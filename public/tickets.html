@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AERIO | Gestion des Tickets</title>
+    <link href="https://fonts.googleapis.com" rel="stylesheet">
+    <style>
+        :root { --primary: #00C2FF; --bg: #030712; --card: rgba(15, 23, 42, 0.7); }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: var(--bg); color: white; padding: 40px; }
+
+        .header-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
+        .btn-print { 
+            background: var(--primary); color: #000; padding: 12px 25px; border-radius: 12px; 
+            font-weight: 800; cursor: pointer; border: none; text-transform: uppercase; font-size: 12px;
+        }
+
+        .table-container { 
+            background: var(--card); border-radius: 30px; padding: 30px; 
+            border: 1px solid rgba(255,255,255,0.05); backdrop-filter: blur(10px);
+        }
+
+        table { width: 100%; border-collapse: collapse; text-align: left; }
+        th { font-size: 11px; color: #555; text-transform: uppercase; padding-bottom: 20px; border-bottom: 1px solid #222; }
+        td { padding: 15px 0; border-bottom: 1px solid #111; font-size: 14px; color: #ccc; }
+        .ticket-code { color: var(--primary); font-weight: 900; letter-spacing: 2px; font-size: 18px; }
+
+        /* STYLE POUR L'IMPRESSION */
+        @media print {
+            body { background: white; color: black; padding: 0; }
+            .btn-print, .header-actions p, .back-link { display: none; }
+            .table-container { border: none; background: white; padding: 0; }
+            th { color: #000; border-bottom: 2px solid #000; }
+            td { color: #000; border-bottom: 1px solid #ddd; }
+            .ticket-code { color: #000; text-decoration: underline; }
+        }
+
+        .back-link { margin-top: 30px; display: block; color: #444; text-decoration: none; font-size: 12px; }
+    </style>
+</head>
+<body>
+
+    <div class="header-actions">
+        <div>
+            <h1 style="font-size: 28px; font-weight: 800;">Mes Tickets <span style="color:var(--primary)">AERIO</span></h1>
+            <p>Historique et impression de vos codes de connexion.</p>
+        </div>
+        <button class="btn-print" onclick="window.print()">🖨️ Imprimer la liste</button>
+    </div>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>DATE DE CRÉATION</th>
+                    <th>CODE TICKET</th>
+                    <th>DURÉE</th>
+                    <th>MONTANT</th>
+                    <th>STATUT</th>
+                </tr>
+            </thead>
+            <tbody id="ticket-list">
+                <!-- Données chargées dynamiquement -->
+            </tbody>
+        </table>
+    </div>
+
+    <a href="/dashboard" class="back-link">← Retour au Tableau de bord</a>
+
+    <script>
+        async function loadTickets() {
+            try {
+                const response = await fetch('/api/my-stats');
+                const tickets = await response.json();
+                const container = document.getElementById('ticket-list');
+                
+                tickets.reverse().forEach(t => {
+                    container.innerHTML += `
+                        <tr>
+                            <td>${new Date(t.date).toLocaleString('fr-FR')}</td>
+                            <td class="ticket-code">${t.code}</td>
+                            <td>${t.duration || '1h'}</td>
+                            <td>${t.amount} XAF</td>
+                            <td style="color:#00F5A0; font-weight:800; font-size:10px;">VALIDÉ</td>
+                        </tr>
+                    `;
+                });
+            } catch (e) { alert("Erreur de chargement des tickets."); }
+        }
+        window.onload = loadTickets;
+    </script>
+</body>
+</html>
