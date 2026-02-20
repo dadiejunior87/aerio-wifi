@@ -26,3 +26,32 @@ app.post("/api/confirm-ticket", (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log("Aerio Server is Ready!"));
+// Configuration des tarifs AERIO
+const TARIFS = {
+"1H": { prix: 100, commission: 15 },
+"24H": { prix: 500, commission: 75 },
+"30J": { prix: 10000, commission: 1500 }
+};
+
+// Route pour simuler un achat et générer un code
+app.get('/buy/:plan', (req, res) => {
+const plan = req.params.plan;
+if (TARIFS[plan]) {
+// Génération d'un code aléatoire style AE-1234
+const codeTicket = "AE-" + Math.floor(1000 + Math.random() * 9000);
+res.send("<h1>Paiement Réussi !</h1><p>Votre code WiFi " + plan + " est : <strong>" + codeTicket + "</strong></p><a href='/login'>Se connecter maintenant</a>");
+} else {
+res.send("Plan invalide");
+}
+});
+
+// Route d'authentification pour ton bouton SE CONNECTER
+app.post('/auth', (req, res) => {
+const { username, password } = req.body;
+console.log("Tentative avec le code : " + username);
+if (username && username.startsWith("AE-")) {
+res.redirect(''); // Simule une redirection vers internet
+} else {
+res.send("<script>alert('Code invalide'); window.location.href='/login';</script>");
+}
+});
