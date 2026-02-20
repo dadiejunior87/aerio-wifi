@@ -47,19 +47,22 @@
         }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        .logo-badge {
-            display: inline-block;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            padding: 12px 25px;
-            border-radius: 20px;
-            font-weight: 800;
-            font-size: 24px;
-            letter-spacing: -1px;
+        /* LOGO BOX STYLE */
+        .logo-box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
             margin-bottom: 30px;
-            box-shadow: 0 10px 20px rgba(112, 0, 255, 0.3);
+        }
+        .logo-text {
+            font-weight: 800;
+            font-size: 28px;
+            color: var(--primary);
+            margin-left: 12px;
+            letter-spacing: -1px;
         }
 
-        h2 { font-weight: 800; font-size: 26px; margin-bottom: 10px; letter-spacing: -1px; }
+        h2 { font-weight: 800; font-size: 26px; margin-bottom: 10px; letter-spacing: -1px; color: white; }
         p.subtitle { color: #888; font-size: 14px; margin-bottom: 35px; }
 
         .input-group { position: relative; margin-bottom: 25px; text-align: left; }
@@ -103,7 +106,6 @@
         .footer-links a { color: var(--primary); text-decoration: none; font-weight: 600; }
         .footer-links a:hover { text-decoration: underline; }
 
-        /* DECORATION */
         .dot { width: 8px; height: 8px; background: var(--accent); display: inline-block; border-radius: 50%; margin-right: 5px; }
     </style>
 </head>
@@ -112,7 +114,19 @@
     <div class="bg-glow"></div>
 
     <div class="register-container">
-        <div class="logo-badge">AERIO</div>
+        <!-- LOGO AERIO SVG ANIMÉ -->
+        <div class="logo-box">
+            <svg width="45" height="45" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org">
+                <circle cx="50" cy="50" r="48" stroke="#00C2FF" stroke-width="4" stroke-dasharray="10 5"/>
+                <path d="M50 25L25 75H35L50 45L65 75H75L50 25Z" fill="#00C2FF"/>
+                <path d="M40 60H60" stroke="#7000FF" stroke-width="5" stroke-linecap="round"/>
+                <circle cx="50" cy="85" r="5" fill="#00F5A0">
+                    <animate attributeName="opacity" values="1;0.2;1" dur="2s" repeatCount="indefinite" />
+                </circle>
+            </svg>
+            <span class="logo-text">AERIO</span>
+        </div>
+
         <h2>CRÉER UN COMPTE</h2>
         <p class="subtitle"><span class="dot"></span> Rejoignez l'élite du WiFi au Cameroun</p>
         
