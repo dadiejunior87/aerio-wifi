@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AERIO | L'Élite du WiFi Zone</title>
-    <link href="https://fonts.googleapis.com" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #00C2FF;
@@ -26,7 +26,6 @@
         }
         @keyframes move { from { transform: translate(-100px, -100px); } to { transform: translate(100vw, 80vh); } }
 
-        /* --- NAVIGATION CORRIGÉE (VISIBLE) --- */
         nav { 
             display: flex; justify-content: space-between; padding: 25px 8%; 
             align-items: center; backdrop-filter: blur(15px); position: sticky; 
@@ -39,7 +38,7 @@
         .menu { display: flex; align-items: center; gap: 25px; }
         .menu a { color: #94a3b8; text-decoration: none; font-size: 13px; font-weight: 600; transition: 0.3s; }
         .menu a:hover { color: var(--primary); }
-        .menu a.active { color: var(--danger); font-weight: 800; } /* Style rouge pour Accueil comme sur l'image */
+        .menu a.active { color: var(--danger); font-weight: 800; }
 
         .btn-glow { 
             background: linear-gradient(45deg, var(--primary), var(--secondary));
@@ -71,7 +70,25 @@
         }
         @keyframes float { from { transform: rotate(-5deg) translateY(0); } to { transform: rotate(-2deg) translateY(-25px); } }
 
-        /* --- BARRE DE STATUT --- */
+        /* --- BOUTIQUE DYNAMIQUE (Cachée par défaut) --- */
+        #shop-section { display: none; padding: 40px 8%; text-align: center; }
+        .tarif-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin-top: 40px; }
+        .tarif-card { 
+            background: var(--glass); border: 1px solid var(--accent); 
+            padding: 30px; border-radius: 25px; transition: 0.3s;
+        }
+        .tarif-card:hover { transform: scale(1.05); background: rgba(0, 245, 160, 0.05); }
+        .tarif-card h3 { font-size: 24px; margin-bottom: 10px; }
+        .tarif-card .price { font-size: 32px; font-weight: 900; color: var(--accent); margin-bottom: 20px; }
+        .tarif-card input { 
+            width: 100%; padding: 12px; border-radius: 10px; border: none; 
+            background: #020617; color: white; margin-bottom: 15px; text-align: center;
+        }
+        .btn-buy { 
+            width: 100%; padding: 15px; border-radius: 12px; border: none; 
+            background: var(--accent); color: #020617; font-weight: 800; cursor: pointer;
+        }
+
         .status-bar {
             position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%);
             background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(255,255,255,0.05);
@@ -80,13 +97,11 @@
         }
         .status-bar span b { color: var(--accent); }
 
-        /* --- WHATSAPP --- */
         .wa-btn {
             position: fixed; bottom: 35px; right: 35px; width: 60px; height: 60px;
             background: #25d366; border-radius: 20px; display: flex; align-items: center; justify-content: center;
             box-shadow: 0 10px 20px rgba(37, 211, 102, 0.3); z-index: 1001; transition: 0.3s;
         }
-        .wa-btn:hover { transform: rotate(10deg) scale(1.1); }
     </style>
 </head>
 <body>
@@ -94,9 +109,9 @@
 
     <nav>
         <a href="/" class="logo">
-            <svg width="40" height="40" viewBox="0 0 100 100" fill="none">
-                <circle cx="50" cy="50" r="48" stroke="#00C2FF" stroke-width="4" stroke-dasharray="10 5""")/>>
-                <path d="M50 25L25 75H35L50 45L65 75H75L50 25Z" fill="#00C2FF""")/>>
+            <svg width="40" height="40" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="48" stroke="#00C2FF" stroke-width="4" stroke-dasharray="10 5"/>
+                <path d="M50 25L25 75H35L50 45L65 75H75L50 25Z" fill="#00C2FF"/>
                 <circle cx="50" cy="85" r="5" fill="#00F5A0">
                     <animate attributeName="opacity" values="1;0.2;1" dur="2s" repeatCount="indefinite" />
                 </circle>
@@ -104,7 +119,6 @@
             <span class="logo-text">AERIO</span>
         </a>
         
-        <!-- MENU COMPLETEMENT RE-INTÉGRÉ -->
         <div class="menu">
             <a href="/" class="active">Accueil</a>
             <a href="/inscription">Partenariats</a>
@@ -114,11 +128,11 @@
         </div>
     </nav>
 
-    <section class="hero">
+    <section class="hero" id="hero-main">
         <div class="hero-content">
             <p style="color: var(--primary); font-weight: 800; letter-spacing: 4px; margin-bottom: 10px;">ÉLITE NETWORK AFRICA</p>
             <h1>Votre WiFi,<br><span>Vos Profits.</span></h1>
-            <p>Automatisez la vente de vos accès internet via Mobile Money. Encaissez 85% de vos gains en temps réel avec la technologie la plus avancée du Cameroun.</p>
+            <p>Automatisez la vente de vos accès internet via Mobile Money. Encaissez vos gains en temps réel avec la technologie la plus avancée.</p>
             <div class="cta-group">
                 <a href="/inscription" class="btn-main">Devenir Partenaire</a>
             </div>
@@ -133,20 +147,69 @@
         </div>
     </section>
 
+    <section id="shop-section">
+        <h1 id="shop-title">Boutique WiFi</h1>
+        <p id="shop-welcome">Choisissez votre forfait pour vous connecter.</p>
+        <div class="tarif-grid" id="tarifs-container">
+            </div>
+    </section>
+
     <div class="status-bar">
         <span>RÉSEAU : <b>ACTIF</b></span>
         <span>PARTENAIRES : <b>120+</b></span>
         <span>PAYS : <b>CAMEROUN 🇨🇲</b></span>
     </div>
 
-    <!-- WhatsApp Support Direct -->
-    <a href="https://wa.me" class="wa-btn" target="_blank">
-        <img src="https://upload.wikimedia.org" width="32">
-    </a>
-
     <script>
-        // Script pour vérifier le statut de la session ou autres animations si besoin
-        console.log("AERIO Élite chargé.");
+        async function checkPartnerShop() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const partnerID = urlParams.get('id');
+
+            if (partnerID) {
+                // On cache le hero et on montre la boutique
+                document.getElementById('hero-main').style.display = 'none';
+                document.getElementById('shop-section').style.display = 'block';
+
+                try {
+                    const res = await fetch(`/api/get-partner-rates?id=${partnerID}`);
+                    const data = await res.json();
+
+                    if (data.rates) {
+                        document.getElementById('shop-title').innerHTML = `Zone <span>${data.name}</span>`;
+                        const container = document.getElementById('tarifs-container');
+                        container.innerHTML = "";
+
+                        data.rates.forEach(rate => {
+                            container.innerHTML += `
+                                <div class="tarif-card">
+                                    <h3>${rate.duree}</h3>
+                                    <div class="price">${rate.prix} F</div>
+                                    <input type="tel" id="phone-${rate.prix}" placeholder="Numéro Orange/MTN">
+                                    <button class="btn-buy" onclick="payerMoneroo(${rate.prix}, '${rate.duree}', '${partnerID}')">PAYER MAINTENANT</button>
+                                </div>
+                            `;
+                        });
+                    }
+                } catch (e) {
+                    console.error("Erreur boutique");
+                }
+            }
+        }
+
+        async function payerMoneroo(montant, duree, routerID) {
+            const phone = document.getElementById(`phone-${montant}`).value;
+            if(!phone) return alert("Numéro requis");
+
+            const response = await fetch('/api/pay', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ amount: montant, duration: duree, router_id: routerID, phone: phone })
+            });
+            const data = await response.json();
+            if (data.checkout_url) window.location.href = data.checkout_url;
+        }
+
+        window.onload = checkPartnerShop;
     </script>
 </body>
 </html>
