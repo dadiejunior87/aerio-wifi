@@ -4,11 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AERIO | Accès Partenaire Sécurisé</title>
-    <link href="https://fonts.googleapis.com" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #00C2FF;
             --secondary: #7000FF;
+            --accent: #00F5A0;
+            --danger: #FF4B4B;
             --bg: #020617;
             --glass: rgba(15, 23, 42, 0.7);
         }
@@ -25,7 +27,6 @@
             position: relative;
         }
 
-        /* EFFET DE LUMIÈRE DYNAMIQUE EN ARRIÈRE-PLAN */
         .glow-bg {
             position: absolute; width: 500px; height: 500px; border-radius: 50%;
             background: radial-gradient(circle, rgba(0, 194, 255, 0.1) 0%, transparent 70%);
@@ -48,8 +49,22 @@
         }
         @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* LOGO BOX */
-        .logo-box { display: flex; align-items: center; justify-content: center; margin-bottom: 40px; }
+        /* BADGES DE NOTIFICATION */
+        .status-badge {
+            display: none;
+            padding: 15px;
+            border-radius: 15px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 25px;
+            animation: fadeIn 0.4s ease;
+        }
+        .badge-success { background: rgba(0, 245, 160, 0.1); border: 1px solid var(--accent); color: var(--accent); }
+        .badge-error { background: rgba(255, 75, 75, 0.1); border: 1px solid var(--danger); color: var(--danger); }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+
+        .logo-box { display: flex; align-items: center; justify-content: center; margin-bottom: 30px; }
         .logo-text { font-weight: 900; font-size: 28px; color: var(--primary); margin-left: 12px; letter-spacing: -1px; }
 
         h2 { font-weight: 900; font-size: 24px; margin-bottom: 8px; letter-spacing: -0.5px; color: white; }
@@ -86,9 +101,8 @@
     <div class="glow-bg"></div>
 
     <div class="login-card">
-        <!-- LOGO AERIO SVG ANIMÉ -->
         <div class="logo-box">
-            <svg width="45" height="45" viewBox="0 0 100 100" fill="none">
+            <svg width="45" height="45" viewBox="0 0 100 100">
                 <circle cx="50" cy="50" r="48" stroke="#00C2FF" stroke-width="4" stroke-dasharray="10 5"/>
                 <path d="M50 25L25 75H35L50 45L65 75H75L50 25Z" fill="#00C2FF"/>
                 <circle cx="50" cy="85" r="5" fill="#00F5A0">
@@ -97,6 +111,9 @@
             </svg>
             <span class="logo-text">AERIO</span>
         </div>
+
+        <div id="msg-success" class="status-badge badge-success">✨ Protocole Alpha Activé ! Connectez-vous.</div>
+        <div id="msg-error" class="status-badge badge-error">❌ Clés de sécurité incorrectes.</div>
 
         <h2>CONNEXION ÉLITE</h2>
         <p class="subtitle">Accédez à votre console de gestion WiFi</p>
@@ -119,6 +136,19 @@
             <p>Pas encore de zone WiFi ? <a href="/inscription">Inscrivez-vous ici</a></p>
         </div>
     </div>
+
+    <script>
+        // Détection automatique des messages venant du serveur
+        const params = new URLSearchParams(window.location.search);
+        
+        if (params.get('signup') === 'success') {
+            document.getElementById('msg-success').style.display = 'block';
+        }
+        
+        if (params.get('error') === 'login') {
+            document.getElementById('msg-error').style.display = 'block';
+        }
+    </script>
 
 </body>
 </html>
