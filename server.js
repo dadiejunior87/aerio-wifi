@@ -10,12 +10,10 @@ const PORT = process.env.PORT || 3000;
 const TICKETS_FILE = path.join(__dirname, "tickets.json");
 const PARTNERS_FILE = path.join(__dirname, "partners.json");
 
-// Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
-// Configuration des Sessions (Sécurité AERIO)
 app.use(session({
     secret: 'AERIO_SUPER_SECRET_2026',
     resave: false,
@@ -23,65 +21,47 @@ app.use(session({
     cookie: { maxAge: 24 * 60 * 60 * 1000 }
 }));
 
-// --- INITIALISATION AUTOMATIQUE DES FICHIERS ---
+// Initialisation des fichiers JSON
 const initFile = (filePath) => {
-    if (!fs.existsSync(filePath)) {
-        fs.writeFileSync(filePath, JSON.stringify([], null, 2));
-    }
+    if (!fs.existsSync(filePath)) fs.writeFileSync(filePath, JSON.stringify([], null, 2));
 };
-
 initFile(TICKETS_FILE);
 initFile(PARTNERS_FILE);
 
-// Fonction de protection des pages privées
 function checkAuth(req, res, next) {
     if (req.session.partnerID) next();
     else res.redirect("/connexion");
 }
 
-// --- IMPORTATION DES ROUTES API (WEBHOOKS) ---
-// Utilisation d'un TRY/CATCH pour éviter que Render ne plante si le fichier est mal placé
-try {
-    const monerooWebhook = require('./api/webhook/moneroo');
-    app.use('/api/webhook/moneroo', monerooWebhook);
-    console.log("✅ Webhook Moneroo chargé");
-} catch (e) {
-    console.log("⚠️ Attention: Fichier api/webhook/moneroo.js introuvable. Créez-le pour activer les paiements.");
-}
+// --- LE WEBHOOK MONEROO (DIRECTEMENT ICI) ---
+app.post("/api/webhook/moneroo", (req, res) => {
+    const payload = req.body;
+    console.log("=== SIGNAL MONEROO REÇU ===");
 
-// --- ROUTES AUTHENTIFICATION ---
-
-app.post("/api/register-account", (req, res) => {
-    const { name, email, password } = req.body;
-    let partners = JSON.parse(fs.readFileSync(PARTNERS_FILE));
-    if (partners.find(p => p.email === email)) return res.send("<script>alert('Email déjà utilisé'); window.location.href='/inscription';</script>");
-    
-    const partnerID = "AE-" + Math.floor(1000 + Math.random() * 9000);
-    partners.push({ name, email, password, partnerID, rates: [], createdAt: new Date() });
-    fs.writeFileSync(PARTNERS_FILE, JSON.stringify(partners, null, 2));
-    res.send("<script>alert('Bienvenue chez AERIO ! Connectez-vous.'); window.location.href='/connexion';</script>");
-});
-
-app.post("/api/login-partenaire", (req, res) => {
-    const { email, password } = req.body;
-    const partners = JSON.parse(fs.readFileSync(PARTNERS_FILE));
-    const partner = partners.find(p => p.email === email && p.password === password);
-
-    if (partner) {
-        req.session.partnerID = partner.partnerID;
-        req.session.name = partner.name;
-        res.redirect("/dashboard");
-    } else {
-        res.send("<script>alert('Email ou mot de passe incorrect'); window.location.href='/connexion';</script>");
+    if (payload.event === 'payment.success') {
+        const { amount, metadata } = payload.data;
+        const code = "AE-" + Math.random().toString(36).substring(2, 7).toUpperCase();
+        
+        try {
+            const tickets = JSON.parse(fs.readFileSync(TICKETS_FILE));
+            tickets.push({
+                code,
+                amount,
+                customer_phone: metadata.phone,
+                partnerID: metadata.router_id,
+                date: new Date(),
+                status: "SUCCESS"
+            });
+            fs.writeFileSync(TICKETS_FILE, JSON.stringify(tickets, null, 2));
+            console.log("✅ Ticket généré : " + code);
+        } catch (e) {
+            console.error("Erreur écriture ticket:", e);
+        }
     }
+    res.status(200).send('OK');
 });
 
-app.get("/logout", (req, res) => {
-    req.session.destroy();
-    res.redirect("/");
-});
-
-// --- ROUTES API GESTION ---
+// --- ROUTES API ---
 
 app.get("/api/admin/stats", checkAuth, (req, res) => {
     const tickets = JSON.parse(fs.readFileSync(TICKETS_FILE));
@@ -97,7 +77,7 @@ app.post("/api/pay", async (req, res) => {
             amount: parseInt(amount),
             currency: 'XAF',
             customer: { phone: phone, name: "Client WiFi" },
-            return_url: `https://${req.get('host')}/success.html`,
+            return_url: `https://${req.get('host')}/success.html?phone=${phone}`,
             notify_url: `https://${req.get('host')}/api/webhook/moneroo`,
             metadata: { router_id, duration, phone }
         }, {
@@ -109,10 +89,17 @@ app.post("/api/pay", async (req, res) => {
     }
 });
 
+app.get('/api/recover-ticket', (req, res) => {
+    const { phone } = req.query;
+    const tickets = JSON.parse(fs.readFileSync(TICKETS_FILE));
+    const found = tickets.reverse().find(t => t.customer_phone === phone);
+    if (found) res.json({ success: true, code: found.code });
+    else res.json({ success: false });
+});
+
 // --- ROUTES PAGES ---
 app.get("/", (req, res) => res.sendFile(path.join(__dirname, "public", "index.html")));
 app.get("/dashboard", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "dashboard.html")));
 app.get("/connexion", (req, res) => res.sendFile(path.join(__dirname, "public", "login-partenaire.html")));
-app.get("/inscription", (req, res) => res.sendFile(path.join(__dirname, "public", "register-partenaire.html")));
 
 app.listen(PORT, () => console.log(`🚀 AERIO LIVE SUR PORT ${PORT}`));
