@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AERIO | Localisation des Zones WiFi</title>
+    <!-- Leaflet CSS pour la carte -->
+    <link rel="stylesheet" href="https://unpkg.com" />
+    <style>
+        :root { --primary: #00C2FF; --bg: #030712; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: var(--bg); color: white; height: 100vh; display: flex; flex-direction: column; }
+        
+        header { padding: 20px; text-align: center; background: rgba(15, 23, 42, 0.9); border-bottom: 1px solid #222; }
+        h1 { font-size: 1.5rem; color: var(--primary); font-weight: 900; }
+        
+        #map { flex: 1; width: 100%; z-index: 1; }
+
+        .info-panel {
+            position: absolute; bottom: 20px; left: 20px; right: 20px;
+            background: rgba(10, 20, 45, 0.9); padding: 15px; border-radius: 15px;
+            border: 1px solid var(--primary); z-index: 1000; font-size: 12px;
+            backdrop-filter: blur(10px); box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .btn-back { color: var(--primary); text-decoration: none; font-weight: bold; display: block; margin-top: 10px; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>POINTS D'ACCÈS <span style="color:white">AERIO</span></h1>
+        <p style="font-size: 10px; color: #666; letter-spacing: 2px;">TROUVEZ UNE ZONE WIFI PROCHE DE VOUS</p>
+    </header>
+
+    <div id="map"></div>
+
+    <div class="info-panel">
+        <b>💡 Astuce :</b> Cliquez sur un marqueur bleu pour voir le nom de la zone et l'itinéraire.
+        <a href="/" class="btn-back">← Retour à l'accueil</a>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com"></script>
+    <script>
+        // 1. Initialiser la carte centrée sur le Cameroun (Yaoundé)
+        const map = L.map('map').setView([3.848, 11.502], 6);
+
+        // 2. Ajouter le fond de carte (Style sombre pour correspondre à AERIO)
+        L.tileLayer('https://{s}://{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        // 3. Liste de vos zones (À compléter avec vos vraies coordonnées)
+        const zones = [
+            { name: "AERIO ZONE - Douala Akwa", lat: 4.051, lng: 9.708, status: "Active" },
+            { name: "AERIO ZONE - Yaoundé Bastos", lat: 3.885, lng: 11.512, status: "Active" },
+            { name: "AERIO ZONE - Maroua", lat: 10.591, lng: 14.315, status: "Active" }
+        ];
+
+        // 4. Ajouter les marqueurs sur la carte
+        zones.forEach(zone => {
+            L.marker([zone.lat, zone.lng]).addTo(map)
+                .bindPopup(`<b>${zone.name}</b><br>Statut: <span style="color:#00F5A0">${zone.status}</span><br><a href="https://www.google.com{zone.lat},${zone.lng}" target="_blank">S'y rendre</a>`);
+        });
+    </script>
+</body>
+</html>
