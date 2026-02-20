@@ -116,11 +116,27 @@ app.get('/api/recover-ticket', (req, res) => {
     }
 });
 
-// --- ROUTES PAGES (SECTION MISE À JOUR) ---
+// 7. Route API Connexion Partenaire (Vérification identifiants)
+app.post("/api/login-partenaire", (req, res) => {
+    const { email, password } = req.body;
+    // Identifiants de test (À modifier pour une vraie base de données plus tard)
+    if (email === "admin@aerio.com" && password === "admin123") {
+        res.redirect("/dashboard");
+    } else {
+        res.send("<script>alert('Identifiants incorrects'); window.location.href='/connexion';</script>");
+    }
+});
 
-// Page d'accueil (Vitrine AERIO)
+// --- ROUTES PAGES ---
+
+// Page d'accueil
 app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "public", "index.html"));
+});
+
+// Page de Connexion (Style Ticket WiFi Zone)
+app.get("/connexion", (req, res) => {
+    res.sendFile(path.join(__dirname, "public", "login-partenaire.html"));
 });
 
 // Page de localisation des zones WiFi (Carte)
@@ -138,7 +154,7 @@ app.get("/dashboard", (req, res) => {
     res.sendFile(path.join(__dirname, "public", "dashboard.html"));
 });
 
-// API pour l'historique des tickets du dashboard
+// API pour l'historique des tickets
 app.get("/api/tickets", (req, res) => {
     const tickets = JSON.parse(fs.readFileSync(TICKETS_FILE));
     res.json(tickets);
