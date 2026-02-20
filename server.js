@@ -32,7 +32,7 @@ app.post("/api/register-account", (req, res) => {
     const newPartner = {
         name,
         email,
-        password, // En production, utilisez un hash (ex: bcrypt)
+        password, 
         partnerID: "AE-" + Math.floor(1000 + Math.random() * 9000),
         router_ip: "",
         payout_number: "",
@@ -51,7 +51,6 @@ app.post("/api/update-profile", (req, res) => {
     const { name, email, password } = req.body;
     let partners = JSON.parse(fs.readFileSync(PARTNERS_FILE));
     
-    // Simulation de mise à jour pour le partenaire actuel
     let partner = partners.find(p => p.email === email);
     if (partner) {
         partner.name = name;
@@ -63,7 +62,7 @@ app.post("/api/update-profile", (req, res) => {
     }
 });
 
-// 3. Enregistrer les réglages routeur/payout depuis le Dashboard
+// 3. Enregistrer les réglages routeur/payout
 app.post("/api/register-partner", (req, res) => {
     const { router_ip, payout_number, payout_method, partnerID } = req.body;
     let partners = JSON.parse(fs.readFileSync(PARTNERS_FILE));
@@ -174,8 +173,10 @@ app.get("/map", (req, res) => res.sendFile(path.join(__dirname, "public", "map.h
 app.get("/recover", (req, res) => res.sendFile(path.join(__dirname, "public", "recover.html")));
 app.get("/dashboard", (req, res) => res.sendFile(path.join(__dirname, "public", "dashboard.html")));
 app.get("/profil", (req, res) => res.sendFile(path.join(__dirname, "public", "profil.html")));
+app.get("/tickets", (req, res) => res.sendFile(path.join(__dirname, "public", "tickets.html")));
 
-app.get("/api/tickets", (req, res) => {
+// API pour les statistiques et historique du dashboard
+app.get("/api/my-stats", (req, res) => {
     const tickets = JSON.parse(fs.readFileSync(TICKETS_FILE));
     res.json(tickets);
 });
