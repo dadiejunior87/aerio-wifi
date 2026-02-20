@@ -27,7 +27,6 @@ app.use(session({
 const initFile = (filePath) => {
     if (!fs.existsSync(filePath)) {
         fs.writeFileSync(filePath, JSON.stringify([], null, 2));
-        console.log(`✅ Fichier ${path.basename(filePath)} créé avec succès !`);
     }
 };
 
@@ -41,12 +40,16 @@ function checkAuth(req, res, next) {
 }
 
 // --- IMPORTATION DES ROUTES API (WEBHOOKS) ---
-// On branche ton nouveau dossier api/webhook/moneroo.js ici
-const monerooWebhook = require('./api/webhook/moneroo');
-app.use('/api/webhook/moneroo', monerooWebhook);
+// Utilisation d'un TRY/CATCH pour éviter que Render ne plante si le fichier est mal placé
+try {
+    const monerooWebhook = require('./api/webhook/moneroo');
+    app.use('/api/webhook/moneroo', monerooWebhook);
+    console.log("✅ Webhook Moneroo chargé");
+} catch (e) {
+    console.log("⚠️ Attention: Fichier api/webhook/moneroo.js introuvable. Créez-le pour activer les paiements.");
+}
 
-
-// --- ROUTES AUTHENTIFICATION & COMPTE ---
+// --- ROUTES AUTHENTIFICATION ---
 
 app.post("/api/register-account", (req, res) => {
     const { name, email, password } = req.body;
@@ -80,24 +83,12 @@ app.get("/logout", (req, res) => {
 
 // --- ROUTES API GESTION ---
 
-app.post("/api/save-rate", checkAuth, (req, res) => {
-    const { prix, duree } = req.body;
-    let partners = JSON.parse(fs.readFileSync(PARTNERS_FILE));
-    let partner = partners.find(p => p.partnerID === req.session.partnerID);
-    if (partner) {
-        partner.rates.push({ prix: parseInt(prix), duree });
-        fs.writeFileSync(PARTNERS_FILE, JSON.stringify(partners, null, 2));
-        res.json({ success: true });
-    }
-});
-
-app.get("/api/my-stats", checkAuth, (req, res) => {
+app.get("/api/admin/stats", checkAuth, (req, res) => {
     const tickets = JSON.parse(fs.readFileSync(TICKETS_FILE));
-    const myTickets = tickets.filter(t => t.partnerID === req.session.partnerID);
-    res.json(myTickets);
+    const myTickets = tickets.filter(t => t.partnerID === req.session.partnerID && t.status === "SUCCESS");
+    const totalCA = myTickets.reduce((sum, t) => sum + t.amount, 0);
+    res.json({ solde: totalCA * 0.15, totalGeneré: totalCA });
 });
-
-// --- SYSTÈME DE PAIEMENT (MONEROO) ---
 
 app.post("/api/pay", async (req, res) => {
     const { amount, duration, router_id, phone } = req.body;
@@ -114,32 +105,14 @@ app.post("/api/pay", async (req, res) => {
         });
         res.json({ checkout_url: response.data.data.checkout_url });
     } catch (e) {
-        console.error("Erreur Moneroo:", e.response ? e.response.data : e.message);
-        res.status(500).json({ error: "Erreur lors de l'initialisation du paiement" });
+        res.status(500).json({ error: "Erreur Moneroo" });
     }
 });
 
-app.get('/api/recover-ticket', (req, res) => {
-    const { phone } = req.query;
-    const tickets = JSON.parse(fs.readFileSync(TICKETS_FILE));
-    const found = tickets.reverse().find(t => t.customer_phone === phone);
-    if (found) res.json({ success: true, code: found.code });
-    else res.json({ success: false });
-});
-
 // --- ROUTES PAGES ---
-
 app.get("/", (req, res) => res.sendFile(path.join(__dirname, "public", "index.html")));
+app.get("/dashboard", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "dashboard.html")));
 app.get("/connexion", (req, res) => res.sendFile(path.join(__dirname, "public", "login-partenaire.html")));
 app.get("/inscription", (req, res) => res.sendFile(path.join(__dirname, "public", "register-partenaire.html")));
-app.get("/map", (req, res) => res.sendFile(path.join(__dirname, "public", "map.html")));
-app.get("/recover", (req, res) => res.sendFile(path.join(__dirname, "public", "recover.html")));
 
-// Pages privées
-app.get("/dashboard", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "dashboard.html")));
-app.get("/profil", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "profil.html")));
-app.get("/tickets", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "tickets.html")));
-app.get("/wifi-zone", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "wifi-zone.html")));
-app.get("/compta", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "compta.html")));
-
-app.listen(PORT, () => console.log(`🚀 AERIO PLATFORME LIVE SUR PORT ${PORT}`));
+app.listen(PORT, () => console.log(`🚀 AERIO LIVE SUR PORT ${PORT}`));
