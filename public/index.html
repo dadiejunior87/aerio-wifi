@@ -3,74 +3,92 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AERIO | Vendez vos tickets WiFi Zone</title>
+    <title>AERIO | L'Élite du WiFi Zone</title>
     <link href="https://fonts.googleapis.com" rel="stylesheet">
     <style>
-        :root { --primary: #00C2FF; --bg: #030712; --accent: #FF4B4B; }
+        :root {
+            --primary: #00C2FF;
+            --secondary: #7000FF;
+            --accent: #00F5A0;
+            --bg: #020617;
+            --glass: rgba(15, 23, 42, 0.6);
+        }
+
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         body { background: var(--bg); color: white; overflow-x: hidden; min-height: 100vh; }
-        
-        /* Menu de navigation */
-        nav { display: flex; justify-content: space-between; padding: 25px 8%; align-items: center; position: relative; z-index: 10; }
-        
-        /* LOGO STYLE */
-        .logo { display: flex; align-items: center; text-decoration: none; }
-        .logo-text { font-weight: 900; color: var(--primary); font-size: 28px; letter-spacing: -1px; margin-left: 10px; }
 
-        .menu a { color: white; text-decoration: none; margin-left: 30px; font-size: 14px; font-weight: 600; transition: 0.3s; }
+        /* --- FOND ANIMÉ --- */
+        .orb {
+            position: absolute; width: 500px; height: 500px; border-radius: 50%;
+            background: radial-gradient(circle, rgba(0, 194, 255, 0.1) 0%, transparent 70%);
+            z-index: -1; filter: blur(80px); animation: move 20s infinite alternate;
+        }
+        @keyframes move { from { transform: translate(-100px, -100px); } to { transform: translate(100vw, 80vh); } }
+
+        /* --- NAVIGATION --- */
+        nav { display: flex; justify-content: space-between; padding: 30px 8%; align-items: center; backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 100; }
+        
+        .logo { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+        .logo-text { font-weight: 900; font-size: 26px; color: var(--primary); letter-spacing: -1px; }
+
+        .menu a { color: #94a3b8; text-decoration: none; margin-left: 30px; font-size: 14px; font-weight: 500; transition: 0.3s; }
         .menu a:hover { color: var(--primary); }
-        .btn-connexion { background: var(--accent); padding: 12px 30px; border-radius: 50px; font-weight: 800 !important; box-shadow: 0 10px 20px rgba(255, 75, 75, 0.2); }
+        .btn-glow { 
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            padding: 12px 25px; border-radius: 12px; color: white !important; font-weight: 800 !important;
+            box-shadow: 0 0 20px rgba(112, 0, 255, 0.3);
+        }
 
-        /* Section Hero */
-        .hero { display: flex; align-items: center; padding: 80px 8% 120px; gap: 50px; position: relative; }
-        .hero-text { flex: 1; z-index: 2; }
-        .hero-text h1 { font-size: 4rem; line-height: 1.1; margin-bottom: 25px; font-weight: 900; }
-        .hero-text span { color: var(--primary); }
-        .hero-text p { color: #888; line-height: 1.8; margin-bottom: 40px; max-width: 500px; font-size: 16px; }
+        /* --- HERO SECTION --- */
+        .hero { display: flex; align-items: center; padding: 100px 8%; gap: 60px; min-height: 80vh; }
+        .hero-content { flex: 1.2; }
+        .hero-content h1 { font-size: 5rem; font-weight: 900; line-height: 0.9; margin-bottom: 25px; letter-spacing: -3px; }
+        .hero-content h1 span { background: linear-gradient(to right, var(--primary), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         
-        .btn-create { 
-            background: var(--accent); color: white; padding: 20px 45px; 
-            border-radius: 50px; text-decoration: none; font-weight: 900; 
-            font-size: 18px; box-shadow: 0 15px 30px rgba(255, 75, 75, 0.4);
-            transition: 0.3s; display: inline-block;
-        }
+        .hero-content p { color: #64748b; font-size: 18px; line-height: 1.6; margin-bottom: 40px; max-width: 600px; }
 
-        .hero-img { flex: 1; text-align: right; }
-        .hero-img img { 
-            width: 100%; max-width: 550px; border-radius: 40px; 
-            border: 5px solid rgba(255,255,255,0.05);
-            box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+        .cta-group { display: flex; gap: 20px; }
+        .btn-main { 
+            padding: 20px 40px; border-radius: 18px; text-decoration: none; font-weight: 800; font-size: 18px;
+            background: white; color: black; transition: 0.3s;
         }
+        .btn-main:hover { transform: scale(1.05); box-shadow: 0 0 30px var(--primary); }
 
-        /* Bouton WhatsApp Flottant */
-        .whatsapp-float {
-            position: fixed; width: 65px; height: 65px; bottom: 80px; right: 30px;
-            background-color: #25d366; border-radius: 50px; text-align: center;
-            z-index: 1000; display: flex; align-items: center; justify-content: center;
-            box-shadow: 2px 2px 20px rgba(0,0,0,0.4); transition: 0.3s;
-            text-decoration: none;
+        .hero-visual { flex: 0.8; position: relative; }
+        .card-preview {
+            background: var(--glass); border: 1px solid rgba(255,255,255,0.1);
+            padding: 30px; border-radius: 30px; backdrop-filter: blur(20px);
+            transform: rotate(-5deg); box-shadow: 0 50px 100px rgba(0,0,0,0.5);
+            animation: float 4s infinite alternate ease-in-out;
         }
-        .whatsapp-float:hover { transform: scale(1.1) rotate(10deg); }
+        @keyframes float { from { transform: rotate(-5deg) translateY(0); } to { transform: rotate(-2deg) translateY(-30px); } }
 
-        /* Barre de statut Windows-style */
+        /* --- BARRE DE STATUT (NOUVELLE) --- */
         .status-bar {
-            position: fixed; bottom: 0; left: 0; width: 100%; height: 45px;
-            background: rgba(10, 10, 20, 0.8); backdrop-filter: blur(15px);
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 0 30px; font-size: 12px; color: #666; font-weight: 700;
-            border-top: 1px solid rgba(255,255,255,0.05); z-index: 999;
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(255,255,255,0.05);
+            padding: 10px 30px; border-radius: 50px; display: flex; gap: 40px; font-size: 11px;
+            color: #475569; backdrop-filter: blur(10px); z-index: 1000;
         }
+        .status-bar span b { color: var(--accent); }
+
+        /* --- WHATSAPP --- */
+        .wa-btn {
+            position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px;
+            background: #25d366; border-radius: 20px; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 10px 20px rgba(37, 211, 102, 0.3); z-index: 1001; transition: 0.3s;
+        }
+        .wa-btn:hover { transform: rotate(10deg) scale(1.1); }
     </style>
 </head>
 <body>
+    <div class="orb"></div>
 
     <nav>
         <div class="logo">
-            <!-- LOGO AERIO SVG ANIMÉ -->
-            <svg width="45" height="45" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org">
+            <svg width="40" height="40" viewBox="0 0 100 100" fill="none">
                 <circle cx="50" cy="50" r="48" stroke="#00C2FF" stroke-width="4" stroke-dasharray="10 5"/>
                 <path d="M50 25L25 75H35L50 45L65 75H75L50 25Z" fill="#00C2FF"/>
-                <path d="M40 60H60" stroke="#7000FF" stroke-width="5" stroke-linecap="round"/>
                 <circle cx="50" cy="85" r="5" fill="#00F5A0">
                     <animate attributeName="opacity" values="1;0.2;1" dur="2s" repeatCount="indefinite" />
                 </circle>
@@ -78,47 +96,39 @@
             <span class="logo-text">AERIO</span>
         </div>
         <div class="menu">
-            <a href="/">Accueil</a>
-            <a href="/dashboard">Partenariats</a>
-            <a href="/recover">Récupérer Ticket</a>
-            <a href="/map">Localisation WiFi</a>
-            <a href="/connexion" class="btn-connexion">Connexion</a>
+            <a href="/map">Zones</a>
+            <a href="/recover">Tickets</a>
+            <a href="/connexion" class="btn-glow">ESPACE PRO</a>
         </div>
     </nav>
 
     <section class="hero">
-        <div class="hero-text">
-            <p style="color: var(--accent); font-weight: 900; letter-spacing: 3px; margin-bottom: 10px;">BIENVENUE SUR AERIO</p>
-            <h1>Vendez vos tickets <span>WiFi Zone</span></h1>
-            <p>AERIO est la plateforme révolutionnaire qui vous permet d'automatiser la vente de vos tickets WiFi via Mobile Money au Cameroun et partout en Afrique.</p>
-            <a href="/inscription" class="btn-create">Créer Un Compte</a>
+        <div class="hero-content">
+            <p style="color: var(--primary); font-weight: 800; letter-spacing: 4px;">SYSTEME INTELLIGENT</p>
+            <h1>Votre WiFi,<br><span>Vos Profits.</span></h1>
+            <p>AERIO automatise la vente de vos accès internet via Mobile Money. Encaissez vos gains en temps réel avec la plateforme la plus avancée du Cameroun.</p>
+            <div class="cta-group">
+                <a href="/inscription" class="btn-main">Devenir Partenaire</a>
+            </div>
         </div>
-        <div class="hero-img">
-            <img src="https://images.unsplash.com" alt="AERIO WiFi User">
+        <div class="hero-visual">
+            <div class="card-preview">
+                <p style="color: var(--primary); font-size: 10px; font-weight: 800; margin-bottom: 20px;">DASHBOARD TEMPS RÉEL</p>
+                <h2 style="font-size: 32px; margin-bottom: 10px;">852.400 F</h2>
+                <p style="color: var(--accent); font-size: 12px; font-weight: 800;">+15% de croissance ce mois</p>
+                <div style="margin-top: 30px; height: 100px; border-bottom: 2px solid var(--primary); opacity: 0.3;"></div>
+            </div>
         </div>
     </section>
 
-    <!-- WhatsApp Support avec ton numéro du Cameroun corrigé -->
-    <a href="https://wa.me" class="whatsapp-float" target="_blank">
-        <img src="https://upload.wikimedia.org" width="38" alt="WhatsApp Support">
-    </a>
-
-    <!-- Barre Statut Bas -->
     <div class="status-bar">
-        <div>🌍 Cameroun Network • 36°C Sunny</div>
-        <div id="clock">14:33 - 20/02/2026</div>
+        <span>RÉSEAU : <b>ACTIF</b></span>
+        <span>PARTENAIRES : <b>120+</b></span>
+        <span>PAYS : <b>CAMEROUN 🇨🇲</b></span>
     </div>
 
-    <script>
-        function updateTime() {
-            const now = new Date();
-            const timeStr = now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
-            const dateStr = now.toLocaleDateString('fr-FR');
-            document.getElementById('clock').innerHTML = `${timeStr} - ${dateStr}`;
-        }
-        setInterval(updateTime, 1000);
-        updateTime();
-    </script>
-
+    <a href="https://wa.me" class="wa-btn">
+        <img src="https://upload.wikimedia.org" width="30">
+    </a>
 </body>
 </html>
