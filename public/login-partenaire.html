@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AERIO | Connexion Partenaire</title>
+    <style>
+        :root { --primary: #00C2FF; --bg: #FF4B4B; }
+        body { background: var(--bg); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; font-family: 'Poppins', sans-serif; }
+        
+        .login-box {
+            background: white; padding: 50px 40px; border-radius: 30px;
+            width: 90%; max-width: 450px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+
+        .logo { font-weight: 900; font-size: 28px; color: #fff; background: var(--primary); display: inline-block; padding: 10px 20px; border-radius: 10px; margin-bottom: 40px; }
+
+        label { display: block; color: #555; font-size: 14px; margin-bottom: 10px; font-weight: bold; }
+        
+        input {
+            width: 100%; padding: 15px; margin-bottom: 25px; border-radius: 50px;
+            border: none; background: #E1F5FE; color: #333; outline: none; text-align: center;
+        }
+
+        .btn-login {
+            width: 80%; padding: 15px; border: none; border-radius: 50px;
+            background: var(--primary); color: white; font-weight: 800; cursor: pointer;
+            font-size: 16px; transition: 0.3s;
+        }
+        .btn-login:hover { transform: scale(1.05); box-shadow: 0 10px 20px rgba(0, 194, 255, 0.3); }
+
+        .links { margin-top: 25px; font-size: 13px; color: #666; }
+        .links a { color: var(--bg); text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div class="login-box">
+        <div class="logo">AERIO</div>
+        
+        <form action="/api/login-partenaire" method="POST">
+            <label>Email</label>
+            <input type="email" name="email" required>
+
+            <label>Mot de passe</label>
+            <input type="password" name="password" required>
+
+            <button type="submit" class="btn-login">Se Connecter</button>
+        </form>
+
+        <div class="links">
+            <p><a href="#">Mot de passe oublié ?</a></p>
+            <p>Vous n'avez pas de compte ? <a href="#">Créez un compte</a></p>
+        </div>
+    </div>
+
+</body>
+</html>
