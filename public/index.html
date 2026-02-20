@@ -55,7 +55,7 @@
         .hero-content p { color: #64748b; font-size: 17px; line-height: 1.6; margin-bottom: 40px; max-width: 580px; }
 
         .btn-main { 
-            display: inline-block; padding: 20px 40px; border-radius: 18px; 
+            display: inline-block; padding: 20px 45px; border-radius: 18px; 
             text-decoration: none; font-weight: 800; font-size: 18px;
             background: white; color: black; transition: 0.3s;
         }
@@ -70,8 +70,8 @@
         }
         @keyframes float { from { transform: rotate(-5deg) translateY(0); } to { transform: rotate(-2deg) translateY(-25px); } }
 
-        /* --- BOUTIQUE DYNAMIQUE (Cachée par défaut) --- */
-        #shop-section { display: none; padding: 40px 8%; text-align: center; }
+        /* --- BOUTIQUE DYNAMIQUE --- */
+        #shop-section { display: none; padding: 60px 8%; text-align: center; }
         .tarif-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin-top: 40px; }
         .tarif-card { 
             background: var(--glass); border: 1px solid var(--accent); 
@@ -82,12 +82,13 @@
         .tarif-card .price { font-size: 32px; font-weight: 900; color: var(--accent); margin-bottom: 20px; }
         .tarif-card input { 
             width: 100%; padding: 12px; border-radius: 10px; border: none; 
-            background: #020617; color: white; margin-bottom: 15px; text-align: center;
+            background: #020617; color: white; margin-bottom: 15px; text-align: center; outline: none;
         }
         .btn-buy { 
             width: 100%; padding: 15px; border-radius: 12px; border: none; 
-            background: var(--accent); color: #020617; font-weight: 800; cursor: pointer;
+            background: var(--accent); color: #020617; font-weight: 800; cursor: pointer; transition: 0.3s;
         }
+        .btn-buy:hover { background: white; }
 
         .status-bar {
             position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%);
@@ -109,7 +110,7 @@
 
     <nav>
         <a href="/" class="logo">
-            <svg width="40" height="40" viewBox="0 0 100 100">
+            <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org">
                 <circle cx="50" cy="50" r="48" stroke="#00C2FF" stroke-width="4" stroke-dasharray="10 5"/>
                 <path d="M50 25L25 75H35L50 45L65 75H75L50 25Z" fill="#00C2FF"/>
                 <circle cx="50" cy="85" r="5" fill="#00F5A0">
@@ -128,6 +129,7 @@
         </div>
     </nav>
 
+    <!-- SECTION PRINCIPALE -->
     <section class="hero" id="hero-main">
         <div class="hero-content">
             <p style="color: var(--primary); font-weight: 800; letter-spacing: 4px; margin-bottom: 10px;">ÉLITE NETWORK AFRICA</p>
@@ -147,11 +149,13 @@
         </div>
     </section>
 
+    <!-- SECTION BOUTIQUE -->
     <section id="shop-section">
-        <h1 id="shop-title">Boutique WiFi</h1>
-        <p id="shop-welcome">Choisissez votre forfait pour vous connecter.</p>
+        <h1 id="shop-title" style="font-size: 3rem; font-weight: 900;">Boutique <span style="color: var(--accent);">WiFi</span></h1>
+        <p id="shop-welcome" style="color: #64748b; margin-top: 10px;">Choisissez votre forfait pour naviguer maintenant.</p>
         <div class="tarif-grid" id="tarifs-container">
-            </div>
+            <!-- Les tarifs seront injectés ici par le script -->
+        </div>
     </section>
 
     <div class="status-bar">
@@ -160,68 +164,60 @@
         <span>PAYS : <b>CAMEROUN 🇨🇲</b></span>
     </div>
 
-    <script>
-        async function checkPartnerShop() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const partnerID = urlParams.get('id');
-
-            if (partnerID) {
-                // On cache le hero et on montre la boutique
-                document.getElementById('hero-main').style.display = 'none';
-                document.getElementById('shop-section').style.display = 'block';
-
-                try {
-                    const res = await fetch(`/api/get-partner-rates?id=${partnerID}`);
-                    const data = await res.json();
-
-                    if (data.rates) {
-                        document.getElementById('shop-title').innerHTML = `Zone <span>${data.name}</span>`;
-                        const container = document.getElementById('tarifs-container');
-                        container.innerHTML = "";
-
-                        data.rates.forEach(rate => {
-                            container.innerHTML += `
-                                <div class="tarif-card">
-                                    <h3>${rate.duree}</h3>
-                                    <div class="price">${rate.prix} F</div>
-                                    <input type="tel" id="phone-${rate.prix}" placeholder="Numéro Orange/MTN">
-                                    <button class="btn-buy" onclick="payerMoneroo(${rate.prix}, '${rate.duree}', '${partnerID}')">PAYER MAINTENANT</button>
-                                </div>
-                            `;
-                        });
-                    }
-                } catch (e) {
-                    console.error("Erreur boutique");
-                }
-            }
-        }
-
-        async function payerMoneroo(montant, duree, routerID) {
-            const phone = document.getElementById(`phone-${montant}`).value;
-            if(!phone) return alert("Numéro requis");
-
-            const response = await fetch('/api/pay', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ amount: montant, duration: duree, router_id: routerID, phone: phone })
-            });
-            const data = await response.json();
-            if (data.checkout_url) window.location.href = data.checkout_url;
-        }
-
-        window.onload = checkPartnerShop;
-    </script>
-        <!-- BOUTON WHATSAPP ÉLITE -->
-    <a href="https://wa.me." class="wa-btn" target="_blank">
-        <img src="https://upload.wikimedia.org" width="32" alt="Support AERIO">
+    <a href="https://wa.me" class="wa-btn" target="_blank">
+        <img src="https://upload.wikimedia.org" width="30" alt="WhatsApp">
     </a>
 
     <script>
-        // Ton script d'horloge existant ici...
+        // LOGIQUE POUR AFFICHER LA BOUTIQUE SI L'URL CONTIENT UN ID ROUTEUR
+        const urlParams = new URLSearchParams(window.location.search);
+        const routerID = urlParams.get('id');
+
+        if (routerID) {
+            document.getElementById('hero-main').style.display = 'none';
+            document.getElementById('shop-section').style.display = 'block';
+            chargerTarifs(routerID);
+        }
+
+        async function chargerTarifs(id) {
+            try {
+                const response = await fetch(`/api/get-rates?id=${id}`);
+                const rates = await response.json();
+                const container = document.getElementById('tarifs-container');
+
+                if (rates.length === 0) {
+                    container.innerHTML = "<p>Aucun tarif configuré pour cette zone.</p>";
+                    return;
+                }
+
+                rates.forEach(rate => {
+                    container.innerHTML += `
+                        <div class="tarif-card">
+                            <h3>FORFAIT ${rate.duree}</h3>
+                            <div class="price">${rate.prix} F</div>
+                            <input type="tel" id="phone-${rate.prix}" placeholder="Numéro Mobile Money" required>
+                            <button class="btn-buy" onclick="payer('${rate.prix}', '${rate.duree}', '${id}')">ACHETER MAINTENANT</button>
+                        </div>
+                    `;
+                });
+            } catch (e) {
+                console.error("Erreur de chargement des tarifs");
+            }
+        }
+
+        async function payer(amount, duration, router_id) {
+            const phone = document.getElementById(`phone-${amount}`).value;
+            if (!phone) return alert("Veuillez entrer votre numéro !");
+
+            const res = await fetch('/api/pay', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ amount, duration, router_id, phone })
+            });
+            const data = await res.json();
+            if (data.checkout_url) window.location.href = data.checkout_url;
+            else alert("Erreur lors de l'initialisation du paiement.");
+        }
     </script>
 </body>
 </html>
-
-</body>
-</html>
-
