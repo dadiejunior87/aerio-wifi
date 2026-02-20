@@ -55,3 +55,35 @@ res.redirect(''); // Simule une redirection vers internet
 res.send("<script>alert('Code invalide'); window.location.href='/login';</script>");
 }
 });
+// 1. CONFIGURATION DES TARIFS INTERNATIONAUX (en Dollar USD)
+const TARIFS_INTERNATIONAUX = {
+"1H": { prix: 0.99, devise: "USD", label: "PASS ÉLITE 1H" },
+"24H": { prix: 4.99, devise: "USD", label: "PASS ÉLITE 24H" },
+"30J": { prix: 19.99, devise: "USD", label: "PASS ÉLITE MENSUEL" }
+};
+
+// 2. ROUTE POUR GÉNÉRER UN TICKET INTERNATIONAL
+app.get('/buy-intl/:plan', (req, res) => {
+const plan = req.params.plan;
+const selection = TARIFS_INTERNATIONAUX[plan];
+
+if (selection) {
+// On génère le code international
+const codeIntl = "INT-" + Math.floor(100000 + Math.random() * 900000);
+
+// Ici, on affiche une page de confirmation (en attendant de brancher PayPal ou Stripe)
+res.send("<h1>AERIO INTERNATIONAL CHECKOUT</h1><p>Forfait : " + selection.label + "</p><p>Prix : " + selection.prix + " " + selection.devise + "</p><p>Votre code généré : <strong>" + codeIntl + "</strong></p><hr><a href='/login'>Utiliser mon code sur le WiFi</a>");
+} else {
+res.send("Erreur : Plan inconnu.");
+}
+});
+
+// 3. MISE À JOUR DU LOGIN POUR ACCEPTER LES CODES INTERNATIONAUX
+app.post('/auth-intl', (req, res) => {
+const { username } = req.body;
+if (username && (username.startsWith("AE-") || username.startsWith("INT-"))) {
+res.redirect('https://www.google.com');
+} else {
+res.send("<script>alert('Code invalide ou expiré'); window.location.href='/login';</script>");
+}
+});
