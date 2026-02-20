@@ -20,18 +20,25 @@ app.use(session({
     secret: 'AERIO_SUPER_SECRET_2026',
     resave: false,
     saveUninitialized: true,
-    cookie: { maxAge: 24 * 60 * 60 * 1000 } // Session de 24 heures
+    cookie: { maxAge: 24 * 60 * 60 * 1000 }
 }));
+
+// --- INITIALISATION AUTOMATIQUE DES FICHIERS ---
+const initFile = (filePath) => {
+    if (!fs.existsSync(filePath)) {
+        fs.writeFileSync(filePath, JSON.stringify([], null, 2));
+        console.log(`✅ Fichier ${path.basename(filePath)} créé avec succès !`);
+    }
+};
+
+initFile(TICKETS_FILE);
+initFile(PARTNERS_FILE);
 
 // Fonction de protection des pages privées
 function checkAuth(req, res, next) {
     if (req.session.partnerID) next();
     else res.redirect("/connexion");
 }
-
-// Initialisation des fichiers JSON
-if (!fs.existsSync(TICKETS_FILE)) fs.writeFileSync(TICKETS_FILE, JSON.stringify([]));
-if (!fs.existsSync(PARTNERS_FILE)) fs.writeFileSync(PARTNERS_FILE, JSON.stringify([]));
 
 // --- ROUTES AUTHENTIFICATION & COMPTE ---
 
@@ -104,7 +111,33 @@ app.post("/api/pay", async (req, res) => {
     }
 });
 
-// --- ROUTES PAGES PUBLIQUES ---
+app.post("/api/webhook", async (req, res) => {
+    const { event, data } = req.body;
+    if (event === 'payment.success') {
+        const amount = data.amount;
+        const partnerID = data.metadata.router_id;
+        const customerPhone = data.metadata.phone;
+        const code = Math.random().toString(36).substring(2, 8).toUpperCase();
+        
+        const tickets = JSON.parse(fs.readFileSync(TICKETS_FILE));
+        tickets.push({
+            code, amount, customer_phone: customerPhone, partnerID,
+            date: new Date(), status: "SUCCESS"
+        });
+        fs.writeFileSync(TICKETS_FILE, JSON.stringify(tickets, null, 2));
+    }
+    res.sendStatus(200);
+});
+
+app.get('/api/recover-ticket', (req, res) => {
+    const { phone } = req.query;
+    const tickets = JSON.parse(fs.readFileSync(TICKETS_FILE));
+    const found = tickets.reverse().find(t => t.customer_phone === phone);
+    if (found) res.json({ success: true, code: found.code });
+    else res.json({ success: false });
+});
+
+// --- ROUTES PAGES ---
 
 app.get("/", (req, res) => res.sendFile(path.join(__dirname, "public", "index.html")));
 app.get("/connexion", (req, res) => res.sendFile(path.join(__dirname, "public", "login-partenaire.html")));
@@ -112,8 +145,7 @@ app.get("/inscription", (req, res) => res.sendFile(path.join(__dirname, "public"
 app.get("/map", (req, res) => res.sendFile(path.join(__dirname, "public", "map.html")));
 app.get("/recover", (req, res) => res.sendFile(path.join(__dirname, "public", "recover.html")));
 
-// --- ROUTES PAGES PRIVÉES (PROTÉGÉES) ---
-
+// Pages privées
 app.get("/dashboard", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "dashboard.html")));
 app.get("/profil", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "profil.html")));
 app.get("/tickets", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "tickets.html")));
