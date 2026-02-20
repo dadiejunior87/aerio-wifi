@@ -3,64 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AERIO | Localisation des Zones WiFi</title>
-    <!-- Leaflet CSS pour la carte -->
+    <title>AERIO | Radar de Réseau Alpha</title>
     <link rel="stylesheet" href="https://unpkg.com" />
+    <link href="https://fonts.googleapis.com" rel="stylesheet">
     <style>
-        :root { --primary: #00C2FF; --bg: #030712; }
+        :root { --primary: #00C2FF; --bg: #020617; --glass: rgba(15, 23, 42, 0.85); --accent: #00F5A0; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        body { background: var(--bg); color: white; height: 100vh; display: flex; flex-direction: column; }
+        body { background: var(--bg); color: white; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
         
-        header { padding: 20px; text-align: center; background: rgba(15, 23, 42, 0.9); border-bottom: 1px solid #222; }
-        h1 { font-size: 1.5rem; color: var(--primary); font-weight: 900; }
-        
-        #map { flex: 1; width: 100%; z-index: 1; }
-
-        .info-panel {
-            position: absolute; bottom: 20px; left: 20px; right: 20px;
-            background: rgba(10, 20, 45, 0.9); padding: 15px; border-radius: 15px;
-            border: 1px solid var(--primary); z-index: 1000; font-size: 12px;
-            backdrop-filter: blur(10px); box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        /* HEADER AVEC EFFET FLOU */
+        header { 
+            padding: 25px; background: var(--glass); backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255,255,255,0.05); z-index: 1000;
+            display: flex; justify-content: center; align-items: center; gap: 15px;
         }
-        .btn-back { color: var(--primary); text-decoration: none; font-weight: bold; display: block; margin-top: 10px; }
+
+        /* CARTE STYLE DARK NEON */
+        #map { flex: 1; width: 100%; filter: grayscale(1) invert(1) contrast(1.1) brightness(0.8); }
+
+        /* OVERLAY RADAR */
+        .radar-panel {
+            position: absolute; top: 120px; left: 30px; width: 250px;
+            background: var(--glass); padding: 25px; border-radius: 25px;
+            border: 1px solid rgba(0, 194, 255, 0.2); z-index: 1000;
+            backdrop-filter: blur(15px); box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+        }
+
+        .status-dot { width: 10px; height: 10px; background: var(--accent); border-radius: 50%; display: inline-block; margin-right: 10px; box-shadow: 0 0 10px var(--accent); animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { opacity: 0.5; transform: scale(1); } 50% { opacity: 1; transform: scale(1.2); } 100% { opacity: 0.5; transform: scale(1); } }
+
+        .btn-exit { 
+            position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
+            background: #1e293b; color: white; padding: 15px 40px; border-radius: 50px;
+            text-decoration: none; font-weight: 800; font-size: 12px; letter-spacing: 2px;
+            border: 1px solid rgba(255,255,255,0.1); z-index: 1001; transition: 0.3s;
+        }
+        .btn-exit:hover { background: var(--primary); color: black; box-shadow: 0 0 30px var(--primary); }
+
+        /* PERSONNALISATION DES MARQUEURS */
+        .leaflet-popup-content-wrapper { background: #0f172a; color: white; border-radius: 15px; border: 1px solid var(--primary); font-size: 12px; }
+        .leaflet-popup-tip { background: var(--primary); }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>POINTS D'ACCÈS <span style="color:white">AERIO</span></h1>
-        <p style="font-size: 10px; color: #666; letter-spacing: 2px;">TROUVEZ UNE ZONE WIFI PROCHE DE VOUS</p>
+        <svg width="40" height="40" viewBox="0 0 100 100" fill="none">
+            <circle cx="50" cy="50" r="48" stroke="#00C2FF" stroke-width="4" stroke-dasharray="10 5""")/>>
+            <path d="M50 25L25 75H35L50 45L65 75H75L50 25Z" fill="#00C2FF""")/>>
+            <circle cx="50" cy="85" r="5" fill="#00F5A0"><animate attributeName="opacity" values="1;0.2;1" dur="2s" repeatCount="indefinite" /></circle>
+        </svg>
+        <h1 style="font-size: 24px; font-weight: 900; letter-spacing: -1.5px;">RADAR <span style="color:var(--primary)">AERIO</span></h1>
     </header>
 
     <div id="map"></div>
 
-    <div class="info-panel">
-        <b>💡 Astuce :</b> Cliquez sur un marqueur bleu pour voir le nom de la zone et l'itinéraire.
-        <a href="/" class="btn-back">← Retour à l'accueil</a>
+    <div class="radar-panel">
+        <p style="font-size: 10px; font-weight: 800; color: #475569; letter-spacing: 2px; margin-bottom: 15px;">DÉTECTION DE FLUX</p>
+        <div style="margin-bottom: 20px;">
+            <span class="status-dot"></span> <span style="font-size: 13px; font-weight: 700;">Système en ligne</span>
+        </div>
+        <p style="font-size: 11px; color: #94a3b8; line-height: 1.6;">Le radar scanne actuellement <b>120+ points d'accès</b> sécurisés au Cameroun.</p>
     </div>
 
-    <!-- Leaflet JS -->
+    <a href="/" class="btn-exit">RETOURNER AU QG</a>
+
     <script src="https://unpkg.com"></script>
     <script>
-        // 1. Initialiser la carte centrée sur le Cameroun (Yaoundé)
-        const map = L.map('map').setView([3.848, 11.502], 6);
+        // Initialisation de la carte (Centre Cameroun)
+        const map = L.map('map', { zoomControl: false }).setView([3.848, 11.502], 7);
 
-        // 2. Ajouter le fond de carte (Style sombre pour correspondre à AERIO)
-        L.tileLayer('https://{s}://{z}/{x}/{y}{r}.png', {
-            attribution: '&copy; OpenStreetMap contributors'
-        }).addTo(map);
+        // Fond de carte Standard (qui sera filtré par le CSS en Dark)
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
-        // 3. Liste de vos zones (À compléter avec vos vraies coordonnées)
+        // Vos zones WiFi
         const zones = [
-            { name: "AERIO ZONE - Douala Akwa", lat: 4.051, lng: 9.708, status: "Active" },
-            { name: "AERIO ZONE - Yaoundé Bastos", lat: 3.885, lng: 11.512, status: "Active" },
-            { name: "AERIO ZONE - Maroua", lat: 10.591, lng: 14.315, status: "Active" }
+            { name: "AERIO ALPHA - Yaoundé", lat: 3.885, lng: 11.512, speed: "50 Mbps" },
+            { name: "AERIO ALPHA - Douala", lat: 4.051, lng: 9.708, speed: "100 Mbps" },
+            { name: "AERIO ALPHA - Bafoussam", lat: 5.477, lng: 10.417, speed: "30 Mbps" }
         ];
 
-        // 4. Ajouter les marqueurs sur la carte
         zones.forEach(zone => {
             L.marker([zone.lat, zone.lng]).addTo(map)
-                .bindPopup(`<b>${zone.name}</b><br>Statut: <span style="color:#00F5A0">${zone.status}</span><br><a href="https://www.google.com{zone.lat},${zone.lng}" target="_blank">S'y rendre</a>`);
+                .bindPopup(`<b style="color:var(--primary); font-size:14px;">${zone.name}</b><br><br><span style="color:var(--accent)">⚡ Débit : ${zone.speed}</span><br><br><a href="https://www.google.com{zone.lat},${zone.lng}" target="_blank" style="display:block; text-align:center; background:var(--primary); color:black; padding:8px; border-radius:8px; text-decoration:none; font-weight:900; font-size:10px;">OBTENIR L'ITINÉRAIRE</a>`);
         });
     </script>
 </body>
