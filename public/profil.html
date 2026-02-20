@@ -14,19 +14,23 @@
             background: var(--card); backdrop-filter: blur(20px);
             padding: 40px; border-radius: 40px; width: 100%; max-width: 600px;
             border: 1px solid rgba(255, 255, 255, 0.05); box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
-            animation: slideIn 0.6s ease-out;
+            animation: slideIn 0.6s ease-out; text-align: center;
         }
         @keyframes slideIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+
+        /* LOGO BOX */
+        .logo-box { display: flex; align-items: center; justify-content: center; margin-bottom: 30px; }
+        .logo-text { font-weight: 800; font-size: 24px; color: var(--primary); margin-left: 10px; letter-spacing: -1px; }
 
         /* GESTION AVATAR */
         .avatar-section { text-align: center; margin-bottom: 40px; position: relative; }
         .avatar-preview {
-            width: 120px; height: 120px; border-radius: 50%;
+            width: 110px; height: 110px; border-radius: 50%;
             border: 3px solid var(--primary); margin: 0 auto 15px;
             background: url('https://ui-avatars.com') center/cover;
-            box-shadow: 0 0 30px rgba(0, 194, 255, 0.3);
+            box-shadow: 0 0 30px rgba(0, 194, 255, 0.2);
         }
-        .btn-upload { font-size: 11px; color: var(--primary); cursor: pointer; font-weight: 700; text-transform: uppercase; }
+        .btn-upload { font-size: 11px; color: var(--primary); cursor: pointer; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
 
         .grid-form { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; text-align: left; }
         .full-width { grid-column: span 2; }
@@ -53,10 +57,23 @@
 <body>
 
     <div class="profil-container">
+        <!-- LOGO AERIO SVG ANIMÉ -->
+        <div class="logo-box">
+            <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org">
+                <circle cx="50" cy="50" r="48" stroke="#00C2FF" stroke-width="4" stroke-dasharray="10 5"/>
+                <path d="M50 25L25 75H35L50 45L65 75H75L50 25Z" fill="#00C2FF"/>
+                <path d="M40 60H60" stroke="#7000FF" stroke-width="5" stroke-linecap="round"/>
+                <circle cx="50" cy="85" r="5" fill="#00F5A0">
+                    <animate attributeName="opacity" values="1;0.2;1" dur="2s" repeatCount="indefinite" />
+                </circle>
+            </svg>
+            <span class="logo-text">AERIO</span>
+        </div>
+
         <div class="avatar-section">
             <div class="avatar-preview" id="avatar-img"></div>
             <label class="btn-upload">
-                📷 Changer le logo / Photo
+                📷 Modifier le Logo / Photo
                 <input type="file" style="display: none;" onchange="previewFile()">
             </label>
         </div>
@@ -64,28 +81,28 @@
         <form class="grid-form" action="/api/update-profile" method="POST">
             <div class="full-width">
                 <label>Nom de l'entreprise / Partenaire</label>
-                <input type="text" name="name" value="Jean WiFi Sarl" required>
+                <input type="text" name="name" placeholder="Votre nom" required>
             </div>
 
             <div>
-                <label>Email de contact</label>
-                <input type="email" name="email" value="jean@wifi.com" required>
+                <label>Email</label>
+                <input type="email" name="email" placeholder="votre@email.com" required>
             </div>
 
             <div>
-                <label>ID AERIO (Non modifiable)</label>
-                <input type="text" value="AE-5821" disabled style="color: #666; cursor: not-allowed;">
+                <label>ID Partenaire (Fixe)</label>
+                <input type="text" value="AE-XXXX" disabled style="color: #444; cursor: not-allowed;">
             </div>
 
             <div class="full-width">
                 <label>Changer le mot de passe</label>
-                <input type="password" name="password" placeholder="Laissez vide pour ne pas changer">
+                <input type="password" name="password" placeholder="Laissez vide pour conserver l'actuel">
             </div>
 
-            <button type="submit" class="btn-update">METTRE À JOUR MON PROFIL</button>
+            <button type="submit" class="btn-update">ENREGISTRER LES MODIFICATIONS</button>
         </form>
 
-        <a href="/dashboard.html" class="back-link">← Retour au Dashboard</a>
+        <a href="/dashboard" class="back-link">← Retour au Dashboard</a>
     </div>
 
     <script>
@@ -93,11 +110,9 @@
             const preview = document.getElementById('avatar-img');
             const file = document.querySelector('input[type=file]').files[0];
             const reader = new FileReader();
-
             reader.addEventListener("load", function () {
                 preview.style.backgroundImage = `url(${reader.result})`;
             }, false);
-
             if (file) { reader.readAsDataURL(file); }
         }
     </script>
