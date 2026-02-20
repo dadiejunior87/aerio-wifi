@@ -3,102 +3,148 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AERIO | Récupérer mon Ticket</title>
+    <title>AERIO | Récupération Alpha</title>
     <link href="https://fonts.googleapis.com" rel="stylesheet">
     <style>
-        :root { --primary: #00C2FF; --bg: #030712; --card: rgba(15, 23, 42, 0.95); --secondary: #7000FF; }
+        :root {
+            --primary: #00C2FF;
+            --secondary: #7000FF;
+            --accent: #00F5A0;
+            --bg: #020617;
+            --glass: rgba(15, 23, 42, 0.7);
+        }
+
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        body { background: var(--bg); color: white; display: flex; justify-content: center; align-items: center; min-height: 100vh; text-align: center; padding: 20px; }
-        
-        .box {
-            background: var(--card); padding: 45px 35px; border-radius: 40px;
-            border: 1px solid rgba(255,255,255,0.05); width: 100%; max-width: 420px;
-            box-shadow: 0 25px 60px rgba(0,0,0,0.6);
-            backdrop-filter: blur(20px);
-            animation: fadeIn 0.8s ease-out;
+        body { 
+            background: var(--bg); 
+            color: white; 
+            height: 100vh; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            overflow: hidden;
+            position: relative;
         }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* LOGO BOX */
+        /* EFFET DE SCANNER EN ARRIÈRE-PLAN */
+        .scan-line {
+            position: absolute; width: 100%; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+            top: 0; left: 0; opacity: 0.3;
+            animation: scan 4s linear infinite;
+        }
+        @keyframes scan { from { top: 0; } to { top: 100%; } }
+
+        .recover-card {
+            background: var(--glass);
+            backdrop-filter: blur(25px);
+            padding: 50px 40px;
+            border-radius: 40px;
+            width: 95%;
+            max-width: 450px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.8);
+            text-align: center;
+            z-index: 10;
+        }
+
+        /* LOGO SVG ANIMÉ */
         .logo-box { display: flex; align-items: center; justify-content: center; margin-bottom: 30px; }
-        .logo-text { font-weight: 800; font-size: 26px; color: var(--primary); margin-left: 12px; letter-spacing: -1px; }
+        .logo-text { font-weight: 900; font-size: 26px; color: var(--primary); margin-left: 12px; letter-spacing: -1px; }
 
-        h2 { font-weight: 900; margin-bottom: 12px; color: white; font-size: 22px; letter-spacing: -0.5px; }
-        p { font-size: 13px; color: #777; margin-bottom: 30px; line-height: 1.5; }
+        h2 { font-weight: 900; font-size: 24px; margin-bottom: 10px; letter-spacing: -1px; }
+        p.desc { color: #64748b; font-size: 13px; margin-bottom: 35px; line-height: 1.5; }
 
+        .input-wrapper { position: relative; margin-bottom: 25px; }
         input {
-            width: 100%; padding: 18px; margin-bottom: 18px; border-radius: 20px;
-            background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); color: white;
-            text-align: center; font-size: 16px; outline: none; transition: 0.3s;
+            width: 100%; padding: 20px; background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 20px;
+            color: white; font-size: 18px; font-weight: 700; text-align: center;
+            outline: none; transition: 0.3s;
         }
-        input:focus { border-color: var(--primary); background: rgba(0, 194, 255, 0.05); }
+        input:focus { border-color: var(--primary); background: rgba(0, 194, 255, 0.05); box-shadow: 0 0 20px rgba(0, 194, 255, 0.15); }
 
-        .btn-search {
-            width: 100%; padding: 18px; border: none; border-radius: 20px;
+        .btn-recover {
+            width: 100%; padding: 20px; border: none; border-radius: 20px;
             background: linear-gradient(45deg, var(--primary), var(--secondary));
-            color: white; font-weight: 800; cursor: pointer; text-transform: uppercase;
-            letter-spacing: 1px; transition: 0.4s;
+            color: white; font-weight: 900; font-size: 16px; cursor: pointer;
+            text-transform: uppercase; letter-spacing: 2px; transition: 0.4s;
         }
-        .btn-search:hover { transform: scale(1.02); box-shadow: 0 10px 25px rgba(0, 194, 255, 0.3); }
+        .btn-recover:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(112, 0, 255, 0.4); }
 
-        #result { 
-            margin-top: 30px; display: none; padding: 25px; border-radius: 20px; 
-            background: rgba(0, 245, 160, 0.05); border: 2px dashed #00F5A0; 
-            animation: pulse 2s infinite;
+        /* RÉSULTAT DU SCAN */
+        #result {
+            margin-top: 30px; display: none; padding: 25px; border-radius: 25px;
+            background: rgba(0, 245, 160, 0.05); border: 1px dashed var(--accent);
+            animation: pulse 2s infinite alternate;
         }
-        @keyframes pulse { 0% { opacity: 0.8; } 50% { opacity: 1; } 100% { opacity: 0.8; } }
-
-        #ticket-code { font-size: 28px; font-weight: 900; color: #00F5A0; margin-top: 8px; letter-spacing: 5px; }
+        @keyframes pulse { from { opacity: 0.7; } to { opacity: 1; } }
         
-        .back-link { display:block; margin-top:30px; color:#444; text-decoration:none; font-size: 12px; font-weight: 600; transition: 0.3s; }
-        .back-link:hover { color: var(--primary); }
+        .ticket-label { font-size: 10px; font-weight: 900; color: var(--accent); text-transform: uppercase; margin-bottom: 5px; }
+        #ticket-code { font-size: 32px; font-weight: 900; color: white; letter-spacing: 5px; text-shadow: 0 0 15px var(--accent); }
+
+        .back-home { display: block; margin-top: 30px; color: #475569; text-decoration: none; font-size: 12px; font-weight: 700; transition: 0.3s; }
+        .back-home:hover { color: var(--primary); }
     </style>
 </head>
 <body>
 
-    <div class="box">
-        <!-- LOGO AERIO SVG ANIMÉ -->
+    <div class="scan-line"></div>
+
+    <div class="recover-card">
         <div class="logo-box">
-            <svg width="45" height="45" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org">
-                <circle cx="50" cy="50" r="48" stroke="#00C2FF" stroke-width="4" stroke-dasharray="10 5"/>
-                <path d="M50 25L25 75H35L50 45L65 75H75L50 25Z" fill="#00C2FF"/>
-                <path d="M40 60H60" stroke="#7000FF" stroke-width="5" stroke-linecap="round"/>
-                <circle cx="50" cy="85" r="5" fill="#00F5A0">
-                    <animate attributeName="opacity" values="1;0.2;1" dur="2s" repeatCount="indefinite" />
-                </circle>
+            <svg width="40" height="40" viewBox="0 0 100 100" fill="none">
+                <circle cx="50" cy="50" r="48" stroke="#00C2FF" stroke-width="4" stroke-dasharray="10 5""")/>>
+                <path d="M50 25L25 75H35L50 45L65 75H75L50 25Z" fill="#00C2FF""")/>>
+                <circle cx="50" cy="85" r="5" fill="#00F5A0"><animate attributeName="opacity" values="1;0.2;1" dur="2s" repeatCount="indefinite" /></circle>
             </svg>
             <span class="logo-text">AERIO</span>
         </div>
 
-        <h2>TICKET PERDU ?</h2>
-        <p>Retrouvez votre code instantanément en saisissant le numéro utilisé pour le paiement.</p>
+        <h2>SCANNER DE TICKET</h2>
+        <p class="desc">Entrez le numéro Mobile Money utilisé lors de l'achat pour extraire votre code du système.</p>
         
-        <input type="text" id="phone" placeholder="Ex: 692487922">
-        <button class="btn-search" onclick="rechercherTicket()">Rechercher mon code</button>
+        <div class="input-wrapper">
+            <input type="text" id="phone" placeholder="Ex: 692487922">
+        </div>
+
+        <button class="btn-recover" onclick="fetchTicket()">Lancer le Scan</button>
 
         <div id="result">
-            <span style="font-size: 10px; color: #00F5A0; font-weight: 800; text-transform: uppercase;">Code retrouvé avec succès :</span>
+            <p class="ticket-label">● Données retrouvées :</p>
             <div id="ticket-code">------</div>
         </div>
-        
-        <a href="/" class="back-link">← Retour à l'accueil</a>
+
+        <a href="/" class="back-home">← Annuler et revenir</a>
     </div>
 
     <script>
-        async function rechercherTicket() {
+        async function fetchTicket() {
             const phone = document.getElementById('phone').value;
-            if(!phone) return alert("Veuillez entrer votre numéro de téléphone !");
+            if(!phone) return alert("Saisissez un numéro !");
 
-            const response = await fetch(`/api/recover-ticket?phone=${phone}`);
-            const data = await response.json();
+            // Animation de chargement
+            const btn = document.querySelector('.btn-recover');
+            btn.innerText = "SCAN EN COURS...";
+            btn.disabled = true;
 
-            const resultDiv = document.getElementById('result');
-            if(data.success) {
-                resultDiv.style.display = 'block';
-                document.getElementById('ticket-code').innerText = data.code;
-            } else {
-                alert("Désolé, aucun ticket n'est associé à ce numéro.");
-                resultDiv.style.display = 'none';
+            try {
+                const response = await fetch(`/api/recover-ticket?phone=${phone}`);
+                const data = await response.json();
+                
+                setTimeout(() => {
+                    if(data.success) {
+                        document.getElementById('result').style.display = 'block';
+                        document.getElementById('ticket-code').innerText = data.code;
+                    } else {
+                        alert("Erreur : Aucun ticket n'est lié à ce numéro dans la base AERIO.");
+                    }
+                    btn.innerText = "LANCER LE SCAN";
+                    btn.disabled = false;
+                }, 1500); // Délai pour l'effet "Scan"
+            } catch (e) {
+                alert("Erreur de connexion au serveur Alpha.");
+                btn.disabled = false;
             }
         }
     </script>
