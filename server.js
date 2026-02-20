@@ -1,68 +1,135 @@
 const express = require("express");
-const bodyParser = require("body-parser");
-const path = require("path"); // <-- ajouté pour path.join
+const fs = require("fs");
+const path = require("path");
+const axios = require("axios");
 const app = express();
+
+// --- CONFIGURATION ---
+const PORT = process.env.PORT || 3000;
+const TICKETS_FILE = path.join(__dirname, "tickets.json");
+const PARTNERS_FILE = path.join(__dirname, "partners.json");
 
 // Middleware
 app.use(express.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
-// Stockage tickets (test)
-let tickets = [
-  { id: "1", username: "AERIO-001", password: "1234", uptime: "1h", status: "pending" },
-  { id: "2", username: "AERIO-002", password: "5678", uptime: "30m", status: "pending" }
-];
+// Initialisation des fichiers JSON s'ils n'existent pas
+if (!fs.existsSync(TICKETS_FILE)) fs.writeFileSync(TICKETS_FILE, JSON.stringify([]));
+if (!fs.existsSync(PARTNERS_FILE)) fs.writeFileSync(PARTNERS_FILE, JSON.stringify([]));
 
-// ================= API MikroTik =================
+// --- ROUTES API POUR LE DASHBOARD PARTENAIRE ---
 
-// Récupérer tickets non confirmés
-app.get("/api/get-pending-tickets", (req, res) => {
-  const pending = tickets.filter(t => t.status === "pending");
-  res.json(pending);
+// 1. Enregistrer un partenaire et générer son ID Unique AERIO
+app.post("/api/register-partner", (req, res) => {
+    const { router_ip, payout_number, payout_method } = req.body;
+    const partners = JSON.parse(fs.readFileSync(PARTNERS_FILE));
+    
+    const partnerID = "AE-" + Math.floor(1000 + Math.random() * 9000);
+    const newPartner = {
+        partnerID,
+        router_ip,
+        payout_number,
+        payout_method,
+        rates: [], // Grille tarifaire vide au début
+        createdAt: new Date()
+    };
+
+    partners.push(newPartner);
+    fs.writeFileSync(PARTNERS_FILE, JSON.stringify(partners, null, 2));
+    res.json({ success: true, partnerID });
 });
 
-// Confirmer ticket après création sur MikroTik
-app.post("/api/confirm-ticket", (req, res) => {
-  const { id } = req.query;
-  tickets = tickets.map(t => t.id === id ? { ...t, status: "confirmed" } : t);
-  res.json({ success: true });
+// 2. Ajouter un tarif personnalisé pour un partenaire
+app.post("/api/save-rate", (req, res) => {
+    const { partnerID, prix, duree } = req.body;
+    let partners = JSON.parse(fs.readFileSync(PARTNERS_FILE));
+    
+    let partner = partners.find(p => p.partnerID === partnerID);
+    if (partner) {
+        partner.rates.push({ prix: parseInt(prix), duree });
+        fs.writeFileSync(PARTNERS_FILE, JSON.stringify(partners, null, 2));
+        res.json({ success: true });
+    } else {
+        res.status(404).json({ error: "Partenaire non trouvé" });
+    }
 });
 
-// ================= LOGIN WiFi =================
-app.post("/login", (req, res) => {
-  const { username, password, dst } = req.body;
-  const user = tickets.find(t => t.username === username && t.password === password);
-
-  if (user) {
-    res.send(`
-      <h2>Bienvenue ${username} !</h2>
-      <p>Connexion réussie.</p>
-      <a href="${dst || '/'}">Continuer</a>
-    `);
-  } else {
-    res.send(`
-      <h2>Erreur : identifiants incorrects</h2>
-      <a href="/">Retour au login</a>
-    `);
-  }
+// 3. Récupérer les tarifs pour le Portail Captif
+app.get("/api/get-rates", (req, res) => {
+    const { id } = req.query;
+    const partners = JSON.parse(fs.readFileSync(PARTNERS_FILE));
+    const partner = partners.find(p => p.partnerID === id);
+    res.json(partner ? partner.rates : []);
 });
 
-// ================= PAGE PRINCIPALE (LOGIN) =================
+// --- SYSTÈME DE PAIEMENT & COMMISSION (15%) ---
+
+// 4. Initialiser le paiement Moneroo
+app.post("/api/pay", async (req, res) => {
+    const { amount, duration, router_id } = req.body;
+
+    try {
+        const response = await axios.post('https://api.moneroo.io', {
+            amount: parseInt(amount),
+            currency: 'XOF',
+            customer: { email: "client@aerio.zone", name: "Client WiFi" },
+            return_url: `https://${req.get('host')}/success.html`,
+            metadata: { 
+                router_id: router_id, 
+                duration: duration,
+                total_amount: amount 
+            }
+        }, {
+            headers: { 'Authorization': `Bearer ${process.env.MONEROO_API_KEY}` }
+        });
+        res.json({ checkout_url: response.data.data.checkout_url });
+    } catch (e) {
+        res.status(500).json({ error: "Erreur Moneroo" });
+    }
+});
+
+// 5. Webhook Moneroo : Confirmation et calcul de commission
+app.post("/api/webhook", async (req, res) => {
+    const { event, data } = req.body;
+
+    if (event === 'payment.success') {
+        const amount = data.amount;
+        const partnerID = data.metadata.router_id;
+        const code = Math.random().toString(36).substring(2, 8).toUpperCase();
+        
+        // Calcul commission 15% / 85%
+        const commissionAerio = amount * 0.15;
+        const gainPartenaire = amount - commissionAerio;
+
+        // Sauvegarde de la transaction
+        const tickets = JSON.parse(fs.readFileSync(TICKETS_FILE));
+        tickets.push({
+            code,
+            amount,
+            net_partner: gainPartenaire,
+            partnerID,
+            date: new Date(),
+            status: "SUCCESS"
+        });
+        fs.writeFileSync(TICKETS_FILE, JSON.stringify(tickets, null, 2));
+
+        console.log(`Ticket ${code} généré. Gain AERIO: ${commissionAerio}F`);
+        // Ici, tu peux ajouter l'appel API vers le MikroTik (mikronode-ng)
+    }
+    res.sendStatus(200);
+});
+
+// --- ROUTES PAGES ---
+
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "login.html")); // <-- corrigé avec path.join
+    res.sendFile(path.join(__dirname, "public", "login.html"));
 });
 
-// ================= PORT =================
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-tickets.push({ id: "3", username: "TEST-001", password: "1111", uptime: "5m", status: "pending" });
-app.get("/success", (req, res) => {
-    const user = req.query.user;
-
-    res.send(`
-        <h1>Bienvenue ${user}</h1>
-        <p><strong>Statut :</strong> Connecté</p>
-        <p><strong>Accès Internet activé</strong></p>
-    `);
+app.get("/api/tickets", (req, res) => {
+    const tickets = JSON.parse(fs.readFileSync(TICKETS_FILE));
+    res.json(tickets);
 });
+
+// Lancement du serveur
+app.listen(PORT, () => console.log(`🚀 AERIO SAAS opérationnel sur le port ${PORT}`));
