@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AERIO | Dashboard Cyber-Élite</title>
+    <title>AERIO | Console Alpha de Pilotage</title>
     <link href="https://fonts.googleapis.com" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net"></script>
     <style>
         :root {
             --primary: #00C2FF; --secondary: #7000FF; --success: #00F5A0;
@@ -14,9 +15,6 @@
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         body { background: var(--bg); color: white; display: flex; min-height: 100vh; overflow-x: hidden; }
-
-        /* EFFETS DE FOND (AMBIANCE CYBER) */
-        .glow-top { position: absolute; width: 600px; height: 300px; background: radial-gradient(circle, rgba(0, 194, 255, 0.1) 0%, transparent 70%); top: -100px; left: 20%; z-index: -1; filter: blur(100px); }
 
         /* --- SIDEBAR GLASSMORPHISM --- */
         .sidebar {
@@ -40,39 +38,33 @@
         .welcome-text span { color: var(--primary); text-shadow: 0 0 15px rgba(0, 194, 255, 0.3); }
 
         /* --- STATS CARDS NEON --- */
-        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 25px; margin-bottom: 50px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 25px; margin-bottom: 40px; }
         .stat-card {
-            background: var(--card); padding: 35px 25px; border-radius: 30px;
-            border: 1px solid rgba(255,255,255,0.05); position: relative; overflow: hidden; transition: 0.4s;
+            background: var(--card); padding: 30px 25px; border-radius: 30px;
+            border: 1px solid rgba(255,255,255,0.05); transition: 0.4s;
         }
-        .stat-card::after { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: var(--primary); opacity: 0; transition: 0.3s; }
-        .stat-card:hover { transform: translateY(-10px); background: rgba(255, 255, 255, 0.05); border-color: rgba(255,255,255,0.1); }
-        .stat-card:hover::after { opacity: 1; }
+        .stat-card:hover { transform: translateY(-10px); background: rgba(255, 255, 255, 0.05); border-color: var(--primary); }
+        .stat-card h3 { font-size: 10px; font-weight: 800; color: #475569; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 15px; }
+        .stat-card .value { font-size: 28px; font-weight: 900; letter-spacing: -1px; }
 
-        .stat-card h3 { font-size: 10px; font-weight: 800; color: #475569; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 20px; }
-        .stat-card .value { font-size: 30px; font-weight: 900; letter-spacing: -1px; }
-        .stat-card .trend { font-size: 11px; margin-top: 10px; font-weight: 700; }
-
-        /* COULEURS */
         .blue { color: var(--primary); text-shadow: 0 0 20px rgba(0, 194, 255, 0.4); }
         .green { color: var(--success); text-shadow: 0 0 20px rgba(0, 245, 160, 0.4); }
-        .orange { color: var(--warning); text-shadow: 0 0 20px rgba(255, 184, 0, 0.4); }
 
-        /* --- TABLEAU STYLE GLASS --- */
-        .table-section { background: var(--card); border-radius: 35px; padding: 40px; border: 1px solid rgba(255,255,255,0.03); backdrop-filter: blur(10px); }
+        /* --- GRAPHIQUE & TABLEAU --- */
+        .glass-panel { background: var(--card); border-radius: 35px; padding: 35px; border: 1px solid rgba(255,255,255,0.03); backdrop-filter: blur(10px); margin-bottom: 30px; }
+        .chart-container { height: 250px; width: 100%; margin-top: 20px; }
+
         table { width: 100%; border-collapse: collapse; text-align: left; }
-        th { font-size: 11px; font-weight: 800; color: #475569; text-transform: uppercase; padding-bottom: 25px; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        td { padding: 20px 0; border-bottom: 1px solid rgba(255,255,255,0.02); font-size: 14px; font-weight: 500; color: #cbd5e1; }
-        .badge { background: rgba(0, 245, 160, 0.1); color: var(--success); padding: 6px 14px; border-radius: 10px; font-size: 10px; font-weight: 900; border: 1px solid rgba(0, 245, 160, 0.2); }
+        th { font-size: 11px; font-weight: 800; color: #475569; text-transform: uppercase; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        td { padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.02); font-size: 13px; color: #cbd5e1; }
+        .badge { background: rgba(0, 245, 160, 0.1); color: var(--success); padding: 5px 12px; border-radius: 8px; font-size: 10px; font-weight: 900; }
     </style>
 </head>
 <body>
-    <div class="glow-top"></div>
 
-    <!-- SIDEBAR -->
     <div class="sidebar">
         <div class="logo-box">
-            <svg width="45" height="45" viewBox="0 0 100 100" fill="none">
+            <svg width="45" height="45" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org">
                 <circle cx="50" cy="50" r="48" stroke="#00C2FF" stroke-width="4" stroke-dasharray="10 5"/>
                 <path d="M50 25L25 75H35L50 45L65 75H75L50 25Z" fill="#00C2FF"/>
                 <path d="M40 60H60" stroke="#7000FF" stroke-width="5" stroke-linecap="round"/>
@@ -80,62 +72,40 @@
             </svg>
             <span class="logo-text">AERIO</span>
         </div>
-        
         <a href="/dashboard" class="nav-item active">📊 Performances</a>
         <a href="/wifi-zone" class="nav-item">📡 Réseau WiFi</a>
-        <a href="/tickets" class="nav-item">🎟️ Générateur de Tickets</a>
-        <a href="/compta" class="nav-item">💰 Revenus & Retraits</a>
-        <a href="/profil" class="nav-item">👤 Paramètres Profil</a>
-        <a href="/logout" class="nav-item" style="margin-top: 100px; color: var(--danger); opacity: 0.6;">🚪 Déconnexion</a>
+        <a href="/tickets" class="nav-item">🎟️ Tickets</a>
+        <a href="/compta" class="nav-item">💰 Revenus</a>
+        <a href="/profil" class="nav-item">👤 Profil</a>
+        <a href="/logout" class="nav-item" style="margin-top: 80px; color: var(--danger);">🚪 Déconnexion</a>
     </div>
 
-    <!-- MAIN -->
     <div class="main-content">
         <header>
             <div class="welcome-text">
                 <h1>Console <span>Alpha v.1</span></h1>
-                <p style="color: #475569; font-size: 13px; font-weight: 500;">Surveillance du trafic et des actifs financiers</p>
-            </div>
-            <div style="display: flex; align-items: center; background: rgba(255,255,255,0.03); padding: 10px 25px; border-radius: 50px; border: 1px solid rgba(255,255,255,0.05);">
-                <span id="p-name" style="font-size: 13px; font-weight: 800; color: var(--primary);">PARTENAIRE ÉLITE</span>
+                <p style="color: #475569; font-size: 13px;">Analyse en temps réel de vos actifs numériques</p>
             </div>
         </header>
 
         <div class="stats-grid">
-            <div class="stat-card" style="border-left: 2px solid var(--primary);">
-                <h3>Capital Net (85%)</h3>
-                <div class="value blue" id="solde">0 F</div>
-                <div class="trend" style="color: var(--success);">↑ Automatique</div>
-            </div>
-            <div class="stat-card">
-                <h3>Ventes Totales</h3>
-                <div class="value green" id="revenue">0 F</div>
-                <div class="trend">Cumulatif</div>
-            </div>
-            <div class="stat-card">
-                <h3>Utilisateurs</h3>
-                <div class="value orange" id="t-count">0</div>
-                <div class="trend">Tickets Actifs</div>
-            </div>
-            <div class="stat-card">
-                <h3>Commission (15%)</h3>
-                <div class="value" id="comm" style="color: #475569;">0 F</div>
-                <div class="trend">Frais Réseau</div>
-            </div>
+            <div class="stat-card"><h3>Capital (85%)</h3><div class="value blue" id="solde">0 F</div></div>
+            <div class="stat-card"><h3>Brut Total</h3><div class="value green" id="revenue">0 F</div></div>
+            <div class="stat-card"><h3>Utilisateurs</h3><div class="value" id="t-count" style="color:white">0</div></div>
+            <div class="stat-card"><h3>Frais (15%)</h3><div class="value" id="comm" style="color:#475569">0 F</div></div>
         </div>
 
-        <div class="table-section">
-            <h2 style="font-size: 18px; margin-bottom: 30px; font-weight: 900; letter-spacing: -0.5px;">Fichiers de Transactions</h2>
+        <!-- GRAPHIQUE -->
+        <div class="glass-panel">
+            <h2 style="font-size: 14px; font-weight: 800; color: var(--primary);">📈 FLUX DE TRESORERIE (7 JOURS)</h2>
+            <div class="chart-container"><canvas id="salesChart"></canvas></div>
+        </div>
+
+        <!-- TRANSACTIONS -->
+        <div class="glass-panel">
+            <h2 style="font-size: 14px; font-weight: 800; margin-bottom: 20px;">Dernières Activités</h2>
             <table>
-                <thead>
-                    <tr>
-                        <th>HORODATAGE</th>
-                        <th>CODE SYSTÈME</th>
-                        <th>MONTANT BRUT</th>
-                        <th>RÉSULTAT (85%)</th>
-                        <th>ÉTAT</th>
-                    </tr>
-                </thead>
+                <thead><tr><th>HORODATAGE</th><th>CODE SYSTÈME</th><th>BRUT</th><th>RÉSULTAT</th><th>ÉTAT</th></tr></thead>
                 <tbody id="t-list"></tbody>
             </table>
         </div>
@@ -148,13 +118,32 @@
             let brut = 0; let list = "";
             data.reverse().forEach(t => {
                 brut += t.amount;
-                list += `<tr><td>${new Date(t.date).toLocaleString()}</td><td><b style="color:var(--primary)">${t.code}</b></td><td>${t.amount} F</td><td style="color:var(--success)">${(t.amount * 0.85).toFixed(0)} F</td><td><span class="badge">SÉCURISÉ</span></td></tr>`;
+                list += `<tr><td>${new Date(t.date).toLocaleDateString()}</td><td><b style="color:var(--primary)">${t.code}</b></td><td>${t.amount} F</td><td style="color:var(--success)">${(t.amount * 0.85).toFixed(0)} F</td><td><span class="badge">SÉCURISÉ</span></td></tr>`;
             });
             document.getElementById('revenue').innerText = brut + " F";
             document.getElementById('solde').innerText = (brut * 0.85).toFixed(0) + " F";
             document.getElementById('comm').innerText = (brut * 0.15).toFixed(0) + " F";
             document.getElementById('t-count').innerText = data.length;
             document.getElementById('t-list').innerHTML = list;
+            initChart(data);
+        }
+
+        function initChart(tickets) {
+            const ctx = document.getElementById('salesChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'],
+                    datasets: [{
+                        label: 'Ventes', data: [1200, 1900, 3000, 5000, 2400, 7000, 9000],
+                        borderColor: '#00C2FF', backgroundColor: 'rgba(0, 194, 255, 0.1)',
+                        fill: true, tension: 0.4, borderWidth: 3, pointRadius: 0
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
+                    scales: { y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#475569' } }, x: { display: false } }
+                }
+            });
         }
         window.onload = loadDash;
     </script>
