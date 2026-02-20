@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AERIO | Console Alpha de Pilotage</title>
     <link href="https://fonts.googleapis.com" rel="stylesheet">
-    <!-- LIEN CHART.JS RE-CORRIGÉ -->
+    <!-- LIEN CHART.JS INTÉGRAL -->
     <script src="https://cdn.jsdelivr.net"></script>
     <style>
         :root {
@@ -65,7 +65,7 @@
 
     <div class="sidebar">
         <div class="logo-box">
-            <svg width="45" height="45" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org">
+            <svg width="45" height="45" viewBox="0 0 100 100" fill="none">
                 <circle cx="50" cy="50" r="48" stroke="#00C2FF" stroke-width="4" stroke-dasharray="10 5"/>
                 <path d="M50 25L25 75H35L50 45L65 75H75L50 25Z" fill="#00C2FF"/>
                 <path d="M40 60H60" stroke="#7000FF" stroke-width="5" stroke-linecap="round"/>
@@ -78,6 +78,7 @@
         <a href="/tickets" class="nav-item">🎟️ Tickets</a>
         <a href="/compta" class="nav-item">💰 Revenus</a>
         <a href="/profil" class="nav-item">👤 Profil</a>
+        <!-- BOUTON QR CODE -->
         <button class="btn-qr" onclick="genererAffiche()">🖼️ MON AFFICHE QR</button>
         <a href="/logout" class="nav-item" style="margin-top: 50px; color: var(--danger);">🚪 Déconnexion</a>
     </div>
@@ -127,11 +128,11 @@
                 document.getElementById('comm').innerText = (brut * 0.15).toFixed(0) + " F";
                 document.getElementById('t-count').innerText = data.length;
                 document.getElementById('t-list').innerHTML = list;
-                initChart();
-            } catch(e) { console.log("Erreur de chargement"); }
+                initChart(data);
+            } catch(e) { console.error("Erreur système de données."); }
         }
 
-        function initChart() {
+        function initChart(tickets) {
             const ctx = document.getElementById('salesChart').getContext('2d');
             if (window.myChart) window.myChart.destroy();
             window.myChart = new Chart(ctx, {
@@ -139,8 +140,10 @@
                 data: {
                     labels: ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'],
                     datasets: [{
-                        label: 'Ventes', data: [4000, 7000, 5000, 9000, 15000, 8000, 20000],
-                        borderColor: '#00C2FF', backgroundColor: 'rgba(0, 194, 255, 0.1)',
+                        label: 'Ventes', 
+                        data: [5000, 8000, 4000, 9500, 12000, 7000, 15000],
+                        borderColor: '#00C2FF', 
+                        backgroundColor: 'rgba(0, 194, 255, 0.1)',
                         fill: true, tension: 0.4, borderWidth: 3, pointRadius: 2
                     }]
                 },
@@ -159,8 +162,32 @@
             const partnerID = "AE-0001"; 
             const urlAerio = window.location.origin + "/?id=" + partnerID;
             const qrUrl = `https://api.qrserver.com{encodeURIComponent(urlAerio)}&color=00C2FF&bgcolor=020617`;
+            
             const win = window.open("", "_blank");
-            win.document.write(`<html><head><title>Affiche AERIO</title><style>body{background:#020617;color:white;text-align:center;font-family:sans-serif;padding:50px;border:20px solid #00C2FF;height:85vh;}h1{font-size:80px;color:#00C2FF;margin:0;}.badge{background:#FF4B4B;padding:15px;border-radius:50px;font-weight:bold;}.qr{margin:40px;background:white;padding:20px;border-radius:20px;display:inline-block;}</style></head><body><h1>AERIO</h1><div class="badge">WIFI HAUT DÉBIT ICI</div><p>Scannez pour payer par Mobile Money</p><div class="qr"><img src="\${qrUrl}"></div><p>ID ZONE : \${partnerID}</p><script>window.print();<\/script><\/body><\/html>`);
+            win.document.write(`
+                <html>
+                <head><title>AERIO | Affiche Officielle</title>
+                <link href="https://fonts.googleapis.com" rel="stylesheet">
+                <style>
+                    body { background: #020617; color: white; text-align: center; font-family: 'Poppins', sans-serif; padding: 50px; border: 15px solid #00C2FF; height: 90vh; }
+                    h1 { font-size: 60px; color: #00C2FF; margin: 0; }
+                    .badge { background: #FF4B4B; padding: 10px 30px; border-radius: 50px; font-size: 15px; font-weight: bold; }
+                    .qr-box { margin: 50px auto; padding: 20px; background: white; display: inline-block; border-radius: 20px; }
+                    p { font-size: 20px; color: #94a3b8; }
+                    .footer-id { margin-top: 50px; font-size: 12px; opacity: 0.5; }
+                </style>
+                </head>
+                <body>
+                    <h1>AERIO</h1>
+                    <div class="badge">WIFI HAUT DÉBIT ICI</div>
+                    <p style="margin-top:40px;">Scannez pour payer par <b>Mobile Money</b></p>
+                    <div class="qr-box"><img src="\${qrUrl}" /></div>
+                    <p>Connectez-vous, payez, surfez !</p>
+                    <div class="footer-id">ZONE CERTIFIÉE : \${partnerID}</div>
+                    <script>window.print();<\/script>
+                </body>
+                </html>
+            `);
         }
 
         window.onload = loadDash;
