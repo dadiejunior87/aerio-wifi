@@ -15,15 +15,15 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
-// Configuration des Sessions (Sécurité AERIO Alpha)
+// Configuration des Sessions (Sécurité Élite)
 app.use(session({
-    secret: 'AERIO_CYBER_SECRET_2026',
+    secret: 'AERIO_CYBER_PRO_2026',
     resave: false,
     saveUninitialized: true,
     cookie: { maxAge: 24 * 60 * 60 * 1000 }
 }));
 
-// --- INITIALISATION DES FICHIERS ---
+// --- INITIALISATION DES FICHIERS JSON ---
 const initFile = (filePath) => {
     if (!fs.existsSync(filePath)) {
         fs.writeFileSync(filePath, JSON.stringify([], null, 2));
@@ -49,7 +49,7 @@ app.post("/api/register-account", (req, res) => {
     const partnerID = "AE-" + Math.floor(1000 + Math.random() * 9000);
     partners.push({ name, email, password, partnerID, rates: [], createdAt: new Date() });
     fs.writeFileSync(PARTNERS_FILE, JSON.stringify(partners, null, 2));
-    res.send("<script>alert('Compte Élite créé ! Connectez-vous.'); window.location.href='/connexion';</script>");
+    res.send("<script>alert('Protocole Alpha Activé ! Connectez-vous.'); window.location.href='/connexion';</script>");
 });
 
 app.post("/api/login-partenaire", (req, res) => {
@@ -61,7 +61,7 @@ app.post("/api/login-partenaire", (req, res) => {
         req.session.partnerID = partner.partnerID;
         res.redirect("/dashboard");
     } else {
-        res.send("<script>alert('Identifiants incorrects'); window.location.href='/connexion';</script>");
+        res.send("<script>alert('Clés de sécurité incorrectes'); window.location.href='/connexion';</script>");
     }
 });
 
@@ -70,7 +70,7 @@ app.get("/logout", (req, res) => {
     res.redirect("/");
 });
 
-// --- ROUTES API ---
+// --- ROUTES API & TRESORERIE ---
 
 app.get("/api/my-stats", checkAuth, (req, res) => {
     const tickets = JSON.parse(fs.readFileSync(TICKETS_FILE));
@@ -92,7 +92,7 @@ app.post("/api/pay", async (req, res) => {
         });
         res.json({ checkout_url: response.data.data.checkout_url });
     } catch (e) {
-        res.status(500).json({ error: "Erreur Moneroo" });
+        res.status(500).json({ error: "Interruption Moneroo" });
     }
 });
 
@@ -103,10 +103,11 @@ app.get("/connexion", (req, res) => res.sendFile(path.join(__dirname, "public", 
 app.get("/inscription", (req, res) => res.sendFile(path.join(__dirname, "public", "register-partenaire.html")));
 app.get("/map", (req, res) => res.sendFile(path.join(__dirname, "public", "map.html")));
 app.get("/recover", (req, res) => res.sendFile(path.join(__dirname, "public", "recover.html")));
+app.get("/guide", (req, res) => res.sendFile(path.join(__dirname, "public", "guide.html")));
 
-// ✅ AJOUT DE LA ROUTE GUIDE TECHNIQUE
-app.get("/guide", (req, res) => {
-    res.sendFile(path.join(__dirname, "public", "guide.html"));
+// ✅ ROUTE CONTRAT PARTENAIRE (AJOUTÉE)
+app.get("/contrat", (req, res) => {
+    res.sendFile(path.join(__dirname, "public", "contrat.html"));
 });
 
 // --- ROUTES PAGES PRIVÉES (SÉCURISÉES) ---
@@ -117,4 +118,4 @@ app.get("/tickets", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "
 app.get("/wifi-zone", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "wifi-zone.html")));
 app.get("/compta", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "compta.html")));
 
-app.listen(PORT, () => console.log(`🚀 AERIO ALPHA EN LIGNE SUR PORT ${PORT}`));
+app.listen(PORT, () => console.log(`🚀 AERIO ALPHA LIVE SUR LE PORT ${PORT}`));
