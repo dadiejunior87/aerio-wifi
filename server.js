@@ -40,6 +40,12 @@ function checkAuth(req, res, next) {
     else res.redirect("/connexion");
 }
 
+// --- IMPORTATION DES ROUTES API (WEBHOOKS) ---
+// On branche ton nouveau dossier api/webhook/moneroo.js ici
+const monerooWebhook = require('./api/webhook/moneroo');
+app.use('/api/webhook/moneroo', monerooWebhook);
+
+
 // --- ROUTES AUTHENTIFICATION & COMPTE ---
 
 app.post("/api/register-account", (req, res) => {
@@ -96,37 +102,21 @@ app.get("/api/my-stats", checkAuth, (req, res) => {
 app.post("/api/pay", async (req, res) => {
     const { amount, duration, router_id, phone } = req.body;
     try {
-        const response = await axios.post('https://api.moneroo.io', {
+        const response = await axios.post('https://api.moneroo.io/v1/payments', {
             amount: parseInt(amount),
-            currency: 'XOF',
+            currency: 'XAF',
             customer: { phone: phone, name: "Client WiFi" },
             return_url: `https://${req.get('host')}/success.html`,
+            notify_url: `https://${req.get('host')}/api/webhook/moneroo`,
             metadata: { router_id, duration, phone }
         }, {
             headers: { 'Authorization': `Bearer ${process.env.MONEROO_API_KEY}` }
         });
         res.json({ checkout_url: response.data.data.checkout_url });
     } catch (e) {
-        res.status(500).json({ error: "Erreur Moneroo" });
+        console.error("Erreur Moneroo:", e.response ? e.response.data : e.message);
+        res.status(500).json({ error: "Erreur lors de l'initialisation du paiement" });
     }
-});
-
-app.post("/api/webhook", async (req, res) => {
-    const { event, data } = req.body;
-    if (event === 'payment.success') {
-        const amount = data.amount;
-        const partnerID = data.metadata.router_id;
-        const customerPhone = data.metadata.phone;
-        const code = Math.random().toString(36).substring(2, 8).toUpperCase();
-        
-        const tickets = JSON.parse(fs.readFileSync(TICKETS_FILE));
-        tickets.push({
-            code, amount, customer_phone: customerPhone, partnerID,
-            date: new Date(), status: "SUCCESS"
-        });
-        fs.writeFileSync(TICKETS_FILE, JSON.stringify(tickets, null, 2));
-    }
-    res.sendStatus(200);
 });
 
 app.get('/api/recover-ticket', (req, res) => {
