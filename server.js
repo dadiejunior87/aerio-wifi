@@ -18,7 +18,7 @@ app.use(express.static("public"));
 if (!fs.existsSync(TICKETS_FILE)) fs.writeFileSync(TICKETS_FILE, JSON.stringify([]));
 if (!fs.existsSync(PARTNERS_FILE)) fs.writeFileSync(PARTNERS_FILE, JSON.stringify([]));
 
-// --- ROUTES API POUR LE DASHBOARD PARTENAIRE ---
+// --- ROUTES API ---
 
 // 1. Enregistrer un partenaire et générer son ID Unique AERIO
 app.post("/api/register-partner", (req, res) => {
@@ -62,9 +62,7 @@ app.get("/api/get-rates", (req, res) => {
     res.json(partner ? partner.rates : []);
 });
 
-// --- SYSTÈME DE PAIEMENT & RÉCUPÉRATION ---
-
-// 4. Initialiser le paiement Moneroo (Correction URL)
+// 4. Initialiser le paiement Moneroo
 app.post("/api/pay", async (req, res) => {
     const { amount, duration, router_id, phone } = req.body;
     try {
@@ -83,13 +81,13 @@ app.post("/api/pay", async (req, res) => {
     }
 });
 
-// 5. Webhook Moneroo : Confirmation et calcul commission
+// 5. Webhook Moneroo : Confirmation de paiement
 app.post("/api/webhook", async (req, res) => {
     const { event, data } = req.body;
     if (event === 'payment.success') {
         const amount = data.amount;
         const partnerID = data.metadata.router_id;
-        const customerPhone = data.metadata.phone; // Récupéré pour la recherche
+        const customerPhone = data.metadata.phone;
         const code = Math.random().toString(36).substring(2, 8).toUpperCase();
         
         const tickets = JSON.parse(fs.readFileSync(TICKETS_FILE));
@@ -106,7 +104,7 @@ app.post("/api/webhook", async (req, res) => {
     res.sendStatus(200);
 });
 
-// 6. NOUVEAU : Récupérer un ticket perdu
+// 6. Récupérer un ticket perdu
 app.get('/api/recover-ticket', (req, res) => {
     const { phone } = req.query;
     const tickets = JSON.parse(fs.readFileSync(TICKETS_FILE));
@@ -118,22 +116,33 @@ app.get('/api/recover-ticket', (req, res) => {
     }
 });
 
-// --- ROUTES PAGES ---
+// --- ROUTES PAGES (SECTION MISE À JOUR) ---
 
-// Route par défaut : La page d'accueil (Vitrine)
+// Page d'accueil (Vitrine AERIO)
 app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
-// Route pour le Dashboard
+// Page de localisation des zones WiFi (Carte)
+app.get("/map", (req, res) => {
+    res.sendFile(path.join(__dirname, "public", "map.html"));
+});
+
+// Page de récupération de ticket
+app.get("/recover", (req, res) => {
+    res.sendFile(path.join(__dirname, "public", "recover.html"));
+});
+
+// Page du Dashboard Partenaire
 app.get("/dashboard", (req, res) => {
     res.sendFile(path.join(__dirname, "public", "dashboard.html"));
 });
 
+// API pour l'historique des tickets du dashboard
 app.get("/api/tickets", (req, res) => {
     const tickets = JSON.parse(fs.readFileSync(TICKETS_FILE));
     res.json(tickets);
 });
 
-// Lancement
+// Lancement du serveur
 app.listen(PORT, () => console.log(`🚀 AERIO SAAS opérationnel sur le port ${PORT}`));
