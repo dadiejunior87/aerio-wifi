@@ -1,13 +1,82 @@
 <!DOCTYPE html>
-<html>
-<body style="background:#030712; color:white; text-align:center; font-family:sans-serif; padding-top:100px;">
-    <h1 style="color:#00F5A0;">PAIEMENT RÉUSSI !</h1>
-    <p>Notez votre code ticket :</p>
-    <h2 id="code" style="font-size:40px; letter-spacing:5px;">------</h2>
-    <a href="http://192.168.88.1" style="background:#00C2FF; color:black; padding:15px; text-decoration:none; border-radius:10px; font-weight:bold;">SE CONNECTER AU WIFI</a>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AERIO | Accès Autorisé</title>
+    <link href="https://fonts.googleapis.com" rel="stylesheet">
+    <style>
+        :root { --primary: #00C2FF; --bg: #020617; --accent: #00F5A0; --glass: rgba(15, 23, 42, 0.8); }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: var(--bg); color: white; height: 100vh; display: flex; justify-content: center; align-items: center; overflow: hidden; }
+
+        .success-card {
+            background: var(--glass); backdrop-filter: blur(25px);
+            padding: 50px 40px; border-radius: 40px; width: 95%; max-width: 450px;
+            border: 2px solid var(--accent); text-align: center;
+            box-shadow: 0 0 50px rgba(0, 245, 160, 0.1);
+            animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes popIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
+
+        /* ICÔNE DE RÉUSSITE ANIMÉE */
+        .check-icon {
+            width: 80px; height: 80px; background: var(--accent); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; margin: 0 auto 30px;
+            box-shadow: 0 0 30px var(--accent); font-size: 40px; color: #020617;
+        }
+
+        h1 { font-size: 24px; font-weight: 900; margin-bottom: 10px; letter-spacing: -1px; }
+        p { color: #94a3b8; font-size: 13px; margin-bottom: 30px; }
+
+        /* ZONE DU CODE EXTRÊME */
+        .code-box {
+            background: rgba(0, 0, 0, 0.4); padding: 25px; border-radius: 20px;
+            border: 1px dashed var(--accent); margin-bottom: 30px; position: relative;
+        }
+        .code-label { font-size: 10px; font-weight: 800; color: var(--accent); text-transform: uppercase; margin-bottom: 10px; display: block; letter-spacing: 2px; }
+        #wifi-code { font-size: 36px; font-weight: 900; color: white; letter-spacing: 6px; text-shadow: 0 0 15px var(--accent); }
+
+        .btn-connect {
+            display: block; width: 100%; padding: 20px; border-radius: 20px;
+            background: var(--accent); color: #020617; text-decoration: none;
+            font-weight: 900; font-size: 14px; text-transform: uppercase; letter-spacing: 1px;
+            transition: 0.3s; box-shadow: 0 10px 25px rgba(0, 245, 160, 0.3);
+        }
+        .btn-connect:hover { transform: translateY(-3px); box-shadow: 0 15px 35px rgba(0, 245, 160, 0.5); }
+
+        .footer-note { margin-top: 25px; font-size: 11px; color: #475569; }
+    </style>
+</head>
+<body>
+
+    <div class="success-card">
+        <div class="check-icon">✓</div>
+        
+        <h1>PAIEMENT VALIDÉ</h1>
+        <p>Votre accès au réseau <b>AERIO ALPHA</b> est maintenant actif.</p>
+
+        <div class="code-box">
+            <span class="code-label">Votre Code de Connexion</span>
+            <div id="wifi-code">-------</div>
+        </div>
+
+        <a href="#" id="connect-link" class="btn-connect">Se connecter maintenant</a>
+
+        <div class="footer-note">
+            🚀 Une copie de ce code a été envoyée par SMS.
+        </div>
+    </div>
+
     <script>
-        const params = new URLSearchParams(window.location.search);
-        document.getElementById('code').innerText = params.get('code') || "ERREUR";
+        // Extraction automatique du code depuis l'URL (si passé par le serveur)
+        const urlParams = new URLSearchParams(window.location.search);
+        const code = urlParams.get('code') || "AE-SCAN"; // AE-SCAN par défaut pour le test
+        
+        document.getElementById('wifi-code').innerText = code;
+        
+        // Lien de connexion automatique (redirige vers le MikroTik pour loguer le user)
+        document.getElementById('connect-link').href = `http://10.5.5.1{code}&password=${code}`;
     </script>
 </body>
 </html>
