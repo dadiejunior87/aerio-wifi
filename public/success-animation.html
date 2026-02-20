@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AERIO | Initialisation Alpha</title>
+    <link href="https://fonts.googleapis.com" rel="stylesheet">
+    <style>
+        :root { --primary: #00C2FF; --bg: #020617; --accent: #00F5A0; }
+        body { background: var(--bg); color: white; height: 100vh; display: flex; justify-content: center; align-items: center; font-family: 'Poppins', sans-serif; overflow: hidden; }
+
+        .loader-container { text-align: center; width: 90%; max-width: 500px; }
+        
+        .glitch-text { font-size: 24px; font-weight: 900; color: var(--primary); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 30px; }
+        
+        .progress-bar { width: 100%; height: 4px; background: rgba(255,255,255,0.05); border-radius: 10px; overflow: hidden; position: relative; }
+        .progress-fill { width: 0%; height: 100%; background: var(--primary); box-shadow: 0 0 20px var(--primary); transition: width 3s ease-in-out; }
+
+        .log-console { margin-top: 30px; height: 150px; background: rgba(0,0,0,0.3); border-radius: 15px; padding: 20px; font-family: 'Courier New', monospace; font-size: 12px; text-align: left; overflow: hidden; color: #475569; border: 1px solid rgba(255,255,255,0.02); }
+        .log-line { margin-bottom: 5px; opacity: 0; transform: translateY(10px); animation: fadeInUp 0.5s forwards; }
+        @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+    <div class="loader-container">
+        <div class="glitch-text" id="status-text">Initialisation...</div>
+        <div class="progress-bar"><div class="progress-fill" id="fill"></div></div>
+        <div class="log-console" id="console"></div>
+    </div>
+
+    <script>
+        const logs = [
+            "> Connexion au noyau AERIO...",
+            "> Chiffrement des clés de sécurité...",
+            "> Injection du partenaire dans la base Alpha...",
+            "> Synchronisation du wallet 85%...",
+            "> PROTOCOLE ALPHA ACTIVÉ AVEC SUCCÈS."
+        ];
+
+        let i = 0;
+        const consoleEl = document.getElementById('console');
+        const fill = document.getElementById('fill');
+        const status = document.getElementById('status-text');
+
+        function addLog() {
+            if (i < logs.length) {
+                const line = document.createElement('div');
+                line.className = 'log-line';
+                line.innerText = logs[i];
+                consoleEl.appendChild(line);
+                i++;
+                setTimeout(addLog, 600);
+            }
+        }
+
+        setTimeout(() => {
+            fill.style.width = "100%";
+            addLog();
+        }, 100);
+
+        setTimeout(() => {
+            status.innerText = "ACCÈS AUTORISÉ";
+            status.style.color = "#00F5A0";
+            setTimeout(() => { window.location.href = "/connexion"; }, 1500);
+        }, 3500);
+    </script>
+</body>
+</html>
