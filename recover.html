@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AERIO | Récupérer mon Ticket</title>
+    <style>
+        :root { --primary: #00C2FF; --bg: #030712; --card: rgba(15, 23, 42, 0.95); }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: var(--bg); color: white; display: flex; justify-content: center; align-items: center; min-height: 100vh; text-align: center; }
+        
+        .box {
+            background: var(--card); padding: 40px; border-radius: 30px;
+            border: 1px solid rgba(255,255,255,0.05); width: 90%; max-width: 400px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+
+        h2 { font-weight: 900; margin-bottom: 10px; color: var(--primary); }
+        p { font-size: 13px; color: #888; margin-bottom: 25px; }
+
+        input {
+            width: 100%; padding: 16px; margin-bottom: 15px; border-radius: 15px;
+            background: rgba(255,255,255,0.05); border: 1px solid #333; color: white;
+            text-align: center; font-size: 16px; outline: none;
+        }
+
+        .btn-search {
+            width: 100%; padding: 18px; border: none; border-radius: 15px;
+            background: linear-gradient(45deg, var(--primary), #7000FF);
+            color: white; font-weight: 800; cursor: pointer; text-transform: uppercase;
+        }
+
+        #result { margin-top: 25px; display: none; padding: 20px; border-radius: 15px; background: rgba(0, 194, 255, 0.1); border: 1px dashed var(--primary); }
+    </style>
+</head>
+<body>
+
+    <div class="box">
+        <h2>TICKET PERDU ?</h2>
+        <p>Entrez le numéro de téléphone utilisé lors du paiement Moneroo.</p>
+        
+        <input type="text" id="phone" placeholder="Ex: 692487922">
+        <button class="btn-search" onclick="rechercherTicket()">Retrouver mon code</button>
+
+        <div id="result">
+            <span style="font-size: 10px; color: var(--primary); font-weight: 800;">VOTRE CODE TICKET :</span>
+            <div id="ticket-code" style="font-size: 24px; font-weight: 900; margin-top: 5px; letter-spacing: 3px;">------</div>
+        </div>
+        
+        <a href="/" style="display:block; margin-top:20px; color:#555; text-decoration:none; font-size:12px;">← Retour à l'accueil</a>
+    </div>
+
+    <script>
+        async function rechercherTicket() {
+            const phone = document.getElementById('phone').value;
+            if(!phone) return alert("Entrez votre numéro !");
+
+            // Appel à votre serveur Render
+            const response = await fetch(`/api/recover-ticket?phone=${phone}`);
+            const data = await response.json();
+
+            const resultDiv = document.getElementById('result');
+            if(data.success) {
+                resultDiv.style.display = 'block';
+                document.getElementById('ticket-code').innerText = data.code;
+            } else {
+                alert("Aucun ticket trouvé pour ce numéro.");
+            }
+        }
+    </script>
+</body>
+</html>
