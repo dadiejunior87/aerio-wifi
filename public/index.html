@@ -12,7 +12,11 @@
         
         /* Menu de navigation */
         nav { display: flex; justify-content: space-between; padding: 25px 8%; align-items: center; position: relative; z-index: 10; }
-        .logo { font-weight: 900; color: var(--primary); font-size: 28px; letter-spacing: -1px; }
+        
+        /* LOGO STYLE */
+        .logo { display: flex; align-items: center; text-decoration: none; }
+        .logo-text { font-weight: 900; color: var(--primary); font-size: 28px; letter-spacing: -1px; margin-left: 10px; }
+
         .menu a { color: white; text-decoration: none; margin-left: 30px; font-size: 14px; font-weight: 600; transition: 0.3s; }
         .menu a:hover { color: var(--primary); }
         .btn-connexion { background: var(--accent); padding: 12px 30px; border-radius: 50px; font-weight: 800 !important; box-shadow: 0 10px 20px rgba(255, 75, 75, 0.2); }
@@ -61,12 +65,24 @@
 <body>
 
     <nav>
-        <div class="logo">AERIO</div>
+        <div class="logo">
+            <!-- LOGO AERIO SVG ANIMÉ -->
+            <svg width="45" height="45" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org">
+                <circle cx="50" cy="50" r="48" stroke="#00C2FF" stroke-width="4" stroke-dasharray="10 5"/>
+                <path d="M50 25L25 75H35L50 45L65 75H75L50 25Z" fill="#00C2FF"/>
+                <path d="M40 60H60" stroke="#7000FF" stroke-width="5" stroke-linecap="round"/>
+                <circle cx="50" cy="85" r="5" fill="#00F5A0">
+                    <animate attributeName="opacity" values="1;0.2;1" dur="2s" repeatCount="indefinite" />
+                </circle>
+            </svg>
+            <span class="logo-text">AERIO</span>
+        </div>
         <div class="menu">
-            <a href="#">Accueil</a>
-            <a href="/dashboard.html">Partenariats</a>
-            <a href="#">Récupérer Ticket</a>
-            <a href="/dashboard.html" class="btn-connexion">Connexion</a>
+            <a href="/">Accueil</a>
+            <a href="/dashboard">Partenariats</a>
+            <a href="/recover">Récupérer Ticket</a>
+            <a href="/map">Localisation WiFi</a>
+            <a href="/connexion" class="btn-connexion">Connexion</a>
         </div>
     </nav>
 
@@ -75,14 +91,14 @@
             <p style="color: var(--accent); font-weight: 900; letter-spacing: 3px; margin-bottom: 10px;">BIENVENUE SUR AERIO</p>
             <h1>Vendez vos tickets <span>WiFi Zone</span></h1>
             <p>AERIO est la plateforme révolutionnaire qui vous permet d'automatiser la vente de vos tickets WiFi via Mobile Money au Cameroun et partout en Afrique.</p>
-            <a href="/dashboard.html" class="btn-create">Créer Un Compte</a>
+            <a href="/inscription" class="btn-create">Créer Un Compte</a>
         </div>
         <div class="hero-img">
             <img src="https://images.unsplash.com" alt="AERIO WiFi User">
         </div>
     </section>
 
-    <!-- WhatsApp Support avec ton numéro du Cameroun -->
+    <!-- WhatsApp Support avec ton numéro du Cameroun corrigé -->
     <a href="https://wa.me" class="whatsapp-float" target="_blank">
         <img src="https://upload.wikimedia.org" width="38" alt="WhatsApp Support">
     </a>
