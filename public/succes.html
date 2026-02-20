@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AERIO | Accès Autorisé</title>
-    <link href="https://fonts.googleapis.com" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root { --primary: #00C2FF; --bg: #020617; --accent: #00F5A0; --glass: rgba(15, 23, 42, 0.8); }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
@@ -19,7 +19,6 @@
         }
         @keyframes popIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
 
-        /* ICÔNE DE RÉUSSITE ANIMÉE */
         .check-icon {
             width: 80px; height: 80px; background: var(--accent); border-radius: 50%;
             display: flex; align-items: center; justify-content: center; margin: 0 auto 30px;
@@ -29,13 +28,12 @@
         h1 { font-size: 24px; font-weight: 900; margin-bottom: 10px; letter-spacing: -1px; }
         p { color: #94a3b8; font-size: 13px; margin-bottom: 30px; }
 
-        /* ZONE DU CODE EXTRÊME */
         .code-box {
             background: rgba(0, 0, 0, 0.4); padding: 25px; border-radius: 20px;
             border: 1px dashed var(--accent); margin-bottom: 30px; position: relative;
         }
         .code-label { font-size: 10px; font-weight: 800; color: var(--accent); text-transform: uppercase; margin-bottom: 10px; display: block; letter-spacing: 2px; }
-        #wifi-code { font-size: 36px; font-weight: 900; color: white; letter-spacing: 6px; text-shadow: 0 0 15px var(--accent); }
+        #wifi-code { font-size: 32px; font-weight: 900; color: white; letter-spacing: 4px; text-shadow: 0 0 15px var(--accent); }
 
         .btn-connect {
             display: block; width: 100%; padding: 20px; border-radius: 20px;
@@ -44,8 +42,7 @@
             transition: 0.3s; box-shadow: 0 10px 25px rgba(0, 245, 160, 0.3);
         }
         .btn-connect:hover { transform: translateY(-3px); box-shadow: 0 15px 35px rgba(0, 245, 160, 0.5); }
-
-        .footer-note { margin-top: 25px; font-size: 11px; color: #475569; }
+        .loading { font-size: 12px; color: var(--primary); }
     </style>
 </head>
 <body>
@@ -54,29 +51,52 @@
         <div class="check-icon">✓</div>
         
         <h1>PAIEMENT VALIDÉ</h1>
-        <p>Votre accès au réseau <b>AERIO ALPHA</b> est maintenant actif.</p>
+        <p>Votre accès au réseau <b>AERIO ZONE</b> est prêt.</p>
 
         <div class="code-box">
-            <span class="code-label">Votre Code de Connexion</span>
-            <div id="wifi-code">-------</div>
+            <span class="code-label">Votre Code WiFi</span>
+            <div id="wifi-code">Récupération...</div>
         </div>
 
-        <a href="#" id="connect-link" class="btn-connect">Se connecter maintenant</a>
+        <a href="#" id="connect-link" class="btn-connect">Se connecter au WiFi</a>
 
-        <div class="footer-note">
-            🚀 Une copie de ce code a été envoyée par SMS.
+        <div style="margin-top: 20px;">
+            <p id="status-msg" style="font-size: 11px;">Vérification du paiement en cours...</p>
         </div>
     </div>
 
     <script>
-        // Extraction automatique du code depuis l'URL (si passé par le serveur)
-        const urlParams = new URLSearchParams(window.location.search);
-        const code = urlParams.get('code') || "AE-SCAN"; // AE-SCAN par défaut pour le test
-        
-        document.getElementById('wifi-code').innerText = code;
-        
-        // Lien de connexion automatique (redirige vers le MikroTik pour loguer le user)
-        document.getElementById('connect-link').href = `http://10.5.5.1{code}&password=${code}`;
+        // Fonction pour récupérer le code généré par le serveur
+        async function fetchMyCode() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const phone = urlParams.get('phone'); // On récupère le numéro depuis l'URL de retour
+
+            if (!phone) {
+                document.getElementById('wifi-code').innerText = "ERREUR";
+                document.getElementById('status-msg').innerText = "Numéro de téléphone manquant dans l'URL.";
+                return;
+            }
+
+            try {
+                // On appelle la route de récupération que nous avons créé dans server.js
+                const response = await fetch(`/api/recover-ticket?phone=${phone}`);
+                const data = await response.json();
+
+                if (data.success) {
+                    document.getElementById('wifi-code').innerText = data.code;
+                    document.getElementById('status-msg').innerText = "Ticket récupéré avec succès !";
+                    // Lien vers le hotspot MikroTik
+                    document.getElementById('connect-link').href = `http://10.5.5.1/login?username=${data.code}`;
+                } else {
+                    // Si le webhook n'a pas encore fini, on réessaie après 3 secondes
+                    setTimeout(fetchMyCode, 3000);
+                }
+            } catch (err) {
+                console.error("Erreur de récupération", err);
+            }
+        }
+
+        fetchMyCode();
     </script>
 </body>
 </html>
