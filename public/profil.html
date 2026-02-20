@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AERIO | Mon Profil Élite</title>
+    <link href="https://fonts.googleapis.com" rel="stylesheet">
+    <style>
+        :root { --primary: #00C2FF; --secondary: #7000FF; --bg: #030712; --card: rgba(15, 23, 42, 0.7); }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: var(--bg); color: white; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+
+        .profil-container {
+            background: var(--card); backdrop-filter: blur(20px);
+            padding: 40px; border-radius: 40px; width: 100%; max-width: 600px;
+            border: 1px solid rgba(255, 255, 255, 0.05); box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+            animation: slideIn 0.6s ease-out;
+        }
+        @keyframes slideIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+
+        /* GESTION AVATAR */
+        .avatar-section { text-align: center; margin-bottom: 40px; position: relative; }
+        .avatar-preview {
+            width: 120px; height: 120px; border-radius: 50%;
+            border: 3px solid var(--primary); margin: 0 auto 15px;
+            background: url('https://ui-avatars.com') center/cover;
+            box-shadow: 0 0 30px rgba(0, 194, 255, 0.3);
+        }
+        .btn-upload { font-size: 11px; color: var(--primary); cursor: pointer; font-weight: 700; text-transform: uppercase; }
+
+        .grid-form { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; text-align: left; }
+        .full-width { grid-column: span 2; }
+
+        label { display: block; font-size: 11px; font-weight: 700; color: #555; text-transform: uppercase; margin-left: 15px; margin-bottom: 8px; }
+        input {
+            width: 100%; padding: 15px 20px; background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 15px;
+            color: white; outline: none; transition: 0.3s;
+        }
+        input:focus { border-color: var(--primary); background: rgba(0, 194, 255, 0.05); }
+
+        .btn-update {
+            grid-column: span 2; padding: 18px; margin-top: 20px; border: none; border-radius: 15px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: white; font-weight: 800; cursor: pointer; transition: 0.4s;
+        }
+        .btn-update:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(112, 0, 255, 0.4); }
+
+        .back-link { display: block; text-align: center; margin-top: 25px; color: #444; text-decoration: none; font-size: 12px; font-weight: 600; }
+        .back-link:hover { color: var(--primary); }
+    </style>
+</head>
+<body>
+
+    <div class="profil-container">
+        <div class="avatar-section">
+            <div class="avatar-preview" id="avatar-img"></div>
+            <label class="btn-upload">
+                📷 Changer le logo / Photo
+                <input type="file" style="display: none;" onchange="previewFile()">
+            </label>
+        </div>
+
+        <form class="grid-form" action="/api/update-profile" method="POST">
+            <div class="full-width">
+                <label>Nom de l'entreprise / Partenaire</label>
+                <input type="text" name="name" value="Jean WiFi Sarl" required>
+            </div>
+
+            <div>
+                <label>Email de contact</label>
+                <input type="email" name="email" value="jean@wifi.com" required>
+            </div>
+
+            <div>
+                <label>ID AERIO (Non modifiable)</label>
+                <input type="text" value="AE-5821" disabled style="color: #666; cursor: not-allowed;">
+            </div>
+
+            <div class="full-width">
+                <label>Changer le mot de passe</label>
+                <input type="password" name="password" placeholder="Laissez vide pour ne pas changer">
+            </div>
+
+            <button type="submit" class="btn-update">METTRE À JOUR MON PROFIL</button>
+        </form>
+
+        <a href="/dashboard.html" class="back-link">← Retour au Dashboard</a>
+    </div>
+
+    <script>
+        function previewFile() {
+            const preview = document.getElementById('avatar-img');
+            const file = document.querySelector('input[type=file]').files[0];
+            const reader = new FileReader();
+
+            reader.addEventListener("load", function () {
+                preview.style.backgroundImage = `url(${reader.result})`;
+            }, false);
+
+            if (file) { reader.readAsDataURL(file); }
+        }
+    </script>
+</body>
+</html>
