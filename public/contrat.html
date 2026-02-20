@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AERIO | Contrat de Partenariat Alpha</title>
+    <link href="https://fonts.googleapis.com" rel="stylesheet">
+    <style>
+        :root { --primary: #00C2FF; --bg: #020617; --glass: rgba(15, 23, 42, 0.7); --accent: #FF4B4B; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: var(--bg); color: white; line-height: 1.8; padding: 60px 10%; }
+
+        .contract-box {
+            background: var(--glass); backdrop-filter: blur(25px);
+            padding: 50px; border-radius: 40px; border: 1px solid rgba(255,255,255,0.05);
+            box-shadow: 0 40px 100px rgba(0,0,0,0.5);
+        }
+
+        .logo-box { display: flex; align-items: center; margin-bottom: 40px; }
+        .logo-text { font-weight: 900; font-size: 24px; color: var(--primary); margin-left: 15px; letter-spacing: -1px; }
+
+        h1 { font-size: 32px; font-weight: 900; margin-bottom: 10px; letter-spacing: -1px; }
+        .badge-legal { background: var(--accent); color: white; padding: 5px 15px; border-radius: 50px; font-size: 10px; font-weight: 800; text-transform: uppercase; margin-bottom: 30px; display: inline-block; }
+
+        h3 { color: var(--primary); margin-top: 35px; margin-bottom: 15px; font-size: 18px; text-transform: uppercase; letter-spacing: 1px; }
+        p, li { color: #94a3b8; font-size: 14px; margin-bottom: 15px; }
+        ul { padding-left: 20px; }
+
+        .highlight { color: white; font-weight: 700; border-bottom: 1px solid var(--primary); }
+
+        .btn-back { display: inline-block; margin-top: 50px; color: var(--primary); text-decoration: none; font-weight: 800; font-size: 12px; text-transform: uppercase; border: 1px solid var(--primary); padding: 12px 30px; border-radius: 12px; transition: 0.3s; }
+        .btn-back:hover { background: var(--primary); color: #000; box-shadow: 0 0 20px var(--primary); }
+    </style>
+</head>
+<body>
+
+    <div class="contract-box">
+        <div class="logo-box">
+            <svg width="40" height="40" viewBox="0 0 100 100" fill="none">
+                <circle cx="50" cy="50" r="48" stroke="#00C2FF" stroke-width="4" stroke-dasharray="10 5"/>
+                <path d="M50 25L25 75H35L50 45L65 75H75L50 25Z" fill="#00C2FF"/>
+            </svg>
+            <span class="logo-text">AERIO</span>
+        </div>
+
+        <span class="badge-legal">Protocole de Partenariat Officiel v1.0</span>
+        <h1>Conditions Générales d'Utilisation</h1>
+        <p>Le présent contrat définit les règles de collaboration entre la plateforme <span class="highlight">AERIO NETWORK</span> et le <span class="highlight">PARTENAIRE</span> (propriétaire de zone WiFi).</p>
+
+        <h3>Article 1 : Répartition des Gains</h3>
+        <p>AERIO prélève une commission fixe de <span class="highlight">15%</span> sur chaque ticket vendu pour couvrir les frais de passerelle de paiement (Mobile Money), l'hébergement serveur et la maintenance technique. Le Partenaire reçoit <span class="highlight">85%</span> du montant brut de chaque vente.</p>
+
+        <h3>Article 2 : Modalités de Retrait</h3>
+        <p>Le solde accumulé sur le Dashboard AERIO est retirable à tout moment vers le numéro Mobile Money (Orange/MTN) enregistré par le Partenaire. Les fonds sont transférés <span class="highlight">instantanément</span> ou sous un délai maximum de 24h ouvrées en cas de vérification réseau.</p>
+
+        <h3>Article 3 : Responsabilité Technique</h3>
+        <p>Le Partenaire est seul responsable de la stabilité de sa connexion internet locale et du bon fonctionnement de son matériel MikroTik. AERIO ne pourra être tenu responsable des pertes de revenus dues à une coupure d'électricité ou une panne du fournisseur d'accès internet du Partenaire.</p>
+
+        <h3>Article 4 : Sécurité et Éthique</h3>
+        <p>Le Partenaire s'engage à ne pas utiliser le réseau AERIO pour des activités illégales. En cas de fraude suspectée, AERIO se réserve le droit de suspendre temporairement le compte pour audit de sécurité.</p>
+
+        <a href="/inscription" class="btn-back">J'accepte et je m'inscris</a>
+    </div>
+
+    <div style="text-align: center; margin-top: 40px; color: #475569; font-size: 11px;">
+        © 2026 AERIO - Yaoundé, Cameroun. Tous droits réservés.
+    </div>
+
+</body>
+</html>
