@@ -2,16 +2,107 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>AERIO | Réseau WiFi Intelligent</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AERIO | Vendez vos tickets WiFi Zone</title>
+    <link href="https://fonts.googleapis.com" rel="stylesheet">
     <style>
-        body { background: #030712; color: white; font-family: sans-serif; text-align: center; padding-top: 100px; }
-        .btn { background: #00C2FF; color: black; padding: 15px 30px; text-decoration: none; border-radius: 10px; font-weight: bold; }
+        :root { --primary: #00C2FF; --bg: #030712; --accent: #FF4B4B; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: var(--bg); color: white; overflow-x: hidden; min-height: 100vh; }
+        
+        /* Menu de navigation */
+        nav { display: flex; justify-content: space-between; padding: 25px 8%; align-items: center; position: relative; z-index: 10; }
+        .logo { font-weight: 900; color: var(--primary); font-size: 28px; letter-spacing: -1px; }
+        .menu a { color: white; text-decoration: none; margin-left: 30px; font-size: 14px; font-weight: 600; transition: 0.3s; }
+        .menu a:hover { color: var(--primary); }
+        .btn-connexion { background: var(--accent); padding: 12px 30px; border-radius: 50px; font-weight: 800 !important; box-shadow: 0 10px 20px rgba(255, 75, 75, 0.2); }
+
+        /* Section Hero */
+        .hero { display: flex; align-items: center; padding: 80px 8% 120px; gap: 50px; position: relative; }
+        .hero-text { flex: 1; z-index: 2; }
+        .hero-text h1 { font-size: 4rem; line-height: 1.1; margin-bottom: 25px; font-weight: 900; }
+        .hero-text span { color: var(--primary); }
+        .hero-text p { color: #888; line-height: 1.8; margin-bottom: 40px; max-width: 500px; font-size: 16px; }
+        
+        .btn-create { 
+            background: var(--accent); color: white; padding: 20px 45px; 
+            border-radius: 50px; text-decoration: none; font-weight: 900; 
+            font-size: 18px; box-shadow: 0 15px 30px rgba(255, 75, 75, 0.4);
+            transition: 0.3s; display: inline-block;
+        }
+
+        .hero-img { flex: 1; text-align: right; }
+        .hero-img img { 
+            width: 100%; max-width: 550px; border-radius: 40px; 
+            border: 5px solid rgba(255,255,255,0.05);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+        }
+
+        /* Bouton WhatsApp Flottant */
+        .whatsapp-float {
+            position: fixed; width: 65px; height: 65px; bottom: 80px; right: 30px;
+            background-color: #25d366; border-radius: 50px; text-align: center;
+            z-index: 1000; display: flex; align-items: center; justify-content: center;
+            box-shadow: 2px 2px 20px rgba(0,0,0,0.4); transition: 0.3s;
+            text-decoration: none;
+        }
+        .whatsapp-float:hover { transform: scale(1.1) rotate(10deg); }
+
+        /* Barre de statut Windows-style */
+        .status-bar {
+            position: fixed; bottom: 0; left: 0; width: 100%; height: 45px;
+            background: rgba(10, 10, 20, 0.8); backdrop-filter: blur(15px);
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 30px; font-size: 12px; color: #666; font-weight: 700;
+            border-top: 1px solid rgba(255,255,255,0.05); z-index: 999;
+        }
     </style>
 </head>
 <body>
-    <h1>Bienvenue sur AERIO</h1>
-    <p>La plateforme élite pour la gestion de vos tickets WiFi.</p>
-    <br><br>
-    <a href="/dashboard.html" class="btn">ACCÉDER À MA CONSOLE PARTENAIRE</a>
+
+    <nav>
+        <div class="logo">AERIO</div>
+        <div class="menu">
+            <a href="#">Accueil</a>
+            <a href="/dashboard.html">Partenariats</a>
+            <a href="#">Récupérer Ticket</a>
+            <a href="/dashboard.html" class="btn-connexion">Connexion</a>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-text">
+            <p style="color: var(--accent); font-weight: 900; letter-spacing: 3px; margin-bottom: 10px;">BIENVENUE SUR AERIO</p>
+            <h1>Vendez vos tickets <span>WiFi Zone</span></h1>
+            <p>AERIO est la plateforme révolutionnaire qui vous permet d'automatiser la vente de vos tickets WiFi via Mobile Money au Cameroun et partout en Afrique.</p>
+            <a href="/dashboard.html" class="btn-create">Créer Un Compte</a>
+        </div>
+        <div class="hero-img">
+            <img src="https://images.unsplash.com" alt="AERIO WiFi User">
+        </div>
+    </section>
+
+    <!-- WhatsApp Support avec ton numéro du Cameroun -->
+    <a href="https://wa.me" class="whatsapp-float" target="_blank">
+        <img src="https://upload.wikimedia.org" width="38" alt="WhatsApp Support">
+    </a>
+
+    <!-- Barre Statut Bas -->
+    <div class="status-bar">
+        <div>🌍 Cameroun Network • 36°C Sunny</div>
+        <div id="clock">14:33 - 20/02/2026</div>
+    </div>
+
+    <script>
+        function updateTime() {
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+            const dateStr = now.toLocaleDateString('fr-FR');
+            document.getElementById('clock').innerHTML = `${timeStr} - ${dateStr}`;
+        }
+        setInterval(updateTime, 1000);
+        updateTime();
+    </script>
+
 </body>
 </html>
