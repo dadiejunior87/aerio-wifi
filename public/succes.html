@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<body style="background:#030712; color:white; text-align:center; font-family:sans-serif; padding-top:100px;">
+    <h1 style="color:#00F5A0;">PAIEMENT RÉUSSI !</h1>
+    <p>Notez votre code ticket :</p>
+    <h2 id="code" style="font-size:40px; letter-spacing:5px;">------</h2>
+    <a href="http://192.168.88.1" style="background:#00C2FF; color:black; padding:15px; text-decoration:none; border-radius:10px; font-weight:bold;">SE CONNECTER AU WIFI</a>
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        document.getElementById('code').innerText = params.get('code') || "ERREUR";
+    </script>
+</body>
+</html>

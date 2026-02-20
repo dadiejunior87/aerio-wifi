@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AERIO | Dashboard Partenaire</title>
+    <style>
+        :root { --primary: #00C2FF; --bg: #030712; --card: rgba(15, 23, 42, 0.8); }
+        body { background: var(--bg); color: white; font-family: 'Poppins', sans-serif; padding: 20px; }
+        
+        .grid { display: grid; grid-template-columns: 1fr 2fr; gap: 20px; max-width: 1200px; margin: 0 auto; }
+        
+        .card { background: var(--card); border-radius: 20px; padding: 25px; border: 1px solid rgba(255,255,255,0.05); }
+        
+        h2 { color: var(--primary); margin-bottom: 20px; font-size: 18px; text-transform: uppercase; }
+        
+        input { 
+            width: 100%; padding: 12px; margin-bottom: 15px; border-radius: 10px; 
+            border: 1px solid #333; background: #000; color: white;
+        }
+        
+        .btn-save { 
+            background: var(--primary); color: #000; font-weight: bold; 
+            width: 100%; padding: 12px; border: none; border-radius: 10px; cursor: pointer;
+        }
+
+        .stats-box { display: flex; gap: 10px; margin-top: 20px; }
+        .stat { flex: 1; background: rgba(0, 194, 255, 0.1); padding: 15px; border-radius: 15px; text-align: center; }
+        .stat span { display: block; font-size: 24px; font-weight: 900; }
+    </style>
+</head>
+<body>
+
+    <h1 style="text-align: center; margin-bottom: 40px;">CONSOLE AERIO <span style="color: var(--primary);">PARTENAIRE</span></h1>
+
+    <div class="grid">
+        <!-- CONFIGURATION ROUTEUR -->
+        <div class="card">
+            <h2>⚙️ CONFIGURATION MIKROTIK</h2>
+            <form id="config-form">
+                <label>IP Publique ou DNS du Routeur :</label>
+                <input type="text" id="router_ip" placeholder="ex: 41.202.xx.xx ou mon-wifi.net">
+                
+                <label>Utilisateur API (créé sur MikroTik) :</label>
+                <input type="text" id="api_user" placeholder="ex: aerio_admin">
+                
+                <label>Mot de passe API :</label>
+                <input type="password" id="api_pass" placeholder="••••••••">
+                
+                <button type="submit" class="btn-save">ENREGISTRER LE ROUTEUR</button>
+            </form>
+        </div>
+
+        <!-- STATISTIQUES DE VENTE -->
+        <div class="card">
+            <h2>📊 PERFORMANCES DU RÉSEAU</h2>
+            <div class="stats-box">
+                <div class="stat">Tickets Vendus <span id="total-sold">0</span></div>
+                <div class="stat">Revenus (XOF) <span id="total-revenue" style="color: #00F5A0;">0</span></div>
+                <div class="stat">Utilisateurs Actifs <span id="active-users">0</span></div>
+            </div>
+            
+            <h2 style="margin-top: 30px;">📜 DERNIERS TICKETS GÉNÉRÉS</h2>
+            <table style="width: 100%; text-align: left; font-size: 13px; color: #888;">
+                <tr style="color: white; border-bottom: 1px solid #333;">
+                    <th>Code</th><th>Durée</th><th>Date</th><th>Statut</th>
+                </tr>
+                <tbody id="ticket-history">
+                    <!-- Les tickets s'afficheront ici dynamiquement -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</body>
+</html>
