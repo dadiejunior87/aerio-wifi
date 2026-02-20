@@ -3,74 +3,167 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AERIO | Dashboard Partenaire</title>
+    <title>AERIO | Dashboard Élite</title>
+    <link href="https://fonts.googleapis.com" rel="stylesheet">
     <style>
-        :root { --primary: #00C2FF; --bg: #030712; --card: rgba(15, 23, 42, 0.8); }
-        body { background: var(--bg); color: white; font-family: 'Poppins', sans-serif; padding: 20px; }
-        
-        .grid { display: grid; grid-template-columns: 1fr 2fr; gap: 20px; max-width: 1200px; margin: 0 auto; }
-        
-        .card { background: var(--card); border-radius: 20px; padding: 25px; border: 1px solid rgba(255,255,255,0.05); }
-        
-        h2 { color: var(--primary); margin-bottom: 20px; font-size: 18px; text-transform: uppercase; }
-        
-        input { 
-            width: 100%; padding: 12px; margin-bottom: 15px; border-radius: 10px; 
-            border: 1px solid #333; background: #000; color: white;
-        }
-        
-        .btn-save { 
-            background: var(--primary); color: #000; font-weight: bold; 
-            width: 100%; padding: 12px; border: none; border-radius: 10px; cursor: pointer;
+        :root {
+            --primary: #00C2FF;
+            --secondary: #7000FF;
+            --success: #00F5A0;
+            --danger: #FF4B4B;
+            --warning: #FFB800;
+            --bg: #030712;
+            --sidebar: rgba(15, 23, 42, 0.95);
+            --card-bg: rgba(255, 255, 255, 0.03);
         }
 
-        .stats-box { display: flex; gap: 10px; margin-top: 20px; }
-        .stat { flex: 1; background: rgba(0, 194, 255, 0.1); padding: 15px; border-radius: 15px; text-align: center; }
-        .stat span { display: block; font-size: 24px; font-weight: 900; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: var(--bg); color: white; display: flex; min-height: 100vh; overflow-x: hidden; }
+
+        /* --- SIDEBAR ÉLITE --- */
+        .sidebar {
+            width: 280px; background: var(--sidebar); height: 100vh; position: fixed;
+            border-right: 1px solid rgba(255,255,255,0.05); padding: 30px 20px;
+            backdrop-filter: blur(20px); z-index: 100;
+        }
+        .logo { font-weight: 900; font-size: 26px; color: var(--primary); margin-bottom: 50px; text-align: center; }
+        
+        .nav-item {
+            display: flex; align-items: center; padding: 15px 20px; color: #888;
+            text-decoration: none; border-radius: 15px; margin-bottom: 10px; transition: 0.3s;
+        }
+        .nav-item:hover, .nav-item.active { background: rgba(0, 194, 255, 0.1); color: var(--primary); font-weight: 600; }
+        .nav-item i { margin-right: 15px; font-size: 20px; }
+
+        /* --- MAIN CONTENT --- */
+        .main-content { margin-left: 280px; flex: 1; padding: 40px; }
+        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
+        .user-profile { display: flex; align-items: center; background: var(--card-bg); padding: 8px 20px; border-radius: 50px; }
+        .user-profile img { width: 35px; height: 35px; border-radius: 50%; margin-right: 12px; border: 2px solid var(--primary); }
+
+        /* --- STATS CARDS (DESIGN GLASS) --- */
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 40px; }
+        .stat-card {
+            background: var(--card-bg); padding: 30px 20px; border-radius: 25px;
+            border: 1px solid rgba(255,255,255,0.05); transition: 0.3s; position: relative; overflow: hidden;
+        }
+        .stat-card:hover { transform: translateY(-5px); border-color: var(--primary); background: rgba(255,255,255,0.05); }
+        .stat-card h3 { font-size: 11px; font-weight: 700; color: #666; text-transform: uppercase; margin-bottom: 15px; }
+        .stat-card .value { font-size: 28px; font-weight: 900; }
+        .stat-card .icon-bg { position: absolute; right: -10px; bottom: -10px; font-size: 80px; opacity: 0.05; color: white; }
+
+        /* Couleurs spécifiques aux icônes */
+        .blue { color: var(--primary); } .green { color: var(--success); } .orange { color: var(--warning); } .red { color: var(--danger); }
+
+        /* --- TABLEAU DES VENTES --- */
+        .table-container { background: var(--card-bg); padding: 30px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.05); }
+        table { width: 100%; border-collapse: collapse; text-align: left; }
+        th { font-size: 11px; text-transform: uppercase; color: #444; padding-bottom: 20px; }
+        td { padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.02); font-size: 14px; }
+        .badge { background: rgba(0, 245, 160, 0.1); color: var(--success); padding: 5px 12px; border-radius: 8px; font-size: 11px; font-weight: 800; }
     </style>
 </head>
 <body>
 
-    <h1 style="text-align: center; margin-bottom: 40px;">CONSOLE AERIO <span style="color: var(--primary);">PARTENAIRE</span></h1>
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <div class="logo">AERIO</div>
+        <a href="/dashboard" class="nav-item active">📊 Tableau de bord</a>
+        <a href="/map" class="nav-item">📡 Mes WiFi Zone</a>
+        <a href="#" class="nav-item">💰 Mes Tarifs</a>
+        <a href="#" class="nav-item">🎟️ Mes Tickets</a>
+        <a href="/profil" class="nav-item">👤 Mon Profil</a>
+        <a href="/logout" class="nav-item" style="margin-top: 100px; color: var(--danger);">🚪 Déconnexion</a>
+    </div>
 
-    <div class="grid">
-        <!-- CONFIGURATION ROUTEUR -->
-        <div class="card">
-            <h2>⚙️ CONFIGURATION MIKROTIK</h2>
-            <form id="config-form">
-                <label>IP Publique ou DNS du Routeur :</label>
-                <input type="text" id="router_ip" placeholder="ex: 41.202.xx.xx ou mon-wifi.net">
-                
-                <label>Utilisateur API (créé sur MikroTik) :</label>
-                <input type="text" id="api_user" placeholder="ex: aerio_admin">
-                
-                <label>Mot de passe API :</label>
-                <input type="password" id="api_pass" placeholder="••••••••">
-                
-                <button type="submit" class="btn-save">ENREGISTRER LE ROUTEUR</button>
-            </form>
+    <!-- MAIN -->
+    <div class="main-content">
+        <header>
+            <div>
+                <h1 style="font-size: 24px; font-weight: 800;">Tableau de bord - AERIO</h1>
+                <p style="color: #444; font-size: 13px;">Gérez vos ventes et suivez vos performances</p>
+            </div>
+            <div class="user-profile">
+                <img src="https://ui-avatars.com" alt="User">
+                <span style="font-size: 13px; font-weight: 700;">Dadie Junior</span>
+            </div>
+        </header>
+
+        <!-- STATS -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>Solde Actuel</h3>
+                <div class="value blue" id="solde">0 XAF</div>
+                <div class="icon-bg">💳</div>
+            </div>
+            <div class="stat-card">
+                <h3>Chiffre d'Affaires</h3>
+                <div class="value green" id="revenue">0 XAF</div>
+                <div class="icon-bg">📈</div>
+            </div>
+            <div class="stat-card">
+                <h3>Tickets Vendus</h3>
+                <div class="value orange" id="tickets-count">0</div>
+                <div class="icon-bg">🎟️</div>
+            </div>
+            <div class="stat-card">
+                <h3>Total Retraits</h3>
+                <div class="value red" id="withdraws">0 XAF</div>
+                <div class="icon-bg">📤</div>
+            </div>
         </div>
 
-        <!-- STATISTIQUES DE VENTE -->
-        <div class="card">
-            <h2>📊 PERFORMANCES DU RÉSEAU</h2>
-            <div class="stats-box">
-                <div class="stat">Tickets Vendus <span id="total-sold">0</span></div>
-                <div class="stat">Revenus (XOF) <span id="total-revenue" style="color: #00F5A0;">0</span></div>
-                <div class="stat">Utilisateurs Actifs <span id="active-users">0</span></div>
-            </div>
-            
-            <h2 style="margin-top: 30px;">📜 DERNIERS TICKETS GÉNÉRÉS</h2>
-            <table style="width: 100%; text-align: left; font-size: 13px; color: #888;">
-                <tr style="color: white; border-bottom: 1px solid #333;">
-                    <th>Code</th><th>Durée</th><th>Date</th><th>Statut</th>
-                </tr>
-                <tbody id="ticket-history">
-                    <!-- Les tickets s'afficheront ici dynamiquement -->
+        <!-- DERNIÈRES VENTES -->
+        <div class="table-container">
+            <h2 style="font-size: 16px; margin-bottom: 25px;">Dernières Transactions</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>DATE</th>
+                        <th>CODE TICKET</th>
+                        <th>MONTANT BRUT</th>
+                        <th>GAIN (85%)</th>
+                        <th>STATUT</th>
+                    </tr>
+                </thead>
+                <tbody id="transaction-list">
+                    <!-- Injecté par JS -->
                 </tbody>
             </table>
         </div>
     </div>
 
+    <script>
+        async function fetchDashboardData() {
+            try {
+                const response = await fetch('/api/my-stats');
+                const tickets = await response.json();
+                
+                let totalBrut = 0;
+                let listHtml = "";
+
+                tickets.reverse().forEach(t => {
+                    totalBrut += t.amount;
+                    const gainNet = t.amount * 0.85;
+                    listHtml += `
+                        <tr>
+                            <td>${new Date(t.date).toLocaleDateString()}</td>
+                            <td><b style="color:var(--primary)">${t.code}</b></td>
+                            <td>${t.amount} F</td>
+                            <td style="color:var(--success)">${gainNet.toFixed(0)} F</td>
+                            <td><span class="badge">PAYÉ</span></td>
+                        </tr>
+                    `;
+                });
+
+                document.getElementById('revenue').innerText = totalBrut + " XAF";
+                document.getElementById('solde').innerText = (totalBrut * 0.85).toFixed(0) + " XAF";
+                document.getElementById('tickets-count').innerText = tickets.length;
+                document.getElementById('transaction-list').innerHTML = listHtml;
+
+            } catch (e) { console.error("Erreur de chargement"); }
+        }
+        window.onload = fetchDashboardData;
+    </script>
 </body>
 </html>
