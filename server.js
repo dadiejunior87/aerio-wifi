@@ -31,7 +31,7 @@ app.post("/api/register-partner", (req, res) => {
         router_ip,
         payout_number,
         payout_method,
-        rates: [], // Grille tarifaire vide au début
+        rates: [],
         createdAt: new Date()
     };
 
@@ -40,11 +40,10 @@ app.post("/api/register-partner", (req, res) => {
     res.json({ success: true, partnerID });
 });
 
-// 2. Ajouter un tarif personnalisé pour un partenaire
+// 2. Ajouter un tarif personnalisé
 app.post("/api/save-rate", (req, res) => {
     const { partnerID, prix, duree } = req.body;
     let partners = JSON.parse(fs.readFileSync(PARTNERS_FILE));
-    
     let partner = partners.find(p => p.partnerID === partnerID);
     if (partner) {
         partner.rates.push({ prix: parseInt(prix), duree });
@@ -63,23 +62,18 @@ app.get("/api/get-rates", (req, res) => {
     res.json(partner ? partner.rates : []);
 });
 
-// --- SYSTÈME DE PAIEMENT & COMMISSION (15%) ---
+// --- SYSTÈME DE PAIEMENT & RÉCUPÉRATION ---
 
-// 4. Initialiser le paiement Moneroo
+// 4. Initialiser le paiement Moneroo (Correction URL)
 app.post("/api/pay", async (req, res) => {
-    const { amount, duration, router_id } = req.body;
-
+    const { amount, duration, router_id, phone } = req.body;
     try {
         const response = await axios.post('https://api.moneroo.io', {
             amount: parseInt(amount),
             currency: 'XOF',
-            customer: { email: "client@aerio.zone", name: "Client WiFi" },
+            customer: { phone: phone, name: "Client WiFi" },
             return_url: `https://${req.get('host')}/success.html`,
-            metadata: { 
-                router_id: router_id, 
-                duration: duration,
-                total_amount: amount 
-            }
+            metadata: { router_id, duration, phone }
         }, {
             headers: { 'Authorization': `Bearer ${process.env.MONEROO_API_KEY}` }
         });
@@ -89,41 +83,51 @@ app.post("/api/pay", async (req, res) => {
     }
 });
 
-// 5. Webhook Moneroo : Confirmation et calcul de commission
+// 5. Webhook Moneroo : Confirmation et calcul commission
 app.post("/api/webhook", async (req, res) => {
     const { event, data } = req.body;
-
     if (event === 'payment.success') {
         const amount = data.amount;
         const partnerID = data.metadata.router_id;
+        const customerPhone = data.metadata.phone; // Récupéré pour la recherche
         const code = Math.random().toString(36).substring(2, 8).toUpperCase();
         
-        // Calcul commission 15% / 85%
-        const commissionAerio = amount * 0.15;
-        const gainPartenaire = amount - commissionAerio;
-
-        // Sauvegarde de la transaction
         const tickets = JSON.parse(fs.readFileSync(TICKETS_FILE));
         tickets.push({
             code,
             amount,
-            net_partner: gainPartenaire,
+            customer_phone: customerPhone,
             partnerID,
             date: new Date(),
             status: "SUCCESS"
         });
         fs.writeFileSync(TICKETS_FILE, JSON.stringify(tickets, null, 2));
-
-        console.log(`Ticket ${code} généré. Gain AERIO: ${commissionAerio}F`);
-        // Ici, tu peux ajouter l'appel API vers le MikroTik (mikronode-ng)
     }
     res.sendStatus(200);
 });
 
+// 6. NOUVEAU : Récupérer un ticket perdu
+app.get('/api/recover-ticket', (req, res) => {
+    const { phone } = req.query;
+    const tickets = JSON.parse(fs.readFileSync(TICKETS_FILE));
+    const found = tickets.reverse().find(t => t.customer_phone === phone);
+    if (found) {
+        res.json({ success: true, code: found.code });
+    } else {
+        res.json({ success: false });
+    }
+});
+
 // --- ROUTES PAGES ---
 
+// Route par défaut : La page d'accueil (Vitrine)
 app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "public", "login.html"));
+    res.sendFile(path.join(__dirname, "public", "index.html"));
+});
+
+// Route pour le Dashboard
+app.get("/dashboard", (req, res) => {
+    res.sendFile(path.join(__dirname, "public", "dashboard.html"));
 });
 
 app.get("/api/tickets", (req, res) => {
@@ -131,5 +135,5 @@ app.get("/api/tickets", (req, res) => {
     res.json(tickets);
 });
 
-// Lancement du serveur
+// Lancement
 app.listen(PORT, () => console.log(`🚀 AERIO SAAS opérationnel sur le port ${PORT}`));
