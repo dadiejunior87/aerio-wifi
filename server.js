@@ -57,3 +57,12 @@ app.get("/", (req, res) => {
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 tickets.push({ id: "3", username: "TEST-001", password: "1111", uptime: "5m", status: "pending" });
+app.get("/success", (req, res) => {
+    const user = req.query.user;
+
+    res.send(`
+        <h1>Bienvenue ${user}</h1>
+        <p><strong>Statut :</strong> Connecté</p>
+        <p><strong>Accès Internet activé</strong></p>
+    `);
+});
