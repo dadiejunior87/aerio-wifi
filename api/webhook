@@ -1,1 +1,59 @@
+app.post("/api/webhook", async (req, res) => {
+    try {
+        const { event, data } = req.body;
 
+        // On vérifie que c'est bien un paiement réussi
+        if (event === "payment.success") {
+
+            const amount = data.amount;
+            const partnerID = data.metadata.router_id;
+            const customerPhone = data.metadata.phone;
+            const duration = data.metadata.duration;
+
+            // Génération code ticket
+            const generateCode = () =>
+                Math.random().toString(36).substring(2, 8).toUpperCase();
+
+            const generatePassword = () =>
+                Math.random().toString(36).substring(2, 6);
+
+            const tickets = JSON.parse(fs.readFileSync(TICKETS_FILE));
+
+            // Sécurité : éviter doublon si webhook envoyé 2 fois
+            const existing = tickets.find(t =>
+                t.customer_phone === customerPhone &&
+                t.amount === amount &&
+                t.status === "active"
+            );
+
+            if (!existing) {
+
+                const newTicket = {
+                    code: generateCode(),
+                    password: generatePassword(),
+                    duration: duration || "1h",
+                    amount: amount,
+                    customer_phone: customerPhone,
+                    partnerID: partnerID,
+                    date: new Date().toISOString(),
+                    status: "active"
+                };
+
+                tickets.push(newTicket);
+
+                fs.writeFileSync(
+                    TICKETS_FILE,
+                    JSON.stringify(tickets, null, 2)
+                );
+
+                console.log("🎫 Nouveau ticket créé :", newTicket.code);
+            }
+        }
+
+        res.sendStatus(200);
+
+    } catch (error) {
+        console.error("❌ Erreur Webhook :", error);
+        res.sendStatus(500);
+    }
+});
