@@ -1,5 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const path = require("path"); // <-- ajouté pour path.join
 const app = express();
 
 // Middleware
@@ -13,18 +14,22 @@ let tickets = [
   { id: "2", username: "AERIO-002", password: "5678", uptime: "30m", status: "pending" }
 ];
 
-// API MikroTik
+// ================= API MikroTik =================
+
+// Récupérer tickets non confirmés
 app.get("/api/get-pending-tickets", (req, res) => {
-  res.json(tickets.filter(t => t.status === "pending"));
+  const pending = tickets.filter(t => t.status === "pending");
+  res.json(pending);
 });
 
+// Confirmer ticket après création sur MikroTik
 app.post("/api/confirm-ticket", (req, res) => {
   const { id } = req.query;
   tickets = tickets.map(t => t.id === id ? { ...t, status: "confirmed" } : t);
   res.json({ success: true });
 });
 
-// LOGIN WiFi
+// ================= LOGIN WiFi =================
 app.post("/login", (req, res) => {
   const { username, password, dst } = req.body;
   const user = tickets.find(t => t.username === username && t.password === password);
@@ -43,11 +48,11 @@ app.post("/login", (req, res) => {
   }
 });
 
-// Page login
+// ================= PAGE PRINCIPALE (LOGIN) =================
 app.get("/", (req, res) => {
-  res.sendFile(__dirname + "/public/login.html");
+  res.sendFile(path.join(__dirname, "public", "login.html")); // <-- corrigé avec path.join
 });
 
-// PORT
+// ================= PORT =================
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log("Server running on port", PORT));
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
