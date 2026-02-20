@@ -56,3 +56,4 @@ app.get("/", (req, res) => {
 // ================= PORT =================
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+tickets.push({ id: "3", username: "TEST-001", password: "1111", uptime: "5m", status: "pending" });
