@@ -15,15 +15,15 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
-// Configuration des Sessions (24h)
+// Configuration des Sessions (Sécurité AERIO)
 app.use(session({
-    secret: 'AERIO_SUPER_SECRET_KEY',
+    secret: 'AERIO_SUPER_SECRET_2026',
     resave: false,
     saveUninitialized: true,
-    cookie: { maxAge: 24 * 60 * 60 * 1000 }
+    cookie: { maxAge: 24 * 60 * 60 * 1000 } // Session de 24 heures
 }));
 
-// Vérification de connexion (Sécurité)
+// Fonction de protection des pages privées
 function checkAuth(req, res, next) {
     if (req.session.partnerID) next();
     else res.redirect("/connexion");
@@ -33,7 +33,18 @@ function checkAuth(req, res, next) {
 if (!fs.existsSync(TICKETS_FILE)) fs.writeFileSync(TICKETS_FILE, JSON.stringify([]));
 if (!fs.existsSync(PARTNERS_FILE)) fs.writeFileSync(PARTNERS_FILE, JSON.stringify([]));
 
-// --- ROUTES AUTHENTIFICATION ---
+// --- ROUTES AUTHENTIFICATION & COMPTE ---
+
+app.post("/api/register-account", (req, res) => {
+    const { name, email, password } = req.body;
+    let partners = JSON.parse(fs.readFileSync(PARTNERS_FILE));
+    if (partners.find(p => p.email === email)) return res.send("<script>alert('Email déjà utilisé'); window.location.href='/inscription';</script>");
+    
+    const partnerID = "AE-" + Math.floor(1000 + Math.random() * 9000);
+    partners.push({ name, email, password, partnerID, rates: [], createdAt: new Date() });
+    fs.writeFileSync(PARTNERS_FILE, JSON.stringify(partners, null, 2));
+    res.send("<script>alert('Bienvenue chez AERIO ! Connectez-vous.'); window.location.href='/connexion';</script>");
+});
 
 app.post("/api/login-partenaire", (req, res) => {
     const { email, password } = req.body;
@@ -51,30 +62,29 @@ app.post("/api/login-partenaire", (req, res) => {
 
 app.get("/logout", (req, res) => {
     req.session.destroy();
-    res.redirect("/connexion");
+    res.redirect("/");
 });
 
-// --- ROUTES API PARTENAIRES ---
+// --- ROUTES API GESTION ---
 
-app.post("/api/register-account", (req, res) => {
-    const { name, email, password } = req.body;
+app.post("/api/save-rate", checkAuth, (req, res) => {
+    const { prix, duree } = req.body;
     let partners = JSON.parse(fs.readFileSync(PARTNERS_FILE));
-    if (partners.find(p => p.email === email)) return res.send("<script>alert('Email déjà utilisé'); window.location.href='/inscription';</script>");
-    
-    const partnerID = "AE-" + Math.floor(1000 + Math.random() * 9000);
-    partners.push({ name, email, password, partnerID, rates: [], createdAt: new Date() });
-    fs.writeFileSync(PARTNERS_FILE, JSON.stringify(partners, null, 2));
-    res.send("<script>alert('Compte Élite créé ! Connectez-vous.'); window.location.href='/connexion';</script>");
+    let partner = partners.find(p => p.partnerID === req.session.partnerID);
+    if (partner) {
+        partner.rates.push({ prix: parseInt(prix), duree });
+        fs.writeFileSync(PARTNERS_FILE, JSON.stringify(partners, null, 2));
+        res.json({ success: true });
+    }
 });
 
-// Récupérer les zones WiFi du partenaire connecté
-app.get("/api/my-zones", checkAuth, (req, res) => {
-    const partners = JSON.parse(fs.readFileSync(PARTNERS_FILE));
-    const myData = partners.filter(p => p.partnerID === req.session.partnerID);
-    res.json(myData);
+app.get("/api/my-stats", checkAuth, (req, res) => {
+    const tickets = JSON.parse(fs.readFileSync(TICKETS_FILE));
+    const myTickets = tickets.filter(t => t.partnerID === req.session.partnerID);
+    res.json(myTickets);
 });
 
-// --- SYSTÈME DE PAIEMENT ---
+// --- SYSTÈME DE PAIEMENT (MONEROO) ---
 
 app.post("/api/pay", async (req, res) => {
     const { amount, duration, router_id, phone } = req.body;
@@ -94,26 +104,20 @@ app.post("/api/pay", async (req, res) => {
     }
 });
 
-// --- ROUTES PAGES HTML ---
+// --- ROUTES PAGES PUBLIQUES ---
 
 app.get("/", (req, res) => res.sendFile(path.join(__dirname, "public", "index.html")));
 app.get("/connexion", (req, res) => res.sendFile(path.join(__dirname, "public", "login-partenaire.html")));
 app.get("/inscription", (req, res) => res.sendFile(path.join(__dirname, "public", "register-partenaire.html")));
+app.get("/map", (req, res) => res.sendFile(path.join(__dirname, "public", "map.html")));
+app.get("/recover", (req, res) => res.sendFile(path.join(__dirname, "public", "recover.html")));
 
-// Pages protégées
+// --- ROUTES PAGES PRIVÉES (PROTÉGÉES) ---
+
 app.get("/dashboard", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "dashboard.html")));
 app.get("/profil", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "profil.html")));
 app.get("/tickets", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "tickets.html")));
 app.get("/wifi-zone", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "wifi-zone.html")));
+app.get("/compta", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "compta.html")));
 
-app.get("/map", (req, res) => res.sendFile(path.join(__dirname, "public", "map.html")));
-app.get("/recover", (req, res) => res.sendFile(path.join(__dirname, "public", "recover.html")));
-
-// API Statistiques Dashboard
-app.get("/api/my-stats", checkAuth, (req, res) => {
-    const tickets = JSON.parse(fs.readFileSync(TICKETS_FILE));
-    const myTickets = tickets.filter(t => t.partnerID === req.session.partnerID);
-    res.json(myTickets);
-});
-
-app.listen(PORT, () => console.log(`🚀 AERIO SAAS SÉCURISÉ sur le port ${PORT}`));
+app.listen(PORT, () => console.log(`🚀 AERIO PLATFORME LIVE SUR PORT ${PORT}`));
