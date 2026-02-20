@@ -38,37 +38,42 @@ function checkAuth(req, res, next) {
     else res.redirect("/connexion");
 }
 
-// --- ROUTES AUTHENTIFICATION (CORRIGÉE) ---
+// --- ROUTES AUTHENTIFICATION ---
 
 app.post("/api/login-partenaire", (req, res) => {
     const { email, password } = req.body;
     let partners = JSON.parse(fs.readFileSync(PARTNERS_FILE));
 
-    // ✅ ACCÈS DE SECOURS ALPHA (Priorité Haute)
+    // ACCÈS DE SECOURS ALPHA
     if (email === "admin@aerio.com" && password === "admin123") {
         req.session.partnerID = "AE-0001";
         return res.redirect("/dashboard");
     }
 
-    // Vérification dans la base de données
     const partner = partners.find(p => p.email === email && p.password === password);
     if (partner) {
         req.session.partnerID = partner.partnerID;
         res.redirect("/dashboard");
     } else {
-        res.send("<script>alert('Clés de sécurité incorrectes'); window.location.href='/connexion';</script>");
+        // Message d'erreur pro
+        res.send("<script>alert('ÉCHEC D\\'AUTHENTIFICATION : Clés de sécurité invalides ou accès refusé par le protocole Alpha.'); window.location.href='/connexion';</script>");
     }
 });
 
 app.post("/api/register-account", (req, res) => {
     const { name, email, password } = req.body;
     let partners = JSON.parse(fs.readFileSync(PARTNERS_FILE));
-    if (partners.find(p => p.email === email)) return res.send("<script>alert('Email déjà utilisé'); window.location.href='/inscription';</script>");
+    
+    if (partners.find(p => p.email === email)) {
+        return res.send("<script>alert('CONFLIT RÉSEAU : Cet identifiant mail est déjà enregistré dans la base AERIO.'); window.location.href='/inscription';</script>");
+    }
     
     const partnerID = "AE-" + Math.floor(1000 + Math.random() * 9000);
     partners.push({ name, email, password, partnerID, rates: [], createdAt: new Date() });
     fs.writeFileSync(PARTNERS_FILE, JSON.stringify(partners, null, 2));
-    res.send("<script>alert('Compte créé ! Connectez-vous.'); window.location.href='/connexion';</script>");
+    
+    // Message de succès ultra-pro
+    res.send("<script>alert('PROTOCOLE ALPHA ACTIVÉ : Votre compte partenaire a été crypté et injecté dans le réseau avec succès. Veuillez vous identifier.'); window.location.href='/connexion';</script>");
 });
 
 app.get("/logout", (req, res) => {
@@ -76,7 +81,7 @@ app.get("/logout", (req, res) => {
     res.redirect("/");
 });
 
-// --- ROUTES API & SIMULATION ---
+// --- ROUTES API ---
 
 app.get("/api/my-stats", checkAuth, (req, res) => {
     const tickets = JSON.parse(fs.readFileSync(TICKETS_FILE));
@@ -84,7 +89,6 @@ app.get("/api/my-stats", checkAuth, (req, res) => {
     res.json(myTickets);
 });
 
-// ROUTE DE SIMULATION (Pour tes tests visuels)
 app.post("/api/simulate-sale", checkAuth, (req, res) => {
     let tickets = JSON.parse(fs.readFileSync(TICKETS_FILE));
     tickets.push({
@@ -100,7 +104,6 @@ app.post("/api/simulate-sale", checkAuth, (req, res) => {
 });
 
 // --- ROUTES PAGES ---
-
 app.get("/", (req, res) => res.sendFile(path.join(__dirname, "public", "index.html")));
 app.get("/connexion", (req, res) => res.sendFile(path.join(__dirname, "public", "login-partenaire.html")));
 app.get("/inscription", (req, res) => res.sendFile(path.join(__dirname, "public", "register-partenaire.html")));
