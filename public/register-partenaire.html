@@ -3,123 +3,111 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AERIO | Inscription Élite</title>
-    <link href="https://fonts.googleapis.com" rel="stylesheet">
+    <title>AERIO | Devenir Partenaire Élite</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #00C2FF;
             --secondary: #7000FF;
-            --accent: #FF4B4B;
-            --bg: #030712;
+            --accent: #00F5A0;
+            --danger: #FF4B4B;
+            --bg: #020617;
+            --glass: rgba(15, 23, 42, 0.7);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         
         body { 
             background: var(--bg); 
-            height: 100vh; 
+            min-height: 100vh; 
             display: flex; 
             justify-content: center; 
             align-items: center; 
-            overflow: hidden;
             position: relative;
+            padding: 20px;
         }
 
-        /* EFFET DE FOND ANIMÉ */
-        .bg-glow {
+        .glow-bg {
             position: absolute; width: 600px; height: 600px; border-radius: 50%;
-            background: radial-gradient(circle, rgba(112, 0, 255, 0.15) 0%, transparent 70%);
-            top: -200px; right: -200px; z-index: -1; animation: float 10s infinite alternate;
+            background: radial-gradient(circle, rgba(112, 0, 255, 0.1) 0%, transparent 70%);
+            top: -200px; right: -200px; z-index: -1; filter: blur(100px);
+            animation: pulse 10s infinite alternate;
         }
-        @keyframes float { from { transform: translate(0,0); } to { transform: translate(-100px, 100px); } }
+        @keyframes pulse { from { opacity: 0.4; transform: scale(1); } to { opacity: 0.8; transform: scale(1.3); } }
 
-        .register-container {
-            background: rgba(15, 23, 42, 0.6);
-            backdrop-filter: blur(20px);
-            padding: 50px 40px;
+        .register-card {
+            background: var(--glass);
+            backdrop-filter: blur(25px);
+            padding: 50px 45px;
             border-radius: 40px;
             width: 90%;
-            max-width: 480px;
+            max-width: 500px;
             border: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.8);
             text-align: center;
-            animation: fadeIn 0.8s ease-out;
+            animation: slideUp 0.6s ease-out;
         }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* LOGO BOX STYLE */
-        .logo-box {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 30px;
+        /* BADGE ERREUR */
+        #error-badge {
+            display: none;
+            background: rgba(255, 75, 75, 0.1);
+            border: 1px solid var(--danger);
+            color: var(--danger);
+            padding: 15px;
+            border-radius: 15px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 25px;
+            animation: shake 0.4s ease;
         }
-        .logo-text {
-            font-weight: 800;
-            font-size: 28px;
-            color: var(--primary);
-            margin-left: 12px;
-            letter-spacing: -1px;
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
         }
 
-        h2 { font-weight: 800; font-size: 26px; margin-bottom: 10px; letter-spacing: -1px; color: white; }
-        p.subtitle { color: #888; font-size: 14px; margin-bottom: 35px; }
+        .logo-box { display: flex; align-items: center; justify-content: center; margin-bottom: 30px; }
+        .logo-text { font-weight: 900; font-size: 28px; color: var(--primary); margin-left: 12px; letter-spacing: -1px; }
 
-        .input-group { position: relative; margin-bottom: 25px; text-align: left; }
-        
+        h2 { font-weight: 900; font-size: 24px; margin-bottom: 8px; color: white; }
+        p.subtitle { color: #475569; font-size: 13px; margin-bottom: 35px; }
+
+        .input-group { position: relative; margin-bottom: 20px; text-align: left; }
         label { 
-            display: block; font-size: 11px; font-weight: 700; color: var(--primary); 
-            text-transform: uppercase; letter-spacing: 1.5px; margin-left: 20px; margin-bottom: 8px;
+            display: block; font-size: 10px; font-weight: 800; color: var(--primary); 
+            text-transform: uppercase; letter-spacing: 2px; margin-left: 20px; margin-bottom: 8px;
         }
 
         input {
-            width: 100%;
-            padding: 18px 25px;
-            background: rgba(0, 0, 0, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 20px;
-            color: white;
-            font-size: 15px;
-            transition: 0.3s;
-            outline: none;
+            width: 100%; padding: 16px 25px; background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 18px;
+            color: white; font-size: 15px; transition: 0.3s; outline: none; text-align: center;
         }
-        input:focus { border-color: var(--primary); background: rgba(0, 194, 255, 0.05); box-shadow: 0 0 15px rgba(0, 194, 255, 0.1); }
+        input:focus { border-color: var(--primary); background: rgba(0, 194, 255, 0.05); }
 
         .btn-register {
-            width: 100%;
-            padding: 20px;
-            border: none;
-            border-radius: 20px;
+            width: 100%; padding: 20px; border: none; border-radius: 20px;
             background: linear-gradient(45deg, var(--primary), var(--secondary));
-            color: white;
-            font-weight: 800;
-            font-size: 16px;
-            cursor: pointer;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: 0.4s;
-            margin-top: 15px;
+            color: white; font-weight: 900; font-size: 16px; cursor: pointer;
+            text-transform: uppercase; letter-spacing: 2px; transition: 0.4s; margin-top: 15px;
         }
-        .btn-register:hover { transform: scale(1.02); box-shadow: 0 15px 30px rgba(112, 0, 255, 0.4); }
+        .btn-register:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(112, 0, 255, 0.4); }
 
-        .footer-links { margin-top: 30px; font-size: 13px; color: #666; }
-        .footer-links a { color: var(--primary); text-decoration: none; font-weight: 600; }
-        .footer-links a:hover { text-decoration: underline; }
-
-        .dot { width: 8px; height: 8px; background: var(--accent); display: inline-block; border-radius: 50%; margin-right: 5px; }
+        .footer-links { margin-top: 30px; font-size: 12px; color: #475569; }
+        .footer-links a { color: var(--primary); text-decoration: none; font-weight: 700; }
     </style>
 </head>
 <body>
 
-    <div class="bg-glow"></div>
+    <div class="glow-bg"></div>
 
-    <div class="register-container">
-        <!-- LOGO AERIO SVG ANIMÉ -->
+    <div class="register-card">
         <div class="logo-box">
-            <svg width="45" height="45" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org">
+            <svg width="45" height="45" viewBox="0 0 100 100">
                 <circle cx="50" cy="50" r="48" stroke="#00C2FF" stroke-width="4" stroke-dasharray="10 5"/>
                 <path d="M50 25L25 75H35L50 45L65 75H75L50 25Z" fill="#00C2FF"/>
-                <path d="M40 60H60" stroke="#7000FF" stroke-width="5" stroke-linecap="round"/>
                 <circle cx="50" cy="85" r="5" fill="#00F5A0">
                     <animate attributeName="opacity" values="1;0.2;1" dur="2s" repeatCount="indefinite" />
                 </circle>
@@ -127,32 +115,41 @@
             <span class="logo-text">AERIO</span>
         </div>
 
-        <h2>CRÉER UN COMPTE</h2>
-        <p class="subtitle"><span class="dot"></span> Rejoignez l'élite du WiFi au Cameroun</p>
+        <div id="error-badge">⚠️ Cet email est déjà utilisé par un autre partenaire.</div>
+
+        <h2>REJOINDRE L'ÉLITE</h2>
+        <p class="subtitle">Créez votre infrastructure WiFi Zone en 2 minutes</p>
         
         <form action="/api/register-account" method="POST">
             <div class="input-group">
-                <label>Nom ou Entreprise</label>
-                <input type="text" name="name" placeholder="Ex: Jean WiFi Sarl" required>
+                <label>Nom complet / Entreprise</label>
+                <input type="text" name="name" placeholder="Ex: Global WiFi Services" required>
             </div>
 
             <div class="input-group">
-                <label>Email Professionnel</label>
+                <label>Adresse Email</label>
                 <input type="email" name="email" placeholder="votre@email.com" required>
             </div>
 
             <div class="input-group">
-                <label>Mot de passe sécurisé</label>
+                <label>Définir une clé d'accès</label>
                 <input type="password" name="password" placeholder="••••••••" required>
             </div>
 
-            <button type="submit" class="btn-register">Démarrer maintenant</button>
+            <button type="submit" class="btn-register">Activer mon accès</button>
         </form>
 
         <div class="footer-links">
-            Déjà partenaire ? <a href="/connexion">Connectez-vous</a>
+            <p>Déjà partenaire ? <a href="/connexion">Connectez-vous ici</a></p>
         </div>
     </div>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('error') === 'exists') {
+            document.getElementById('error-badge').style.display = 'block';
+        }
+    </script>
 
 </body>
 </html>
