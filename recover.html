@@ -4,58 +4,91 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AERIO | Récupérer mon Ticket</title>
+    <link href="https://fonts.googleapis.com" rel="stylesheet">
     <style>
-        :root { --primary: #00C2FF; --bg: #030712; --card: rgba(15, 23, 42, 0.95); }
+        :root { --primary: #00C2FF; --bg: #030712; --card: rgba(15, 23, 42, 0.95); --secondary: #7000FF; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        body { background: var(--bg); color: white; display: flex; justify-content: center; align-items: center; min-height: 100vh; text-align: center; }
+        body { background: var(--bg); color: white; display: flex; justify-content: center; align-items: center; min-height: 100vh; text-align: center; padding: 20px; }
         
         .box {
-            background: var(--card); padding: 40px; border-radius: 30px;
-            border: 1px solid rgba(255,255,255,0.05); width: 90%; max-width: 400px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            background: var(--card); padding: 45px 35px; border-radius: 40px;
+            border: 1px solid rgba(255,255,255,0.05); width: 100%; max-width: 420px;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.6);
+            backdrop-filter: blur(20px);
+            animation: fadeIn 0.8s ease-out;
         }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
-        h2 { font-weight: 900; margin-bottom: 10px; color: var(--primary); }
-        p { font-size: 13px; color: #888; margin-bottom: 25px; }
+        /* LOGO BOX */
+        .logo-box { display: flex; align-items: center; justify-content: center; margin-bottom: 30px; }
+        .logo-text { font-weight: 800; font-size: 26px; color: var(--primary); margin-left: 12px; letter-spacing: -1px; }
+
+        h2 { font-weight: 900; margin-bottom: 12px; color: white; font-size: 22px; letter-spacing: -0.5px; }
+        p { font-size: 13px; color: #777; margin-bottom: 30px; line-height: 1.5; }
 
         input {
-            width: 100%; padding: 16px; margin-bottom: 15px; border-radius: 15px;
-            background: rgba(255,255,255,0.05); border: 1px solid #333; color: white;
-            text-align: center; font-size: 16px; outline: none;
+            width: 100%; padding: 18px; margin-bottom: 18px; border-radius: 20px;
+            background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); color: white;
+            text-align: center; font-size: 16px; outline: none; transition: 0.3s;
         }
+        input:focus { border-color: var(--primary); background: rgba(0, 194, 255, 0.05); }
 
         .btn-search {
-            width: 100%; padding: 18px; border: none; border-radius: 15px;
-            background: linear-gradient(45deg, var(--primary), #7000FF);
+            width: 100%; padding: 18px; border: none; border-radius: 20px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
             color: white; font-weight: 800; cursor: pointer; text-transform: uppercase;
+            letter-spacing: 1px; transition: 0.4s;
         }
+        .btn-search:hover { transform: scale(1.02); box-shadow: 0 10px 25px rgba(0, 194, 255, 0.3); }
 
-        #result { margin-top: 25px; display: none; padding: 20px; border-radius: 15px; background: rgba(0, 194, 255, 0.1); border: 1px dashed var(--primary); }
+        #result { 
+            margin-top: 30px; display: none; padding: 25px; border-radius: 20px; 
+            background: rgba(0, 245, 160, 0.05); border: 2px dashed #00F5A0; 
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse { 0% { opacity: 0.8; } 50% { opacity: 1; } 100% { opacity: 0.8; } }
+
+        #ticket-code { font-size: 28px; font-weight: 900; color: #00F5A0; margin-top: 8px; letter-spacing: 5px; }
+        
+        .back-link { display:block; margin-top:30px; color:#444; text-decoration:none; font-size: 12px; font-weight: 600; transition: 0.3s; }
+        .back-link:hover { color: var(--primary); }
     </style>
 </head>
 <body>
 
     <div class="box">
+        <!-- LOGO AERIO SVG ANIMÉ -->
+        <div class="logo-box">
+            <svg width="45" height="45" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org">
+                <circle cx="50" cy="50" r="48" stroke="#00C2FF" stroke-width="4" stroke-dasharray="10 5"/>
+                <path d="M50 25L25 75H35L50 45L65 75H75L50 25Z" fill="#00C2FF"/>
+                <path d="M40 60H60" stroke="#7000FF" stroke-width="5" stroke-linecap="round"/>
+                <circle cx="50" cy="85" r="5" fill="#00F5A0">
+                    <animate attributeName="opacity" values="1;0.2;1" dur="2s" repeatCount="indefinite" />
+                </circle>
+            </svg>
+            <span class="logo-text">AERIO</span>
+        </div>
+
         <h2>TICKET PERDU ?</h2>
-        <p>Entrez le numéro de téléphone utilisé lors du paiement Moneroo.</p>
+        <p>Retrouvez votre code instantanément en saisissant le numéro utilisé pour le paiement.</p>
         
         <input type="text" id="phone" placeholder="Ex: 692487922">
-        <button class="btn-search" onclick="rechercherTicket()">Retrouver mon code</button>
+        <button class="btn-search" onclick="rechercherTicket()">Rechercher mon code</button>
 
         <div id="result">
-            <span style="font-size: 10px; color: var(--primary); font-weight: 800;">VOTRE CODE TICKET :</span>
-            <div id="ticket-code" style="font-size: 24px; font-weight: 900; margin-top: 5px; letter-spacing: 3px;">------</div>
+            <span style="font-size: 10px; color: #00F5A0; font-weight: 800; text-transform: uppercase;">Code retrouvé avec succès :</span>
+            <div id="ticket-code">------</div>
         </div>
         
-        <a href="/" style="display:block; margin-top:20px; color:#555; text-decoration:none; font-size:12px;">← Retour à l'accueil</a>
+        <a href="/" class="back-link">← Retour à l'accueil</a>
     </div>
 
     <script>
         async function rechercherTicket() {
             const phone = document.getElementById('phone').value;
-            if(!phone) return alert("Entrez votre numéro !");
+            if(!phone) return alert("Veuillez entrer votre numéro de téléphone !");
 
-            // Appel à votre serveur Render
             const response = await fetch(`/api/recover-ticket?phone=${phone}`);
             const data = await response.json();
 
@@ -64,7 +97,8 @@
                 resultDiv.style.display = 'block';
                 document.getElementById('ticket-code').innerText = data.code;
             } else {
-                alert("Aucun ticket trouvé pour ce numéro.");
+                alert("Désolé, aucun ticket n'est associé à ce numéro.");
+                resultDiv.style.display = 'none';
             }
         }
     </script>
