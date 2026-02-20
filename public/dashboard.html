@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AERIO | Console Alpha de Pilotage</title>
     <link href="https://fonts.googleapis.com" rel="stylesheet">
+    <!-- LIEN CHART.JS CORRIGÉ -->
     <script src="https://cdn.jsdelivr.net"></script>
     <style>
         :root {
@@ -16,7 +17,7 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         body { background: var(--bg); color: white; display: flex; min-height: 100vh; overflow-x: hidden; }
 
-        /* --- SIDEBAR GLASSMORPHISM --- */
+        /* --- SIDEBAR --- */
         .sidebar {
             width: 280px; background: var(--sidebar); height: 100vh; position: fixed;
             border-right: 1px solid rgba(255,255,255,0.05); padding: 40px 20px;
@@ -31,26 +32,24 @@
         }
         .nav-item:hover, .nav-item.active { background: linear-gradient(90deg, rgba(0, 194, 255, 0.1), transparent); color: var(--primary); box-shadow: inset 4px 0 0 var(--primary); }
 
-        /* --- MAIN CONTENT --- */
+        /* --- MAIN --- */
         .main-content { margin-left: 280px; flex: 1; padding: 50px; position: relative; }
         header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 50px; }
         .welcome-text h1 { font-size: 32px; font-weight: 900; letter-spacing: -1px; }
-        .welcome-text span { color: var(--primary); text-shadow: 0 0 15px rgba(0, 194, 255, 0.3); }
+        .welcome-text span { color: var(--primary); }
 
-        /* --- STATS CARDS NEON --- */
         .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 25px; margin-bottom: 40px; }
         .stat-card {
             background: var(--card); padding: 30px 25px; border-radius: 30px;
             border: 1px solid rgba(255,255,255,0.05); transition: 0.4s;
         }
-        .stat-card:hover { transform: translateY(-10px); background: rgba(255, 255, 255, 0.05); border-color: var(--primary); }
-        .stat-card h3 { font-size: 10px; font-weight: 800; color: #475569; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 15px; }
-        .stat-card .value { font-size: 28px; font-weight: 900; letter-spacing: -1px; }
+        .stat-card:hover { transform: translateY(-5px); border-color: var(--primary); }
+        .stat-card h3 { font-size: 10px; font-weight: 800; color: #475569; text-transform: uppercase; margin-bottom: 15px; }
+        .stat-card .value { font-size: 28px; font-weight: 900; }
 
-        .blue { color: var(--primary); text-shadow: 0 0 20px rgba(0, 194, 255, 0.4); }
-        .green { color: var(--success); text-shadow: 0 0 20px rgba(0, 245, 160, 0.4); }
+        .blue { color: var(--primary); text-shadow: 0 0 20px rgba(0, 194, 255, 0.3); }
+        .green { color: var(--success); text-shadow: 0 0 20px rgba(0, 245, 160, 0.3); }
 
-        /* --- GRAPHIQUE & TABLEAU --- */
         .glass-panel { background: var(--card); border-radius: 35px; padding: 35px; border: 1px solid rgba(255,255,255,0.03); backdrop-filter: blur(10px); margin-bottom: 30px; }
         .chart-container { height: 250px; width: 100%; margin-top: 20px; }
 
@@ -86,26 +85,26 @@
                 <h1>Console <span>Alpha v.1</span></h1>
                 <p style="color: #475569; font-size: 13px;">Analyse en temps réel de vos actifs numériques</p>
             </div>
+            <!-- BOUTON DE TEST -->
+            <button onclick="simulerVente()" style="background: rgba(0, 245, 160, 0.1); border: 1px solid var(--success); color: var(--success); padding: 10px 20px; border-radius: 12px; font-size: 10px; font-weight: 800; cursor: pointer;">⚡ SIMULER VENTE</button>
         </header>
 
         <div class="stats-grid">
             <div class="stat-card"><h3>Capital (85%)</h3><div class="value blue" id="solde">0 F</div></div>
             <div class="stat-card"><h3>Brut Total</h3><div class="value green" id="revenue">0 F</div></div>
-            <div class="stat-card"><h3>Utilisateurs</h3><div class="value" id="t-count" style="color:white">0</div></div>
+            <div class="stat-card"><h3>Ventes</h3><div class="value" id="t-count">0</div></div>
             <div class="stat-card"><h3>Frais (15%)</h3><div class="value" id="comm" style="color:#475569">0 F</div></div>
         </div>
 
-        <!-- GRAPHIQUE -->
         <div class="glass-panel">
-            <h2 style="font-size: 14px; font-weight: 800; color: var(--primary);">📈 FLUX DE TRESORERIE (7 JOURS)</h2>
+            <h2 style="font-size: 14px; font-weight: 800; color: var(--primary);">📈 FLUX DE TRESORERIE</h2>
             <div class="chart-container"><canvas id="salesChart"></canvas></div>
         </div>
 
-        <!-- TRANSACTIONS -->
         <div class="glass-panel">
-            <h2 style="font-size: 14px; font-weight: 800; margin-bottom: 20px;">Dernières Activités</h2>
+            <h2 style="font-size: 14px; font-weight: 800; margin-bottom: 20px;">Dernières Transactions</h2>
             <table>
-                <thead><tr><th>HORODATAGE</th><th>CODE SYSTÈME</th><th>BRUT</th><th>RÉSULTAT</th><th>ÉTAT</th></tr></thead>
+                <thead><tr><th>DATE</th><th>CODE</th><th>BRUT</th><th>GAIN NET</th><th>ÉTAT</th></tr></thead>
                 <tbody id="t-list"></tbody>
             </table>
         </div>
@@ -113,38 +112,47 @@
 
     <script>
         async function loadDash() {
-            const res = await fetch('/api/my-stats');
-            const data = await res.json();
-            let brut = 0; let list = "";
-            data.reverse().forEach(t => {
-                brut += t.amount;
-                list += `<tr><td>${new Date(t.date).toLocaleDateString()}</td><td><b style="color:var(--primary)">${t.code}</b></td><td>${t.amount} F</td><td style="color:var(--success)">${(t.amount * 0.85).toFixed(0)} F</td><td><span class="badge">SÉCURISÉ</span></td></tr>`;
-            });
-            document.getElementById('revenue').innerText = brut + " F";
-            document.getElementById('solde').innerText = (brut * 0.85).toFixed(0) + " F";
-            document.getElementById('comm').innerText = (brut * 0.15).toFixed(0) + " F";
-            document.getElementById('t-count').innerText = data.length;
-            document.getElementById('t-list').innerHTML = list;
-            initChart(data);
+            try {
+                const res = await fetch('/api/my-stats');
+                const data = await res.json();
+                let brut = 0; let list = "";
+                data.reverse().forEach(t => {
+                    brut += t.amount;
+                    list += `<tr><td>${new Date(t.date).toLocaleDateString()}</td><td><b style="color:var(--primary)">${t.code}</b></td><td>${t.amount} F</td><td style="color:var(--success)">${(t.amount * 0.85).toFixed(0)} F</td><td><span class="badge">SUCCÈS</span></td></tr>`;
+                });
+                document.getElementById('revenue').innerText = brut + " F";
+                document.getElementById('solde').innerText = (brut * 0.85).toFixed(0) + " F";
+                document.getElementById('comm').innerText = (brut * 0.15).toFixed(0) + " F";
+                document.getElementById('t-count').innerText = data.length;
+                document.getElementById('t-list').innerHTML = list;
+                initChart();
+            } catch(e) { console.log(e); }
         }
 
-        function initChart(tickets) {
+        function initChart() {
             const ctx = document.getElementById('salesChart').getContext('2d');
-            new Chart(ctx, {
+            if (window.myChart) window.myChart.destroy();
+            window.myChart = new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'],
                     datasets: [{
-                        label: 'Ventes', data: [1200, 1900, 3000, 5000, 2400, 7000, 9000],
+                        label: 'Ventes', data: [5000, 8000, 4000, 9500, 12000, 7000, 15000],
                         borderColor: '#00C2FF', backgroundColor: 'rgba(0, 194, 255, 0.1)',
-                        fill: true, tension: 0.4, borderWidth: 3, pointRadius: 0
+                        fill: true, tension: 0.4, borderWidth: 3, pointRadius: 2
                     }]
                 },
                 options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
-                    scales: { y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#475569' } }, x: { display: false } }
+                    scales: { y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#475569' } }, x: { grid: { display: false }, ticks: { color: '#475569' } } }
                 }
             });
         }
+
+        async function simulerVente() {
+            await fetch('/api/simulate-sale', { method: 'POST' });
+            loadDash();
+        }
+
         window.onload = loadDash;
     </script>
 </body>
