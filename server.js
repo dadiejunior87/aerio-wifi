@@ -44,7 +44,7 @@ app.post("/api/login-partenaire", (req, res) => {
     const { email, password } = req.body;
     let partners = JSON.parse(fs.readFileSync(PARTNERS_FILE));
 
-    // ACCÈS DE SECOURS ALPHA
+    // ACCÈS DE SECOURS ALPHA (Priorité Haute)
     if (email === "admin@aerio.com" && password === "admin123") {
         req.session.partnerID = "AE-0001";
         return res.redirect("/dashboard");
@@ -55,7 +55,6 @@ app.post("/api/login-partenaire", (req, res) => {
         req.session.partnerID = partner.partnerID;
         res.redirect("/dashboard");
     } else {
-        // Message d'erreur pro
         res.send("<script>alert('ÉCHEC D\\'AUTHENTIFICATION : Clés de sécurité invalides ou accès refusé par le protocole Alpha.'); window.location.href='/connexion';</script>");
     }
 });
@@ -72,8 +71,8 @@ app.post("/api/register-account", (req, res) => {
     partners.push({ name, email, password, partnerID, rates: [], createdAt: new Date() });
     fs.writeFileSync(PARTNERS_FILE, JSON.stringify(partners, null, 2));
     
-    // Message de succès ultra-pro
-    res.send("<script>alert('PROTOCOLE ALPHA ACTIVÉ : Votre compte partenaire a été crypté et injecté dans le réseau avec succès. Veuillez vous identifier.'); window.location.href='/connexion';</script>");
+    // ✅ REDIRECTION VERS LA SÉQUENCE D'INITIALISATION
+    res.redirect("/success-init");
 });
 
 app.get("/logout", (req, res) => {
@@ -107,6 +106,7 @@ app.post("/api/simulate-sale", checkAuth, (req, res) => {
 app.get("/", (req, res) => res.sendFile(path.join(__dirname, "public", "index.html")));
 app.get("/connexion", (req, res) => res.sendFile(path.join(__dirname, "public", "login-partenaire.html")));
 app.get("/inscription", (req, res) => res.sendFile(path.join(__dirname, "public", "register-partenaire.html")));
+app.get("/success-init", (req, res) => res.sendFile(path.join(__dirname, "public", "success-animation.html"))); // ✅ NOUVEAU
 app.get("/dashboard", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "dashboard.html")));
 app.get("/map", (req, res) => res.sendFile(path.join(__dirname, "public", "map.html")));
 app.get("/recover", (req, res) => res.sendFile(path.join(__dirname, "public", "recover.html")));
