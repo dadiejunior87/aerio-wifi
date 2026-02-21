@@ -11,13 +11,13 @@ const twilio = require("twilio");
 const app = express();
 
 // --- CONFIGURATION ÉLITE ---
-const PORT = process.env.PORT || 3000;
-const ADMIN_PHONE = "237691285152"; // ✅ TON ORANGE MONEY POUR LES REVENUS
+const PORT = process.env.PORT || 10000; // Render préfère 10000
+const ADMIN_PHONE = "237691285152"; 
 const TICKETS_FILE = path.join(__dirname, "tickets.json");
 const PARTNERS_FILE = path.join(__dirname, "partners.json");
 
 // --- SÉCURITÉ BASTION ---
-app.use(helmet()); 
+app.use(helmet({ contentSecurityPolicy: false })); // Désactivation CSP pour laisser passer les scripts externes
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000, max: 100, 
     message: "ALERTE SÉCURITÉ : Protocole Alpha activé."
@@ -29,7 +29,18 @@ const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: { user: 'votre-email@gmail.com', pass: 'votre-pass-app' }
 });
-const smsClient = new twilio('TON_ACCOUNT_SID', 'TON_AUTH_TOKEN');
+
+// ✅ BLINDAGE TWILIO (ÉVITE LE CRASH "accountSid must start with AC")
+const sid = process.env.TWILIO_ACCOUNT_SID || 'AC_TEMP';
+const token = process.env.TWILIO_AUTH_TOKEN || 'TOKEN_TEMP';
+let smsClient;
+
+if (sid.startsWith('AC') && sid.length > 10) {
+    smsClient = new twilio(sid, token);
+    console.log("✅ Moteur SMS Twilio Opérationnel.");
+} else {
+    console.log("⚠️ MODE DÉMO : Twilio désactivé (SID invalide ou manquant).");
+}
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -54,13 +65,23 @@ function checkAuth(req, res, next) {
     else res.redirect("/connexion");
 }
 
-// ✅ ROUTE PAIEMENT LICENCE (5 000 F)
+async function envoyerSmsTicket(phone, code, duration) {
+    if (!smsClient) return console.log("❌ Envoi SMS annulé (Twilio non configuré).");
+    try {
+        await smsClient.messages.create({
+            body: `[AERIO ALPHA] 🎟️ Votre ticket WiFi : ${code}\nDUREE : ${duration}`,
+            from: 'AERIO', to: phone
+        });
+    } catch (e) { console.log("Erreur SMS"); }
+}
+
+// ✅ ROUTE PAIEMENT LICENCE
 app.post("/api/pay-license", checkAuth, async (req, res) => {
     try {
         const response = await axios.post("https://api.moneroo.io", {
             amount: 5000, 
             currency: "XAF",
-            description: `Activation Licence Alpha - Partenaire ${req.session.partnerID}`,
+            description: `Licence Alpha - ${req.session.partnerID}`,
             metadata: { type: "LICENSE_ACTIVATION", partnerID: req.session.partnerID },
             return_url: `${req.protocol}://${req.get('host')}/dashboard?success=true`
         }, {
@@ -70,12 +91,11 @@ app.post("/api/pay-license", checkAuth, async (req, res) => {
     } catch (e) { res.status(500).json({ error: "Erreur Moneroo" }); }
 });
 
-// ✅ WEBHOOK MONEROO (VENTES + LICENCES)
+// ✅ WEBHOOK MONEROO
 app.post("/api/moneroo-webhook", async (req, res) => {
     const { status, metadata, amount } = req.body.data;
     if (status === "completed") {
         if (metadata.type === "LICENSE_ACTIVATION") {
-            // ACTIVATION AUTO DE LA LICENCE
             let partners = JSON.parse(fs.readFileSync(PARTNERS_FILE));
             const idx = partners.findIndex(p => p.partnerID === metadata.partnerID);
             if (idx !== -1) {
@@ -83,7 +103,6 @@ app.post("/api/moneroo-webhook", async (req, res) => {
                 fs.writeFileSync(PARTNERS_FILE, JSON.stringify(partners, null, 2));
             }
         } else {
-            // GÉNÉRATION DE TICKET WIFI
             const { router_id, duration, phone } = metadata;
             const wifiCode = "AE-" + Math.random().toString(36).substring(2, 8).toUpperCase();
             let tickets = JSON.parse(fs.readFileSync(TICKETS_FILE));
@@ -95,30 +114,10 @@ app.post("/api/moneroo-webhook", async (req, res) => {
     }
 });
 
-// ✅ RETRAIT VERS TON ORANGE MONEY (691285152)
-app.post("/api/admin-withdraw", async (req, res) => {
-    if (req.session.partnerID !== "AE-0001") return res.status(403).send("Interdit");
-    try {
-        const response = await axios.post("https://api.moneroo.io", {
-            amount: req.body.amount,
-            currency: "XAF",
-            method: "orange_money",
-            phone: ADMIN_PHONE,
-            description: "Retrait Commission AERIO Alpha"
-        }, {
-            headers: { 'Authorization': `Bearer ${process.env.MONEROO_SECRET}` }
-        });
-        res.json({ success: true, msg: "Transfert vers Orange Money lancé" });
-    } catch (e) { res.status(500).json({ error: "Erreur de transfert" }); }
-});
-
 // --- ROUTES PAGES & AUTH ---
 app.get("/", (req, res) => res.sendFile(path.join(__dirname, "public", "index.html")));
 app.get("/dashboard", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "dashboard.html")));
-app.get("/admin-alpha", (req, res) => {
-    if (req.session.partnerID === "AE-0001") res.sendFile(path.join(__dirname, "public", "admin-alpha.html"));
-    else res.status(403).send("Accès refusé");
-});
+app.get("/connexion", (req, res) => res.sendFile(path.join(__dirname, "public", "login-partenaire.html")));
 
 app.post("/api/login-partenaire", (req, res) => {
     const { email, password } = req.body;
@@ -132,4 +131,5 @@ app.post("/api/login-partenaire", (req, res) => {
     else res.status(401).send("<script>alert('Identifiants invalides'); window.location.href='/connexion';</script>");
 });
 
-app.listen(PORT, () => console.log(`🚀 AERIO ALPHA BASTION V3 LIVE SUR PORT ${PORT}`));
+// ✅ ÉCOUTE SUR 0.0.0.0 (OBLIGATOIRE POUR RENDER)
+app.listen(PORT, '0.0.0.0', () => console.log(`🚀 BASTION V3 LIVE SUR PORT ${PORT}`));
