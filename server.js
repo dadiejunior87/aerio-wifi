@@ -39,30 +39,19 @@ function checkAuth(req, res, next) {
     else res.redirect("/connexion");
 }
 
-// ✅ [NOUVEAU] SYSTÈME D'INSCRIPTION AUTOMATIQUE ALPHA [1.1, 1.2]
+// ✅ [PRO] SYSTÈME D'INSCRIPTION AUTOMATIQUE ALPHA [1.2]
 app.post("/api/inscription-partenaire", (req, res) => {
     const { name, email, password } = req.body;
     let partners = JSON.parse(fs.readFileSync(PARTNERS_FILE));
-
-    // Vérifier si l'email existe déjà
     if (partners.find(p => p.email === email)) return res.send("Email déjà utilisé.");
 
-    // Générer un nouvel ID (ex: AE-0002)
     const newID = "AE-" + (partners.length + 1).toString().padStart(4, '0');
-
     const newPartner = {
-        partnerID: newID,
-        name,
-        email,
-        password, // Pour la prod, il faudrait crypter ici
-        licence: "INACTIVE",
-        tarifs: [],
-        dateInscription: new Date()
+        partnerID: newID, name, email, password,
+        licence: "INACTIVE", tarifs: [], dateInscription: new Date()
     };
-
     partners.push(newPartner);
     fs.writeFileSync(PARTNERS_FILE, JSON.stringify(partners, null, 2));
-    
     res.redirect("/connexion?signup=success");
 });
 
@@ -73,28 +62,26 @@ app.get("/api/admin/purge", checkAuth, (req, res) => {
     res.send("<script>alert('EMPIRE PURGÉ : Compteurs à 0 F.'); window.location.href='/dashboard';</script>");
 });
 
-// ✅ STATISTIQUES AVEC FLUX BRUT (100%) ET NET (85%) [1.4]
+// ✅ STATISTIQUES AVEC FLUX BRUT ET NET [1.4]
 app.get("/api/my-stats", checkAuth, (req, res) => {
     const tickets = JSON.parse(fs.readFileSync(TICKETS_FILE));
     const myTickets = tickets.filter(t => t.partnerID === req.session.partnerID);
-    
-    let brutTotal = 0;
-    let netTotal = 0;
-    
-    myTickets.forEach(t => {
-        brutTotal += t.amount;
-        netTotal += (t.amount * 0.85);
-    });
-
+    let brut = 0;
+    myTickets.forEach(t => brut += t.amount);
     res.json({
         tickets: myTickets.sort((a,b) => new Date(b.date) - new Date(a.date)),
-        summary: { brut: brutTotal, net: netTotal, count: myTickets.length }
+        summary: { brut: brut, net: brut * 0.85, count: myTickets.length }
     });
 });
 
-// ✅ ROUTES PAGES
+// ✅ ROUTES PAGES - RÉORGANISATION STRATÉGIQUE [1.1, 1.3]
+// 1. Vitrine de Luxe (Présentation AERIO)
 app.get("/", (req, res) => res.sendFile(path.join(__dirname, "public", "index.html")));
+
+// 2. Portail de Vente (La page bleue scan QR)
 app.get("/boutique", (req, res) => res.sendFile(path.join(__dirname, "public", "boutique.html")));
+
+// 3. Espace Gestion
 app.get("/dashboard", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "dashboard.html")));
 app.get("/wifi-zone", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "wifi-zone.html")));
 app.get("/tarifs", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "tarifs.html")));
@@ -116,4 +103,4 @@ app.post("/api/login-partenaire", (req, res) => {
 
 app.get("/logout", (req, res) => { req.session.destroy(); res.redirect("/"); });
 
-app.listen(PORT, '0.0.0.0', () => console.log(`🚀 EMPIRE AERIO LIVE SUR PORT ${PORT}`));
+app.listen(PORT, '0.0.0.0', () => console.log(`🚀 EMPIRE AERIO ALPHA LIVE SUR PORT ${PORT}`));
