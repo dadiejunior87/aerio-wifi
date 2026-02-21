@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AERIO | Console Alpha de Pilotage</title>
     <link href="https://fonts.googleapis.com" rel="stylesheet">
-    <!-- LIEN CHART.JS RÉPARÉ -->
     <script src="https://cdn.jsdelivr.net"></script>
     <style>
         :root {
@@ -16,28 +15,49 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         body { background: var(--bg); color: white; display: flex; min-height: 100vh; overflow-x: hidden; }
         
-        /* SIDEBAR AJUSTÉE POUR PLUS D'ITEMS */
+        /* SIDEBAR */
         .sidebar { width: 280px; background: var(--sidebar); height: 100vh; position: fixed; border-right: 1px solid rgba(255,255,255,0.05); padding: 30px 20px; backdrop-filter: blur(30px); z-index: 100; overflow-y: auto; }
         .logo-box { display: flex; align-items: center; margin-bottom: 40px; text-decoration: none; }
         .logo-text { font-weight: 900; font-size: 26px; color: var(--primary); margin-left: 12px; letter-spacing: -1.5px; }
-        
         .nav-item { display: flex; align-items: center; padding: 12px 20px; color: #64748b; text-decoration: none; border-radius: 15px; margin-bottom: 8px; transition: 0.4s; font-size: 13px; font-weight: 600; }
         .nav-item:hover, .nav-item.active { background: linear-gradient(90deg, rgba(0, 194, 255, 0.1), transparent); color: var(--primary); box-shadow: inset 4px 0 0 var(--primary); }
         
+        /* MAIN CONTENT */
         .main-content { margin-left: 280px; flex: 1; padding: 50px; position: relative; }
         header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 50px; }
+        
+        /* NOTIFICATIONS ALPHA (STYLE ÉLITE) */
+        .notif-container { position: relative; display: flex; align-items: center; gap: 20px; }
+        .notif-trigger { cursor: pointer; position: relative; transition: 0.3s; }
+        .notif-trigger:hover { transform: scale(1.1); }
+        .notif-badge { position: absolute; top: -5px; right: -5px; background: var(--danger); color: white; font-size: 9px; padding: 2px 6px; border-radius: 50px; font-weight: 900; border: 2px solid var(--bg); }
+        
+        .notif-panel { 
+            position: absolute; top: 60px; right: 0; width: 350px; 
+            background: rgba(15, 23, 42, 0.95); border: 1px solid rgba(0, 194, 255, 0.2); 
+            border-radius: 25px; backdrop-filter: blur(20px); padding: 20px; 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8); z-index: 2000; 
+            display: none; animation: slideIn 0.3s ease-out;
+        }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .notif-item { padding: 15px; border-radius: 18px; margin-bottom: 10px; background: rgba(255, 255, 255, 0.03); border-left: 4px solid var(--warning); }
+        .notif-critical { border-left-color: var(--danger); background: rgba(255, 75, 75, 0.05); }
+        .notif-title { font-size: 10px; font-weight: 900; color: var(--warning); letter-spacing: 1px; display: flex; align-items: center; }
+        .pulse-icon { width: 7px; height: 7px; background: var(--warning); border-radius: 50%; display: inline-block; margin-right: 8px; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+        .notif-msg { font-size: 12px; color: #cbd5e1; margin-top: 5px; line-height: 1.4; }
+
+        /* STATS & GRID */
         .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; margin-bottom: 40px; }
         .stat-card { background: var(--card); padding: 30px 25px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.05); transition: 0.4s; }
         .stat-card .value { font-size: 28px; font-weight: 900; }
         .green { color: var(--success); } .blue { color: var(--primary); }
-        
         .glass-panel { background: var(--card); border-radius: 35px; padding: 35px; border: 1px solid rgba(255,255,255,0.03); backdrop-filter: blur(10px); margin-bottom: 30px; }
         .chart-container { height: 250px; width: 100%; margin-top: 20px; }
-        
         table { width: 100%; border-collapse: collapse; text-align: left; }
         th { font-size: 11px; font-weight: 800; color: #475569; text-transform: uppercase; padding-bottom: 20px; }
         td { padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.02); font-size: 13px; color: #cbd5e1; }
-        
         .btn-qr { background: var(--primary); color: black; padding: 15px; border-radius: 15px; font-weight: 900; cursor: pointer; border: none; width: 100%; margin: 20px 0; }
         #admin-zone { display: none; }
     </style>
@@ -45,56 +65,80 @@
 <body>
     <div class="sidebar">
         <div class="logo-box">
-            <svg width="40" height="40" viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="48" stroke="#00C2FF" stroke-width="4"/><path d="M50 25L25 75H35L50 45L65 75H75L50 25Z" fill="#00C2FF"/></svg>
+            <svg width="40" height="40" viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="48" stroke="#00C2FF" stroke-width="4""")/>><path d="M50 25L25 75H35L50 45L65 75H75L50 25Z" fill="#00C2FF""")/>></svg>
             <span class="logo-text">AERIO</span>
         </div>
-        
-        <!-- MENU COMPLET RÉ-INSÉRÉ -->
         <a href="/dashboard" class="nav-item active">📊 Tableau de bord</a>
         <a href="/wifi-zone" class="nav-item">📡 Mes Wifi Zone</a>
-        <a href="/wifi-zone" class="nav-item">🏷️ Mes Tarifs</a>
         <a href="/tickets" class="nav-item">🎟️ Mes Tickets</a>
         <a href="/compta" class="nav-item">💰 Ma Comptabilité</a>
         <a href="/parrainage" class="nav-item">🤝 Mes parrainages</a>
         <a href="/profil" class="nav-item">👤 Mon Profil</a>
-        <a href="/faq" class="nav-item">💬 Support Chat</a>
         <a href="/guide" class="nav-item">📚 Contacts & Docs</a>
-
         <button class="btn-qr" onclick="genererAffiche()">🖼️ MON AFFICHE QR</button>
         <a href="/logout" class="nav-item" style="margin-top: 20px; color: var(--danger);">🚪 Déconnexion</a>
     </div>
 
     <div class="main-content">
         <header>
-            <div class="welcome-text"><h1>Console <span>Alpha v.1</span></h1><p>Analyse des actifs numériques</p></div>
-            <div id="admin-zone">
-                <button onclick="simulerVente()" style="background: rgba(0, 245, 160, 0.1); border: 1px solid var(--success); color: var(--success); padding: 10px 20px; border-radius: 12px; font-weight: 800; cursor: pointer;">⚡ SIMULER VENTE (ADMIN)</button>
+            <div class="welcome-text">
+                <h1>Console <span>Alpha v.1</span></h1>
+                <p>Analyse des actifs numériques</p>
+            </div>
+            
+            <div class="notif-container">
+                <div id="admin-zone">
+                    <button onclick="simulerVente()" style="background: rgba(0, 245, 160, 0.1); border: 1px solid var(--success); color: var(--success); padding: 10px 20px; border-radius: 12px; font-weight: 800; cursor: pointer; font-size: 10px;">⚡ SIMULER VENTE</button>
+                </div>
+
+                <!-- CLOCHE DE NOTIFICATION -->
+                <div class="notif-trigger" onclick="toggleNotifs()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+                    <span class="notif-badge">2</span>
+                </div>
+
+                <!-- PANNEAU DE NOTIFICATIONS -->
+                <div class="notif-panel" id="notif-box">
+                    <h4 style="font-size: 11px; color: var(--primary); margin-bottom: 15px; letter-spacing: 1px;">FLUX D'ALERTES</h4>
+                    <div class="notif-item">
+                        <div class="notif-title"><span class="pulse-icon"></span>STOCK FAIBLE</div>
+                        <p class="notif-msg">Tarif <b>100 XAF</b> : Plus que 2 tickets en réserve.</p>
+                    </div>
+                    <div class="notif-item notif-critical">
+                        <div class="notif-title" style="color:var(--danger)">⚠️ RUPTURE</div>
+                        <p class="notif-msg">Tarif <b>500 XAF</b> : Stock vide sur <b>Zone Connexia</b>.</p>
+                    </div>
+                </div>
             </div>
         </header>
 
         <div class="stats-grid">
-            <div class="stat-card" style="border-left: 3px solid var(--success);"><h3>VOTRE GAIN NET (85%)</h3><div class="value green" id="solde">0 F</div></div>
+            <div class="stat-card" style="border-left: 3px solid var(--success);"><h3>GAIN NET (85%)</h3><div class="value green" id="solde">0 F</div></div>
             <div class="stat-card"><h3>FLUX BRUT</h3><div class="value" id="revenue" style="opacity: 0.7;">0 F</div></div>
             <div class="stat-card"><h3>SESSIONS</h3><div class="value blue" id="t-count">0</div></div>
         </div>
 
         <div class="glass-panel">
-            <h2 style="font-size: 14px; color: var(--primary);">📈 FLUX DE TRESORERIE</h2>
+            <h2 style="font-size: 14px; color: var(--primary);">📈 TENDANCE DES REVENUS</h2>
             <div class="chart-container"><canvas id="salesChart"></canvas></div>
         </div>
 
         <div class="glass-panel">
-            <table><thead><tr><th>DATE</th><th>CODE</th><th>BRUT</th><th>VOTRE GAIN (85%)</th><th>ÉTAT</th></tr></thead><tbody id="t-list"></tbody></table>
+            <table><thead><tr><th>DATE</th><th>CODE</th><th>BRUT</th><th>GAIN (85%)</th><th>ÉTAT</th></tr></thead><tbody id="t-list"></tbody></table>
         </div>
     </div>
 
     <script>
+        function toggleNotifs() {
+            const box = document.getElementById('notif-box');
+            box.style.display = box.style.display === 'block' ? 'none' : 'block';
+        }
+
         async function loadDash() {
             try {
                 const res = await fetch('/api/my-stats');
                 const data = await res.json();
                 
-                // Détection Admin
                 if (window.location.href.includes('admin')) { 
                     document.getElementById('admin-zone').style.display = 'block'; 
                 }
@@ -111,7 +155,7 @@
                 document.getElementById('t-count').innerText = data.length;
                 document.getElementById('t-list').innerHTML = list;
                 initChart(data);
-            } catch(e) { console.error("Erreur de chargement"); }
+            } catch(e) { console.error("Erreur flux"); }
         }
 
         function initChart(data) {
@@ -122,11 +166,13 @@
                 data: {
                     labels: ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'],
                     datasets: [{
-                        label: 'Gains', data: [1200, 1900, 1500, 2500, 2200, 3000, 2800],
-                        borderColor: '#00C2FF', tension: 0.4, fill: true, backgroundColor: 'rgba(0, 194, 255, 0.1)'
+                        label: 'Gains', data: [1500, 2200, 1800, 3100, 2600, 4200, 3800],
+                        borderColor: '#00C2FF', tension: 0.4, fill: true, backgroundColor: 'rgba(0, 194, 255, 0.1)', pointRadius: 0
                     }]
                 },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
+                    scales: { y: { display: false }, x: { grid: { display: false }, ticks: { color: '#475569' } } }
+                }
             });
         }
 
@@ -139,7 +185,7 @@
             const urlAerio = window.location.origin + "/?id=AE-0001";
             const qrUrl = `https://api.qrserver.com{encodeURIComponent(urlAerio)}&color=00C2FF&bgcolor=020617`;
             const win = window.open("", "_blank");
-            win.document.write(`<html><body style="background:#020617;color:white;text-align:center;padding:50px;border:20px solid #00C2FF;"><h1>AERIO</h1><img src="${qrUrl}" style="margin:40px;background:white;padding:10px;"><p>SCANNÉ POUR PAYER</p><script>window.print();<\/script></body></html>`);
+            win.document.write(`<html><body style="background:#020617;color:white;text-align:center;padding:50px;font-family:sans-serif;border:15px solid #00C2FF;"><h1>AERIO</h1><img src="${qrUrl}" style="margin:30px;background:white;padding:15px;border-radius:15px;"><p>SCANNÉ POUR PAYER</p><script>window.print();<\/script></body></html>`);
         }
 
         window.onload = loadDash;
