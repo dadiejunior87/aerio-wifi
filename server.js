@@ -9,7 +9,7 @@ const nodemailer = require("nodemailer");
 const cron = require("node-cron"); 
 const app = express();
 
-// --- SÉCURITÉ BOUNKER ALPHA ---
+// --- SÉCURITÉ BASTION ALPHA ---
 app.use(helmet()); 
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000, 
@@ -23,9 +23,13 @@ const PORT = process.env.PORT || 3000;
 const TICKETS_FILE = path.join(__dirname, "tickets.json");
 const PARTNERS_FILE = path.join(__dirname, "partners.json");
 
+// ✅ CONFIGURATION EMAIL (Mets tes identifiants Gmail ici)
 const transporter = nodemailer.createTransport({
     service: 'gmail',
-    auth: { user: 'votre-email@gmail.com', pass: 'votre-pass-app' }
+    auth: { 
+        user: 'ton-email@gmail.com', 
+        pass: 'ton-mot-de-pass-application' 
+    }
 });
 
 app.use(express.json());
@@ -51,7 +55,54 @@ function checkAuth(req, res, next) {
     else res.redirect("/connexion");
 }
 
-// --- ROUTES PAGES (POUR RÉPARER LES "NOT FOUND") ---
+// ✅ FONCTION ALERTE VENTE INSTANTANÉE
+async function envoyerAlerteVente(partnerID, montant) {
+    const mailOptions = {
+        from: '"AERIO ALPHA" <ton-email@gmail.com>',
+        to: 'ton-email@gmail.com',
+        subject: '⚡ NOUVELLE INJECTION DÉTECTÉE',
+        html: `<div style="background:#020617; color:white; padding:30px; border:2px solid #00C2FF; border-radius:15px; font-family:sans-serif;">
+                <h2 style="color:#00C2FF;">AERIO ALPHA 🛰️</h2>
+                <p>Vente confirmée pour le partenaire <b>${partnerID}</b></p>
+                <p style="color:#00F5A0; font-size:20px;"><b>TA COMMISSION (15%) : + ${(montant * 0.15).toFixed(0)} F</b></p>
+               </div>`
+    };
+    try { await transporter.sendMail(mailOptions); } catch (e) { console.log("Erreur Mail"); }
+}
+
+// ✅ RAPPORT HEBDOMADAIRE (Chaque Dimanche à 23h59)
+cron.schedule('59 23 * * 0', async () => {
+    const tickets = JSON.parse(fs.readFileSync(TICKETS_FILE));
+    const brut = tickets.reduce((sum, t) => sum + t.amount, 0);
+    const comm = brut * 0.15;
+    const reportMail = {
+        from: '"AERIO HQ" <ton-email@gmail.com>',
+        to: 'ton-email@gmail.com',
+        subject: '📊 BILAN HEBDOMADAIRE AERIO',
+        html: `<div style="background:#020617; color:white; padding:40px; border:3px solid #7000FF; border-radius:25px; text-align:center;">
+                <h1 style="color:#7000FF;">RAPPORT ALPHA 🌍</h1>
+                <p>Volume Brut : ${brut.toLocaleString()} F</p>
+                <h2 style="color:#00F5A0;">TON PROFIT NET : ${comm.toLocaleString()} F</h2>
+               </div>`
+    };
+    try { await transporter.sendMail(reportMail); } catch (e) { console.log("Erreur Rapport"); }
+});
+
+// ✅ WEBHOOK MONEROO (Génération de Tickets Réels)
+app.post("/api/moneroo-webhook", async (req, res) => {
+    const { status, metadata, amount } = req.body.data;
+    if (status === "completed") {
+        const { router_id, duration, phone } = metadata;
+        const wifiCode = "AE-" + Math.random().toString(36).substring(2, 8).toUpperCase();
+        let tickets = JSON.parse(fs.readFileSync(TICKETS_FILE));
+        tickets.push({ code: wifiCode, amount, partnerID: router_id, duration, customer_phone: phone, date: new Date(), status: "SUCCESS" });
+        fs.writeFileSync(TICKETS_FILE, JSON.stringify(tickets, null, 2));
+        await envoyerAlerteVente(router_id, amount);
+        res.status(200).send("OK");
+    } else { res.status(400).send("Échec"); }
+});
+
+// --- ROUTES PAGES ---
 app.get("/", (req, res) => res.sendFile(path.join(__dirname, "public", "index.html")));
 app.get("/connexion", (req, res) => res.sendFile(path.join(__dirname, "public", "login-partenaire.html")));
 app.get("/inscription", (req, res) => res.sendFile(path.join(__dirname, "public", "register-partenaire.html")));
@@ -85,8 +136,10 @@ app.get("/api/my-stats", checkAuth, (req, res) => {
 
 app.post("/api/simulate-sale", checkAuth, async (req, res) => {
     let tickets = JSON.parse(fs.readFileSync(TICKETS_FILE));
-    tickets.push({ code: "SIM-" + Math.random().toString(36).substring(2, 7).toUpperCase(), amount: 500, partnerID: req.session.partnerID, date: new Date(), status: "SUCCESS" });
+    const montant = 500;
+    tickets.push({ code: "SIM-" + Math.random().toString(36).substring(2, 7).toUpperCase(), amount: montant, partnerID: req.session.partnerID, date: new Date(), status: "SUCCESS" });
     fs.writeFileSync(TICKETS_FILE, JSON.stringify(tickets, null, 2));
+    await envoyerAlerteVente(req.session.partnerID, montant);
     res.json({ success: true });
 });
 
