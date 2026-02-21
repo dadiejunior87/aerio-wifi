@@ -10,25 +10,25 @@ const cron = require("node-cron");
 const twilio = require("twilio"); 
 const app = express();
 
-// --- SÉCURITÉ BASTION ALPHA ---
+// --- CONFIGURATION ÉLITE ---
+const PORT = process.env.PORT || 3000;
+const ADMIN_PHONE = "237691285152"; // ✅ TON ORANGE MONEY POUR LES REVENUS
+const TICKETS_FILE = path.join(__dirname, "tickets.json");
+const PARTNERS_FILE = path.join(__dirname, "partners.json");
+
+// --- SÉCURITÉ BASTION ---
 app.use(helmet()); 
 const limiter = rateLimit({
-    windowMs: 15 * 60 * 1000, 
-    max: 100, 
+    windowMs: 15 * 60 * 1000, max: 100, 
     message: "ALERTE SÉCURITÉ : Protocole Alpha activé."
 });
 app.use("/api/", limiter);
 
-// --- CONFIGURATION ---
-const PORT = process.env.PORT || 3000;
-const TICKETS_FILE = path.join(__dirname, "tickets.json");
-const PARTNERS_FILE = path.join(__dirname, "partners.json");
-
+// --- SERVICES (EMAIL & SMS) ---
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: { user: 'votre-email@gmail.com', pass: 'votre-pass-app' }
 });
-
 const smsClient = new twilio('TON_ACCOUNT_SID', 'TON_AUTH_TOKEN');
 
 app.use(express.json());
@@ -54,90 +54,71 @@ function checkAuth(req, res, next) {
     else res.redirect("/connexion");
 }
 
-// ✅ FONCTION ALERTE VENTE (EMAIL ADMIN)
-async function envoyerAlerteVente(partnerID, montant) {
-    const mailOptions = {
-        from: '"AERIO ALPHA" <votre-email@gmail.com>',
-        to: 'votre-email@gmail.com',
-        subject: '⚡ NOUVELLE INJECTION DÉTECTÉE',
-        html: `<div style="background:#020617; color:white; padding:30px; border:2px solid #00C2FF; border-radius:15px; font-family:sans-serif;">
-                <h2 style="color:#00C2FF;">AERIO ALPHA 🛰️</h2>
-                <p>Vente confirmée : <b>${partnerID}</b> | Commission (15%): <b>+ ${(montant * 0.15).toFixed(0)} F</b></p>
-               </div>`
-    };
-    try { await transporter.sendMail(mailOptions); } catch (e) { console.log("Erreur Mail"); }
-}
-
-// ✅ FONCTION ALERTE STOCK BAS (SMS PARTENAIRE)
-async function alerterStockBas(phone, tarifName, reste) {
+// ✅ ROUTE PAIEMENT LICENCE (5 000 F)
+app.post("/api/pay-license", checkAuth, async (req, res) => {
     try {
-        await smsClient.messages.create({
-            body: `[AERIO ALPHA] ⚠️ ALERTE STOCK : Le tarif ${tarifName} est presque épuisé (${reste} restants). Importez de nouveaux tickets pour continuer vos ventes !`,
-            from: 'AERIO',
-            to: phone
+        const response = await axios.post("https://api.moneroo.io", {
+            amount: 5000, 
+            currency: "XAF",
+            description: `Activation Licence Alpha - Partenaire ${req.session.partnerID}`,
+            metadata: { type: "LICENSE_ACTIVATION", partnerID: req.session.partnerID },
+            return_url: `${req.protocol}://${req.get('host')}/dashboard?success=true`
+        }, {
+            headers: { 'Authorization': `Bearer ${process.env.MONEROO_SECRET}` }
         });
-        console.log(`📡 Alerte stock envoyée au ${phone}`);
-    } catch (e) { console.log("Erreur SMS Alerte Stock"); }
-}
-
-// ✅ FONCTION ENVOI TICKET (SMS CLIENT)
-async function envoyerSmsTicket(phone, code, duration) {
-    try {
-        await smsClient.messages.create({
-            body: `[AERIO ALPHA] 🎟️ Votre ticket WiFi est prêt !\nCODE : ${code}\nDUREE : ${duration}\nBonne navigation sur le réseau Élite.`,
-            from: 'AERIO',
-            to: phone
-        });
-    } catch (e) { console.log("Erreur SMS Ticket"); }
-}
-
-// ✅ RAPPORT HEBDOMADAIRE (Dimanche 23h59)
-cron.schedule('59 23 * * 0', async () => {
-    const tickets = JSON.parse(fs.readFileSync(TICKETS_FILE));
-    const brut = tickets.reduce((sum, t) => sum + t.amount, 0);
-    const reportMail = {
-        from: '"AERIO HQ" <votre-email@gmail.com>',
-        to: 'votre-email@gmail.com',
-        subject: '📊 BILAN HEBDOMADAIRE AERIO',
-        html: `<h1 style="color:#7000FF;">RAPPORT ALPHA 🌍</h1><p>Profit Net : ${(brut * 0.15).toLocaleString()} F</p>`
-    };
-    try { await transporter.sendMail(reportMail); } catch (e) { console.log("Erreur Rapport"); }
+        res.json({ checkout_url: response.data.data.checkout_url });
+    } catch (e) { res.status(500).json({ error: "Erreur Moneroo" }); }
 });
 
-// ✅ WEBHOOK MONEROO (GENERATEUR + SMS + SURVEILLANCE STOCK)
+// ✅ WEBHOOK MONEROO (VENTES + LICENCES)
 app.post("/api/moneroo-webhook", async (req, res) => {
     const { status, metadata, amount } = req.body.data;
     if (status === "completed") {
-        const { router_id, duration, phone } = metadata;
-        const wifiCode = "AE-" + Math.random().toString(36).substring(2, 8).toUpperCase();
-        
-        let tickets = JSON.parse(fs.readFileSync(TICKETS_FILE));
-        tickets.push({ code: wifiCode, amount, partnerID: router_id, duration, customer_phone: phone, date: new Date(), status: "SUCCESS" });
-        fs.writeFileSync(TICKETS_FILE, JSON.stringify(tickets, null, 2));
-        
-        // 1. Alerte Vente Admin
-        await envoyerAlerteVente(router_id, amount);
-        
-        // 2. Envoi SMS Client
-        if (phone) await envoyerSmsTicket(phone, wifiCode, duration);
-
-        // 3. ✅ SURVEILLANCE DE STOCK AUTOMATIQUE
-        // Simulation : On compte les tickets restants pour ce partenaire dans la base
-        let stockRestant = 3; // Ici tu feras un vrai comptage plus tard
-        if (stockRestant <= 5) {
-            const partners = JSON.parse(fs.readFileSync(PARTNERS_FILE));
-            const p = partners.find(part => part.partnerID === router_id);
-            if (p && p.phone) await alerterStockBas(p.phone, duration, stockRestant);
+        if (metadata.type === "LICENSE_ACTIVATION") {
+            // ACTIVATION AUTO DE LA LICENCE
+            let partners = JSON.parse(fs.readFileSync(PARTNERS_FILE));
+            const idx = partners.findIndex(p => p.partnerID === metadata.partnerID);
+            if (idx !== -1) {
+                partners[idx].licence = "ACTIVE";
+                fs.writeFileSync(PARTNERS_FILE, JSON.stringify(partners, null, 2));
+            }
+        } else {
+            // GÉNÉRATION DE TICKET WIFI
+            const { router_id, duration, phone } = metadata;
+            const wifiCode = "AE-" + Math.random().toString(36).substring(2, 8).toUpperCase();
+            let tickets = JSON.parse(fs.readFileSync(TICKETS_FILE));
+            tickets.push({ code: wifiCode, amount, partnerID: router_id, duration, customer_phone: phone, date: new Date(), status: "SUCCESS" });
+            fs.writeFileSync(TICKETS_FILE, JSON.stringify(tickets, null, 2));
+            if (phone) await envoyerSmsTicket(phone, wifiCode, duration);
         }
-        
         res.status(200).send("OK");
-    } else { res.status(400).send("ECHEC"); }
+    }
 });
 
-// --- ROUTES PAGES & AUTH (Garde tes routes existantes) ---
+// ✅ RETRAIT VERS TON ORANGE MONEY (691285152)
+app.post("/api/admin-withdraw", async (req, res) => {
+    if (req.session.partnerID !== "AE-0001") return res.status(403).send("Interdit");
+    try {
+        const response = await axios.post("https://api.moneroo.io", {
+            amount: req.body.amount,
+            currency: "XAF",
+            method: "orange_money",
+            phone: ADMIN_PHONE,
+            description: "Retrait Commission AERIO Alpha"
+        }, {
+            headers: { 'Authorization': `Bearer ${process.env.MONEROO_SECRET}` }
+        });
+        res.json({ success: true, msg: "Transfert vers Orange Money lancé" });
+    } catch (e) { res.status(500).json({ error: "Erreur de transfert" }); }
+});
+
+// --- ROUTES PAGES & AUTH ---
 app.get("/", (req, res) => res.sendFile(path.join(__dirname, "public", "index.html")));
-app.get("/connexion", (req, res) => res.sendFile(path.join(__dirname, "public", "login-partenaire.html")));
 app.get("/dashboard", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "dashboard.html")));
+app.get("/admin-alpha", (req, res) => {
+    if (req.session.partnerID === "AE-0001") res.sendFile(path.join(__dirname, "public", "admin-alpha.html"));
+    else res.status(403).send("Accès refusé");
+});
 
 app.post("/api/login-partenaire", (req, res) => {
     const { email, password } = req.body;
@@ -148,14 +129,7 @@ app.post("/api/login-partenaire", (req, res) => {
     let partners = JSON.parse(fs.readFileSync(PARTNERS_FILE));
     const partner = partners.find(p => p.email === email && p.password === password);
     if (partner) { req.session.partnerID = partner.partnerID; res.redirect("/dashboard"); }
-    else res.status(401).send("<script>alert('Clés invalides'); window.location.href='/connexion';</script>");
+    else res.status(401).send("<script>alert('Identifiants invalides'); window.location.href='/connexion';</script>");
 });
-
-app.get("/api/my-stats", checkAuth, (req, res) => {
-    const tickets = JSON.parse(fs.readFileSync(TICKETS_FILE));
-    res.json(tickets.filter(t => t.partnerID === req.session.partnerID));
-});
-
-app.get("/logout", (req, res) => { req.session.destroy(); res.redirect("/"); });
 
 app.listen(PORT, () => console.log(`🚀 AERIO ALPHA BASTION V3 LIVE SUR PORT ${PORT}`));
