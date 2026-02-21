@@ -3,76 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AERIO | Mes WiFi Zone</title>
+    <title>AERIO | Configuration Zone</title>
     <link href="https://fonts.googleapis.com" rel="stylesheet">
     <style>
-        :root { --primary: #00C2FF; --bg: #030712; --card: rgba(15, 23, 42, 0.7); --success: #00F5A0; --danger: #FF4B4B; }
+        :root { --primary: #00C2FF; --accent: #00F5A0; --bg: #020617; --glass: rgba(15, 23, 42, 0.7); }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         body { background: var(--bg); color: white; padding: 40px; }
 
-        .header-section { margin-bottom: 40px; }
-        .grid-zones { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; }
+        .config-card { background: var(--glass); padding: 40px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.05); max-width: 600px; margin: 0 auto; }
+        h1 { font-size: 24px; font-weight: 900; margin-bottom: 30px; color: var(--primary); text-align: center; }
 
-        .zone-card {
-            background: var(--card); border-radius: 25px; padding: 25px;
-            border: 1px solid rgba(255,255,255,0.05); position: relative;
-            transition: 0.3s; backdrop-filter: blur(10px);
-        }
-        .zone-card:hover { transform: translateY(-5px); border-color: var(--primary); }
-
-        .status-badge {
-            position: absolute; top: 20px; right: 20px; display: flex; align-items: center;
-            font-size: 10px; font-weight: 800; text-transform: uppercase;
-        }
-        .status-led { width: 8px; height: 8px; border-radius: 50%; margin-right: 8px; box-shadow: 0 0 10px currentColor; }
-        .online { color: var(--success); }
-        .offline { color: var(--danger); }
-
-        .zone-info h2 { font-size: 18px; margin-bottom: 10px; color: var(--primary); }
-        .zone-info p { font-size: 13px; color: #666; margin-bottom: 5px; }
-        .zone-info b { color: #ccc; }
-
-        .btn-config {
-            display: inline-block; margin-top: 20px; padding: 10px 20px;
-            background: rgba(0, 194, 255, 0.1); color: var(--primary);
-            text-decoration: none; border-radius: 10px; font-size: 12px; font-weight: 700;
-        }
-
-        .back-link { margin-top: 40px; display: block; color: #444; text-decoration: none; font-size: 12px; }
+        .tarif-item { background: rgba(0,0,0,0.3); padding: 20px; border-radius: 15px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255,255,255,0.02); }
+        .tarif-info b { color: var(--accent); font-size: 18px; }
+        
+        .btn-add { width: 100%; padding: 15px; background: var(--primary); color: black; border: none; border-radius: 12px; font-weight: 800; cursor: pointer; margin-top: 20px; }
+        .back-link { display: block; text-align: center; margin-top: 30px; color: #475569; text-decoration: none; font-size: 12px; }
     </style>
 </head>
 <body>
 
-    <div class="header-section">
-        <h1 style="font-size: 28px; font-weight: 800;">Mes <span style="color:var(--primary)">WiFi Zone</span></h1>
-        <p style="color:#666;">Surveillez l'état de vos routeurs MikroTik en temps réel.</p>
-    </div>
-
-    <div class="grid-zones" id="zones-container">
-        <!-- Les routeurs s'afficheront ici -->
-        <div class="zone-card">
-            <div class="status-badge online">
-                <div class="status-led"></div> En ligne
-            </div>
-            <div class="zone-info">
-                <h2>Zone Principale</h2>
-                <p>IP Publique : <b>41.202.xx.xx</b></p>
-                <p>Identifiant : <b>AE-5821</b></p>
-                <p>Dernier ping : <b>Il y a 2 min</b></p>
-                <a href="/dashboard" class="btn-config">⚙️ Gérer les tarifs</a>
-            </div>
+    <div class="config-card">
+        <h1>CONFIGURATION <span style="color:white">WIFI</span></h1>
+        
+        <div id="tarifs-liste">
+            <!-- Les tarifs s'afficheront ici -->
         </div>
-    </div>
 
-    <a href="/dashboard" class="back-link">← Retour au Tableau de bord</a>
+        <button class="btn-add" onclick="ajouterTarif()">+ AJOUTER UN FORFAIT</button>
+        <a href="/dashboard" class="back-link">← Retour au Dashboard</a>
+    </div>
 
     <script>
-        async function fetchZones() {
-            // Ici, vous ferez l'appel à votre API pour lister les routeurs du partenaire connecté
-            // const res = await fetch('/api/my-zones');
-            // ... logique d'affichage dynamique ...
+        // Simulation pour le moment, on connectera l'API après
+        let tarifs = [{prix: 100, duree: "1H"}, {prix: 250, duree: "3H"}];
+
+        function afficher() {
+            const container = document.getElementById('tarifs-liste');
+            container.innerHTML = tarifs.map(t => `
+                <div class="tarif-item">
+                    <div class="tarif-info"><b>${t.prix} F</b> — ${t.duree} d'accès</div>
+                    <button style="background:none; border:none; color:#FF4B4B; cursor:pointer; font-weight:bold;">Supprimer</button>
+                </div>
+            `).join('');
         }
-        window.onload = fetchZones;
+
+        function ajouterTarif() {
+            const p = prompt("Prix (ex: 500) :");
+            const d = prompt("Durée (ex: 10H) :");
+            if(p && d) {
+                tarifs.push({prix: p, duree: d});
+                afficher();
+            }
+        }
+        afficher();
     </script>
 </body>
 </html>
