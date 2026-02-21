@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AERIO | Stratégie de Tarification Alpha</title>
+    <!-- LIEN POLICE RÉPARÉ -->
     <link href="https://fonts.googleapis.com" rel="stylesheet">
     <style>
         :root { --primary: #00C2FF; --accent: #00F5A0; --bg: #020617; --glass: rgba(15, 23, 42, 0.7); }
@@ -58,7 +59,7 @@
     </div>
 
     <div class="advice-banner">
-        <b>💡 ANALYSE ALPHA :</b> Une structure tarifaire diversifiée augmente la conversion client. Proposez des forfaits "Flash" pour les besoins rapides et des forfaits "Premium" pour la fidélisation.
+        <b>💡 ANALYSE ALPHA :</b> Une structure tarifaire diversifiée augmente la conversion. Laissez le partenaire définir ses propres durées stratégiques (Nuit, Flash, Premium).
     </div>
 
     <div class="config-card">
@@ -78,28 +79,28 @@
                 <div class="form-group">
                     <label>🎫 NOM DE L'OFFRE</label>
                     <input type="text" placeholder="Ex: PASS ÉCLAIR" required>
-                    <p class="hint">Utilisez un nom percutant qui attire l'œil sur le portail de vente.</p>
+                    <p class="hint">Un nom percutant qui attire l'œil sur le portail de vente bleu.</p>
                 </div>
 
-                <!-- DURÉE -->
+                <!-- DURÉE (SAISIE LIBRE - MISE À JOUR ALPHA) -->
                 <div class="form-group">
-                    <label>⏱️ UNITÉ DE TEMPS (VALIDITÉ)</label>
-                    <input type="text" placeholder="Ex: 2 HEURES" required>
-                    <p class="hint">Définissez la durée d'expiration de l'accès (Heures, Jours, Semaine).</p>
+                    <label>⏱️ UNITÉ DE TEMPS (SAISIE LIBRE)</label>
+                    <input type="text" placeholder="Ex: 1H, 24H, 7 JOURS, PASS NUIT..." required>
+                    <p class="hint">Le partenaire définit lui-même la durée selon ses réglages MikroTik.</p>
                 </div>
 
                 <!-- DESCRIPTION -->
                 <div class="form-group" style="grid-column: 1 / -1;">
                     <label>📑 AVANTAGES ET PERFORMANCES</label>
                     <textarea placeholder="Ex: Streaming HD illimité, idéal pour les téléchargements lourds..."></textarea>
-                    <p class="hint">Détaillez la puissance de ce forfait pour justifier son prix auprès du client.</p>
+                    <p class="hint">Détaillez la puissance de ce forfait pour rassurer le client final.</p>
                 </div>
 
                 <!-- PRIX -->
                 <div class="form-group" style="grid-column: 1 / -1;">
                     <label>💰 VALEUR TRANSACTIONNELLE (F CFA)</label>
                     <input type="number" placeholder="Montant minimum : 100 F" min="100" required>
-                    <p class="hint">Le montant brut qui sera facturé au client via Mobile Money.</p>
+                    <p class="hint">Le montant brut facturé au client via Orange ou MTN Money.</p>
                 </div>
             </div>
 
@@ -112,7 +113,7 @@
     <script>
         document.getElementById('tarifForm').onsubmit = (e) => {
             e.preventDefault();
-            alert("✅ PROTOCOLE RÉUSSI : Votre nouveau forfait est désormais actif sur le portail client.");
+            alert("✅ PROTOCOLE RÉUSSI : Votre nouveau forfait est désormais actif.");
             window.location.href = "/dashboard";
         };
     </script>
