@@ -39,7 +39,7 @@ function checkAuth(req, res, next) {
     else res.redirect("/connexion");
 }
 
-// ✅ [PRO] STATISTIQUES GLOBALES POUR L'ACCUEIL (INDEX.HTML) [1.2, 1.4]
+// ✅ STATISTIQUES GLOBALES (ACCUEIL)
 app.get("/api/global-stats", (req, res) => {
     try {
         const tickets = JSON.parse(fs.readFileSync(TICKETS_FILE));
@@ -50,12 +50,11 @@ app.get("/api/global-stats", (req, res) => {
     } catch (e) { res.json({ total: 0, nodeCount: 0 }); }
 });
 
-// ✅ INSCRIPTION AUTOMATIQUE ALPHA
+// ✅ INSCRIPTION AUTOMATIQUE
 app.post("/api/inscription-partenaire", (req, res) => {
     const { name, email, password } = req.body;
     let partners = JSON.parse(fs.readFileSync(PARTNERS_FILE));
     if (partners.find(p => p.email === email)) return res.send("Email déjà utilisé.");
-
     const newID = "AE-" + (partners.length + 1).toString().padStart(4, '0');
     const newPartner = {
         partnerID: newID, name, email, password,
@@ -66,14 +65,14 @@ app.post("/api/inscription-partenaire", (req, res) => {
     res.redirect("/connexion?signup=success");
 });
 
-// ✅ PROTOCOLE DE PURGE (RÉSERVÉ ADMIN AE-0001)
+// ✅ PROTOCOLE DE PURGE (AE-0001)
 app.get("/api/admin/purge", checkAuth, (req, res) => {
     if (req.session.partnerID !== "AE-0001") return res.status(403).send("ACCÈS REFUSÉ");
     fs.writeFileSync(TICKETS_FILE, JSON.stringify([], null, 2));
     res.send("<script>alert('EMPIRE PURGÉ : Compteurs à 0 F.'); window.location.href='/dashboard';</script>");
 });
 
-// ✅ STATISTIQUES PARTENAIRES (DASHBOARD)
+// ✅ STATISTIQUES DASHBOARD
 app.get("/api/my-stats", checkAuth, (req, res) => {
     const tickets = JSON.parse(fs.readFileSync(TICKETS_FILE));
     const myTickets = tickets.filter(t => t.partnerID === req.session.partnerID);
@@ -85,7 +84,7 @@ app.get("/api/my-stats", checkAuth, (req, res) => {
     });
 });
 
-// ✅ RÉCUPÉRATION DES TARIFS DYNAMIQUE
+// ✅ RÉCUPÉRATION DES TARIFS
 app.get("/api/get-shop-tarifs/:partnerID", (req, res) => {
     const { partnerID } = req.params;
     const partners = JSON.parse(fs.readFileSync(PARTNERS_FILE));
@@ -94,14 +93,32 @@ app.get("/api/get-shop-tarifs/:partnerID", (req, res) => {
     else res.json([{ name: "Pass Flash", price: 100, duration: "1H" }]);
 });
 
-// ✅ ROUTES PAGES RÉORGANISÉES [1.1, 1.3]
+// ==========================================
+// ✅ ROUTES DES PAGES (RÉPARÉES) [1.1, 1.3]
+// ==========================================
+
+// --- PUBLIC ---
 app.get("/", (req, res) => res.sendFile(path.join(__dirname, "public", "index.html")));
 app.get("/boutique", (req, res) => res.sendFile(path.join(__dirname, "public", "boutique.html")));
+app.get("/connexion", (req, res) => res.sendFile(path.join(__dirname, "public", "login-partenaire.html")));
+app.get("/inscription", (req, res) => res.sendFile(path.join(__dirname, "public", "inscription.html")));
+
+// --- PRIVÉ (DASHBOARD & MENU) ---
 app.get("/dashboard", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "dashboard.html")));
 app.get("/wifi-zone", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "wifi-zone.html")));
 app.get("/tarifs", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "tarifs.html")));
-app.get("/connexion", (req, res) => res.sendFile(path.join(__dirname, "public", "login-partenaire.html")));
-app.get("/inscription", (req, res) => res.sendFile(path.join(__dirname, "public", "inscription.html")));
+app.get("/affiche", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "affiche.html")));
+app.get("/profil", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "profil.html")));
+
+// --- ⚡ LES PAGES QUI MANQUAIENT ---
+app.get("/compta", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "compta.html")));
+app.get("/parrainage", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "parrainage.html")));
+app.get("/guide", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "guide.html")));
+
+// --- 🎟️ SOUS-MENU TICKETS ---
+app.get("/tickets", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "tickets.html")));
+app.get("/tickets/ajouter", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "ajouter-ticket.html")));
+app.get("/tickets/stats", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "stats-tickets.html")));
 
 // ✅ AUTHENTIFICATION
 app.post("/api/login-partenaire", (req, res) => {
