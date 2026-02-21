@@ -50,22 +50,31 @@ app.get("/api/my-profile", checkAuth, (req, res) => {
     else res.status(404).send("Profil introuvable");
 });
 
-// ✅ STATISTIQUES ÉPURÉES (UNIQUEMENT LE GAIN RÉEL 85%) [1.2, 1.3]
 app.get("/api/my-stats", checkAuth, (req, res) => {
     const tickets = JSON.parse(fs.readFileSync(TICKETS_FILE));
     const myTickets = tickets.filter(t => t.partnerID === req.session.partnerID);
-    
-    // On calcule uniquement ce que le partenaire perçoit réellement
     let gainTotal = 0;
     myTickets.forEach(t => gainTotal += (t.amount * 0.85));
-
     res.json({
         tickets: myTickets.sort((a,b) => new Date(b.date) - new Date(a.date)),
         summary: { 
-            gain: Math.floor(gainTotal), // Montant net affiché
+            gain: Math.floor(gainTotal), 
             count: myTickets.length 
         }
     });
+});
+
+// ✅ API DE RETRAIT AVEC VERROU DE SÉCURITÉ (5 000 F MINIMUM) [1.2]
+app.post("/api/payout", checkAuth, (req, res) => {
+    const { amount, phone, network } = req.body;
+    
+    // 🛡️ PROTECTION ALPHA : BLOCAGE SOUS 5000 F
+    if (amount < 5000) {
+        return res.status(403).json({ error: "ERREUR : Seuil de retrait minimum de 5 000 F non atteint." });
+    }
+
+    console.log(`📡 EXTRACTION INITIALISÉE : ${amount} F vers ${phone} (${network})`);
+    res.json({ success: true, message: "Demande transmise au noyau financier." });
 });
 
 app.post("/api/inscription-partenaire", (req, res) => {
@@ -97,7 +106,6 @@ app.post("/api/login-partenaire", (req, res) => {
 // ==========================================
 // ✅ ROUTES DES PAGES
 // ==========================================
-
 app.get("/", (req, res) => res.sendFile(path.join(__dirname, "public", "index.html")));
 app.get("/dashboard", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "dashboard.html")));
 app.get("/profil", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "profil.html")));
@@ -107,6 +115,7 @@ app.get("/liste-wifi", checkAuth, (req, res) => res.sendFile(path.join(__dirname
 app.get("/tickets", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "tickets.html")));
 app.get("/tickets/ajouter", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "ajouter-ticket.html")));
 app.get("/tarifs", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "tarifs.html")));
+app.get("/affiche", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "affiche.html")));
 app.get("/connexion", (req, res) => res.sendFile(path.join(__dirname, "public", "login-partenaire.html")));
 app.get("/inscription", (req, res) => res.sendFile(path.join(__dirname, "public", "inscription.html")));
 
