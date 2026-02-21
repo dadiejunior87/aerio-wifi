@@ -37,6 +37,9 @@
         
         .glass-panel { background: var(--card); border-radius: 35px; padding: 35px; border: 1px solid rgba(255,255,255,0.03); backdrop-filter: blur(10px); margin-bottom: 30px; }
         .btn-qr { background: var(--primary); color: black; padding: 15px; border-radius: 15px; font-weight: 900; cursor: pointer; border: none; width: 100%; margin: 20px 0; }
+        
+        /* Section Masquable */
+        #admin-rank-section { display: none; }
     </style>
 </head>
 <body>
@@ -74,18 +77,16 @@
             <div class="welcome-text"><h1>Console <span>Alpha v.1</span></h1><p>Analyse des actifs numériques</p></div>
         </header>
 
-        <!-- ✅ HALL OF FAME ALPHA [1.5] -->
-        <div class="glass-panel" style="margin-bottom: 30px;">
-            <h3 style="font-size: 11px; color: var(--primary); letter-spacing: 2px; margin-bottom: 25px; text-transform: uppercase;">🏆 CLASSEMENT DES NŒUDS ÉLITE</h3>
-            <div id="top-list" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
-                <p style="color:#475569">Analyse du réseau en cours...</p>
-            </div>
+        <!-- ✅ CLASSEMENT ÉLITE (VISIBLE UNIQUEMENT PAR ADMIN) -->
+        <div id="admin-rank-section" class="glass-panel">
+            <h3 style="font-size: 11px; color: var(--primary); letter-spacing: 2px; margin-bottom: 25px; text-transform: uppercase;">🏆 CLASSEMENT DES NŒUDS ALPHA (PRO)</h3>
+            <div id="top-list" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;"></div>
         </div>
 
         <div class="stats-grid">
-            <div class="stat-card" style="border-left: 4px solid var(--success);"><h3>GAIN NET</h3><div class="value" id="solde" style="font-size:32px; font-weight:900; color:var(--success)">0 F</div></div>
+            <div class="stat-card" style="border-left: 4px solid var(--success);"><h3>GAIN NET (85%)</h3><div class="value" id="solde" style="font-size:32px; font-weight:900; color:var(--success)">0 F</div></div>
             <div class="stat-card"><h3>SESSIONS</h3><div class="value" id="t-count" style="font-size:32px; font-weight:900; color:var(--primary)">0</div></div>
-            <div class="stat-card" id="admin-tools"><h3>SIMULATION</h3><button onclick="simulateSale()" style="background:none; border:1px solid var(--warning); color:var(--warning); padding:10px; border-radius:10px; width:100%; margin-top:10px; font-weight:800; cursor:pointer;">⚡ VENDRE (TEST)</button></div>
+            <div class="stat-card"><h3>SIMULATION</h3><button onclick="simulateSale()" style="background:none; border:1px solid var(--warning); color:var(--warning); padding:10px; border-radius:10px; width:100%; margin-top:10px; font-weight:800; cursor:pointer;">⚡ TESTER VENTE</button></div>
         </div>
 
         <div class="glass-panel">
@@ -102,7 +103,7 @@
 
         async function loadData() {
             try {
-                // 1. Stats personnelles
+                // 1. Charger tes propres stats
                 const res = await fetch('/api/my-stats');
                 const tickets = await res.json();
                 let net = 0;
@@ -110,20 +111,20 @@
                 document.getElementById('solde').innerText = net.toLocaleString() + " F";
                 document.getElementById('t-count').innerText = tickets.length;
 
-                // 2. Top 3 Alpha [1.2]
+                // 2. Tenter de charger le Top 3 (Seul AE-0001 peut)
                 const resTop = await fetch('/api/top-performers');
-                const top = await resTop.json();
-                const medals = ['🥇', '🥈', '🥉'];
-                document.getElementById('top-list').innerHTML = top.map((site, i) => `
-                    <div style="background: rgba(255,255,255,0.02); padding: 20px; border-radius: 20px; border-left: 3px solid ${i==0 ? 'var(--success)' : 'var(--primary)'};">
-                        <div style="font-size: 20px; margin-bottom: 10px;">${medals[i]} <span style="font-size: 12px; font-weight: 800;">${site.id}</span></div>
-                        <div style="font-size: 18px; font-weight: 900;">${site.total.toLocaleString()} F</div>
-                        <div style="height: 4px; background: rgba(255,255,255,0.05); border-radius: 10px; margin-top: 10px;">
-                            <div style="width: ${100 - (i*25)}%; height: 100%; background: ${i==0 ? 'var(--success)' : 'var(--primary)'}; box-shadow: 0 0 10px ${i==0 ? 'var(--success)' : 'var(--primary)'};"></div>
+                if (resTop.ok) {
+                    const top = await resTop.json();
+                    const medals = ['🥇', '🥈', '🥉'];
+                    document.getElementById('admin-rank-section').style.display = 'block';
+                    document.getElementById('top-list').innerHTML = top.map((site, i) => `
+                        <div style="background: rgba(255,255,255,0.02); padding: 20px; border-radius: 20px; border-left: 3px solid ${i==0 ? 'var(--success)' : 'var(--primary)'};">
+                            <div style="font-size: 18px; margin-bottom: 10px;">${medals[i]} <span style="font-size: 12px; font-weight: 800;">${site.id}</span></div>
+                            <div style="font-size: 18px; font-weight: 900;">${site.total.toLocaleString()} F</div>
                         </div>
-                    </div>
-                `).join('') || "<p style='color:#475569'>En attente de transactions...</p>";
-            } catch(e) { console.error("Sync Error"); }
+                    `).join('');
+                }
+            } catch(e) { console.log("Liaison sécurisée."); }
         }
 
         async function simulateSale() {
