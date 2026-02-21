@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AERIO | Configuration Nœud Alpha</title>
+    <title>AERIO | Initialisation Nœud Alpha</title>
+    <!-- GOOGLE FONTS ÉLITE RÉPARÉ -->
     <link href="https://fonts.googleapis.com" rel="stylesheet">
     <style>
         :root { --primary: #00C2FF; --accent: #00F5A0; --bg: #020617; --glass: rgba(15, 23, 42, 0.7); }
@@ -23,7 +24,7 @@
         .card-config { 
             background: var(--glass); padding: 45px; border-radius: 40px; 
             border: 1px solid rgba(255,255,255,0.05); backdrop-filter: blur(30px); 
-            box-shadow: 0 40px 80px rgba(0,0,0,0.5);
+            box-shadow: 0 40px 80px rgba(0,0,0,0.5); position: relative;
         }
 
         .form-group { margin-bottom: 30px; }
@@ -37,7 +38,22 @@
         textarea { height: 130px; resize: none; }
         input:focus, textarea:focus { border-color: var(--primary); background: rgba(0, 194, 255, 0.05); box-shadow: 0 0 25px rgba(0, 194, 255, 0.1); }
 
-        .hint { font-size: 10px; color: #475569; margin-top: 10px; font-weight: 700; line-height: 1.5; text-transform: italic; }
+        .hint { font-size: 10px; color: #475569; margin-top: 10px; font-weight: 700; line-height: 1.5; }
+
+        /* RADAR TACTIQUE ALPHA [1.5] */
+        #radar-display { 
+            width: 100%; height: 150px; border-radius: 25px; background: #000; 
+            border: 1px solid var(--primary); position: relative; overflow: hidden; margin-top: 15px; 
+        }
+        .radar-ping { 
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); 
+            width: 70px; height: 70px; border: 1px solid var(--primary); border-radius: 50%; 
+            animation: ping 2s infinite; 
+        }
+        @keyframes ping { 0% { transform: translate(-50%, -50%) scale(0.5); opacity: 1; } 100% { transform: translate(-50%, -50%) scale(2); opacity: 0; } }
+
+        .btn-scan { background: var(--primary); color: #000; padding: 12px 25px; border-radius: 12px; font-weight: 900; font-size: 10px; cursor: pointer; border: none; text-transform: uppercase; transition: 0.3s; }
+        .btn-scan:hover { filter: brightness(1.2); box-shadow: 0 0 15px var(--primary); }
 
         .btn-save {
             grid-column: 1 / -1; background: var(--primary); color: #000;
@@ -54,41 +70,55 @@
 
     <div class="header-wifi">
         <h1>Initialisation du <span style="color:var(--primary)">Nœud Réseau</span></h1>
-        <p style="color: #475569; font-size: 14px; font-weight: 600;">Déployez votre propre infrastructure de monétisation WiFi.</p>
+        <p style="color: #475569; font-size: 14px; font-weight: 600;">Géolocalisation et déploiement de votre infrastructure WiFi.</p>
     </div>
 
     <div class="info-banner">
-        <b>🛑 PROTOCOLE CRITIQUE :</b> Les paramètres suivants définissent l'identité de votre point d'accès sur le réseau AERIO. Une configuration précise garantit une liaison satellite stable et une expérience client sans friction.
+        <b>🛑 PROTOCOLE CRITIQUE :</b> Ces paramètres définissent votre signature sur le réseau AERIO. Une configuration précise garantit une liaison stable et une monétisation sans friction.
     </div>
 
     <form id="wifiForm" class="config-grid">
-        <!-- COLONNE GAUCHE : IDENTITÉ -->
+        <!-- COLONNE GAUCHE : IDENTITÉ & RADAR -->
         <div class="card-config">
             <div class="form-group">
                 <label>🆔 SIGNATURE DU NŒUD (NOM)</label>
                 <input type="text" placeholder="Ex: STATION ALPHA DOUALA" required>
-                <p class="hint">C'est le nom de guerre de votre zone. Il sera visible par vos clients lors de la connexion.</p>
+                <p class="hint">Le nom de guerre de votre zone, visible par vos clients lors de la connexion.</p>
             </div>
 
             <div class="form-group">
-                <label>🌐 PASSERELLE RÉSEAU (IP/DNS)</label>
-                <input type="text" placeholder="Ex: 192.168.88.1">
-                <p class="hint">Indispensable pour l'injection automatique des tickets. Utilisez l'IP de votre passerelle MikroTik.</p>
+                <label>📍 COORDONNÉES TACTIQUES (GPS)</label>
+                <div style="display: flex; gap: 10px;">
+                    <input type="text" id="gps-coords" placeholder="Lat, Long" readonly>
+                    <button type="button" class="btn-scan" onclick="activerRadar()">SCAN</button>
+                </div>
+                <p class="hint">Verrouillez la position géographique exacte pour le référencement satellite.</p>
+            </div>
+
+            <div id="radar-display">
+                <div class="radar-ping"></div>
+                <p style="position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%); font-size: 8px; color: var(--primary); letter-spacing: 2px; font-weight: 800;">BALAYAGE SATELLITE ACTIF</p>
             </div>
         </div>
 
-        <!-- COLONNE DROITE : SUPPORT -->
+        <!-- COLONNE DROITE : SUPPORT & DÉTAILS -->
         <div class="card-config">
             <div class="form-group">
                 <label>📝 ARGUMENTAIRE COMMERCIAL</label>
                 <textarea placeholder="Ex: Connexion Fibre Optique ultra-stable. Idéal pour le Streaming et le Gaming..."></textarea>
-                <p class="hint">Décrivez la puissance de votre connexion. Un bon argumentaire augmente vos ventes de 25%.</p>
+                <p class="hint">Un bon argumentaire augmente vos ventes de 25%. Décrivez votre puissance.</p>
             </div>
 
             <div class="form-group">
                 <label>📞 CANAL D'ASSISTANCE DIRECTE</label>
                 <input type="text" placeholder="Ex: +237 6XX XX XX XX">
-                <p class="hint">Le numéro d'urgence que vos clients utiliseront en cas de besoin technique.</p>
+                <p class="hint">Le numéro d'urgence pour le support technique de vos clients.</p>
+            </div>
+
+            <div class="form-group">
+                <label>🌐 PASSERELLE MIKROTIK (IP)</label>
+                <input type="text" placeholder="Ex: 192.168.88.1">
+                <p class="hint">Indispensable pour l'injection automatique des tickets tickets.</p>
             </div>
         </div>
 
@@ -98,9 +128,22 @@
     <a href="/dashboard" class="back-link">← Retour au Cockpit de Pilotage</a>
 
     <script>
+        // ✅ SYSTÈME DE GÉOLOCALISATION ALPHA [1.2, 1.4]
+        function activerRadar() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition((pos) => {
+                    const coords = `${pos.coords.latitude.toFixed(6)}, ${pos.coords.longitude.toFixed(6)}`;
+                    document.getElementById('gps-coords').value = coords;
+                    alert("📍 CIBLE VERROUILLÉE : Votre nœud réseau est désormais géolocalisé.");
+                }, () => {
+                    alert("❌ ERREUR : Liaison satellite impossible. Activez la localisation.");
+                });
+            }
+        }
+
         document.getElementById('wifiForm').onsubmit = (e) => {
             e.preventDefault();
-            alert("🚀 SYSTÈME SYNCHRONISÉ : Votre nœud réseau est désormais actif sur la plateforme AERIO.");
+            alert("🚀 SYSTÈME SYNCHRONISÉ : Votre nœud réseau est actif sur la plateforme AERIO.");
             window.location.href = "/dashboard";
         };
     </script>
