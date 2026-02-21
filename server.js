@@ -15,7 +15,7 @@ const PORT = process.env.PORT || 10000;
 const ADMIN_PHONE = "237691285152"; 
 const TICKETS_FILE = path.join(__dirname, "tickets.json");
 const PARTNERS_FILE = path.join(__dirname, "partners.json");
-const MONEROO_KEY = process.env.MONEROO_SECRET || "CLE_TEST_MONEROO"; // Sécurité Alpha
+const MONEROO_KEY = process.env.MONEROO_SECRET || "CLE_TEST_MONEROO";
 
 // --- SÉCURITÉ BASTION ---
 app.use(helmet({ contentSecurityPolicy: false })); 
@@ -45,7 +45,38 @@ function checkAuth(req, res, next) {
     else res.redirect("/connexion");
 }
 
-// ✅ ROUTE DÉMO : SIMULATION DE VENTE (Pour tes présentations)
+// ✅ [PRO] AJOUTER UN TARIF (POUR LE PARTENAIRE) [1.2]
+app.post("/api/add-tarif", checkAuth, (req, res) => {
+    const { name, price, duration } = req.body;
+    let partners = JSON.parse(fs.readFileSync(PARTNERS_FILE));
+    const idx = partners.findIndex(p => p.partnerID === req.session.partnerID);
+    
+    if (idx !== -1) {
+        if (!partners[idx].tarifs) partners[idx].tarifs = [];
+        partners[idx].tarifs.push({ id: "TRF-" + Date.now(), name, price, duration, active: true });
+        fs.writeFileSync(PARTNERS_FILE, JSON.stringify(partners, null, 2));
+        res.json({ success: true, message: "Tarif injecté dans votre catalogue." });
+    } else { res.status(404).json({ error: "Partenaire non trouvé" }); }
+});
+
+// ✅ [PRO] RÉCUPÉRER LES TARIFS POUR LA BOUTIQUE CLIENT [1.4]
+app.get("/api/get-shop-tarifs/:partnerID", (req, res) => {
+    const { partnerID } = req.params;
+    const partners = JSON.parse(fs.readFileSync(PARTNERS_FILE));
+    const partner = partners.find(p => p.partnerID === partnerID);
+    
+    if (partner && partner.tarifs && partner.tarifs.length > 0) {
+        res.json(partner.tarifs);
+    } else {
+        // Tarifs par défaut de sécurité
+        res.json([
+            { name: "Pass Flash", price: 100, duration: "1H" },
+            { name: "Pass Élite", price: 500, duration: "24H" }
+        ]);
+    }
+});
+
+// ✅ ROUTE DÉMO : SIMULATION DE VENTE
 app.post("/api/simulate-sale", checkAuth, (req, res) => {
     let tickets = JSON.parse(fs.readFileSync(TICKETS_FILE));
     const fakeTicket = {
@@ -60,12 +91,11 @@ app.post("/api/simulate-sale", checkAuth, (req, res) => {
     res.json({ success: true, ticket: fakeTicket });
 });
 
-// ✅ WEBHOOK MONEROO (AUTOMATISATION)
+// ✅ WEBHOOK MONEROO
 app.post("/api/moneroo-webhook", async (req, res) => {
     const { status, metadata, amount } = req.body.data;
     if (status === "completed") {
-        const { partnerID, type } = metadata;
-        
+        const { partnerID, type, router_id } = metadata;
         if (type === "LICENSE_ACTIVATION") {
             let partners = JSON.parse(fs.readFileSync(PARTNERS_FILE));
             const idx = partners.findIndex(p => p.partnerID === partnerID);
@@ -76,7 +106,7 @@ app.post("/api/moneroo-webhook", async (req, res) => {
         } else {
             const wifiCode = "AE-" + Math.random().toString(36).substring(2, 8).toUpperCase();
             let tickets = JSON.parse(fs.readFileSync(TICKETS_FILE));
-            tickets.push({ code: wifiCode, amount, partnerID: metadata.router_id, date: new Date(), status: "SUCCESS" });
+            tickets.push({ code: wifiCode, amount, partnerID: router_id || partnerID, date: new Date(), status: "SUCCESS" });
             fs.writeFileSync(TICKETS_FILE, JSON.stringify(tickets, null, 2));
         }
         res.status(200).send("OK");
@@ -87,6 +117,7 @@ app.post("/api/moneroo-webhook", async (req, res) => {
 app.get("/", (req, res) => res.sendFile(path.join(__dirname, "public", "index.html")));
 app.get("/dashboard", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "dashboard.html")));
 app.get("/wifi-zone", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "wifi-zone.html")));
+app.get("/tarifs", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "tarifs.html")));
 app.get("/tickets", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "tickets.html")));
 app.get("/compta", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "compta.html")));
 app.get("/parrainage", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "parrainage.html")));
@@ -115,4 +146,4 @@ app.get("/api/my-stats", checkAuth, (req, res) => {
 
 app.get("/logout", (req, res) => { req.session.destroy(); res.redirect("/"); });
 
-app.listen(PORT, '0.0.0.0', () => console.log(`🚀 BASTION ALPHA V3 LIVE SUR PORT ${PORT}`));
+app.listen(PORT, '0.0.0.0', () => console.log(`🚀 EMPIRE AERIO ALPHA V3 LIVE SUR PORT ${PORT}`));
