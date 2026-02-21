@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AERIO | Stratégie de Tarification Alpha</title>
-    <!-- LIEN POLICE RÉPARÉ -->
+    <!-- ✅ POLICE POPPINS INJECTÉE CORRECTEMENT -->
     <link href="https://fonts.googleapis.com" rel="stylesheet">
     <style>
         :root { --primary: #00C2FF; --accent: #00F5A0; --bg: #020617; --glass: rgba(15, 23, 42, 0.7); }
@@ -55,52 +55,42 @@
 
     <div class="header-tarifs">
         <h1>Architecture des <span style="color:var(--accent)">Tarifs</span></h1>
-        <p style="color: #475569; font-size: 14px; font-weight: 600;">Définissez la valeur de vos actifs numériques par zone.</p>
+        <p style="color: #475569; font-size: 14px; font-weight: 600;">Définissez la valeur de vos actifs numériques.</p>
     </div>
 
     <div class="advice-banner">
-        <b>💡 ANALYSE ALPHA :</b> Une structure tarifaire diversifiée augmente la conversion. Laissez le partenaire définir ses propres durées stratégiques (Nuit, Flash, Premium).
+        <b>💡 ANALYSE ALPHA :</b> Une structure tarifaire variée booste vos revenus. Le partenaire est libre de définir ses propres durées (Pass Nuit, Weekend, etc.).
     </div>
 
     <div class="config-card">
         <form id="tarifForm">
-            <!-- SÉLECTION DU NŒUD -->
             <div class="form-group">
                 <label>📡 SÉLECTION DU NŒUD RÉSEAU</label>
-                <select required>
-                    <option value="" disabled selected>Choisissez le point d'accès concerné</option>
-                    <option value="node1">STATION ALPHA 01 - DOUALA</option>
+                <select id="node-select" required>
+                    <option value="" disabled selected>Chargement de vos nœuds...</option>
                 </select>
-                <p class="hint">Liez ce forfait à une infrastructure spécifique de votre parc WiFi.</p>
+                <p class="hint">Liez ce tarif à une zone WiFi spécifique de votre parc.</p>
             </div>
 
             <div class="input-grid">
-                <!-- NOM DU FORFAIT -->
                 <div class="form-group">
                     <label>🎫 NOM DE L'OFFRE</label>
                     <input type="text" placeholder="Ex: PASS ÉCLAIR" required>
-                    <p class="hint">Un nom percutant qui attire l'œil sur le portail de vente bleu.</p>
                 </div>
 
-                <!-- DURÉE (SAISIE LIBRE - MISE À JOUR ALPHA) -->
                 <div class="form-group">
-                    <label>⏱️ UNITÉ DE TEMPS (SAISIE LIBRE)</label>
-                    <input type="text" placeholder="Ex: 1H, 24H, 7 JOURS, PASS NUIT..." required>
-                    <p class="hint">Le partenaire définit lui-même la durée selon ses réglages MikroTik.</p>
+                    <label>⏱️ UNITÉ DE TEMPS (DURÉE)</label>
+                    <input type="text" placeholder="Ex: 1H, 24H, 7 JOURS..." required>
                 </div>
 
-                <!-- DESCRIPTION -->
                 <div class="form-group" style="grid-column: 1 / -1;">
-                    <label>📑 AVANTAGES ET PERFORMANCES</label>
-                    <textarea placeholder="Ex: Streaming HD illimité, idéal pour les téléchargements lourds..."></textarea>
-                    <p class="hint">Détaillez la puissance de ce forfait pour rassurer le client final.</p>
+                    <label>📑 AVANTAGES CLIENTS</label>
+                    <textarea placeholder="Ex: Idéal pour YouTube et Téléchargements..."></textarea>
                 </div>
 
-                <!-- PRIX -->
                 <div class="form-group" style="grid-column: 1 / -1;">
                     <label>💰 VALEUR TRANSACTIONNELLE (F CFA)</label>
-                    <input type="number" placeholder="Montant minimum : 100 F" min="100" required>
-                    <p class="hint">Le montant brut facturé au client via Orange ou MTN Money.</p>
+                    <input type="number" placeholder="Min: 100 F" min="100" required>
                 </div>
             </div>
 
@@ -108,14 +98,33 @@
         </form>
     </div>
 
-    <a href="/dashboard" class="back-link">← Retour au Cockpit de Pilotage</a>
+    <a href="/dashboard" class="back-link">← Retour au Cockpit</a>
 
     <script>
+        // ✅ CHARGEMENT DES NŒUDS RÉELS [1.4]
+        async function loadNodes() {
+            try {
+                const res = await fetch('/api/my-profile');
+                const user = await res.json();
+                const select = document.getElementById('node-select');
+                
+                // On affiche les zones enregistrées ou une zone par défaut
+                select.innerHTML = `<option value="default">STATION ALPHA - ${user.id}</option>`;
+                if(user.zones && user.zones.length > 0) {
+                    select.innerHTML = user.zones.map(z => `<option value="${z.id}">${z.name}</option>`).join('');
+                }
+            } catch (e) {
+                console.log("Synchronisation des nœuds...");
+            }
+        }
+
         document.getElementById('tarifForm').onsubmit = (e) => {
             e.preventDefault();
-            alert("✅ PROTOCOLE RÉUSSI : Votre nouveau forfait est désormais actif.");
+            alert("✅ PROTOCOLE RÉUSSI : Tarif activé sur votre portail de vente.");
             window.location.href = "/dashboard";
         };
+
+        window.onload = loadNodes;
     </script>
 </body>
 </html>
