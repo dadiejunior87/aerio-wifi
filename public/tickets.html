@@ -1,1 +1,96 @@
-[]
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AERIO | Archive des Tickets</title>
+    <link href="https://fonts.googleapis.com" rel="stylesheet">
+    <style>
+        :root { --primary: #00C2FF; --bg: #020617; --card: rgba(15, 23, 42, 0.7); --accent: #00F5A0; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: var(--bg); color: white; padding: 40px; min-height: 100vh; background-image: radial-gradient(circle at top right, rgba(0, 194, 255, 0.05), transparent); }
+
+        .header-tickets { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
+        .btn-print { background: var(--primary); color: black; padding: 12px 25px; border-radius: 12px; font-weight: 800; cursor: pointer; border: none; font-size: 11px; text-transform: uppercase; }
+
+        .table-container { 
+            background: var(--card); border-radius: 35px; padding: 40px; 
+            border: 1px solid rgba(255,255,255,0.05); backdrop-filter: blur(20px);
+            box-shadow: 0 40px 100px rgba(0,0,0,0.4);
+        }
+
+        table { width: 100%; border-collapse: collapse; text-align: left; }
+        th { font-size: 10px; color: #475569; text-transform: uppercase; letter-spacing: 2px; padding-bottom: 25px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        td { padding: 20px 0; border-bottom: 1px solid rgba(255,255,255,0.02); font-size: 14px; color: #cbd5e1; }
+        .ticket-code { color: var(--primary); font-weight: 900; letter-spacing: 2px; font-size: 16px; }
+
+        .status-badge { padding: 5px 12px; border-radius: 50px; font-size: 10px; font-weight: 900; border: 1px solid currentColor; }
+
+        .back-link { display: block; text-align: center; margin-top: 40px; color: #475569; text-decoration: none; font-size: 11px; font-weight: 800; text-transform: uppercase; }
+    </style>
+</head>
+<body>
+
+    <div class="header-tickets">
+        <div>
+            <h1 style="font-size: 32px; font-weight: 900; letter-spacing: -2px;">Liste des <span style="color:var(--primary)">Tickets</span></h1>
+            <p style="color: #475569; font-size: 13px;">Historique complet de vos actifs numériques.</p>
+        </div>
+        <button class="btn-print" onclick="window.print()">🖨️ IMPRIMER LA LISTE</button>
+    </div>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>DATE / HEURE</th>
+                    <th>CODE ALPHA</th>
+                    <th>VALEUR</th>
+                    <th>STATUT</th>
+                </tr>
+            </thead>
+            <tbody id="ticket-list">
+                <tr><td colspan="4" style="text-align:center; padding:50px; color:#475569;">Initialisation du scan...</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <a href="/dashboard" class="back-link">← Retour au QG Alpha</a>
+
+    <script>
+        // ✅ SYNCHRONISATION RÉELLE AVEC LE SERVEUR [1.2, 1.4]
+        async function loadTickets() {
+            try {
+                const res = await fetch('/api/my-stats');
+                const data = await res.json();
+                const container = document.getElementById('ticket-list');
+                
+                container.innerHTML = ""; // On vide l'attente
+
+                if (data.tickets.length === 0) {
+                    container.innerHTML = "<tr><td colspan='4' style='text-align:center; padding:50px; color:#475569; font-weight:700;'>PROTOCOLE : AUCUN TICKET DÉTECTÉ.</td></tr>";
+                    return;
+                }
+
+                // On affiche les tickets du plus récent au plus ancien
+                data.tickets.forEach(t => {
+                    container.innerHTML += `
+                        <tr>
+                            <td>${new Date(t.date).toLocaleString('fr-FR')}</td>
+                            <td class="ticket-code">${t.code}</td>
+                            <td style="font-weight:800">${t.amount.toLocaleString()} F</td>
+                            <td><span class="status-badge" style="color:var(--accent)">VALIDÉ</span></td>
+                        </tr>
+                    `;
+                });
+
+            } catch (e) {
+                console.error("Échec de liaison Alpha.");
+                document.getElementById('ticket-list').innerHTML = "<tr><td colspan='4' style='color:red; text-align:center;'>Erreur de connexion au noyau.</td></tr>";
+            }
+        }
+
+        window.onload = loadTickets;
+    </script>
+</body>
+</html>
