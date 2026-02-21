@@ -6,77 +6,135 @@
     <title>AERIO | Gestion des Zones WiFi</title>
     <link href="https://fonts.googleapis.com" rel="stylesheet">
     <style>
-        :root { --primary: #00C2FF; --bg: #020617; --glass: rgba(15, 23, 42, 0.7); }
+        :root { --primary: #00C2FF; --bg: #020617; --glass: rgba(15, 23, 42, 0.7); --success: #00F5A0; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         body { background: var(--bg); color: white; padding: 40px; overflow-x: hidden; min-height: 100vh; }
 
-        /* ✅ LE RADAR ALPHA (INJECTION ÉLITE) */
-        .radar-box { position: absolute; top: 10%; right: 5%; opacity: 0.3; z-index: -1; }
-        .radar-circle { width: 250px; height: 250px; border: 2px solid var(--primary); border-radius: 50%; position: relative; animation: radar-pulse 3s infinite; }
-        .radar-sweep { width: 100%; height: 2px; background: linear-gradient(to right, var(--primary), transparent); position: absolute; top: 50%; transform-origin: center; animation: radar-spin 4s linear infinite; }
-        @keyframes radar-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        @keyframes radar-pulse { 0% { transform: scale(0.9); opacity: 0.6; } 100% { transform: scale(1.2); opacity: 0; } }
+        /* RADAR BACKGROUND */
+        .radar-box { position: absolute; top: 50px; right: 50px; opacity: 0.2; z-index: -1; }
+        .radar { width: 150px; height: 150px; border: 2px solid var(--primary); border-radius: 50%; position: relative; animation: pulse 3s infinite; }
+        @keyframes pulse { 0% { transform: scale(1); opacity: 0.5; } 100% { transform: scale(1.3); opacity: 0; } }
 
-        .container { max-width: 900px; margin: 0 auto; position: relative; }
-        .header-zone { margin-bottom: 50px; }
-        .header-zone h1 { font-size: 32px; font-weight: 900; color: var(--primary); letter-spacing: -1px; }
+        .container { max-width: 1000px; margin: 0 auto; position: relative; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 50px; }
+        
+        /* BOUTON LUMINEUX */
+        .btn-add { 
+            background: var(--primary); color: #000; padding: 15px 25px; border-radius: 15px; 
+            font-weight: 900; border: none; cursor: pointer; transition: 0.3s; font-size: 12px;
+            box-shadow: 0 0 15px rgba(0, 194, 255, 0.2);
+        }
+        .btn-add:hover { transform: scale(1.05); box-shadow: 0 0 30px var(--primary); }
 
-        /* PANNEAU DE CONFIGURATION GLASS */
-        .config-card { background: var(--glass); padding: 40px; border-radius: 35px; border: 1px solid rgba(255,255,255,0.05); backdrop-filter: blur(20px); margin-bottom: 30px; }
-        .config-card h2 { font-size: 18px; margin-bottom: 25px; color: #64748b; text-transform: uppercase; letter-spacing: 2px; }
+        /* GRID DES ZONES */
+        .zone-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
+        .zone-card { 
+            background: var(--glass); padding: 30px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.05);
+            backdrop-filter: blur(20px); position: relative; transition: 0.4s; animation: fadeIn 0.5s ease-out;
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .zone-card:hover { border-color: var(--primary); box-shadow: 0 10px 40px rgba(0, 194, 255, 0.1); }
+        .status-dot { width: 8px; height: 8px; background: var(--success); border-radius: 50%; display: inline-block; margin-right: 10px; box-shadow: 0 0 10px var(--success); }
 
-        .input-group { margin-bottom: 25px; }
-        label { display: block; font-size: 11px; font-weight: 800; color: #475569; margin-bottom: 10px; text-transform: uppercase; }
-        input, select { width: 100%; padding: 15px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: white; font-weight: 600; outline: none; transition: 0.3s; }
-        input:focus { border-color: var(--primary); box-shadow: 0 0 15px rgba(0, 194, 255, 0.2); }
+        .zone-stats { display: flex; justify-content: space-between; margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.05); font-size: 10px; color: #64748b; text-transform: uppercase; letter-spacing: 1px; }
+        .zone-stats b { color: white; font-size: 14px; display: block; margin-top: 5px; }
 
-        .btn-save { background: var(--primary); color: black; padding: 18px; border: none; border-radius: 15px; font-weight: 900; width: 100%; cursor: pointer; transition: 0.3s; text-transform: uppercase; font-size: 14px; }
-        .btn-save:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(0, 194, 255, 0.4); }
-
-        .back-link { display: block; text-align: center; margin-top: 40px; color: #475569; text-decoration: none; font-size: 12px; font-weight: 700; transition: 0.3s; }
-        .back-link:hover { color: var(--primary); }
+        /* MODAL ALPHA */
+        #modal-add { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 2000; align-items: center; justify-content: center; backdrop-filter: blur(10px); }
+        .modal-content { background: #0f172a; padding: 40px; border-radius: 35px; width: 400px; border: 1px solid var(--primary); box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+        input { width: 100%; padding: 15px; margin: 10px 0; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: white; outline: none; }
+        input:focus { border-color: var(--primary); }
     </style>
 </head>
 <body>
 
-    <!-- RADAR VISUEL -->
-    <div class="radar-box">
-        <div class="radar-circle">
-            <div class="radar-sweep"></div>
-        </div>
-    </div>
+    <div class="radar-box"><div class="radar"></div></div>
 
     <div class="container">
-        <div class="header-zone">
-            <h1>RÉSEAU <span style="color:white">WIFI ZONE</span></h1>
-            <p style="color: #475569;">Synchronisez vos routeurs MikroTik avec le noyau Alpha.</p>
+        <div class="header">
+            <div>
+                <h1 style="font-size: 32px; font-weight: 900; letter-spacing: -1.5px;">MES <span style="color:var(--primary)">WIFI ZONES</span></h1>
+                <p style="color:#475569; font-size: 13px;">Contrôle centralisé de votre parc MikroTik.</p>
+            </div>
+            <button class="btn-add" onclick="openModal()">+ NOUVELLE ZONE</button>
         </div>
 
-        <div class="config-card">
-            <h2>⚙️ Paramètres du Routeur</h2>
-            <div class="input-group">
-                <label>NOM DE LA ZONE (SSID)</label>
-                <input type="text" placeholder="Ex: AERIO_FREE_WIFI" id="zone-name">
-            </div>
-            <div class="input-group">
-                <label>ADRESSE IP MIKROTIK (LOCALE)</label>
-                <input type="text" placeholder="192.168.88.1" id="router-ip">
-            </div>
-            <div class="input-group">
-                <label>STATUT DE PROTECTION</label>
-                <div style="color: #00F5A0; font-weight: 900; font-size: 13px;">🛡️ BOUCLIER ALPHA ACTIF</div>
-            </div>
-            <button class="btn-save" onclick="saveConfig()">🚀 ENREGISTRER LA CONFIGURATION</button>
+        <div class="zone-grid" id="zone-list">
+            <!-- Chargement dynamique ici -->
+            <p style="color:#475569">Initialisation du scan réseau...</p>
         </div>
+        
+        <a href="/dashboard" style="display:block; margin-top:40px; color:#475569; text-decoration:none; font-size:12px; font-weight:700; text-transform: uppercase;">← Retour au QG de Pilotage</a>
+    </div>
 
-        <a href="/dashboard" class="back-link">← RETOUR AU QG ALPHA</a>
+    <!-- MODAL -->
+    <div id="modal-add">
+        <div class="modal-content">
+            <h2 style="margin-bottom:20px; font-weight:900;">ACTIVER UNE ZONE</h2>
+            <label style="font-size: 10px; font-weight: 800; color: #475569;">NOM DU SITE</label>
+            <input type="text" id="z-name" placeholder="Ex: Cyber Douala Akwa">
+            <label style="font-size: 10px; font-weight: 800; color: #475569;">ADRESSE IP (WINBOX)</label>
+            <input type="text" id="z-ip" placeholder="192.168.88.1">
+            <button class="btn-add" style="width:100%; margin-top:15px; padding:18px;" onclick="addZone()">INJECTER LE PROTOCOLE</button>
+            <button onclick="closeModal()" style="background:none; border:none; color:#475569; width:100%; margin-top:15px; cursor:pointer; font-size:11px; font-weight:700;">ANNULER</button>
+        </div>
     </div>
 
     <script>
-        function saveConfig() {
-            const name = document.getElementById('zone-name').value;
-            alert("PROTOCOLE ALPHA : La configuration de la zone '" + name + "' a été injectée avec succès dans votre routeur.");
+        function openModal() { document.getElementById('modal-add').style.display = 'flex'; }
+        function closeModal() { document.getElementById('modal-add').style.display = 'none'; }
+
+        async function loadZones() {
+            try {
+                // On récupère les données de l'utilisateur (qui contiennent ses routeurs)
+                const res = await fetch('/api/admin-all-stats'); 
+                const data = await res.json();
+                const container = document.getElementById('zone-list');
+                container.innerHTML = "";
+
+                // Simulation si aucune zone n'est encore enregistrée en DB
+                if (!data.partners || data.partners.length === 0) {
+                     container.innerHTML = "<p style='color:#475569'>Aucune zone active détectée.</p>";
+                     return;
+                }
+
+                // On affiche les zones (ici on prend les zones du partenaire connecté via une logique simplifiée)
+                // Pour la démo, on affiche une carte générique stylée
+                container.innerHTML = `
+                    <div class="zone-card">
+                        <div style="font-size: 10px; color: var(--primary); font-weight: 900; margin-bottom: 10px;">ID: AE-ALPHA-01</div>
+                        <h2 style="font-size: 20px; margin-bottom: 5px;"><span class="status-dot"></span>Zone Principale</h2>
+                        <p style="font-size: 12px; color: #475569;">Protocole MikroTik RouterOS v7</p>
+                        <div class="zone-stats">
+                            <div>VENTES<br><b>-- F</b></div>
+                            <div>SESSIONS<br><b>ACTIF</b></div>
+                            <div>UPTIME<br><b style="color:var(--success)">99.9%</b></div>
+                        </div>
+                    </div>
+                `;
+            } catch(e) { console.error("Erreur de scan."); }
         }
+
+        async function addZone() {
+            const name = document.getElementById('z-name').value;
+            const ip = document.getElementById('z-ip').value;
+            if(!name || !ip) return alert("Champs requis !");
+
+            const res = await fetch('/api/add-router', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ name, ip, model: "MIPSBE" })
+            });
+            const data = await res.json();
+            if(data.success) {
+                alert("Zone activée avec succès !");
+                closeModal();
+                loadZones();
+            }
+        }
+
+        window.onload = loadZones;
     </script>
 </body>
 </html>
