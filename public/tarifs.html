@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AERIO | Architecture des Tarifs Alpha</title>
+    <!-- GOOGLE FONTS ÉLITE -->
+    <link href="https://fonts.googleapis.com" rel="stylesheet">
+    <style>
+        :root { --primary: #00C2FF; --secondary: #7000FF; --success: #00F5A0; --bg: #020617; --glass: rgba(15, 23, 42, 0.7); }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: var(--bg); color: white; padding: 40px; overflow-x: hidden; min-height: 100vh; background-image: radial-gradient(circle at bottom right, rgba(0, 194, 255, 0.05), transparent); }
+
+        .container { max-width: 1000px; margin: 0 auto; position: relative; }
+        
+        .header-alpha { display: flex; justify-content: space-between; align-items: center; margin-bottom: 60px; }
+        .header-alpha h1 { font-size: 32px; font-weight: 900; letter-spacing: -1.5px; }
+
+        /* BOUTON NÉON PULSÉ */
+        .btn-add { 
+            background: var(--primary); color: #000; padding: 15px 30px; border-radius: 18px; 
+            font-weight: 900; border: none; cursor: pointer; transition: 0.4s; font-size: 11px;
+            text-transform: uppercase; animation: neon-pulse 2s infinite;
+        }
+        @keyframes neon-pulse { 0% { box-shadow: 0 0 10px var(--primary); } 50% { box-shadow: 0 0 30px var(--primary); } 100% { box-shadow: 0 0 10px var(--primary); } }
+        .btn-add:hover { transform: translateY(-5px); filter: brightness(1.2); }
+
+        /* GRILLE DE TARIFS HOLOGRAPHIQUE */
+        .tarif-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; }
+        .tarif-card { 
+            background: var(--glass); padding: 40px; border-radius: 40px; border: 1px solid rgba(255,255,255,0.05);
+            backdrop-filter: blur(25px); position: relative; transition: 0.5s; overflow: hidden;
+        }
+        .tarif-card::after { content: ""; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent); transition: 0.5s; }
+        .tarif-card:hover::after { left: 100%; }
+        .tarif-card:hover { border-color: var(--success); transform: scale(1.03); box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+
+        .price-tag { font-size: 42px; font-weight: 900; color: var(--success); margin: 15px 0; text-shadow: 0 0 20px rgba(0, 245, 160, 0.3); }
+        .duration-label { font-size: 10px; color: #475569; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; }
+        
+        .info-row { display: flex; align-items: center; gap: 10px; font-size: 13px; color: #cbd5e1; margin-top: 10px; font-weight: 600; }
+
+        /* MODAL DE CONFIGURATION */
+        #modal-tarif { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 2000; align-items: center; justify-content: center; backdrop-filter: blur(15px); }
+        .modal-content { background: #0f172a; padding: 50px; border-radius: 40px; width: 450px; border: 1px solid var(--primary); box-shadow: 0 0 100px rgba(0, 194, 255, 0.2); }
+        input { width: 100%; padding: 18px; margin: 15px 0; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); border-radius: 15px; color: white; outline: none; font-weight: 600; }
+        input:focus { border-color: var(--primary); }
+
+        .back-link { display: block; text-align: center; margin-top: 60px; color: #475569; text-decoration: none; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header-alpha">
+            <div>
+                <h1>CATALOGUE <span style="color:var(--primary)">TARIFS</span></h1>
+                <p style="color:#475569; font-weight: 700;">Architecture de monétisation MikroTik.</p>
+            </div>
+            <button class="btn-add" onclick="openModal()">+ Nouveau Tarif</button>
+        </div>
+
+        <div class="tarif-grid" id="tarif-list">
+            <!-- CARTE 1 -->
+            <div class="tarif-card">
+                <div class="duration-label">PASS STANDARD</div>
+                <div class="price-tag">100 F</div>
+                <div class="info-row">⏱️ <span>Durée : 1 Heure</span></div>
+                <div class="info-row">📡 <span>Débit : 2 Mbps</span></div>
+            </div>
+
+            <!-- CARTE 2 (BEST SELLER) -->
+            <div class="tarif-card" style="border-color: var(--primary);">
+                <div class="duration-label" style="color:var(--primary)">PASS ÉLITE</div>
+                <div class="price-tag" style="color:var(--primary)">500 F</div>
+                <div class="info-row">⏱️ <span>Durée : 24 Heures</span></div>
+                <div class="info-row">📡 <span>Débit : Illimité</span></div>
+            </div>
+        </div>
+        
+        <a href="/dashboard" class="back-link">← Retour au QG de Pilotage</a>
+    </div>
+
+    <!-- MODAL -->
+    <div id="modal-tarif">
+        <div class="modal-content">
+            <h2 style="font-size: 24px; font-weight: 900; margin-bottom: 30px;">INJECTER UN TARIF</h2>
+            <input type="text" id="t-name" placeholder="Nom de l'offre">
+            <input type="number" id="t-price" placeholder="Montant (F CFA)">
+            <input type="text" id="t-time" placeholder="Durée (ex: 3 Heures)">
+            <button class="btn-add" style="width:100%; margin-top:20px; padding:20px;" onclick="addTarif()">Activer le Tarif</button>
+            <p onclick="closeModal()" style="text-align:center; color:#475569; margin-top:20px; cursor:pointer; font-size:11px; font-weight:800;">ANNULER L'INJECTION</p>
+        </div>
+    </div>
+
+    <script>
+        function openModal() { document.getElementById('modal-tarif').style.display = 'flex'; }
+        function closeModal() { document.getElementById('modal-tarif').style.display = 'none'; }
+
+        function addTarif() {
+            const name = document.getElementById('t-name').value;
+            const price = document.getElementById('t-price').value;
+            alert("PROTOCOLE ALPHA : L'offre '" + name + "' à " + price + " F est désormais active sur votre portail.");
+            closeModal();
+            // Ici tu pourras ajouter la logique pour sauvegarder en DB plus tard
+        }
+    </script>
+</body>
+</html>
