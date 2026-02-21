@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AERIO | L'Élite du WiFi Zone Panafricain</title>
+    <!-- GOOGLE FONTS RÉPARÉ -->
     <link href="https://fonts.googleapis.com" rel="stylesheet">
     <style>
         :root { --primary: #00C2FF; --accent: #00F5A0; --bg: #020617; --glass: rgba(15, 23, 42, 0.7); }
@@ -12,7 +13,8 @@
         body { 
             background: linear-gradient(rgba(2, 6, 23, 0.9), rgba(2, 6, 23, 0.95)), 
                         url('https://images.unsplash.com');
-            background-size: cover; background-position: center; color: white; overflow-x: hidden; min-height: 100vh; 
+            background-size: cover; background-position: center; background-attachment: fixed;
+            color: white; overflow-x: hidden; min-height: 100vh; 
         }
 
         nav { display: flex; justify-content: space-between; padding: 25px 8%; align-items: center; backdrop-filter: blur(15px); border-bottom: 1px solid rgba(255,255,255,0.05); }
@@ -28,6 +30,7 @@
             text-decoration: none; font-weight: 900; font-size: 15px;
             background: var(--primary); color: black; transition: 0.4s;
             text-transform: uppercase; letter-spacing: 1px;
+            box-shadow: 0 10px 30px rgba(0, 194, 255, 0.2);
         }
         .btn-main:hover { transform: translateY(-5px); box-shadow: 0 15px 50px var(--primary); }
 
@@ -36,7 +39,11 @@
             background: var(--glass); border: 1px solid rgba(255,255,255,0.1);
             padding: 40px; border-radius: 40px; backdrop-filter: blur(25px);
             border-left: 5px solid var(--primary);
+            box-shadow: 0 40px 80px rgba(0,0,0,0.5);
+            animation: float 4s infinite alternate ease-in-out;
         }
+        @keyframes float { from { transform: translateY(0); } to { transform: translateY(-20px); } }
+
         .counter-label { font-size: 11px; color: #475569; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px; }
         #counter { font-size: 50px; font-weight: 900; color: var(--accent); text-shadow: 0 0 30px rgba(0, 245, 160, 0.3); }
     </style>
@@ -45,14 +52,14 @@
 
     <nav>
         <div class="logo-text">AERIO</div>
-        <div class="menu"><a href="/connexion" style="color:white; text-decoration:none; font-weight:800; font-size:11px; border:1px solid var(--primary); padding:10px 20px; border-radius:12px;">ACCÈS PRO</a></div>
+        <div class="menu"><a href="/connexion" style="color:white; text-decoration:none; font-weight:800; font-size:11px; border:1px solid var(--primary); padding:12px 25px; border-radius:12px;">ACCÈS PRO</a></div>
     </nav>
 
     <section class="hero">
         <div class="hero-content">
             <p style="color: var(--primary); font-weight: 900; letter-spacing: 5px; margin-bottom: 15px; font-size: 11px;">🛰️ RÉSEAU PANAFRICAIN ALPHA</p>
             <h1>Monétisez votre<br><span>WiFi Zone.</span></h1>
-            <p style="color: #94a3b8; margin: 30px 0;">Transformez votre MikroTik en source de revenus avec Orange & MTN Money. Pas de faux chiffres, juste la performance réelle.</p>
+            <p style="color: #94a3b8; margin: 30px 0; font-size: 16px; line-height: 1.6;">Transformez votre MikroTik en source de revenus avec Orange & MTN Money. Une infrastructure conçue pour les entrepreneurs panafricains 🇨🇲 🇹🇩.</p>
             <a href="/inscription" class="btn-main">Déployer ma Zone</a>
         </div>
 
@@ -60,7 +67,7 @@
             <div class="card-preview">
                 <div class="counter-label">Flux Réseau Global</div>
                 <h2 id="counter">0 F</h2>
-                <p style="font-size: 10px; color: #475569; margin-top: 15px; font-weight: 800;">POINT D'ACCÈS ACTIFS : <span id="nodes">0</span></p>
+                <p style="font-size: 10px; color: #475569; margin-top: 20px; font-weight: 800; letter-spacing: 1px;">POINT D'ACCÈS ACTIFS : <span id="nodes" style="color:var(--primary)">0</span></p>
             </div>
         </div>
     </section>
@@ -69,15 +76,17 @@
         // ✅ CHARGEMENT DU FLUX RÉEL DEPUIS TON SERVEUR [1.2, 1.4]
         async function fetchGlobalData() {
             try {
+                // On appelle la route qu'on a créée dans server.js
                 const res = await fetch('/api/global-stats');
                 const data = await res.json();
                 
-                // On anime le compteur de 0 vers le chiffre réel (même si c'est 0 pour l'instant)
+                // On affiche les données réelles (ce sera 0 F si personne n'a encore vendu)
                 document.getElementById('counter').innerText = data.total.toLocaleString() + " F";
                 document.getElementById('nodes').innerText = data.nodeCount;
                 
             } catch (e) {
                 console.log("Mode Initialisation : En attente du premier flux...");
+                document.getElementById('counter').innerText = "0 F";
             }
         }
         window.onload = fetchGlobalData;
