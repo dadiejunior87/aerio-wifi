@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AERIO | Trésorerie Alpha</title>
+    <!-- LIEN POPPINS RÉPARÉ -->
     <link href="https://fonts.googleapis.com" rel="stylesheet">
     <style>
         :root { --primary: #00C2FF; --accent: #00F5A0; --bg: #020617; --glass: rgba(15, 23, 42, 0.7); --danger: #FF4B4B; }
@@ -48,7 +49,6 @@
         }
         .btn-withdraw:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(0, 245, 160, 0.4); }
 
-        /* TABLEAU MINI */
         table { width: 100%; border-collapse: collapse; font-size: 12px; }
         th { text-align: left; color: #475569; padding-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); }
         td { padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.02); }
@@ -75,7 +75,6 @@
     </div>
 
     <div class="main-grid">
-        <!-- FORMULAIRE -->
         <div class="payout-form">
             <h3>Configuration du Retrait</h3>
             <form id="payoutForm">
@@ -100,13 +99,12 @@
             </form>
         </div>
 
-        <!-- HISTORIQUE RAPIDE -->
         <div class="history-panel">
             <h3>Recettes Récentes</h3>
             <table>
                 <thead><tr><th>DATE</th><th>BRUT</th><th>GAIN NET</th></tr></thead>
                 <tbody id="quick-history">
-                    <!-- Chargement JS -->
+                    <tr><td colspan='3' style='padding:20px; text-align:center;'>Synchronisation...</td></tr>
                 </tbody>
             </table>
         </div>
@@ -115,24 +113,28 @@
     <a href="/dashboard" class="back-link">← Retour au QG Alpha</a>
 
     <script>
+        // ✅ SYNCHRONISATION AVEC TON NOUVEAU SERVEUR [1.4]
         async function loadData() {
             try {
                 const res = await fetch('/api/my-stats');
-                const tickets = await res.json();
+                const data = await res.json();
                 
-                // Calcul Solde
-                const balance = tickets.reduce((sum, t) => sum + (t.amount * 0.85), 0);
-                document.getElementById('current-balance').innerText = balance.toLocaleString() + " F";
+                // On récupère le NET (85%) envoyé par le serveur
+                document.getElementById('current-balance').innerText = Math.floor(data.summary.net).toLocaleString() + " F";
 
-                // Historique
+                // Historique dynamique
                 const historyEl = document.getElementById('quick-history');
-                historyEl.innerHTML = tickets.reverse().slice(0, 5).map(t => `
-                    <tr>
-                        <td>${new Date(t.date).toLocaleDateString()}</td>
-                        <td style="opacity:0.6">${t.amount} F</td>
-                        <td style="color:var(--accent); font-weight:800">+${(t.amount * 0.85).toFixed(0)} F</td>
-                    </tr>
-                `).join('') || "<tr><td colspan='3'>Aucun flux détecté.</td></tr>";
+                if (data.tickets.length === 0) {
+                    historyEl.innerHTML = "<tr><td colspan='3' style='padding:20px; text-align:center;'>Aucun flux détecté.</td></tr>";
+                } else {
+                    historyEl.innerHTML = data.tickets.slice(0, 5).map(t => `
+                        <tr>
+                            <td>${new Date(t.date).toLocaleDateString()}</td>
+                            <td style="opacity:0.6">${t.amount.toLocaleString()} F</td>
+                            <td style="color:var(--accent); font-weight:800">+${Math.floor(t.amount * 0.85).toLocaleString()} F</td>
+                        </tr>
+                    `).join('');
+                }
 
             } catch(e) { console.error("Erreur Synchro."); }
         }
