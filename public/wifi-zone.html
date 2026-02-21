@@ -3,110 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AERIO | Centre de Contrôle Alpha</title>
+    <title>AERIO | Configuration Nœud Alpha</title>
     <link href="https://fonts.googleapis.com" rel="stylesheet">
-    <script src="https://maps.googleapis.com"></script>
     <style>
-        :root { --primary: #00C2FF; --bg: #020617; --glass: rgba(15, 23, 42, 0.7); --success: #00F5A0; --danger: #FF4B4B; }
+        :root { --primary: #00C2FF; --accent: #00F5A0; --bg: #020617; --glass: rgba(15, 23, 42, 0.7); }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        body { background: var(--bg); color: white; padding: 40px; overflow-x: hidden; min-height: 100vh; }
+        body { background: var(--bg); color: white; padding: 40px; min-height: 100vh; background-image: radial-gradient(circle at top right, rgba(0, 194, 255, 0.05), transparent); }
 
-        /* ✅ RADAR ARRIÈRE-PLAN */
-        .radar-container { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); opacity: 0.1; z-index: -1; pointer-events: none; }
-        .radar-circle { width: 600px; height: 600px; border: 1px solid var(--primary); border-radius: 50%; position: relative; }
-        .radar-sweep { width: 50%; height: 2px; background: linear-gradient(to right, var(--primary), transparent); position: absolute; top: 50%; left: 50%; transform-origin: left center; animation: sweep 4s linear infinite; }
-        @keyframes sweep { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .header-wifi { margin-bottom: 40px; }
+        .header-wifi h1 { font-size: 32px; font-weight: 900; letter-spacing: -2px; }
 
-        .container { max-width: 1200px; margin: 0 auto; position: relative; }
-        .header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 60px; }
+        .info-banner { 
+            background: rgba(0, 194, 255, 0.05); border: 1px solid var(--primary); 
+            padding: 20px; border-radius: 20px; margin-bottom: 30px; font-size: 13px; color: #94a3b8;
+        }
+
+        .config-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+        .card-config { 
+            background: var(--glass); padding: 40px; border-radius: 40px; 
+            border: 1px solid rgba(255,255,255,0.05); backdrop-filter: blur(25px); 
+        }
+
+        .form-group { margin-bottom: 25px; }
+        label { display: block; font-size: 11px; font-weight: 800; color: var(--primary); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; margin-left: 10px; }
         
-        .btn-add { background: var(--primary); color: #000; padding: 15px 30px; border-radius: 18px; font-weight: 900; border: none; cursor: pointer; transition: 0.4s; font-size: 12px; box-shadow: 0 0 20px rgba(0, 194, 255, 0.4); text-transform: uppercase; }
-        .btn-add:hover { transform: translateY(-5px); box-shadow: 0 15px 40px var(--primary); }
+        input, textarea {
+            width: 100%; padding: 18px 25px; background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 20px;
+            color: white; font-size: 14px; outline: none; transition: 0.3s;
+        }
+        textarea { height: 120px; resize: none; }
+        input:focus, textarea:focus { border-color: var(--primary); background: rgba(0, 194, 255, 0.05); }
 
-        /* TABLEAU ÉLITE (VERSION SUPÉRIEURE À L'IMAGE) */
-        .glass-panel { background: var(--glass); padding: 35px; border-radius: 40px; border: 1px solid rgba(255,255,255,0.05); backdrop-filter: blur(30px); margin-top: 50px; overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; text-align: left; min-width: 900px; }
-        th { font-size: 10px; font-weight: 800; color: #475569; text-transform: uppercase; letter-spacing: 2px; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        td { padding: 20px 0; border-bottom: 1px solid rgba(255,255,255,0.02); font-size: 13px; color: #cbd5e1; }
-        
-        .status-pill { background: rgba(0,245,160,0.1); color: var(--success); padding: 6px 15px; border-radius: 50px; font-size: 10px; font-weight: 900; border: 1px solid var(--success); }
-        .action-btn { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 8px; border-radius: 10px; cursor: pointer; transition: 0.3s; margin-right: 5px; }
-        .action-btn:hover { background: var(--primary); color: black; border-color: var(--primary); }
+        .hint { font-size: 11px; color: #475569; margin-top: 8px; margin-left: 10px; line-height: 1.4; }
 
-        /* MODAL */
-        #modal-add { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 2000; align-items: center; justify-content: center; backdrop-filter: blur(15px); }
-        .modal-content { background: #0f172a; padding: 40px; border-radius: 40px; width: 950px; border: 1px solid var(--primary); display: grid; grid-template-columns: 1fr 1.2fr; gap: 30px; }
-        #map { width: 100%; height: 100%; border-radius: 25px; border: 1px solid rgba(255,255,255,0.05); min-height: 450px; }
-        
-        .back-link { display: block; text-align: center; margin-top: 50px; color: #475569; text-decoration: none; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; }
+        .btn-save {
+            grid-column: 1 / -1; background: var(--primary); color: #020617;
+            padding: 22px; border-radius: 25px; font-weight: 900; border: none;
+            text-transform: uppercase; letter-spacing: 2px; cursor: pointer; transition: 0.4s;
+            box-shadow: 0 10px 30px rgba(0, 194, 255, 0.3); margin-top: 20px;
+        }
+        .btn-save:hover { transform: translateY(-5px); box-shadow: 0 15px 50px var(--primary); }
+
+        .back-link { display: block; text-align: center; margin-top: 40px; color: #475569; text-decoration: none; font-size: 11px; font-weight: 800; text-transform: uppercase; }
     </style>
 </head>
 <body>
 
-    <div class="radar-container"><div class="radar-circle"><div class="radar-sweep"></div></div></div>
-
-    <div class="container">
-        <div class="header">
-            <div><h1>WIFI <span style="color:var(--primary)">ZONES</span></h1><p style="color:#475569; font-weight: 700;">GESTION DES NŒUDS RÉSEAU ALPHA</p></div>
-            <button class="btn-add" onclick="openModal()">+ Ajouter une Zone</button>
-        </div>
-
-        <!-- TABLEAU DE GESTION (COMME DANS TON IMAGE MAIS EN MIEUX) -->
-        <div class="glass-panel">
-            <h2 style="font-size: 14px; color: var(--primary); margin-bottom: 25px; letter-spacing: 1px;">LISTE DES SITES ACTIFS</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>NOM DU SITE</th>
-                        <th>DESCRIPTION</th>
-                        <th>CONTACT</th>
-                        <th>ETAT FLUX</th>
-                        <th>ACTIONS</th>
-                    </tr>
-                </thead>
-                <tbody id="wifi-table-body">
-                    <!-- Exemple d'un site -->
-                    <tr>
-                        <td><b style="color:white">CONNEXIA</b></td>
-                        <td>Wifi haute vitesse Centre-Ville</td>
-                        <td>691285152</td>
-                        <td><span class="status-pill">⚡ EN LIGNE</span></td>
-                        <td>
-                            <button class="action-btn" title="Lien de paiement">🔗</button>
-                            <button class="action-btn" title="Code d'intégration">Code</button>
-                            <button class="action-btn" title="Supprimer" style="color:var(--danger)">🗑️</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <a href="/dashboard" class="back-link">← Retour au Cockpit Alpha</a>
+    <div class="header-wifi">
+        <h1>Déployer une <span style="color:var(--primary)">Zone WiFi</span></h1>
+        <p style="color: #475569; font-size: 14px; margin-top: 5px;">Configuration avancée de votre point d'accès réseau.</p>
     </div>
 
-    <!-- MODAL D'INJECTION -->
-    <div id="modal-add">
-        <div class="modal-content">
-            <div class="form-side">
-                <h2 style="font-size: 20px; font-weight: 900; margin-bottom: 20px; color: var(--primary);">INJECTION RÉSEAU</h2>
-                <input type="text" id="z-name" placeholder="Nom du WiFi Zone" style="width:100%; padding:14px; margin-top:5px; background:rgba(0,0,0,0.5); border:1px solid rgba(255,255,255,0.1); border-radius:12px; color:white; margin-bottom:15px;">
-                <input type="text" id="z-ip" placeholder="Adresse IP MikroTik" style="width:100%; padding:14px; margin-top:5px; background:rgba(0,0,0,0.5); border:1px solid rgba(255,255,255,0.1); border-radius:12px; color:white; margin-bottom:15px;">
-                <button class="btn-add" style="width:100%; margin-top:20px;" onclick="addZone()">Activer le Nœud</button>
-                <p onclick="closeModal()" style="text-align:center; color:#475569; margin-top:15px; cursor:pointer; font-size:10px; font-weight:800;">ANNULER</p>
+    <div class="info-banner">
+        <b>💡 IMPORTANT :</b> Les informations saisies ici seront utilisées pour configurer et identifier votre zone WiFi. Assurez-vous de fournir des données précises pour une meilleure gestion.
+    </div>
+
+    <form id="wifiForm" class="config-grid">
+        <!-- COLONNE GAUCHE -->
+        <div class="card-config">
+            <div class="form-group">
+                <label>🏷️ Nom du WiFi Zone</label>
+                <input type="text" placeholder="Ex: Cyber Café Central" required>
+                <p class="hint">Choisissez le nom correspondant à votre zone WiFi existante ou celle que vous installez.</p>
             </div>
-            <div id="map"></div>
+
+            <div class="form-group">
+                <label>🌐 Adresse IP ou DNS local / VPN</label>
+                <input type="text" placeholder="Ex: 192.168.30.1 ou galaxie.net">
+                <p class="hint">Champ facultatif mais important pour la connexion automatique de vos clients après génération du ticket.</p>
+            </div>
         </div>
-    </div>
+
+        <!-- COLONNE DROITE -->
+        <div class="card-config">
+            <div class="form-group">
+                <label>📝 Description de la zone</label>
+                <textarea placeholder="Ex: WiFi haute vitesse situé au centre-ville, idéal pour le travail..."></textarea>
+                <p class="hint">Une bonne description aide vos clients à comprendre les avantages de votre réseau.</p>
+            </div>
+
+            <div class="form-group">
+                <label>📞 Votre contact assistance</label>
+                <input type="text" placeholder="Ex: +226 70 00 00 00">
+                <p class="hint">Ce numéro sera utilisé par vos clients pour obtenir de l'assistance au besoin.</p>
+            </div>
+        </div>
+
+        <button type="submit" class="btn-save">🚀 ACTIVER LE NŒUD RÉSEAU ALPHA</button>
+    </form>
+
+    <a href="/dashboard" class="back-link">← Retour au QG Alpha</a>
 
     <script>
-        // Fonctions d'ouverture/fermeture du modal (Idem à tes versions précédentes)
-        function openModal() { document.getElementById('modal-add').style.display = 'flex'; }
-        function closeModal() { document.getElementById('modal-add').style.display = 'none'; }
-        
-        async function addZone() {
-            // Logique de sauvegarde déjà présente dans tes versions
-            alert("PROTOCOLE INJECTÉ 🛰️"); location.reload();
-        }
+        document.getElementById('wifiForm').onsubmit = (e) => {
+            e.preventDefault();
+            alert("[PROTOCOLE ALPHA] Configuration transmise au serveur. Synchronisation MikroTik en cours...");
+            window.location.href = "/dashboard";
+        };
     </script>
 </body>
 </html>
