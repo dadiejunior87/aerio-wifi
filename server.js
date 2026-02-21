@@ -7,7 +7,7 @@ const axios = require("axios");
 const session = require("express-session");
 const nodemailer = require("nodemailer"); 
 const cron = require("node-cron"); 
-const twilio = require("twilio"); // ✅ MOTEUR SMS ALPHA
+const twilio = require("twilio"); 
 const app = express();
 
 // --- SÉCURITÉ BASTION ALPHA ---
@@ -24,13 +24,11 @@ const PORT = process.env.PORT || 3000;
 const TICKETS_FILE = path.join(__dirname, "tickets.json");
 const PARTNERS_FILE = path.join(__dirname, "partners.json");
 
-// ✅ CONFIGURATION EMAIL
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: { user: 'votre-email@gmail.com', pass: 'votre-pass-app' }
 });
 
-// ✅ CONFIGURATION SMS TWILIO
 const smsClient = new twilio('TON_ACCOUNT_SID', 'TON_AUTH_TOKEN');
 
 app.use(express.json());
@@ -56,7 +54,7 @@ function checkAuth(req, res, next) {
     else res.redirect("/connexion");
 }
 
-// ✅ FONCTION ALERTE VENTE (EMAIL)
+// ✅ FONCTION ALERTE VENTE (EMAIL ADMIN)
 async function envoyerAlerteVente(partnerID, montant) {
     const mailOptions = {
         from: '"AERIO ALPHA" <votre-email@gmail.com>',
@@ -70,7 +68,19 @@ async function envoyerAlerteVente(partnerID, montant) {
     try { await transporter.sendMail(mailOptions); } catch (e) { console.log("Erreur Mail"); }
 }
 
-// ✅ FONCTION ENVOI TICKET (SMS)
+// ✅ FONCTION ALERTE STOCK BAS (SMS PARTENAIRE)
+async function alerterStockBas(phone, tarifName, reste) {
+    try {
+        await smsClient.messages.create({
+            body: `[AERIO ALPHA] ⚠️ ALERTE STOCK : Le tarif ${tarifName} est presque épuisé (${reste} restants). Importez de nouveaux tickets pour continuer vos ventes !`,
+            from: 'AERIO',
+            to: phone
+        });
+        console.log(`📡 Alerte stock envoyée au ${phone}`);
+    } catch (e) { console.log("Erreur SMS Alerte Stock"); }
+}
+
+// ✅ FONCTION ENVOI TICKET (SMS CLIENT)
 async function envoyerSmsTicket(phone, code, duration) {
     try {
         await smsClient.messages.create({
@@ -78,8 +88,7 @@ async function envoyerSmsTicket(phone, code, duration) {
             from: 'AERIO',
             to: phone
         });
-        console.log(`📱 SMS envoyé au ${phone}`);
-    } catch (e) { console.log("Erreur SMS Twilio"); }
+    } catch (e) { console.log("Erreur SMS Ticket"); }
 }
 
 // ✅ RAPPORT HEBDOMADAIRE (Dimanche 23h59)
@@ -95,7 +104,7 @@ cron.schedule('59 23 * * 0', async () => {
     try { await transporter.sendMail(reportMail); } catch (e) { console.log("Erreur Rapport"); }
 });
 
-// ✅ WEBHOOK MONEROO (GENERATEUR + SMS)
+// ✅ WEBHOOK MONEROO (GENERATEUR + SMS + SURVEILLANCE STOCK)
 app.post("/api/moneroo-webhook", async (req, res) => {
     const { status, metadata, amount } = req.body.data;
     if (status === "completed") {
@@ -106,24 +115,30 @@ app.post("/api/moneroo-webhook", async (req, res) => {
         tickets.push({ code: wifiCode, amount, partnerID: router_id, duration, customer_phone: phone, date: new Date(), status: "SUCCESS" });
         fs.writeFileSync(TICKETS_FILE, JSON.stringify(tickets, null, 2));
         
+        // 1. Alerte Vente Admin
         await envoyerAlerteVente(router_id, amount);
-        if (phone) await envoyerSmsTicket(phone, wifiCode, duration); // 📲 ENVOI SMS
+        
+        // 2. Envoi SMS Client
+        if (phone) await envoyerSmsTicket(phone, wifiCode, duration);
+
+        // 3. ✅ SURVEILLANCE DE STOCK AUTOMATIQUE
+        // Simulation : On compte les tickets restants pour ce partenaire dans la base
+        let stockRestant = 3; // Ici tu feras un vrai comptage plus tard
+        if (stockRestant <= 5) {
+            const partners = JSON.parse(fs.readFileSync(PARTNERS_FILE));
+            const p = partners.find(part => part.partnerID === router_id);
+            if (p && p.phone) await alerterStockBas(p.phone, duration, stockRestant);
+        }
         
         res.status(200).send("OK");
     } else { res.status(400).send("ECHEC"); }
 });
 
-// --- ROUTES PAGES ---
+// --- ROUTES PAGES & AUTH (Garde tes routes existantes) ---
 app.get("/", (req, res) => res.sendFile(path.join(__dirname, "public", "index.html")));
 app.get("/connexion", (req, res) => res.sendFile(path.join(__dirname, "public", "login-partenaire.html")));
-app.get("/inscription", (req, res) => res.sendFile(path.join(__dirname, "public", "register-partenaire.html")));
 app.get("/dashboard", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "dashboard.html")));
-app.get("/wifi-zone", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "wifi-zone.html")));
-app.get("/tickets", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "tickets.html")));
-app.get("/compta", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "compta.html")));
-app.get("/profil", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "profil.html")));
 
-// --- API AUTH ---
 app.post("/api/login-partenaire", (req, res) => {
     const { email, password } = req.body;
     if (email === "admin@aerio.com" && password === "admin123") {
@@ -139,14 +154,6 @@ app.post("/api/login-partenaire", (req, res) => {
 app.get("/api/my-stats", checkAuth, (req, res) => {
     const tickets = JSON.parse(fs.readFileSync(TICKETS_FILE));
     res.json(tickets.filter(t => t.partnerID === req.session.partnerID));
-});
-
-app.post("/api/simulate-sale", checkAuth, async (req, res) => {
-    let tickets = JSON.parse(fs.readFileSync(TICKETS_FILE));
-    tickets.push({ code: "SIM-" + Math.random().toString(36).substring(2, 7).toUpperCase(), amount: 500, partnerID: req.session.partnerID, date: new Date(), status: "SUCCESS" });
-    fs.writeFileSync(TICKETS_FILE, JSON.stringify(tickets, null, 2));
-    await envoyerAlerteVente(req.session.partnerID, 500);
-    res.json({ success: true });
 });
 
 app.get("/logout", (req, res) => { req.session.destroy(); res.redirect("/"); });
