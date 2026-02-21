@@ -3,181 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AERIO | L'Élite du WiFi Zone Panafricain</title>
-    <!-- GOOGLE FONTS RÉPARÉ -->
+    <title>AERIO | L'Élite du WiFi Zone</title>
     <link href="https://fonts.googleapis.com" rel="stylesheet">
     <style>
-        :root {
-            --primary: #00C2FF; --secondary: #7000FF; --accent: #00F5A0;
-            --danger: #FF4B4B; --bg: #020617; --glass: rgba(15, 23, 42, 0.7);
-        }
+        :root { --primary: #00C2FF; --accent: #00F5A0; --bg: #020617; --glass: rgba(15, 23, 42, 0.7); }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         
-        /* IMAGE DE FOND ALPHA IMMERSIVE */
         body { 
             background: linear-gradient(rgba(2, 6, 23, 0.85), rgba(2, 6, 23, 0.95)), 
                         url('https://images.unsplash.com');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
+            background-size: cover; background-position: center; background-attachment: fixed;
             color: white; overflow-x: hidden; min-height: 100vh; 
         }
 
-        .orb {
-            position: absolute; width: 500px; height: 500px; border-radius: 50%;
-            background: radial-gradient(circle, rgba(0, 194, 255, 0.1) 0%, transparent 70%);
-            z-index: -1; filter: blur(80px); animation: move 20s infinite alternate;
-        }
-        @keyframes move { from { transform: translate(-100px, -100px); } to { transform: translate(100vw, 80vh); } }
-
-        nav { 
-            display: flex; justify-content: space-between; padding: 20px 8%; 
-            align-items: center; backdrop-filter: blur(15px); position: sticky; 
-            top: 0; z-index: 1000; border-bottom: 1px solid rgba(255,255,255,0.05);
-        }
-        .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+        nav { display: flex; justify-content: space-between; padding: 20px 8%; align-items: center; backdrop-filter: blur(15px); position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .logo-text { font-weight: 900; font-size: 26px; color: var(--primary); letter-spacing: -1.5px; }
 
-        .menu { display: flex; align-items: center; gap: 25px; }
-        .menu a { color: #94a3b8; text-decoration: none; font-size: 13px; font-weight: 600; transition: 0.3s; }
-        .menu a:hover { color: var(--primary); }
-        .btn-glow { 
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
-            padding: 12px 25px; border-radius: 12px; color: white !important; font-weight: 800 !important;
-            box-shadow: 0 0 20px rgba(112, 0, 255, 0.3); font-size: 11px !important;
+        .hero { padding: 80px 8%; text-align: center; }
+        .hero h1 { font-size: 3.5rem; font-weight: 900; margin-bottom: 20px; }
+        .hero h1 span { color: var(--primary); }
+
+        /* BOUTIQUE DYNAMIQUE */
+        #shop-section { padding: 60px 8%; }
+        .tarif-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; margin-top: 40px; }
+        .tarif-card { 
+            background: var(--glass); padding: 40px; border-radius: 40px; border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(20px); transition: 0.4s; text-align: center;
+        }
+        .tarif-card:hover { border-color: var(--primary); transform: translateY(-10px); }
+        .tarif-card .price { font-size: 42px; font-weight: 900; color: var(--accent); margin: 15px 0; }
+        
+        .btn-buy { 
+            background: var(--primary); color: black; padding: 15px 30px; border-radius: 15px; 
+            font-weight: 900; border: none; cursor: pointer; width: 100%; margin-top: 20px;
         }
 
-        .hero { display: flex; align-items: center; padding: 80px 8%; gap: 60px; min-height: 85vh; }
-        .hero-content { flex: 1.2; }
-        .hero-content h1 { font-size: 4.5rem; font-weight: 900; line-height: 0.9; margin-bottom: 25px; letter-spacing: -3px; }
-        .hero-content h1 span { background: linear-gradient(to right, var(--primary), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .hero-content p { color: #94a3b8; font-size: 17px; line-height: 1.6; margin-bottom: 40px; max-width: 580px; }
-
-        .btn-main { 
-            display: inline-block; padding: 20px 45px; border-radius: 18px; 
-            text-decoration: none; font-weight: 900; font-size: 16px;
-            background: white; color: black; transition: 0.3s; box-shadow: 0 10px 40px rgba(0, 194, 255, 0.2);
-        }
-        .btn-main:hover { transform: translateY(-5px); box-shadow: 0 15px 50px var(--primary); }
-
-        /* CARTE PREVIEW GLASSMORPHISM */
-        .card-preview {
-            background: var(--glass); border: 1px solid rgba(255,255,255,0.1);
-            padding: 40px; border-radius: 40px; backdrop-filter: blur(20px);
-            transform: rotate(-5deg); box-shadow: 0 50px 100px rgba(0,0,0,0.5);
-            animation: float 4s infinite alternate ease-in-out;
-        }
-        @keyframes float { from { transform: rotate(-5deg) translateY(0); } to { transform: rotate(-2deg) translateY(-25px); } }
-
-        /* SECTION COMPARATIF ÉLITE */
-        .comparison-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 50px; }
-        .comp-card { background: rgba(255,255,255,0.02); padding: 40px; border-radius: 35px; border: 1px solid rgba(255,255,255,0.05); }
-        .comp-card.premium { border: 2px solid var(--primary); background: rgba(0, 194, 255, 0.05); }
-
-        .status-bar {
-            position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%);
-            background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(255,255,255,0.05);
-            padding: 12px 35px; border-radius: 50px; display: flex; gap: 40px; font-size: 10px;
-            color: #64748b; backdrop-filter: blur(10px); z-index: 1000; font-weight: 800; text-transform: uppercase;
-        }
-
-        .wa-btn {
-            position: fixed; bottom: 35px; right: 35px; width: 60px; height: 60px;
-            background: #25d366; border-radius: 20px; display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 10px 30px rgba(37, 211, 102, 0.3); z-index: 1001; transition: 0.3s;
-        }
-        .wa-btn:hover { transform: scale(1.1) rotate(10deg); }
+        .status-bar { position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); background: rgba(15, 23, 42, 0.9); padding: 12px 35px; border-radius: 50px; font-size: 10px; font-weight: 800; z-index: 1000; }
     </style>
 </head>
 <body>
-    <div class="orb"></div>
 
     <nav>
-        <a href="/" class="logo">
-            <svg width="40" height="40" viewBox="0 0 100 100" fill="none">
-                <circle cx="50" cy="50" r="48" stroke="#00C2FF" stroke-width="4" stroke-dasharray="10 5"/>
-                <path d="M50 25L25 75H35L50 45L65 75H75L50 25Z" fill="#00C2FF"/>
-            </svg>
-            <span class="logo-text">AERIO</span>
-        </a>
-        <div class="menu">
-            <a href="/">Accueil</a>
-            <a href="/inscription">Partenariats</a>
-            <a href="/guide">Documentation</a>
-            <a href="/connexion" class="btn-glow">ESPACE PRO</a>
-        </div>
+        <div class="logo-text">AERIO</div>
+        <div class="menu"><a href="/connexion" style="color:white; text-decoration:none; font-weight:800; font-size:12px;">ACCÈS PARTENAIRE</a></div>
     </nav>
 
     <section class="hero">
-        <div class="hero-content">
-            <p style="color: var(--primary); font-weight: 900; letter-spacing: 4px; margin-bottom: 15px; font-size: 12px;">🛰️ RÉSEAU ALPHA DÉPLOYÉ</p>
-            <h1>Le Futur du<br><span>WiFi Zone.</span></h1>
-            <p>Monétisez votre connexion MikroTik avec la puissance du Mobile Money. Paiements automatiques, codes par SMS et revenus en temps réel.</p>
-            <div class="cta-group">
-                <a href="/inscription" class="btn-main">Devenir Partenaire</a>
-            </div>
-        </div>
+        <p style="color:var(--primary); font-weight:900; letter-spacing:3px; margin-bottom:10px;">PORTAIL DE CONNEXION</p>
+        <h1 id="welcome-title">Bienvenue sur le <span>WiFi Alpha</span></h1>
+        <p id="partner-info" style="color:#64748b;">Détection du nœud réseau en cours...</p>
+    </section>
 
-        <div class="hero-visual">
-            <div class="card-preview">
-                <p style="color: var(--primary); font-size: 10px; font-weight: 900; margin-bottom: 20px; letter-spacing: 2px;">VOTRE BUSINESS EN LIVE</p>
-                <div style="font-size: 11px; color: #475569; margin-bottom: 5px; font-weight: 800;">FLUX TOTAL GÉNÉRÉ :</div>
-                <h2 id="counter" style="font-size: 42px; margin-bottom: 15px; font-weight: 900; color: #00F5A0; text-shadow: 0 0 30px rgba(0, 245, 160, 0.3);">0 F</h2>
-                <div style="height: 6px; background: rgba(255,255,255,0.05); border-radius: 10px;"><div style="width: 85%; height: 100%; background: var(--primary); box-shadow: 0 0 15px var(--primary);"></div></div>
-            </div>
+    <!-- BOUTIQUE DYNAMIQUE -->
+    <section id="shop-section">
+        <h2 style="text-align:center; font-weight:900;">CHOISISSEZ VOTRE FORFAIT</h2>
+        <div class="tarif-grid" id="tarif-list">
+            <!-- Chargement des tarifs du partenaire ici -->
         </div>
     </section>
 
-    <!-- SECTION COMPARATIF -->
-    <section style="padding: 100px 8%;">
-        <h2 style="text-align: center; font-size: 32px; font-weight: 900; margin-bottom: 60px;">AERIO vs <span style="color: #475569;">LES AUTRES</span></h2>
-        <div class="comparison-grid">
-            <div class="comp-card">
-                <h3 style="color: #64748b; margin-bottom: 25px;">Systèmes Classiques</h3>
-                <ul style="list-style: none; font-size: 14px; line-height: 2.5; opacity: 0.6;">
-                    <li>❌ Vente de tickets manuelle</li>
-                    <li>❌ Risque de piratage constant</li>
-                    <li>❌ Pas de suivi comptable</li>
-                    <li>❌ Zéro automatisation</li>
-                </ul>
-            </div>
-            <div class="comp-card premium">
-                <h3 style="color: var(--primary); margin-bottom: 25px;">AERIO ALPHA 🛰️</h3>
-                <ul style="list-style: none; font-size: 15px; line-height: 2.5; font-weight: 600;">
-                    <li>✅ Paiement Mobile Money 100% Auto</li>
-                    <li>✅ Codes tickets envoyés par SMS</li>
-                    <li>✅ Tableau de bord pro 24h/7j</li>
-                    <li>✅ Bouclier Anti-Piratage MikroTik</li>
-                </ul>
-            </div>
-        </div>
-    </section>
-
-    <div class="status-bar">
-        <span>RÉSEAU : <b style="color:var(--accent)">ACTIF</b></span>
-        <span>PARTENAIRES : <b>120+</b></span>
-        <span>STABILITÉ : <b>99.9%</b></span>
-    </div>
-
-    <!-- WHATSAPP RÉPARÉ (Utilise ton numéro) -->
-    <a href="https://wa.me" class="wa-btn" target="_blank">
-        <img src="https://upload.wikimedia.org" width="30" alt="WhatsApp">
-    </a>
+    <div class="status-bar">RÉSEAU SÉCURISÉ PAR AERIO ALPHA 🛰️</div>
 
     <script>
-        // COMPTEUR DE GAINS ÉLITE
-        function animateCounter(target) {
-            let start = 0;
-            const duration = 2000;
-            const step = target / (duration / 16);
-            const el = document.getElementById('counter');
-            const timer = setInterval(() => {
-                start += step;
-                el.innerText = Math.floor(start).toLocaleString() + " F";
-                if (start >= target) { clearInterval(timer); el.innerText = target.toLocaleString() + " F"; }
-            }, 16);
+        // ✅ DÉTECTION DU PARTENAIRE ET CHARGEMENT DES TARIFS [1.4]
+        async function initBoutique() {
+            const urlParams = new URLSearchParams(window.location.search);
+            // Si pas d'ID en URL, on prend l'admin par défaut
+            const partnerID = urlParams.get('partner') || 'AE-0001'; 
+            
+            try {
+                const res = await fetch(`/api/get-shop-tarifs/${partnerID}`);
+                const tarifs = await res.json();
+                
+                const container = document.getElementById('tarif-list');
+                container.innerHTML = "";
+
+                tarifs.forEach(t => {
+                    container.innerHTML += `
+                        <div class="tarif-card">
+                            <div style="font-size:10px; font-weight:900; color:var(--primary); text-transform:uppercase;">${t.name}</div>
+                            <div class="price">${t.price} F</div>
+                            <p style="font-size:13px; opacity:0.7;">⏱️ Durée : ${t.duration}</p>
+                            <button class="btn-buy" onclick="lancerPaiement('${t.price}', '${t.duration}', '${partnerID}')">ACHETER LE PASS</button>
+                        </div>
+                    `;
+                });
+
+                document.getElementById('partner-info').innerText = `Connecté au nœud : ${partnerID}`;
+            } catch(e) { console.error("Erreur boutique"); }
         }
-        window.onload = () => animateCounter(128500);
+
+        function lancerPaiement(prix, duree, partnerID) {
+            alert(`[AERIO PAY] Initialisation du paiement de ${prix} F pour ${duree}.\nPartenaire : ${partnerID}`);
+            // Ici tu appelleras ton API Moneroo plus tard
+        }
+
+        window.onload = initBoutique;
     </script>
 </body>
 </html>
