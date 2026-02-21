@@ -3,10 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AERIO | L'Élite du WiFi Zone</title>
+    <title>AERIO | L'Élite du WiFi Zone Panafricain</title>
     <link href="https://fonts.googleapis.com" rel="stylesheet">
     <style>
-        :root { --primary: #00C2FF; --accent: #00F5A0; --bg: #020617; --glass: rgba(15, 23, 42, 0.7); }
+        :root {
+            --primary: #00C2FF; --secondary: #7000FF; --accent: #00F5A0;
+            --bg: #020617; --glass: rgba(15, 23, 42, 0.7);
+        }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         
         body { 
@@ -19,56 +22,60 @@
         nav { display: flex; justify-content: space-between; padding: 20px 8%; align-items: center; backdrop-filter: blur(15px); position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .logo-text { font-weight: 900; font-size: 26px; color: var(--primary); letter-spacing: -1.5px; }
 
-        .hero { padding: 80px 8%; text-align: center; }
-        .hero h1 { font-size: 3.5rem; font-weight: 900; margin-bottom: 20px; }
+        .hero { padding: 60px 8%; text-align: center; }
+        .hero h1 { font-size: 3rem; font-weight: 900; margin-bottom: 15px; letter-spacing: -1px; }
         .hero h1 span { color: var(--primary); }
+        .hero p { color: #94a3b8; font-size: 14px; margin-bottom: 30px; }
 
-        /* BOUTIQUE DYNAMIQUE */
-        #shop-section { padding: 60px 8%; }
-        .tarif-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; margin-top: 40px; }
+        /* GRILLE DE TARIFS DYNAMIQUE */
+        #shop-section { padding: 20px 8% 80px; }
+        .tarif-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
+        
         .tarif-card { 
             background: var(--glass); padding: 40px; border-radius: 40px; border: 1px solid rgba(255,255,255,0.1);
-            backdrop-filter: blur(20px); transition: 0.4s; text-align: center;
+            backdrop-filter: blur(20px); text-align: center; transition: 0.4s;
+            position: relative; overflow: hidden;
         }
-        .tarif-card:hover { border-color: var(--primary); transform: translateY(-10px); }
-        .tarif-card .price { font-size: 42px; font-weight: 900; color: var(--accent); margin: 15px 0; }
+        .tarif-card:hover { border-color: var(--primary); transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0, 194, 255, 0.2); }
+        
+        .duration { font-size: 10px; font-weight: 900; color: var(--primary); text-transform: uppercase; letter-spacing: 2px; }
+        .price { font-size: 42px; font-weight: 900; color: var(--accent); margin: 15px 0; text-shadow: 0 0 20px rgba(0, 245, 160, 0.3); }
         
         .btn-buy { 
-            background: var(--primary); color: black; padding: 15px 30px; border-radius: 15px; 
+            background: var(--primary); color: black; padding: 18px; border-radius: 15px; 
             font-weight: 900; border: none; cursor: pointer; width: 100%; margin-top: 20px;
+            text-transform: uppercase; letter-spacing: 1px; transition: 0.3s;
         }
+        .btn-buy:hover { filter: brightness(1.2); transform: scale(1.02); }
 
-        .status-bar { position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); background: rgba(15, 23, 42, 0.9); padding: 12px 35px; border-radius: 50px; font-size: 10px; font-weight: 800; z-index: 1000; }
+        .status-bar { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: rgba(15, 23, 42, 0.9); padding: 10px 30px; border-radius: 50px; font-size: 9px; font-weight: 800; border: 1px solid rgba(255,255,255,0.05); letter-spacing: 1px; }
     </style>
 </head>
 <body>
 
     <nav>
         <div class="logo-text">AERIO</div>
-        <div class="menu"><a href="/connexion" style="color:white; text-decoration:none; font-weight:800; font-size:12px;">ACCÈS PARTENAIRE</a></div>
+        <div class="menu"><a href="/connexion" style="color:#64748b; text-decoration:none; font-size:11px; font-weight:800; text-transform:uppercase;">Accès Pro</a></div>
     </nav>
 
     <section class="hero">
-        <p style="color:var(--primary); font-weight:900; letter-spacing:3px; margin-bottom:10px;">PORTAIL DE CONNEXION</p>
         <h1 id="welcome-title">Bienvenue sur le <span>WiFi Alpha</span></h1>
-        <p id="partner-info" style="color:#64748b;">Détection du nœud réseau en cours...</p>
+        <p id="partner-status">📡 Scan de la zone en cours...</p>
     </section>
 
-    <!-- BOUTIQUE DYNAMIQUE -->
     <section id="shop-section">
-        <h2 style="text-align:center; font-weight:900;">CHOISISSEZ VOTRE FORFAIT</h2>
         <div class="tarif-grid" id="tarif-list">
-            <!-- Chargement des tarifs du partenaire ici -->
+            <!-- ✅ Ton script va injecter les forfaits ici -->
+            <p style="text-align: center; width: 100%; color: #475569;">Synchronisation avec le routeur local...</p>
         </div>
     </section>
 
-    <div class="status-bar">RÉSEAU SÉCURISÉ PAR AERIO ALPHA 🛰️</div>
+    <div class="status-bar">PROTOCOLE DE PAIEMENT SÉCURISÉ AES-256 🛰️</div>
 
     <script>
-        // ✅ DÉTECTION DU PARTENAIRE ET CHARGEMENT DES TARIFS [1.4]
-        async function initBoutique() {
+        // ✅ TON MOTEUR DE BOUTIQUE DYNAMIQUE [1.2, 1.4]
+        async function chargerLaBoutiqueDuPartenaire() {
             const urlParams = new URLSearchParams(window.location.search);
-            // Si pas d'ID en URL, on prend l'admin par défaut
             const partnerID = urlParams.get('partner') || 'AE-0001'; 
             
             try {
@@ -76,29 +83,38 @@
                 const tarifs = await res.json();
                 
                 const container = document.getElementById('tarif-list');
-                container.innerHTML = "";
+                container.innerHTML = ""; 
+
+                if (tarifs.length === 0) {
+                    container.innerHTML = "<p style='color:#475569'>Ce partenaire n'a pas encore configuré ses tarifs.</p>";
+                    return;
+                }
 
                 tarifs.forEach(t => {
                     container.innerHTML += `
                         <div class="tarif-card">
-                            <div style="font-size:10px; font-weight:900; color:var(--primary); text-transform:uppercase;">${t.name}</div>
+                            <div class="duration">${t.name}</div>
                             <div class="price">${t.price} F</div>
-                            <p style="font-size:13px; opacity:0.7;">⏱️ Durée : ${t.duration}</p>
-                            <button class="btn-buy" onclick="lancerPaiement('${t.price}', '${t.duration}', '${partnerID}')">ACHETER LE PASS</button>
+                            <p style="font-size:12px; color:#64748b;">⏱️ Durée : <b>${t.duration}</b></p>
+                            <button class="btn-buy" onclick="payer('${t.price}', '${partnerID}')">ACHETER LE PASS</button>
                         </div>
                     `;
                 });
+                
+                document.getElementById('welcome-title').innerHTML = `WiFi Zone : <span>${partnerID}</span>`;
+                document.getElementById('partner-status').innerHTML = `📡 Connexion établie avec succès`;
 
-                document.getElementById('partner-info').innerText = `Connecté au nœud : ${partnerID}`;
-            } catch(e) { console.error("Erreur boutique"); }
+            } catch (e) {
+                document.getElementById('tarif-list').innerHTML = "<p style='color:red'>Erreur de liaison Alpha.</p>";
+            }
         }
 
-        function lancerPaiement(prix, duree, partnerID) {
-            alert(`[AERIO PAY] Initialisation du paiement de ${prix} F pour ${duree}.\nPartenaire : ${partnerID}`);
-            // Ici tu appelleras ton API Moneroo plus tard
+        function payer(montant, partnerID) {
+            alert(`[AERIO PAY] Initialisation du paiement de ${montant} F CFA pour le partenaire ${partnerID}.\nVeuillez préparer votre code Mobile Money.`);
+            // Intégration future Moneroo ici
         }
 
-        window.onload = initBoutique;
+        window.onload = chargerLaBoutiqueDuPartenaire;
     </script>
 </body>
 </html>
