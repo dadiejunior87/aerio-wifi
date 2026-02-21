@@ -3,100 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AERIO | Accès Autorisé</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700;900&display=swap" rel="stylesheet">
+    <title>AERIO | Connexion Établie</title>
+    <link href="https://fonts.googleapis.com" rel="stylesheet">
     <style>
-        :root { --primary: #00C2FF; --bg: #020617; --accent: #00F5A0; --glass: rgba(15, 23, 42, 0.8); }
+        :root { --primary: #00C2FF; --bg: #020617; --accent: #00F5A0; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        body { background: var(--bg); color: white; height: 100vh; display: flex; justify-content: center; align-items: center; overflow: hidden; }
+        body { background: var(--bg); color: white; display: flex; align-items: center; justify-content: center; min-height: 100vh; text-align: center; overflow: hidden; }
 
-        .success-card {
-            background: var(--glass); backdrop-filter: blur(25px);
-            padding: 50px 40px; border-radius: 40px; width: 95%; max-width: 450px;
-            border: 2px solid var(--accent); text-align: center;
-            box-shadow: 0 0 50px rgba(0, 245, 160, 0.1);
-            animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        @keyframes popIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
+        .success-glow { position: absolute; width: 300px; height: 300px; background: var(--accent); filter: blur(150px); opacity: 0.1; animation: pulse 3s infinite; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.5); } 100% { transform: scale(1); } }
 
-        .check-icon {
-            width: 80px; height: 80px; background: var(--accent); border-radius: 50%;
-            display: flex; align-items: center; justify-content: center; margin: 0 auto 30px;
-            box-shadow: 0 0 30px var(--accent); font-size: 40px; color: #020617;
-        }
+        .container { position: relative; z-index: 10; padding: 30px; width: 100%; max-width: 450px; }
+        .icon { font-size: 80px; margin-bottom: 20px; text-shadow: 0 0 30px var(--accent); }
+        h1 { font-size: 32px; font-weight: 900; margin-bottom: 10px; }
+        p { color: #94a3b8; font-size: 14px; margin-bottom: 40px; }
 
-        h1 { font-size: 24px; font-weight: 900; margin-bottom: 10px; letter-spacing: -1px; }
-        p { color: #94a3b8; font-size: 13px; margin-bottom: 30px; }
+        .ticket-box { background: rgba(255,255,255,0.03); border: 2px dashed var(--accent); padding: 35px; border-radius: 35px; margin-bottom: 40px; backdrop-filter: blur(10px); }
+        .code { font-size: 42px; font-weight: 900; color: var(--accent); letter-spacing: 5px; text-shadow: 0 0 20px var(--accent); }
+        
+        .loading-bar { width: 100%; height: 4px; background: rgba(255,255,255,0.05); border-radius: 10px; margin-top: 30px; overflow: hidden; }
+        .progress { width: 0%; height: 100%; background: var(--accent); transition: 4.5s linear; }
 
-        .code-box {
-            background: rgba(0, 0, 0, 0.4); padding: 25px; border-radius: 20px;
-            border: 1px dashed var(--accent); margin-bottom: 30px; position: relative;
-        }
-        .code-label { font-size: 10px; font-weight: 800; color: var(--accent); text-transform: uppercase; margin-bottom: 10px; display: block; letter-spacing: 2px; }
-        #wifi-code { font-size: 32px; font-weight: 900; color: white; letter-spacing: 4px; text-shadow: 0 0 15px var(--accent); }
-
-        .btn-connect {
-            display: block; width: 100%; padding: 20px; border-radius: 20px;
-            background: var(--accent); color: #020617; text-decoration: none;
-            font-weight: 900; font-size: 14px; text-transform: uppercase; letter-spacing: 1px;
-            transition: 0.3s; box-shadow: 0 10px 25px rgba(0, 245, 160, 0.3);
-        }
-        .btn-connect:hover { transform: translateY(-3px); box-shadow: 0 15px 35px rgba(0, 245, 160, 0.5); }
-        .loading { font-size: 12px; color: var(--primary); }
+        .btn-direct { display: block; margin-top: 20px; color: var(--primary); text-decoration: none; font-size: 11px; font-weight: 800; text-transform: uppercase; }
     </style>
 </head>
 <body>
+    <div class="success-glow"></div>
+    <div class="container">
+        <div class="icon">✅</div>
+        <h1>PAIEMENT <span>VALIDE</span></h1>
+        <p>Protocole de connexion Alpha activé avec succès.</p>
 
-    <div class="success-card">
-        <div class="check-icon">✓</div>
+        <div class="ticket-box">
+            <div style="font-size: 10px; font-weight: 800; color: #475569; letter-spacing: 2px; margin-bottom: 15px;">VOTRE CODE WIFI UNIQUE</div>
+            <div class="code" id="wifi-code">SCAN RÉSEAU...</div>
+            <div class="loading-bar"><div class="progress" id="bar"></div></div>
+            <p id="status-msg" style="margin-top: 15px; font-size: 10px; color: var(--accent); font-weight: 700;">REDIRECTION VERS GOOGLE DANS 5s...</p>
+        </div>
         
-        <h1>PAIEMENT VALIDÉ</h1>
-        <p>Votre accès au réseau <b>AERIO ZONE</b> est prêt.</p>
-
-        <div class="code-box">
-            <span class="code-label">Votre Code WiFi</span>
-            <div id="wifi-code">Récupération...</div>
-        </div>
-
-        <a href="#" id="connect-link" class="btn-connect">Se connecter au WiFi</a>
-
-        <div style="margin-top: 20px;">
-            <p id="status-msg" style="font-size: 11px;">Vérification du paiement en cours...</p>
-        </div>
+        <a href="https://www.google.com" class="btn-direct">Accéder à internet maintenant</a>
     </div>
 
     <script>
-        // Fonction pour récupérer le code généré par le serveur
+        // ✅ LE CERVEAU DE RÉCUPÉRATION ALPHA [1.4, 1.5]
         async function fetchMyCode() {
             const urlParams = new URLSearchParams(window.location.search);
-            const phone = urlParams.get('phone'); // On récupère le numéro depuis l'URL de retour
+            const phone = urlParams.get('phone'); 
 
             if (!phone) {
-                document.getElementById('wifi-code').innerText = "ERREUR";
-                document.getElementById('status-msg').innerText = "Numéro de téléphone manquant dans l'URL.";
+                // Si pas de téléphone, on essaie de voir si le code est direct dans l'URL
+                const directCode = urlParams.get('code');
+                if(directCode) {
+                    displaySuccess(directCode);
+                } else {
+                    document.getElementById('wifi-code').innerText = "ERREUR";
+                    document.getElementById('status-msg').innerText = "NUMÉRO MANQUANT";
+                }
                 return;
             }
 
             try {
-                // On appelle la route de récupération que nous avons créé dans server.js
                 const response = await fetch(`/api/recover-ticket?phone=${phone}`);
                 const data = await response.json();
 
                 if (data.success) {
-                    document.getElementById('wifi-code').innerText = data.code;
-                    document.getElementById('status-msg').innerText = "Ticket récupéré avec succès !";
-                    // Lien vers le hotspot MikroTik
-                    document.getElementById('connect-link').href = `http://10.5.5.1/login?username=${data.code}`;
+                    displaySuccess(data.code);
                 } else {
-                    // Si le webhook n'a pas encore fini, on réessaie après 3 secondes
+                    // On boucle tant que le paiement n'est pas validé par le Webhook
                     setTimeout(fetchMyCode, 3000);
                 }
             } catch (err) {
-                console.error("Erreur de récupération", err);
+                console.error("Échec de liaison.");
             }
         }
 
-        fetchMyCode();
+        function displaySuccess(finalCode) {
+            document.getElementById('wifi-code').innerText = finalCode;
+            document.getElementById('bar').style.width = "100%";
+            
+            // Redirection automatique vers Google après 5 secondes
+            setTimeout(() => {
+                window.location.href = "https://www.google.com";
+            }, 5000);
+        }
+
+        window.onload = fetchMyCode;
     </script>
 </body>
 </html>
