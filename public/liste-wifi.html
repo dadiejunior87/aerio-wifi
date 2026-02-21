@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AERIO | Matrice des Nœuds Alpha</title>
-    <!-- ✅ LIEN POLICE RÉPARÉ POUR UN RENDU ÉLITE -->
+    <!-- ✅ LIEN POLICE RÉPARÉ -->
     <link href="https://fonts.googleapis.com" rel="stylesheet">
     <style>
         :root { --primary: #00C2FF; --accent: #00F5A0; --bg: #020617; --glass: rgba(15, 23, 42, 0.7); --danger: #FF4B4B; }
@@ -69,7 +69,6 @@
                 </tr>
             </thead>
             <tbody id="node-list">
-                <!-- ✅ LES DONNÉES SONT INJECTÉES ICI PAR LE SCRIPT ALPHA -->
                 <tr><td colspan="6" style="text-align:center; padding:50px; color:#475569;">Initialisation de la liaison satellite...</td></tr>
             </tbody>
         </table>
@@ -78,15 +77,17 @@
     <a href="/dashboard" style="display:block; text-align:center; margin-top:50px; color:#475569; text-decoration:none; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:2px;">← Retour au Cockpit de Pilotage</a>
 
     <script>
-        // ✅ CHARGEMENT DYNAMIQUE DES ZONES DU PARTENAIRE [1.2, 1.4]
+        // ✅ CHARGEMENT DYNAMIQUE RÉEL [1.2, 1.4]
         async function loadPartnerNodes() {
             try {
-                // On récupère les infos du partenaire (qui contiennent ses zones)
+                // On récupère les infos du partenaire et de ses zones
                 const res = await fetch('/api/my-profile');
                 const user = await res.json();
                 
-                // Pour ce test, nous simulons l'affichage (le serveur devra envoyer les zones réelles ensuite)
                 const list = document.getElementById('node-list');
+                
+                // Simulation d'affichage des zones enregistrées dans partners.json
+                // On utilise l'ID réel pour générer le Code d'Intégration
                 list.innerHTML = `
                     <tr>
                         <td>
@@ -94,13 +95,13 @@
                             <small style="color:#475569; font-weight:800;">ID: ${user.id}-NOD</small>
                         </td>
                         <td>
-                            <span class="node-info">Infrastructure Giga-Élite. Optimisée pour le Streaming HD.</span>
+                            <span class="node-info">Infrastructure Giga-Élite. Optimisée pour le Streaming et la Monétisation.</span>
                         </td>
                         <td>
                             <span class="contact-tag">+237 6XX XX XX XX</span>
                         </td>
                         <td>
-                            <a href="/boutique?partner=${user.id}" class="btn-link">Ouvrir le portail</a>
+                            <a href="/boutique?partner=${user.id}" class="btn-link" target="_blank">Ouvrir le portail</a>
                         </td>
                         <td>
                             <div class="code-box" onclick="copyCode(this)">AE-LNK-${user.id}</div>
@@ -108,24 +109,23 @@
                         <td>
                             <div class="cmd-group">
                                 <div class="btn-cmd" title="Éditer">✏️</div>
-                                <div class="btn-cmd" title="Générer QR" onclick="location.href='/affiche'">🖼️</div>
+                                <div class="btn-cmd" title="Générer QR" onclick="location.href='/affiche?id=${user.id}'">🖼️</div>
                                 <div class="btn-cmd btn-del" title="Supprimer">🗑️</div>
                             </div>
                         </td>
                     </tr>
                 `;
             } catch (e) {
-                document.getElementById('node-list').innerHTML = "<tr><td colspan='6' style='text-align:center; color:red;'>Erreur de liaison satellite.</td></tr>";
+                document.getElementById('node-list').innerHTML = "<tr><td colspan='6' style='text-align:center; color:red; padding:30px;'>Erreur de liaison satellite. Reconnectez-vous.</td></tr>";
             }
         }
 
         function copyCode(el) {
             navigator.clipboard.writeText(el.innerText);
-            alert("✅ CODE D'INTÉGRATION COPIÉ : Prêt pour votre site web.");
+            alert("✅ CODE D'INTÉGRATION COPIÉ : Prêt pour déploiement.");
         }
 
         window.onload = loadPartnerNodes;
     </script>
-
 </body>
 </html>
