@@ -3,7 +3,6 @@ const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
 const fs = require("fs");
 const path = require("path");
-const axios = require("axios");
 const session = require("express-session");
 const app = express();
 
@@ -40,11 +39,24 @@ function checkAuth(req, res, next) {
     else res.redirect("/connexion");
 }
 
-// ✅ [PRO] ROUTE TOP 3 ALPHA - VERROUILLÉE AU QG (AE-0001)
+// ✅ [NOUVEAU] PROTOCOLE DE PURGE ALPHA (RÉSERVÉ AE-0001) [1.2]
+// Tape ://ton-site.com pour remettre les compteurs à 0 F
+app.get("/api/admin/purge", checkAuth, (req, res) => {
+    if (req.session.partnerID !== "AE-0001") return res.status(403).send("ACCÈS REFUSÉ");
+    
+    // On écrase les ventes de test par un tableau vide
+    fs.writeFileSync(TICKETS_FILE, JSON.stringify([], null, 2));
+    
+    res.send("<script>alert('EMPIRE PURGÉ : Toutes les données de test ont été supprimées. Votre compteur affiche désormais 0 F CFA.'); window.location.href='/dashboard';</script>");
+});
+
+// ✅ ROUTE TOP 3 ALPHA - SÉCURISÉE [1.2]
 app.get("/api/top-performers", checkAuth, (req, res) => {
-    if (req.session.partnerID !== "AE-0001") return res.status(403).json({ error: "Accès refusé" });
+    if (req.session.partnerID !== "AE-0001") return res.status(403).json({ error: "Accès réservé" });
     try {
         const tickets = JSON.parse(fs.readFileSync(TICKETS_FILE));
+        if (tickets.length === 0) return res.json([]); // Renvoie vide si pas de ventes
+
         const salesByPartner = {};
         tickets.forEach(t => { salesByPartner[t.partnerID] = (salesByPartner[t.partnerID] || 0) + t.amount; });
         const top3 = Object.entries(salesByPartner).map(([id, total]) => ({ id, total })).sort((a, b) => b.total - a.total).slice(0, 3);
@@ -61,14 +73,9 @@ app.get("/api/get-shop-tarifs/:partnerID", (req, res) => {
     else res.json([{ name: "Pass Flash", price: 100, duration: "1H" }]);
 });
 
-// ✅ ROUTES PAGES - RÉORGANISATION ALPHA [1.1, 1.2]
-// 1. Vitrine de Luxe (L'Accueil du site)
+// ✅ ROUTES PAGES
 app.get("/", (req, res) => res.sendFile(path.join(__dirname, "public", "index.html")));
-
-// 2. Portail de Vente (La page bleue de 100F pour les clients via QR Code)
 app.get("/boutique", (req, res) => res.sendFile(path.join(__dirname, "public", "boutique.html")));
-
-// 3. Espace Partenaire
 app.get("/dashboard", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "dashboard.html")));
 app.get("/wifi-zone", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "wifi-zone.html")));
 app.get("/tarifs", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "tarifs.html")));
@@ -84,7 +91,7 @@ app.post("/api/login-partenaire", (req, res) => {
     let partners = JSON.parse(fs.readFileSync(PARTNERS_FILE));
     const partner = partners.find(p => p.email === email && p.password === password);
     if (partner) { req.session.partnerID = partner.partnerID; res.redirect("/dashboard"); }
-    else res.status(401).send("Erreur");
+    else res.status(401).send("Identifiants invalides.");
 });
 
 app.get("/api/my-stats", checkAuth, (req, res) => {
@@ -94,4 +101,4 @@ app.get("/api/my-stats", checkAuth, (req, res) => {
 
 app.get("/logout", (req, res) => { req.session.destroy(); res.redirect("/"); });
 
-app.listen(PORT, '0.0.0.0', () => console.log(`🚀 EMPIRE AERIO ALPHA LIVE SUR PORT ${PORT}`));
+app.listen(PORT, '0.0.0.0', () => console.log(`🚀 BASTION ALPHA LIVE SUR PORT ${PORT}`));
