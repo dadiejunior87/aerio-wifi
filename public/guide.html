@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AERIO | Manuel d'Activation Alpha</title>
-    <!-- GOOGLE FONTS ÉLITE RÉPARÉ -->
+    <!-- ✅ POLICE POPPINS INJECTÉE CORRECTEMENT -->
     <link href="https://fonts.googleapis.com" rel="stylesheet">
     <style>
         :root { --primary: #00C2FF; --secondary: #7000FF; --bg: #020617; --glass: rgba(15, 23, 42, 0.7); --accent: #00F5A0; --danger: #FF4B4B; }
@@ -12,51 +12,29 @@
         body { background: var(--bg); color: white; line-height: 1.6; padding: 50px 8%; background-image: radial-gradient(circle at top right, rgba(0, 194, 255, 0.05), transparent); }
 
         .header-guide { text-align: center; margin-bottom: 80px; position: relative; }
-        
         .back-btn-top { position: absolute; top: -30px; left: 0; color: #475569; text-decoration: none; font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; border: 1px solid rgba(255,255,255,0.05); padding: 12px 25px; border-radius: 50px; transition: 0.4s; backdrop-filter: blur(10px); }
-        .back-btn-top:hover { color: var(--primary); border-color: var(--primary); background: rgba(0, 194, 255, 0.05); box-shadow: 0 0 20px rgba(0, 194, 255, 0.1); }
+        .back-btn-top:hover { color: var(--primary); border-color: var(--primary); background: rgba(0, 194, 255, 0.05); }
 
         .logo-box { display: flex; align-items: center; justify-content: center; margin-bottom: 25px; }
         .logo-text { font-weight: 900; font-size: 32px; color: var(--primary); margin-left: 15px; letter-spacing: -2px; }
 
-        .step-card {
-            background: var(--glass); backdrop-filter: blur(30px); border-radius: 40px;
-            padding: 50px; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 40px;
-            position: relative; overflow: hidden; transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        .step-card:hover { border-color: var(--primary); transform: translateY(-5px); box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+        .step-card { background: var(--glass); backdrop-filter: blur(30px); border-radius: 40px; padding: 50px; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 40px; position: relative; overflow: hidden; transition: 0.5s; }
+        .step-card:hover { border-color: var(--primary); transform: translateY(-5px); }
 
-        .step-number { 
-            position: absolute; top: -20px; right: 20px; font-size: 140px; 
-            font-weight: 900; color: rgba(255,255,255,0.02); z-index: -1; 
-        }
+        .step-number { position: absolute; top: -20px; right: 20px; font-size: 140px; font-weight: 900; color: rgba(255,255,255,0.02); z-index: -1; }
 
         h2 { color: var(--primary); font-size: 22px; margin-bottom: 25px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; }
         
-        /* BLOC DE CODE "TERMINAL ALPHA" */
-        .code-block { 
-            background: #000; padding: 25px; border-radius: 20px; color: var(--accent); 
-            font-family: 'Courier New', monospace; font-size: 14px; margin: 20px 0;
-            border-left: 4px solid var(--primary); position: relative;
-            box-shadow: inset 0 0 30px rgba(0, 245, 160, 0.05);
-        }
+        .code-block { background: #000; padding: 25px; border-radius: 20px; color: var(--accent); font-family: 'Courier New', monospace; font-size: 14px; margin: 20px 0; border-left: 4px solid var(--primary); position: relative; }
         .copy-hint { position: absolute; top: 10px; right: 15px; font-size: 9px; color: #475569; font-weight: 800; text-transform: uppercase; }
         
-        .badge-tech { background: rgba(0, 194, 255, 0.1); color: var(--primary); padding: 6px 15px; border-radius: 8px; font-size: 10px; font-weight: 900; margin-bottom: 15px; display: inline-block; letter-spacing: 1px; border: 1px solid rgba(0, 194, 255, 0.2); }
+        .badge-tech { background: rgba(0, 194, 255, 0.1); color: var(--primary); padding: 6px 15px; border-radius: 8px; font-size: 10px; font-weight: 900; margin-bottom: 15px; display: inline-block; border: 1px solid rgba(0, 194, 255, 0.2); }
 
-        /* SELECTEUR ARCHITECTURE */
         .selector-box { background: rgba(0,0,0,0.4); padding: 30px; border-radius: 25px; margin-top: 20px; border: 1px solid rgba(255,255,255,0.05); }
-        select { width: 100%; padding: 15px; background: #0f172a; color: white; border: 1px solid var(--primary); border-radius: 12px; outline: none; cursor: pointer; font-weight: 700; font-size: 13px; }
+        select { width: 100%; padding: 15px; background: #0f172a; color: white; border: 1px solid var(--primary); border-radius: 12px; outline: none; font-weight: 700; }
 
-        .btn-download {
-            display: inline-block; padding: 20px 40px; background: var(--primary);
-            color: #000; text-decoration: none; border-radius: 18px; font-weight: 900;
-            margin-top: 30px; transition: 0.4s; border: none; cursor: pointer;
-            text-transform: uppercase; letter-spacing: 1px;
-        }
-        .btn-download:hover { transform: translateY(-5px); box-shadow: 0 15px 40px var(--primary); }
-
-        .footer-guide { text-align: center; margin-top: 100px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 40px; color: #475569; font-size: 11px; font-weight: 700; letter-spacing: 2px; }
+        .btn-download { display: inline-block; padding: 20px 40px; background: var(--primary); color: #000; text-decoration: none; border-radius: 18px; font-weight: 900; margin-top: 30px; border: none; cursor: pointer; text-transform: uppercase; }
+        .footer-guide { text-align: center; margin-top: 100px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 40px; color: #475569; font-size: 11px; font-weight: 700; }
     </style>
 </head>
 <body>
@@ -64,10 +42,7 @@
     <div class="header-guide">
         <a href="/dashboard" class="back-btn-top">← RETOUR AU QG ALPHA</a>
         <div class="logo-box">
-            <svg width="55" height="55" viewBox="0 0 100 100" fill="none">
-                <circle cx="50" cy="50" r="48" stroke="#00C2FF" stroke-width="5" stroke-dasharray="12 6""")/>>
-                <path d="M50 25L25 75H35L50 45L65 75H75L50 25Z" fill="#00C2FF""")/>>
-            </svg>
+            <svg width="55" height="55" viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="48" stroke="#00C2FF" stroke-width="5" stroke-dasharray="12 6"/><path d="M50 25L25 75H35L50 45L65 75H75L50 25Z" fill="#00C2FF"/></svg>
             <span class="logo-text">AERIO</span>
         </div>
         <h1 style="font-size: 42px; font-weight: 900; letter-spacing: -2px;">MANUEL <span style="color:var(--primary)">ALPHA</span></h1>
@@ -79,7 +54,7 @@
         <div class="step-number">01</div>
         <span class="badge-tech">MIKROTIK API</span>
         <h2>1. Ouverture du Canal Alpha</h2>
-        <p style="color: #94a3b8; font-size: 14px;">Activez le service API sur votre routeur pour permettre à AERIO d'injecter vos tickets automatiquement.</p>
+        <p style="color: #94a3b8; font-size: 14px;">Activez le service API sur votre routeur pour permettre l'injection automatique.</p>
         <div class="code-block">
             <span class="copy-hint">Terminal Winbox</span>
             /ip service set api disabled=no port=8728
@@ -87,12 +62,13 @@
     </div>
 
     <!-- ÉTAPE 2 -->
-    <div class="step-card" style="border-left: 5px solid var(--accent); background: linear-gradient(90deg, rgba(0, 245, 160, 0.02), transparent);">
-        <div class="step-number" style="color: rgba(0, 245, 160, 0.05);">02</div>
+    <div class="step-card">
+        <div class="step-number">02</div>
         <span class="badge-tech" style="background: var(--accent); color: black;">WALLED GARDEN</span>
-        <h2 style="color: var(--accent);">2. Libération des Flux Mobiles</h2>
-        <p style="color: #94a3b8; font-size: 14px;">Autorisez l'accès aux serveurs de paiement. Vos clients pourront payer même sans crédit internet actif.</p>
+        <h2 style="color: var(--accent);">2. Libération des Flux (Paiement sans Data)</h2>
+        <p style="color: #94a3b8; font-size: 14px;">Autorisez l'accès au domaine de paiement. Vos clients paieront **même sans forfait internet actif**.</p>
         <div class="code-block" style="border-left-color: var(--accent); color: var(--accent);">
+            <span class="copy-hint">Script MikroTik</span>
             /ip hotspot walled-garden ip add dst-host=checkout.moneroo.io action=accept<br>
             /ip hotspot walled-garden ip add dst-host=api.moneroo.io action=accept
         </div>
@@ -101,30 +77,12 @@
     <!-- ÉTAPE 3 -->
     <div class="step-card">
         <div class="step-number">03</div>
-        <span class="badge-tech">CORE DOWNLOAD</span>
-        <h2>3. Extraction de l'Architecture</h2>
-        <p style="color: #94a3b8; font-size: 14px;">Sélectionnez votre processeur MikroTik pour obtenir le pack de scripts optimisé (.ZIP).</p>
-        
-        <div class="selector-box">
-            <select id="model-select">
-                <option value="SMIPS">SMIPS (hAP lite, hAP mini...)</option>
-                <option value="MIPSBE" selected>MIPSBE (RB750, RB951, hAP ac...)</option>
-                <option value="ARM">ARM (hAP ac2, RB4011, L009...)</option>
-                <option value="TILE">TILE (Cloud Core Routers - CCR...)</option>
-            </select>
-            <button class="btn-download" onclick="checkDownload()">📥 TÉLÉCHARGER LE PACK ALPHA</button>
-        </div>
-    </div>
-
-    <!-- ÉTAPE 4 -->
-    <div class="step-card">
-        <div class="step-number">04</div>
-        <span class="badge-tech">IDENTITÉ UNIQUE</span>
-        <h2>4. Synchronisation de Clé</h2>
-        <p style="color: #94a3b8; font-size: 14px;">Injectez votre identifiant unique dans vos scripts pour lier vos ventes à votre compte AERIO.</p>
-        <div class="code-block" style="color: var(--primary);">
-            <span class="copy-hint">Secret Key</span>
-            const PARTNER_ID = "AE-0001"; // Votre signature réseau
+        <span class="badge-tech">IDENTITÉ ALPHA</span>
+        <h2>3. Votre Signature Réseau</h2>
+        <p style="color: #94a3b8; font-size: 14px;">Copiez votre identifiant unique ci-dessous dans votre script d'injection MikroTik.</p>
+        <div class="code-block" style="color: var(--primary); font-size: 20px;">
+            <span class="copy-hint">ID Partenaire Personnel</span>
+            <span id="partner-id-display">CHARGEMENT...</span>
         </div>
     </div>
 
@@ -133,10 +91,17 @@
     </div>
 
     <script>
-        function checkDownload() {
-            const model = document.getElementById('model-select').value;
-            alert(`[AERIO HQ] Préparation du pack ${model}. Veuillez activer votre licence (5 000 F) pour débloquer l'accès aux serveurs de téléchargement.`);
+        async function loadGuide() {
+            try {
+                // ✅ RÉCUPÉRATION DE L'ID RÉEL DU PARTENAIRE [1.4]
+                const res = await fetch('/api/my-profile');
+                const user = await res.json();
+                document.getElementById('partner-id-display').innerText = `PARTNER_ID = "${user.partnerID}"`;
+            } catch (e) {
+                document.getElementById('partner-id-display').innerText = "ERREUR DE LIAISON";
+            }
         }
+        window.onload = loadGuide;
     </script>
 </body>
 </html>
