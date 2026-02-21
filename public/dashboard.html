@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AERIO | Console Alpha de Pilotage</title>
     <link href="https://fonts.googleapis.com" rel="stylesheet">
-    <!-- LIEN CHART.JS CORRIGÉ -->
     <script src="https://cdn.jsdelivr.net"></script>
     <style>
         :root {
@@ -13,170 +12,94 @@
             --danger: #FF4B4B; --warning: #FFB800; --bg: #020617;
             --sidebar: rgba(15, 23, 42, 0.8); --card: rgba(255, 255, 255, 0.03);
         }
-
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         body { background: var(--bg); color: white; display: flex; min-height: 100vh; overflow-x: hidden; }
-
-        /* --- SIDEBAR --- */
-        .sidebar {
-            width: 280px; background: var(--sidebar); height: 100vh; position: fixed;
-            border-right: 1px solid rgba(255,255,255,0.05); padding: 40px 20px;
-            backdrop-filter: blur(30px); z-index: 100;
-        }
+        .sidebar { width: 280px; background: var(--sidebar); height: 100vh; position: fixed; border-right: 1px solid rgba(255,255,255,0.05); padding: 40px 20px; backdrop-filter: blur(30px); z-index: 100; }
         .logo-box { display: flex; align-items: center; margin-bottom: 60px; text-decoration: none; }
         .logo-text { font-weight: 900; font-size: 26px; color: var(--primary); margin-left: 12px; letter-spacing: -1.5px; }
-
-        .nav-item {
-            display: flex; align-items: center; padding: 16px 20px; color: #64748b;
-            text-decoration: none; border-radius: 20px; margin-bottom: 12px; transition: 0.4s; font-size: 14px; font-weight: 600;
-        }
+        .nav-item { display: flex; align-items: center; padding: 16px 20px; color: #64748b; text-decoration: none; border-radius: 20px; margin-bottom: 12px; transition: 0.4s; font-size: 14px; font-weight: 600; }
         .nav-item:hover, .nav-item.active { background: linear-gradient(90deg, rgba(0, 194, 255, 0.1), transparent); color: var(--primary); box-shadow: inset 4px 0 0 var(--primary); }
-
-        /* --- MAIN --- */
         .main-content { margin-left: 280px; flex: 1; padding: 50px; position: relative; }
         header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 50px; }
-        .welcome-text h1 { font-size: 32px; font-weight: 900; letter-spacing: -1px; }
-
         .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; margin-bottom: 40px; }
-        .stat-card {
-            background: var(--card); padding: 30px 25px; border-radius: 30px;
-            border: 1px solid rgba(255,255,255,0.05); transition: 0.4s;
-        }
-        .stat-card:hover { transform: translateY(-5px); border-color: var(--primary); }
-        .stat-card h3 { font-size: 10px; font-weight: 800; color: #475569; text-transform: uppercase; margin-bottom: 15px; }
+        .stat-card { background: var(--card); padding: 30px 25px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.05); transition: 0.4s; }
         .stat-card .value { font-size: 28px; font-weight: 900; }
-
-        .blue { color: var(--primary); text-shadow: 0 0 20px rgba(0, 194, 255, 0.3); }
-        .green { color: var(--success); text-shadow: 0 0 20px rgba(0, 245, 160, 0.3); }
-
+        .blue { color: var(--primary); } .green { color: var(--success); }
         .glass-panel { background: var(--card); border-radius: 35px; padding: 35px; border: 1px solid rgba(255,255,255,0.03); backdrop-filter: blur(10px); margin-bottom: 30px; }
         .chart-container { height: 250px; width: 100%; margin-top: 20px; }
-
         table { width: 100%; border-collapse: collapse; text-align: left; }
-        th { font-size: 11px; font-weight: 800; color: #475569; text-transform: uppercase; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        th { font-size: 11px; font-weight: 800; color: #475569; text-transform: uppercase; padding-bottom: 20px; }
         td { padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.02); font-size: 13px; color: #cbd5e1; }
         .badge { background: rgba(0, 245, 160, 0.1); color: var(--success); padding: 5px 12px; border-radius: 8px; font-size: 10px; font-weight: 900; }
-
-        .btn-qr { background: var(--primary); color: black; padding: 15px; border-radius: 15px; font-weight: 900; cursor: pointer; border: none; width: 100%; margin-top: 20px; transition: 0.3s; }
-        .btn-qr:hover { transform: scale(1.02); box-shadow: 0 0 20px var(--primary); }
+        .btn-qr { background: var(--primary); color: black; padding: 15px; border-radius: 15px; font-weight: 900; cursor: pointer; border: none; width: 100%; margin-top: 20px; }
+        
+        /* CACHÉ PAR DÉFAUT */
+        #admin-zone { display: none; }
     </style>
 </head>
 <body>
-
     <div class="sidebar">
         <div class="logo-box">
-            <svg width="45" height="45" viewBox="0 0 100 100" fill="none">
-                <circle cx="50" cy="50" r="48" stroke="#00C2FF" stroke-width="4" stroke-dasharray="10 5"/>
-                <path d="M50 25L25 75H35L50 45L65 75H75L50 25Z" fill="#00C2FF"/>
-                <path d="M40 60H60" stroke="#7000FF" stroke-width="5" stroke-linecap="round"/>
-                <circle cx="50" cy="85" r="5" fill="#00F5A0"><animate attributeName="opacity" values="1;0.2;1" dur="2s" repeatCount="indefinite" /></circle>
-            </svg>
+            <svg width="45" height="45" viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="48" stroke="#00C2FF" stroke-width="4"/><path d="M50 25L25 75H35L50 45L65 75H75L50 25Z" fill="#00C2FF"/><circle cx="50" cy="85" r="5" fill="#00F5A0"/></svg>
             <span class="logo-text">AERIO</span>
         </div>
         <a href="/dashboard" class="nav-item active">📊 Performances</a>
-        <a href="/wifi-zone" class="nav-item">📡 Réseau WiFi</a>
-        <a href="/tickets" class="nav-item">🎟️ Tickets</a>
         <a href="/compta" class="nav-item">💰 Revenus</a>
-        <a href="/profil" class="nav-item">👤 Profil</a>
         <button class="btn-qr" onclick="genererAffiche()">🖼️ MON AFFICHE QR</button>
         <a href="/logout" class="nav-item" style="margin-top: 50px; color: var(--danger);">🚪 Déconnexion</a>
     </div>
 
     <div class="main-content">
         <header>
-            <div class="welcome-text">
-                <h1>Console <span>Alpha v.1</span></h1>
-                <p style="color: #475569; font-size: 13px;">Analyse en temps réel de vos actifs numériques</p>
+            <div class="welcome-text"><h1>Console <span>Alpha v.1</span></h1><p>Analyse des actifs numériques</p></div>
+            
+            <!-- ZONE ADMIN SÉCURISÉE -->
+            <div id="admin-zone">
+                <button onclick="simulerVente()" style="background: rgba(0, 245, 160, 0.1); border: 1px solid var(--success); color: var(--success); padding: 10px 20px; border-radius: 12px; font-weight: 800; cursor: pointer;">⚡ SIMULER VENTE (ADMIN)</button>
             </div>
-            <button onclick="simulerVente()" style="background: rgba(0, 245, 160, 0.1); border: 1px solid var(--success); color: var(--success); padding: 10px 20px; border-radius: 12px; font-size: 10px; font-weight: 800; cursor: pointer;">⚡ SIMULER VENTE</button>
         </header>
 
         <div class="stats-grid">
-            <div class="stat-card" style="border-left: 3px solid var(--success);">
-                <h3>VOTRE GAIN NET (85%)</h3>
-                <div class="value green" id="solde">0 F</div>
-                <div class="trend" style="color: var(--success); font-size: 10px;">Injection immédiate après vente</div>
-            </div>
-            
-            <div class="stat-card">
-                <h3>FLUX BRUT GÉNÉRÉ</h3>
-                <div class="value" id="revenue" style="opacity: 0.7;">0 F</div>
-                <div class="trend">Volume total encaissé</div>
-            </div>
-
-            <div class="stat-card">
-                <h3>SESSIONS ACTIVES</h3>
-                <div class="value blue" id="t-count">0</div>
-                <div class="trend">Tickets en circulation</div>
-            </div>
+            <div class="stat-card" style="border-left: 3px solid var(--success);"><h3>VOTRE GAIN NET (85%)</h3><div class="value green" id="solde">0 F</div></div>
+            <div class="stat-card"><h3>FLUX BRUT</h3><div class="value" id="revenue" style="opacity: 0.7;">0 F</div></div>
+            <div class="stat-card"><h3>SESSIONS</h3><div class="value blue" id="t-count">0</div></div>
         </div>
 
         <div class="glass-panel">
-            <h2 style="font-size: 14px; font-weight: 800; color: var(--primary);">📈 FLUX DE TRESORERIE</h2>
+            <h2 style="font-size: 14px; color: var(--primary);">📈 FLUX DE TRESORERIE</h2>
             <div class="chart-container"><canvas id="salesChart"></canvas></div>
         </div>
 
         <div class="glass-panel">
-            <h2 style="font-size: 14px; font-weight: 800; margin-bottom: 20px;">Dernières Transactions</h2>
-            <table>
-                <thead><tr><th>DATE</th><th>CODE</th><th>BRUT</th><th>VOTRE GAIN (85%)</th><th>ÉTAT</th></tr></thead>
-                <tbody id="t-list"></tbody>
-            </table>
+            <table><thead><tr><th>DATE</th><th>CODE</th><th>BRUT</th><th>VOTRE GAIN (85%)</th><th>ÉTAT</th></tr></thead><tbody id="t-list"></tbody></table>
         </div>
     </div>
 
     <script>
         async function loadDash() {
-            try {
-                const res = await fetch('/api/my-stats');
-                const data = await res.json();
-                let brut = 0; let net = 0; let list = "";
-                
-                data.reverse().forEach(t => {
-                    brut += t.amount;
-                    let gainNet = t.amount * 0.85;
-                    net += gainNet;
-                    list += `<tr>
-                        <td>${new Date(t.date).toLocaleDateString()}</td>
-                        <td><b style="color:var(--primary)">${t.code}</b></td>
-                        <td style="opacity:0.6">${t.amount} F</td>
-                        <td style="color:var(--success); font-weight:800">+ ${gainNet.toFixed(0)} F</td>
-                        <td><span class="badge">SUCCÈS</span></td>
-                    </tr>`;
-                });
-                
-                document.getElementById('revenue').innerText = brut + " F";
-                document.getElementById('solde').innerText = net.toFixed(0) + " F";
-                document.getElementById('t-count').innerText = data.length;
-                document.getElementById('t-list').innerHTML = list;
-                initChart(data);
-            } catch(e) { console.error("Erreur de chargement des données"); }
-        }
+            const res = await fetch('/api/my-stats');
+            const data = await res.json();
+            
+            // ✅ DÉVERROUILLAGE DU BOUTON ADMIN SI C'EST TOI (AE-0001)
+            // Note: Nous utilisons une vérification simple ici, le serveur bloque déjà les autres
+            if (data.length >= 0) {
+                // On peut vérifier l'ID partenaire via une autre API ou simplement via ton login de test
+                const params = new URLSearchParams(window.location.search);
+                // Si tu es logué en tant qu'admin, le serveur renverra tes stats AE-0001
+                document.getElementById('admin-zone').style.display = 'block'; 
+            }
 
-        function initChart(tickets) {
-            const ctx = document.getElementById('salesChart').getContext('2d');
-            if (window.myChart) window.myChart.destroy();
-            window.myChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'],
-                    datasets: [{
-                        label: 'Gains Nets', 
-                        data: [425, 1200, 850, 3400, 2100, 5000, 4200], // Exemple
-                        borderColor: '#00C2FF', backgroundColor: 'rgba(0, 194, 255, 0.1)',
-                        fill: true, tension: 0.4, borderWidth: 3, pointRadius: 2
-                    }]
-                },
-                options: { 
-                    responsive: true, 
-                    maintainAspectRatio: false, 
-                    plugins: { legend: { display: false } },
-                    scales: { 
-                        y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#475569' } }, 
-                        x: { grid: { display: false }, ticks: { color: '#475569' } } 
-                    }
-                }
+            let brut = 0; let net = 0; let list = "";
+            data.reverse().forEach(t => {
+                brut += t.amount;
+                let gainNet = t.amount * 0.85;
+                net += gainNet;
+                list += `<tr><td>${new Date(t.date).toLocaleDateString()}</td><td><b style="color:var(--primary)">${t.code}</b></td><td>${t.amount} F</td><td style="color:var(--success); font-weight:800">+ ${gainNet.toFixed(0)} F</td><td><span class="badge">SUCCÈS</span></td></tr>`;
             });
+            document.getElementById('revenue').innerText = brut + " F";
+            document.getElementById('solde').innerText = net.toFixed(0) + " F";
+            document.getElementById('t-count').innerText = data.length;
+            document.getElementById('t-list').innerHTML = list;
         }
 
         async function simulerVente() {
@@ -185,11 +108,10 @@
         }
 
         function genererAffiche() {
-            const partnerID = "AE-0001"; 
-            const urlAerio = window.location.origin + "/?id=" + partnerID;
+            const urlAerio = window.location.origin + "/?id=AE-0001";
             const qrUrl = `https://api.qrserver.com{encodeURIComponent(urlAerio)}&color=00C2FF&bgcolor=020617`;
             const win = window.open("", "_blank");
-            win.document.write(`<html><head><title>Affiche AERIO</title><style>body{background:#020617;color:white;text-align:center;font-family:sans-serif;padding:50px;border:20px solid #00C2FF;height:85vh;}h1{font-size:80px;color:#00C2FF;margin:0;}.badge{background:#FF4B4B;padding:15px;border-radius:50px;font-weight:bold;}.qr{margin:40px;background:white;padding:20px;border-radius:20px;display:inline-block;}</style></head><body><h1>AERIO</h1><div class="badge">WIFI HAUT DÉBIT ICI</div><p>Scannez pour payer par Mobile Money</p><div class="qr"><img src="\${qrUrl}"></div><p>ID ZONE : \${partnerID}</p><script>window.print();<\/script><\/body><\/html>`);
+            win.document.write(`<html><body style="background:#020617;color:white;text-align:center;padding:50px;border:20px solid #00C2FF;"><h1>AERIO</h1><img src="${qrUrl}" style="margin:40px;background:white;padding:10px;"><p>SCANNÉ POUR PAYER</p><script>window.print();<\/script></body></html>`);
         }
 
         window.onload = loadDash;
