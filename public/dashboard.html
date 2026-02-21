@@ -16,29 +16,30 @@
         body { background: var(--bg); color: white; display: flex; min-height: 100vh; overflow-x: hidden; }
         
         .sidebar { width: 280px; background: var(--sidebar); height: 100vh; position: fixed; border-right: 1px solid rgba(255,255,255,0.05); padding: 30px 20px; backdrop-filter: blur(30px); z-index: 100; overflow-y: auto; }
-        .logo-box { display: flex; align-items: center; margin-bottom: 40px; text-decoration: none; }
+        .logo-box { display: flex; align-items: center; margin-bottom: 30px; text-decoration: none; }
         .logo-text { font-weight: 900; font-size: 26px; color: var(--primary); margin-left: 12px; letter-spacing: -1.5px; }
         
+        /* ✅ BLOC PROFIL AGENT ÉLITE */
+        .profile-badge { display: flex; align-items: center; gap: 12px; padding: 15px; background: rgba(0, 194, 255, 0.05); border: 1px solid rgba(0, 194, 255, 0.1); border-radius: 20px; margin-bottom: 30px; text-decoration: none; transition: 0.3s; }
+        .profile-badge:hover { background: rgba(0, 194, 255, 0.1); border-color: var(--primary); }
+        .avatar { width: 40px; height: 40px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; color: black; font-size: 12px; }
+
         .nav-item { display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; color: #64748b; text-decoration: none; border-radius: 15px; margin-bottom: 8px; transition: 0.4s; font-size: 13px; font-weight: 600; cursor: pointer; }
         .nav-item:hover, .nav-item.active { background: linear-gradient(90deg, rgba(0, 194, 255, 0.1), transparent); color: var(--primary); }
         .nav-item.active { box-shadow: inset 4px 0 0 var(--primary); }
 
-        /* ✅ DÉROULEMENT ALPHA [1.5] */
-        .submenu { max-height: 0; overflow: hidden; transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); padding-left: 20px; background: rgba(0,0,0,0.15); border-radius: 15px; margin: 0 5px; }
-        .submenu.open { max-height: 250px; padding-bottom: 10px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.02); }
-        .sub-item { display: block; padding: 10px 20px; color: #475569; text-decoration: none; font-size: 12px; font-weight: 700; transition: 0.3s; }
-        .sub-item:hover { color: var(--primary); padding-left: 25px; }
-
-        .arrow { transition: 0.4s; color: #475569; }
-        .nav-group.open .arrow { transform: rotate(180deg); color: var(--primary); }
+        .submenu { max-height: 0; overflow: hidden; transition: 0.5s ease-in-out; padding-left: 20px; }
+        .submenu.open { max-height: 250px; margin-bottom: 10px; }
+        .sub-item { display: block; padding: 10px; color: #475569; text-decoration: none; font-size: 12px; font-weight: 700; transition: 0.3s; }
+        .sub-item:hover { color: var(--primary); }
 
         .main-content { margin-left: 280px; flex: 1; padding: 50px; position: relative; }
-        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; margin-bottom: 40px; }
-        .stat-card { background: var(--card); padding: 30px 25px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.05); transition: 0.4s; }
         
-        .glass-panel { background: var(--card); border-radius: 35px; padding: 35px; border: 1px solid rgba(255,255,255,0.03); backdrop-filter: blur(10px); margin-bottom: 30px; }
-        .btn-qr { background: var(--primary); color: black; padding: 15px; border-radius: 15px; font-weight: 900; cursor: pointer; border: none; width: 100%; margin: 20px 0; transition: 0.3s; text-transform: uppercase; letter-spacing: 1px; }
-        .btn-qr:hover { transform: scale(1.02); box-shadow: 0 0 20px var(--primary); }
+        /* ✅ CLOCHE DE NOTIFICATION ALPHA [1.5] */
+        .bell-box { position: fixed; bottom: 30px; right: 30px; width: 65px; height: 65px; background: var(--danger); border-radius: 50%; display: none; align-items: center; justify-content: center; cursor: pointer; z-index: 1000; box-shadow: 0 15px 40px rgba(255, 75, 75, 0.4); animation: pulse-red 2s infinite; }
+        @keyframes pulse-red { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+        
+        .stat-card { background: var(--card); padding: 35px; border-radius: 35px; border: 1px solid rgba(255,255,255,0.05); }
     </style>
 </head>
 <body>
@@ -48,95 +49,79 @@
             <span class="logo-text">AERIO</span>
         </div>
 
+        <!-- ✅ INSERTION DU PROFIL ICI -->
+        <a href="/profil" class="profile-badge">
+            <div class="avatar">AE</div>
+            <div>
+                <div id="p-name" style="font-size: 11px; font-weight: 900; color: white; text-transform: uppercase;">CHARGEMENT...</div>
+                <div style="font-size: 9px; color: var(--primary); font-weight: 800;">GRADE : ALPHA</div>
+            </div>
+        </a>
+
         <a href="/dashboard" class="nav-item active"><span>📊 Tableau de bord</span></a>
-
-        <!-- ✅ MENU WIFI ZONE DÉROULANT [1.2] -->
-        <div class="nav-group" id="wifi-group">
-            <div class="nav-item" onclick="toggleMenu('wifi-sub', 'wifi-group')">
-                <span>📡 Mes Wifi Zone</span>
-                <svg class="arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M6 9l6 6 6-6""")/>></svg>
-            </div>
+        
+        <div class="nav-group">
+            <div class="nav-item" onclick="toggleMenu('wifi-sub')"><span>📡 Mes Wifi Zone</span><small>▼</small></div>
             <div id="wifi-sub" class="submenu">
-                <a href="/wifi-zone" class="sub-item">• Ajouter un Wifi Zone</a>
-                <a href="/liste-wifi" class="sub-item">• Liste des Wifi Zone</a>
-                <a href="/tickets/stats" class="sub-item">• Statistiques des Wifis</a>
-            </div>
-        </div>
-
-        <!-- ✅ MENU TICKETS DÉROULANT -->
-        <div class="nav-group" id="tickets-group">
-            <div class="nav-item" onclick="toggleMenu('tickets-sub', 'tickets-group')">
-                <span>🎟️ Mes Tickets</span>
-                <svg class="arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M6 9l6 6 6-6""")/>></svg>
-            </div>
-            <div id="tickets-sub" class="submenu">
-                <a href="/tickets/ajouter" class="sub-item">• Générer un ticket</a>
-                <a href="/tickets" class="sub-item">• Archive des ventes</a>
+                <a href="/wifi-zone" class="sub-item">• Déployer un Nœud</a>
+                <a href="/liste-wifi" class="sub-item">• Matrice des Nœuds</a>
             </div>
         </div>
 
         <a href="/compta" class="nav-item"><span>💰 Ma Comptabilité</span></a>
-        <a href="/parrainage" class="nav-item"><span>🤝 Mes parrainages</span></a>
-        <a href="/guide" class="nav-item"><span>📚 Contacts & Docs</span></a>
-        
-        <button class="btn-qr" onclick="location.href='/affiche'">🖼️ MON AFFICHE QR</button>
-        <a href="/logout" class="nav-item" style="margin-top: 20px; color: var(--danger);">🚪 Déconnexion</a>
+        <a href="/logout" class="nav-item" style="margin-top: 30px; color: var(--danger);">🚪 Déconnexion</a>
+    </div>
+
+    <!-- ✅ LA CLOCHE FLOTTANTE -->
+    <div id="alert-bell" class="bell-box" onclick="location.href='/tickets/ajouter'">
+        <svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9""")/>><path d="M13.73 21a2 2 0 0 1-3.46 0""")/>></svg>
     </div>
 
     <div class="main-content">
-        <header style="display:flex; justify-content:space-between; align-items:center; margin-bottom:50px;">
-            <div class="welcome-text"><h1>Console <span>Alpha v.1</span></h1><p>Analyse des actifs numériques</p></div>
+        <header style="margin-bottom:50px;">
+            <h1 style="font-size: 32px;">Console <span>Alpha v.1</span></h1>
+            <p style="color: #64748b;">Analyse des actifs numériques en temps réel.</p>
         </header>
 
-        <div class="stats-grid">
-            <div class="stat-card" style="border-left: 4px solid var(--primary);">
-                <h3>FLUX BRUT (100%)</h3>
-                <div class="value" id="flux-brut" style="font-size:32px; font-weight:900; color:var(--primary)">0 F</div>
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px;">
+            <div class="stat-card" style="border-left: 5px solid var(--primary);">
+                <h3 style="font-size: 11px; color: #475569; letter-spacing: 2px;">FLUX BRUT</h3>
+                <div id="flux-brut" style="font-size: 38px; font-weight: 900; color: var(--primary);">0 F</div>
             </div>
-            <div class="stat-card" style="border-left: 4px solid var(--success);">
-                <h3>GAIN NET (85%)</h3>
-                <div class="value" id="solde" style="font-size:32px; font-weight:900; color:var(--success)">0 F</div>
+            <div class="stat-card" style="border-left: 5px solid var(--success);">
+                <h3 style="font-size: 11px; color: #475569; letter-spacing: 2px;">GAIN NET</h3>
+                <div id="solde" style="font-size: 38px; font-weight: 900; color: var(--success);">0 F</div>
             </div>
             <div class="stat-card">
-                <h3>SESSIONS</h3>
-                <div class="value" id="t-count" style="font-size:32px; font-weight:900; color:white">0</div>
+                <h3 style="font-size: 11px; color: #475569; letter-spacing: 2px;">SESSIONS</h3>
+                <div id="t-count" style="font-size: 38px; font-weight: 900;">0</div>
             </div>
-        </div>
-
-        <div class="glass-panel">
-            <h2 style="font-size: 14px; color: var(--primary); margin-bottom: 20px;">📈 PERFORMANCE RÉSEAU RÉELLE</h2>
-            <div style="height:280px;"><canvas id="salesChart"></canvas></div>
         </div>
     </div>
 
     <script>
-        // ✅ LE MOTEUR DE NAVIGATION TACTIQUE [1.4]
-        function toggleMenu(id, groupId) {
-            const menu = document.getElementById(id);
-            const group = document.getElementById(groupId);
-            
-            // Ferme les autres pour rester propre
-            document.querySelectorAll('.submenu').forEach(s => {
-                if(s.id !== id) {
-                    s.classList.remove('open');
-                    s.parentElement.classList.remove('open');
-                }
-            });
+        function toggleMenu(id) { document.getElementById(id).classList.toggle('open'); }
 
-            menu.classList.toggle('open');
-            group.classList.toggle('open');
-        }
-
-        async function loadData() {
+        async function loadAll() {
             try {
-                const res = await fetch('/api/my-stats');
-                const data = await res.json();
+                // Chargement Profil
+                const resUser = await fetch('/api/my-profile');
+                const user = await resUser.json();
+                document.getElementById('p-name').innerText = user.name;
+
+                // Chargement Stats + Alerte Cloche [1.2, 1.4]
+                const resStats = await fetch('/api/my-stats');
+                const data = await resStats.json();
                 document.getElementById('solde').innerText = Math.floor(data.summary.net).toLocaleString() + " F";
                 document.getElementById('flux-brut').innerText = data.summary.brut.toLocaleString() + " F";
                 document.getElementById('t-count').innerText = data.summary.count;
-            } catch(e) { console.log("Liaison satellite en attente..."); }
+
+                if (data.summary.count < 5) {
+                    document.getElementById('alert-bell').style.display = 'flex';
+                }
+            } catch(e) { console.log("Liaison satellite..."); }
         }
-        window.onload = loadData;
+        window.onload = loadAll;
     </script>
 </body>
 </html>
