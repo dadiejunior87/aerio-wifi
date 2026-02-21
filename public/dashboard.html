@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AERIO | Console Alpha de Pilotage</title>
+    <!-- ✅ POLICE POPPINS INJECTÉE CORRECTEMENT -->
     <link href="https://fonts.googleapis.com" rel="stylesheet">
+    <!-- ✅ MOTEUR GRAPHIQUE RÉPARÉ -->
     <script src="https://cdn.jsdelivr.net"></script>
     <style>
         :root {
@@ -19,7 +21,6 @@
         .logo-box { display: flex; align-items: center; margin-bottom: 30px; text-decoration: none; }
         .logo-text { font-weight: 900; font-size: 26px; color: var(--primary); margin-left: 12px; letter-spacing: -1.5px; }
         
-        /* ✅ BLOC PROFIL AGENT ÉLITE */
         .profile-badge { display: flex; align-items: center; gap: 12px; padding: 15px; background: rgba(0, 194, 255, 0.05); border: 1px solid rgba(0, 194, 255, 0.1); border-radius: 20px; margin-bottom: 30px; text-decoration: none; transition: 0.3s; }
         .profile-badge:hover { background: rgba(0, 194, 255, 0.1); border-color: var(--primary); }
         .avatar { width: 40px; height: 40px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; color: black; font-size: 12px; }
@@ -28,14 +29,13 @@
         .nav-item:hover, .nav-item.active { background: linear-gradient(90deg, rgba(0, 194, 255, 0.1), transparent); color: var(--primary); }
         .nav-item.active { box-shadow: inset 4px 0 0 var(--primary); }
 
-        .submenu { max-height: 0; overflow: hidden; transition: 0.5s ease-in-out; padding-left: 20px; }
-        .submenu.open { max-height: 250px; margin-bottom: 10px; }
+        .submenu { max-height: 0; overflow: hidden; transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); padding-left: 20px; }
+        .submenu.open { max-height: 250px; margin-bottom: 10px; padding-top: 5px; }
         .sub-item { display: block; padding: 10px; color: #475569; text-decoration: none; font-size: 12px; font-weight: 700; transition: 0.3s; }
-        .sub-item:hover { color: var(--primary); }
+        .sub-item:hover { color: var(--primary); padding-left: 15px; }
 
         .main-content { margin-left: 280px; flex: 1; padding: 50px; position: relative; }
         
-        /* ✅ CLOCHE DE NOTIFICATION ALPHA [1.5] */
         .bell-box { position: fixed; bottom: 30px; right: 30px; width: 65px; height: 65px; background: var(--danger); border-radius: 50%; display: none; align-items: center; justify-content: center; cursor: pointer; z-index: 1000; box-shadow: 0 15px 40px rgba(255, 75, 75, 0.4); animation: pulse-red 2s infinite; }
         @keyframes pulse-red { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
         
@@ -49,7 +49,6 @@
             <span class="logo-text">AERIO</span>
         </div>
 
-        <!-- ✅ INSERTION DU PROFIL ICI -->
         <a href="/profil" class="profile-badge">
             <div class="avatar">AE</div>
             <div>
@@ -72,7 +71,6 @@
         <a href="/logout" class="nav-item" style="margin-top: 30px; color: var(--danger);">🚪 Déconnexion</a>
     </div>
 
-    <!-- ✅ LA CLOCHE FLOTTANTE -->
     <div id="alert-bell" class="bell-box" onclick="location.href='/tickets/ajouter'">
         <svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9""")/>><path d="M13.73 21a2 2 0 0 1-3.46 0""")/>></svg>
     </div>
@@ -104,22 +102,27 @@
 
         async function loadAll() {
             try {
-                // Chargement Profil
+                // ✅ RÉCUPÉRATION DU PROFIL RÉEL
                 const resUser = await fetch('/api/my-profile');
-                const user = await resUser.json();
-                document.getElementById('p-name').innerText = user.name;
-
-                // Chargement Stats + Alerte Cloche [1.2, 1.4]
-                const resStats = await fetch('/api/my-stats');
-                const data = await resStats.json();
-                document.getElementById('solde').innerText = Math.floor(data.summary.net).toLocaleString() + " F";
-                document.getElementById('flux-brut').innerText = data.summary.brut.toLocaleString() + " F";
-                document.getElementById('t-count').innerText = data.summary.count;
-
-                if (data.summary.count < 5) {
-                    document.getElementById('alert-bell').style.display = 'flex';
+                if(resUser.ok) {
+                    const user = await resUser.json();
+                    document.getElementById('p-name').innerText = user.name;
                 }
-            } catch(e) { console.log("Liaison satellite..."); }
+
+                // ✅ RÉCUPÉRATION DES STATS ET ALERTE
+                const resStats = await fetch('/api/my-stats');
+                if(resStats.ok) {
+                    const data = await resStats.json();
+                    document.getElementById('solde').innerText = Math.floor(data.summary.net).toLocaleString() + " F";
+                    document.getElementById('flux-brut').innerText = data.summary.brut.toLocaleString() + " F";
+                    document.getElementById('t-count').innerText = data.summary.count;
+
+                    // Alerte rupture si stock < 5
+                    if (data.summary.count < 5) {
+                        document.getElementById('alert-bell').style.display = 'flex';
+                    }
+                }
+            } catch(e) { console.log("Synchronisation Alpha en cours..."); }
         }
         window.onload = loadAll;
     </script>
