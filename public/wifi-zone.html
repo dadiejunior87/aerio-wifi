@@ -5,13 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AERIO | Centre de Contrôle Alpha</title>
     <link href="https://fonts.googleapis.com" rel="stylesheet">
-    <!-- API GOOGLE MAPS (À remplacer par ta clé plus tard) -->
+    <!-- API GOOGLE MAPS -->
     <script src="https://maps.googleapis.com"></script>
     <style>
         :root { --primary: #00C2FF; --bg: #020617; --glass: rgba(15, 23, 42, 0.7); --success: #00F5A0; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         body { background: var(--bg); color: white; padding: 40px; overflow-x: hidden; min-height: 100vh; }
 
+        /* ✅ RADAR ARRIÈRE-PLAN */
         .radar-container { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); opacity: 0.1; z-index: -1; pointer-events: none; }
         .radar-circle { width: 600px; height: 600px; border: 1px solid var(--primary); border-radius: 50%; position: relative; }
         .radar-sweep { width: 50%; height: 2px; background: linear-gradient(to right, var(--primary), transparent); position: absolute; top: 50%; left: 50%; transform-origin: left center; animation: sweep 4s linear infinite; }
@@ -19,24 +20,25 @@
 
         .container { max-width: 1100px; margin: 0 auto; position: relative; }
         .header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 60px; }
-        .header h1 { font-size: 38px; font-weight: 900; letter-spacing: -2px; }
         
         .btn-add { background: var(--primary); color: #000; padding: 15px 30px; border-radius: 18px; font-weight: 900; border: none; cursor: pointer; transition: 0.4s; font-size: 12px; box-shadow: 0 0 20px rgba(0, 194, 255, 0.4); text-transform: uppercase; }
         .btn-add:hover { transform: translateY(-5px); box-shadow: 0 15px 40px var(--primary); }
 
-        .zone-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; }
-        .zone-card { background: var(--glass); padding: 40px; border-radius: 40px; border: 1px solid rgba(255,255,255,0.05); backdrop-filter: blur(25px); position: relative; transition: 0.4s; }
-        .zone-card:hover { border-color: var(--primary); box-shadow: 0 20px 60px rgba(0, 194, 255, 0.15); transform: scale(1.02); }
-
-        /* MODAL ÉTENDU POUR LA CARTE */
+        /* MODAL GIGA-ÉLITE (DOUBLE PANNEAU) */
         #modal-add { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 2000; align-items: center; justify-content: center; backdrop-filter: blur(15px); }
-        .modal-content { background: #0f172a; padding: 40px; border-radius: 40px; width: 800px; border: 1px solid var(--primary); display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+        .modal-content { background: #0f172a; padding: 40px; border-radius: 40px; width: 950px; border: 1px solid var(--primary); display: grid; grid-template-columns: 1fr 1.2fr; gap: 30px; box-shadow: 0 0 100px rgba(0, 194, 255, 0.2); }
         
-        input { width: 100%; padding: 15px; margin: 10px 0; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: white; outline: none; font-size: 12px; }
-        label { font-size: 9px; font-weight: 800; color: #475569; text-transform: uppercase; margin-left: 5px; }
+        .form-side { overflow-y: auto; max-height: 80vh; padding-right: 15px; }
+        label { font-size: 9px; font-weight: 800; color: #475569; text-transform: uppercase; margin-left: 5px; display: block; margin-top: 15px; }
+        input, select { width: 100%; padding: 14px; margin-top: 5px; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: white; outline: none; font-size: 12px; }
+        input:focus, select:focus { border-color: var(--primary); }
 
-        #map { width: 100%; height: 100%; border-radius: 25px; border: 1px solid rgba(255,255,255,0.05); min-height: 350px; }
+        #map { width: 100%; height: 100%; border-radius: 25px; border: 1px solid rgba(255,255,255,0.05); min-height: 450px; }
 
+        .btn-gps { background: rgba(0, 245, 160, 0.1); color: var(--success); border: 1px solid var(--success); padding: 10px; border-radius: 10px; font-size: 10px; font-weight: 900; cursor: pointer; width: 100%; margin-top: 10px; }
+
+        .zone-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; }
+        .zone-card { background: var(--glass); padding: 40px; border-radius: 40px; border: 1px solid rgba(255,255,255,0.05); backdrop-filter: blur(25px); transition: 0.4s; }
         .back-link { display: block; text-align: center; margin-top: 50px; color: #475569; text-decoration: none; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; }
     </style>
 </head>
@@ -46,35 +48,45 @@
 
     <div class="container">
         <div class="header">
-            <div><h1>WIFI <span style="color:var(--primary)">ZONES</span></h1><p style="color:#475569; font-weight: 700;">GÉOLOCALISATION & SCAN ALPHA</p></div>
+            <div><h1>WIFI <span style="color:var(--primary)">ZONES</span></h1><p style="color:#475569; font-weight: 700;">GÉOLOCALISATION & SCAN ALPHA ACTIF</p></div>
             <button class="btn-add" onclick="openModal()">+ Ajouter une Zone</button>
         </div>
 
         <div class="zone-grid" id="zone-list">
             <div class="zone-card">
                 <p style="color:var(--primary); font-size: 10px; font-weight: 900;">NODE: ALPHA-01</p>
-                <h2 style="font-size: 24px; font-weight: 900;">Hôtel de la Paix</h2>
-                <div style="margin-top: 15px; font-size: 11px; color: #475569;">📍 LAT: 12.37 | LONG: -1.52</div>
+                <h2 style="font-size: 22px; font-weight: 900;">Hôtel de la Paix</h2>
+                <div style="margin-top: 15px; font-size: 11px; color: #475569;">📍 12.37, -1.52 | 💸 ORANGE MONEY</div>
             </div>
         </div>
-        
         <a href="/dashboard" class="back-link">← Retour au Cockpit</a>
     </div>
 
-    <!-- MODAL AVEC CARTE INTERACTIVE -->
+    <!-- MODAL FINAL (COMME TES IMAGES MAIS EN MIEUX) -->
     <div id="modal-add">
         <div class="modal-content">
             <div class="form-side">
-                <h2 style="font-size: 22px; font-weight: 900; margin-bottom: 20px;">INJECTER UNE ZONE</h2>
-                <label>Nom du site</label><input type="text" id="z-name" placeholder="Ex: Cyber Douala">
-                <label>Adresse IP</label><input type="text" id="z-ip" placeholder="192.168.88.1">
+                <h2 style="font-size: 20px; font-weight: 900; margin-bottom: 20px; color: var(--primary);">INJECTION RÉSEAU</h2>
                 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <label>Nom du WiFi Zone</label><input type="text" id="z-name" placeholder="Ex: Cyber Akwa">
+                <label>Adresse IP MikroTik</label><input type="text" id="z-ip" placeholder="192.168.88.1">
+                
+                <button class="btn-gps" onclick="autoGeo()">📍 UTILISER MA POSITION ACTUELLE</button>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px;">
                     <div><label>Longitude</label><input type="text" id="z-long" readonly></div>
                     <div><label>Latitude</label><input type="text" id="z-lat" readonly></div>
                 </div>
-                
-                <button class="btn-add" style="width:100%; margin-top:20px;" onclick="addZone()">Activer le Protocole</button>
+
+                <label>Opérateur réseau de paiement</label>
+                <select id="z-operator">
+                    <option value="orange_cm">🇨🇲 Orange Money (Cameroun)</option>
+                    <option value="mtn_cm">🇨🇲 Mobile Money (Cameroun)</option>
+                    <option value="airtel_td">🇹🇩 Airtel Money (Tchad)</option>
+                    <option value="moov_td">🇹🇩 Moov Money (Tchad)</option>
+                </select>
+
+                <button class="btn-add" style="width:100%; margin-top:30px;" onclick="addZone()">Activer le Nœud</button>
                 <p onclick="closeModal()" style="text-align:center; color:#475569; margin-top:15px; cursor:pointer; font-size:10px; font-weight:800;">ANNULER</p>
             </div>
             <div id="map"></div>
@@ -84,43 +96,36 @@
     <script>
         let map, marker;
         function initMap() {
-            // Style Night Mode pour AERIO
             const nightStyle = [{ "elementType": "geometry", "stylers": [{ "color": "#020617" }] }, { "elementType": "labels.text.fill", "stylers": [{ "color": "#475569" }] }];
             map = new google.maps.Map(document.getElementById("map"), {
-                center: { lat: 12.3712, lng: -1.5197 }, // Ouagadougou par défaut comme ton image
-                zoom: 13,
-                styles: nightStyle,
-                disableDefaultUI: true
+                center: { lat: 12.37, lng: -1.52 }, zoom: 14, styles: nightStyle, disableDefaultUI: true
             });
-
-            map.addListener("click", (e) => {
-                placeMarker(e.latLng);
-                document.getElementById('z-lat').value = e.latLng.lat().toFixed(6);
-                document.getElementById('z-long').value = e.latLng.lng().toFixed(6);
-            });
+            map.addListener("click", (e) => { updatePos(e.latLng); });
         }
 
-        function placeMarker(location) {
+        function updatePos(loc) {
             if (marker) marker.setMap(null);
-            marker = new google.maps.Marker({ position: location, map: map, icon: 'https://maps.google.com' });
+            marker = new google.maps.Marker({ position: loc, map: map, icon: 'https://maps.google.com' });
+            document.getElementById('z-lat').value = loc.lat().toFixed(6);
+            document.getElementById('z-long').value = loc.lng().toFixed(6);
         }
 
-        function openModal() { 
-            document.getElementById('modal-add').style.display = 'flex';
-            setTimeout(initMap, 100); // Charge la carte après l'ouverture
+        function autoGeo() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(pos => {
+                    const loc = new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude);
+                    map.setCenter(loc); updatePos(loc);
+                });
+            }
         }
+
+        function openModal() { document.getElementById('modal-add').style.display = 'flex'; setTimeout(initMap, 200); }
         function closeModal() { document.getElementById('modal-add').style.display = 'none'; }
 
         async function addZone() {
-            const data = {
-                name: document.getElementById('z-name').value,
-                ip: document.getElementById('z-ip').value,
-                lat: document.getElementById('z-lat').value,
-                long: document.getElementById('z-long').value
-            };
+            const data = { name: document.getElementById('z-name').value, ip: document.getElementById('z-ip').value, operator: document.getElementById('z-operator').value, lat: document.getElementById('z-lat').value, long: document.getElementById('z-long').value };
             await fetch('/api/add-router', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data) });
-            alert("ZONE GÉOLOCALISÉE ET ACTIVÉE 🛰️");
-            location.reload();
+            alert("PROTOCOLE INJECTÉ 🛰️"); location.reload();
         }
     </script>
 </body>
