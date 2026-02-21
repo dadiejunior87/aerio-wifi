@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AERIO | Trésorerie & Retrait</title>
-    <!-- ✅ POLICE POPPINS INJECTÉE CORRECTEMENT -->
+    <!-- ✅ POLICE POPPINS RÉPARÉE -->
     <link href="https://fonts.googleapis.com" rel="stylesheet">
     <style>
-        :root { --primary: #00C2FF; --accent: #00F5A0; --bg: #020617; --glass: rgba(15, 23, 42, 0.7); --warning: #FFB800; }
+        :root { --primary: #00C2FF; --accent: #00F5A0; --bg: #020617; --glass: rgba(15, 23, 42, 0.7); --warning: #FFB800; --danger: #FF4B4B; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         body { background: var(--bg); color: white; padding: 40px; min-height: 100vh; background-image: radial-gradient(circle at top right, rgba(0, 194, 255, 0.05), transparent); }
 
@@ -25,19 +25,22 @@
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 30px; }
         
         label { display: block; font-size: 10px; font-weight: 900; color: #475569; text-transform: uppercase; margin-bottom: 10px; }
-        input, select { width: 100%; padding: 18px 25px; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 20px; color: white; font-size: 14px; outline: none; }
+        input, select { width: 100%; padding: 18px 25px; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 20px; color: white; font-size: 14px; outline: none; transition: 0.3s; }
+        input:focus { border-color: var(--primary); }
         
+        /* ✅ STYLE DU MESSAGE D'ALERTE */
+        .limit-hint { font-size: 10px; color: var(--danger); font-weight: 800; margin-top: 10px; display: block; letter-spacing: 1px; }
+
         .btn-withdraw { grid-column: 1 / -1; background: var(--accent); color: #020617; padding: 22px; border-radius: 20px; font-weight: 900; border: none; text-transform: uppercase; letter-spacing: 2px; cursor: pointer; transition: 0.4s; }
         .btn-withdraw:hover { transform: translateY(-5px); box-shadow: 0 15px 40px rgba(0, 245, 160, 0.3); }
 
-        /* ✅ TABLEAU HISTORIQUE (COMME SUR TON IMAGE) [1.5] */
         .history-card { background: var(--glass); padding: 40px; border-radius: 40px; border: 1px solid rgba(255,255,255,0.05); max-width: 1000px; margin: 0 auto; overflow-x: auto; }
         table { width: 100%; border-collapse: collapse; text-align: left; min-width: 600px; }
         th { font-size: 10px; color: #475569; text-transform: uppercase; letter-spacing: 2px; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.05); }
         td { padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.02); font-size: 13px; }
-        .status-pill { padding: 4px 10px; border-radius: 50px; font-size: 9px; font-weight: 900; border: 1px solid currentColor; }
 
-        .back-link { display: block; text-align: center; margin-top: 40px; color: #475569; text-decoration: none; font-size: 11px; font-weight: 800; text-transform: uppercase; }
+        .back-link { display: block; text-align: center; margin-top: 40px; color: #475569; text-decoration: none; font-size: 11px; font-weight: 800; text-transform: uppercase; transition: 0.3s; }
+        .back-link:hover { color: var(--primary); }
     </style>
 </head>
 <body>
@@ -72,17 +75,18 @@
             </div>
             <div class="form-group">
                 <label>Numéro de téléphone</label>
-                <input type="text" id="phone" placeholder="Ex: 6XX XX XX XX" required>
+                <input type="text" id="phone" placeholder="6XX XX XX XX" required>
             </div>
             <div class="form-group" style="grid-column: 1 / -1;">
-                <label>Montant (XAF)</label>
-                <input type="number" id="amount" placeholder="Min: 500 F" min="500" required>
+                <label>Montant à extraire (XAF)</label>
+                <!-- ✅ VERROU PHYSIQUE À 5000 -->
+                <input type="number" id="amount" placeholder="Entrez 5000 ou plus" min="5000" required>
+                <span class="limit-hint">🛡️ SEUIL DE SÉCURITÉ : 5 000 F MINIMUM</span>
             </div>
             <button type="submit" class="btn-withdraw">🚀 Initialiser l'extraction</button>
         </form>
     </div>
 
-    <!-- ✅ LISTE DES RETRAITS (AJOUTÉE) [1.5] -->
     <div class="history-card">
         <h2 style="font-size: 16px; margin-bottom: 25px; color: var(--primary);">LISTE DES RETRAITS</h2>
         <table>
@@ -113,10 +117,38 @@
             } catch(e) { console.log("Liaison Alpha..."); }
         }
 
-        document.getElementById('payoutForm').onsubmit = (e) => {
+        document.getElementById('payoutForm').onsubmit = async (e) => {
             e.preventDefault();
-            alert("🚀 PROTOCOLE ALPHA : Demande de retrait envoyée. Traitement en cours.");
-            window.location.reload();
+            const btn = document.querySelector('.btn-withdraw');
+            const data = {
+                amount: parseInt(document.getElementById('amount').value),
+                phone: document.getElementById('phone').value,
+                network: document.getElementById('network').value
+            };
+
+            btn.disabled = true;
+            btn.innerText = "VERIFICATION DU SEUIL...";
+
+            try {
+                const res = await fetch('/api/payout', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await res.json();
+                if (res.ok) {
+                    alert("🚀 PROTOCOLE RÉUSSI : " + result.message);
+                    window.location.reload();
+                } else {
+                    alert("❌ " + result.error);
+                    btn.disabled = false;
+                    btn.innerText = "🚀 INITIALISER L'EXTRACTION";
+                }
+            } catch (err) {
+                alert("❌ Erreur de liaison satellite.");
+                btn.disabled = false;
+            }
         };
 
         window.onload = loadCompta;
