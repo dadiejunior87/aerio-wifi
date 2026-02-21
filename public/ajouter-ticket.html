@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AERIO | Injecteur de Tickets Alpha</title>
+    <!-- LIEN POLICE RÉPARÉ -->
     <link href="https://fonts.googleapis.com" rel="stylesheet">
     <style>
         :root { --primary: #00C2FF; --accent: #00F5A0; --bg: #020617; --glass: rgba(15, 23, 42, 0.7); }
@@ -25,12 +26,14 @@
         .form-group { text-align: left; margin-bottom: 25px; }
         label { display: block; font-size: 10px; font-weight: 800; color: var(--primary); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; margin-left: 15px; }
         
-        input, select {
+        input {
             width: 100%; padding: 18px 25px; background: rgba(0,0,0,0.4);
             border: 1px solid rgba(255,255,255,0.08); border-radius: 20px;
             color: white; font-size: 15px; font-weight: 600; outline: none; transition: 0.3s;
         }
         input:focus { border-color: var(--primary); background: rgba(0, 194, 255, 0.05); }
+
+        .hint-text { font-size: 10px; color: #475569; margin-top: 8px; margin-left: 15px; font-weight: 700; line-height: 1.4; }
 
         .btn-inject {
             width: 100%; padding: 20px; border: none; border-radius: 20px;
@@ -40,7 +43,7 @@
         }
         .btn-inject:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(0, 194, 255, 0.4); }
 
-        .back-link { display: block; margin-top: 30px; color: #475569; text-decoration: none; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
+        .back-link { display: block; text-align: center; margin-top: 30px; color: #475569; text-decoration: none; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
         .back-link:hover { color: var(--primary); }
     </style>
 </head>
@@ -59,18 +62,15 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Valeur du Pass (F CFA)</label>
+                    <label>Valeur brute (F CFA)</label>
                     <input type="number" id="amount" placeholder="Ex: 100" required>
                 </div>
 
+                <!-- ✅ CHAMP DURÉE EN SAISIE LIBRE POUR PLUS DE FLEXIBILITÉ -->
                 <div class="form-group">
-                    <label>Durée d'accès</label>
-                    <select id="duration" required>
-                        <option value="1 Heure">1 Heure</option>
-                        <option value="3 Heures">3 Heures</option>
-                        <option value="24 Heures">24 Heures</option>
-                        <option value="7 Jours">7 Jours</option>
-                    </select>
+                    <label>Durée d'accès (Saisie libre)</label>
+                    <input type="text" id="duration" placeholder="Ex: 1 Heure, 30 Min, 24H..." required>
+                    <p class="hint-text">Indiquez la durée correspondant à votre configuration MikroTik.</p>
                 </div>
 
                 <button type="submit" class="btn-inject">Injecter au Système</button>
@@ -94,7 +94,7 @@
             btn.disabled = true;
 
             try {
-                // ✅ Liaison avec ta route API de création manuelle
+                // Liaison avec la route API du serveur
                 const res = await fetch('/api/simulate-sale', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -102,7 +102,7 @@
                 });
 
                 if (res.ok) {
-                    alert(`✅ PROTOCOLE RÉUSSI : Le ticket ${data.code} a été injecté dans votre comptabilité.`);
+                    alert(`✅ PROTOCOLE RÉUSSI : Le ticket ${data.code} est injecté.`);
                     window.location.href = "/tickets";
                 }
             } catch (err) {
@@ -114,4 +114,3 @@
     </script>
 </body>
 </html>
-
