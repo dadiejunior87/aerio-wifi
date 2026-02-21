@@ -4,51 +4,65 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AERIO | Configuration Nœud Alpha</title>
+    <!-- ✅ POLICE POPPINS INJECTÉE -->
     <link href="https://fonts.googleapis.com" rel="stylesheet">
     <style>
         :root { --primary: #00C2FF; --accent: #00F5A0; --bg: #020617; --glass: rgba(15, 23, 42, 0.7); }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         body { background: var(--bg); color: white; display: flex; min-height: 100vh; }
 
-        /* ✅ MENU LATÉRAL ALPHA (Comme sur ton image) */
-        .sidebar { width: 280px; background: rgba(15, 23, 42, 0.8); border-right: 1px solid rgba(255,255,255,0.05); padding: 30px 20px; backdrop-filter: blur(30px); }
+        /* ✅ SIDEBAR IDENTIQUE AU DASHBOARD [1.5] */
+        .sidebar { width: 280px; background: rgba(15, 23, 42, 0.8); border-right: 1px solid rgba(255,255,255,0.05); padding: 30px 20px; backdrop-filter: blur(30px); position: fixed; height: 100vh; }
+        .profile-badge { display: flex; align-items: center; gap: 12px; padding: 15px; background: rgba(0, 194, 255, 0.05); border: 1px solid rgba(0, 194, 255, 0.1); border-radius: 20px; margin-bottom: 30px; text-decoration: none; }
+        .avatar { width: 35px; height: 35px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; color: black; font-size: 10px; }
+        
         .nav-item { display: flex; align-items: center; padding: 14px 20px; color: #64748b; text-decoration: none; border-radius: 15px; margin-bottom: 8px; font-size: 13px; font-weight: 600; }
-        .nav-item.active { background: var(--primary); color: white; box-shadow: 0 10px 20px rgba(0, 194, 255, 0.2); }
-        .submenu { padding-left: 20px; margin-top: 10px; }
-        .sub-item { display: block; padding: 10px; color: var(--primary); text-decoration: none; font-size: 12px; font-weight: 700; border-left: 2px solid var(--primary); padding-left: 15px; margin-bottom: 5px; }
+        .nav-item.active { background: linear-gradient(90deg, rgba(0, 194, 255, 0.1), transparent); color: var(--primary); }
+        .submenu { padding-left: 20px; margin-bottom: 20px; }
+        .sub-item { display: block; padding: 10px; color: var(--primary); text-decoration: none; font-size: 12px; font-weight: 700; border-left: 2px solid var(--primary); padding-left: 15px; }
 
-        /* ✅ ZONE DE FORMULAIRE (Inspirée de ton image) */
-        .main-content { flex: 1; padding: 50px; overflow-y: auto; }
-        .info-banner { background: rgba(0, 194, 255, 0.05); border: 1px solid var(--primary); padding: 25px; border-radius: 20px; margin-bottom: 40px; font-size: 13px; color: #94a3b8; line-height: 1.6; }
+        /* ZONE CONTENU */
+        .main-content { flex: 1; padding: 50px; margin-left: 280px; }
+        .info-banner { background: rgba(0, 194, 255, 0.05); border: 1px solid var(--primary); padding: 25px; border-radius: 20px; margin-bottom: 40px; font-size: 12px; color: #94a3b8; }
         
         .config-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
         .card-config { background: var(--glass); padding: 40px; border-radius: 35px; border: 1px solid rgba(255,255,255,0.05); backdrop-filter: blur(20px); }
 
         .form-group { margin-bottom: 25px; }
-        label { display: block; font-size: 11px; font-weight: 800; color: var(--primary); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; }
-        input, textarea { width: 100%; padding: 18px 25px; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 18px; color: white; font-size: 14px; outline: none; transition: 0.3s; }
-        textarea { height: 120px; resize: none; }
-        .hint { font-size: 10px; color: #475569; margin-top: 10px; font-weight: 600; line-height: 1.4; }
+        label { display: block; font-size: 10px; font-weight: 900; color: var(--primary); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; }
+        input, textarea { width: 100%; padding: 18px 25px; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 18px; color: white; font-size: 14px; outline: none; }
+        
+        /* RADAR GPS ALPHA [1.5] */
+        #radar-map { width: 100%; height: 120px; background: #000; border-radius: 20px; border: 1px solid var(--primary); position: relative; overflow: hidden; margin-top: 15px; }
+        .ping { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 60px; height: 60px; border: 1px solid var(--primary); border-radius: 50%; animation: ping-alpha 2s infinite; }
+        @keyframes ping-alpha { 0% { transform: translate(-50%, -50%) scale(0.5); opacity: 1; } 100% { transform: translate(-50%, -50%) scale(2); opacity: 0; } }
 
-        .btn-deploy { grid-column: 1 / -1; background: var(--primary); color: #020617; padding: 22px; border-radius: 20px; font-weight: 900; border: none; text-transform: uppercase; letter-spacing: 2px; cursor: pointer; transition: 0.4s; margin-top: 20px; }
+        .btn-deploy { grid-column: 1 / -1; background: var(--primary); color: #020617; padding: 22px; border-radius: 20px; font-weight: 900; border: none; text-transform: uppercase; cursor: pointer; transition: 0.4s; }
         .btn-deploy:hover { transform: translateY(-5px); box-shadow: 0 15px 40px var(--primary); }
     </style>
 </head>
 <body>
 
     <div class="sidebar">
-        <div style="font-weight:900; color:var(--primary); font-size:24px; margin-bottom:40px;">AERIO</div>
-        <a href="/dashboard" class="nav-item"><span>Tableau de bord</span></a>
-        <div class="nav-item active"><span>Mes Wifi Zone</span></div>
+        <a href="/profil" class="profile-badge">
+            <div class="avatar">AE</div>
+            <div>
+                <div id="p-name" style="font-size: 10px; font-weight: 900; color: white;">AGENT ALPHA</div>
+                <div style="font-size: 8px; color: var(--primary); font-weight: 800;">STATUT : ACCRÉDITÉ</div>
+            </div>
+        </a>
+        <a href="/dashboard" class="nav-item"><span>📊 Tableau de bord</span></a>
+        <div class="nav-item active"><span>📡 Mes Wifi Zone</span></div>
         <div class="submenu">
-            <a href="#" class="sub-item">Ajouter un Wifi Zone</a>
-            <a href="/liste-wifi" style="color:#475569; text-decoration:none; font-size:12px; display:block; padding:10px;">Liste des Wifi Zone</a>
+            <a href="#" class="sub-item">• Ajouter un Wifi Zone</a>
+            <a href="/liste-wifi" style="color:#475569; text-decoration:none; font-size:12px; display:block; padding:10px;">• Liste des Wifi Zone</a>
         </div>
+        <a href="/compta" class="nav-item"><span>💰 Ma Comptabilité</span></a>
     </div>
 
     <div class="main-content">
         <div class="info-banner">
-            <b>🛡️ PROTOCOLE ALPHA :</b> Les informations saisies ici définissent votre signature réseau. Une configuration précise assure une liaison satellite stable et une monétisation optimale.
+            <b>🛡️ PROTOCOLE ALPHA :</b> Cette configuration définit votre signature réseau. Une précision totale assure une liaison MikroTik stable.
         </div>
 
         <form id="wifiForm" class="config-grid">
@@ -56,31 +70,53 @@
                 <div class="form-group">
                     <label>🆔 SIGNATURE DU NŒUD (NOM)</label>
                     <input type="text" placeholder="Ex: STATION ALPHA DOUALA" required>
-                    <p class="hint">Identifiant public de votre zone, visible par les clients lors de l'accès.</p>
                 </div>
                 <div class="form-group">
-                    <label>🌐 PASSERELLE RÉSEAU (IP/VPN)</label>
-                    <input type="text" placeholder="Ex: 192.168.88.1">
-                    <p class="hint">Crucial pour l'injection automatique. Utilisez l'IP locale de votre MikroTik.</p>
+                    <label>📍 RADAR TACTIQUE (GPS)</label>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" id="gps" placeholder="Position Satellite" readonly>
+                        <button type="button" onclick="scanGPS()" style="background:var(--primary); border:none; padding:10px; border-radius:12px; cursor:pointer; font-weight:900; font-size:10px;">SCAN</button>
+                    </div>
+                    <div id="radar-map"><div class="ping"></div></div>
                 </div>
             </div>
 
             <div class="card-config">
                 <div class="form-group">
                     <label>📝 ARGUMENTAIRE COMMERCIAL</label>
-                    <textarea placeholder="Ex: Connexion Giga-Élite. Idéal pour le Streaming HD et le Gaming..."></textarea>
-                    <p class="hint">Un argumentaire puissant convertit 30% de clients en plus. Valorisez votre débit.</p>
+                    <textarea placeholder="Ex: Connexion Fibre ultra-stable pour Gaming..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>🌐 PASSERELLE RÉSEAU (IP/VPN)</label>
+                    <input type="text" placeholder="Ex: 192.168.88.1">
                 </div>
                 <div class="form-group">
                     <label>📞 CANAL D'ASSISTANCE</label>
                     <input type="text" placeholder="Ex: +237 6XX XX XX XX">
-                    <p class="hint">Numéro d'urgence pour le support technique de vos utilisateurs finaux.</p>
                 </div>
             </div>
 
-            <button type="submit" class="btn-deploy">🚀 DÉPLOYER L'INFRASTRUCTURE ALPHA</button>
+            <button type="submit" class="btn-deploy">🚀 ACTIVER L'INFRASTRUCTURE RÉSEAU</button>
         </form>
     </div>
 
+    <script>
+        // ✅ GÉOLOCALISATION ALPHA [1.4]
+        function scanGPS() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition((pos) => {
+                    document.getElementById('gps').value = `${pos.coords.latitude.toFixed(4)}, ${pos.coords.longitude.toFixed(4)}`;
+                });
+            }
+        }
+        
+        // ✅ CHARGEMENT NOM PROFIL [1.4]
+        async function load() {
+            const res = await fetch('/api/my-profile');
+            const user = await res.json();
+            document.getElementById('p-name').innerText = user.name;
+        }
+        window.onload = load;
+    </script>
 </body>
 </html>
