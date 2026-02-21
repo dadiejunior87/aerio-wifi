@@ -33,58 +33,72 @@
 
         .stats-ref { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 30px; }
         .stat-small { background: rgba(255,255,255,0.03); padding: 25px; border-radius: 25px; border: 1px solid rgba(255,255,255,0.05); transition: 0.3s; }
-        .stat-small:hover { border-color: var(--primary); background: rgba(112, 0, 255, 0.05); }
         .stat-small h4 { font-size: 10px; color: #475569; text-transform: uppercase; font-weight: 800; letter-spacing: 1px; margin-bottom: 10px; }
         .stat-small div { font-size: 26px; font-weight: 900; color: white; }
 
         .rank-badge { position: absolute; top: 20px; right: 20px; background: rgba(0, 245, 160, 0.1); color: var(--success); padding: 5px 15px; border-radius: 50px; font-size: 9px; font-weight: 900; border: 1px solid var(--success); letter-spacing: 1px; }
 
-        .back-link { margin-top: 40px; color: #475569; text-decoration: none; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; }
-        .back-link:hover { color: var(--accent); }
+        .back-link { margin-top: 40px; color: #475569; text-decoration: none; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; transition: 0.3s; }
+        .back-link:hover { color: var(--accent); text-shadow: 0 0 10px var(--accent); }
     </style>
 </head>
 <body>
 
     <div class="header-ref">
         <h1>PROGRAMME <span style="color:white">ALPHA</span></h1>
-        <p style="color: #475569; font-size: 14px; font-weight: 600;">Développez l'empire et encaissez 2% de commission à vie.</p>
+        <p style="color: #475569; font-size: 14px; font-weight: 600;">Recrutez des partenaires et encaissez 2% à vie.</p>
     </div>
 
     <div class="ref-card">
         <div class="rank-badge">RANG : ÉLITE</div>
-        <h3 style="font-size: 20px; font-weight: 900;">Votre Lien d'Invitation</h3>
-        <p style="color: #64748b; font-size: 12px; margin-top: 8px;">Partagez ce protocole unique pour affilier vos partenaires.</p>
+        <h3 style="font-size: 20px; font-weight: 900;">Lien d'Invitation Unique</h3>
+        <p style="color: #64748b; font-size: 12px; margin-top: 8px;">Affiliez de nouveaux nœuds au réseau AERIO.</p>
         
         <div class="link-box">
-            <span class="link-text" id="ref-url">https://aerio-alpha.com...</span>
+            <span class="link-text" id="ref-url">CHARGEMENT DU PROTOCOLE...</span>
             <button class="btn-copy" onclick="copyLink()">COPIER</button>
         </div>
 
         <div class="stats-ref">
-            <div class="stat-small"><h4>FILLEULS ACTIFS</h4><div id="count-ref">12</div></div>
-            <div class="stat-small"><h4>BONUS CUMULÉS</h4><div id="gain-ref" style="color:var(--success)">4 850 F</div></div>
+            <div class="stat-small"><h4>FILLEULS ACTIFS</h4><div id="count-ref">0</div></div>
+            <div class="stat-small"><h4>BONUS CUMULÉS</h4><div id="gain-ref" style="color:var(--success)">0 F</div></div>
         </div>
 
-        <div style="margin-top: 35px; font-size: 10px; color: #475569; font-weight: 700;">PROCHAINE RÉCOMPENSE À 20 FILLEULS : +5% COMMISSION</div>
+        <div style="margin-top: 35px; font-size: 10px; color: #475569; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">Prochain Palier : +5% COMMISSION À 20 FILLEULS</div>
     </div>
 
-    <a href="/dashboard" class="back-link">← Retour au QG de Pilotage</a>
+    <a href="/dashboard" class="back-link">← Retour au Cockpit</a>
 
     <script>
+        // ✅ RÉCUPÉRATION DYNAMIQUE DE L'ID PARTENAIRE [1.4]
+        async function loadRefSystem() {
+            try {
+                // On récupère l'ID du partenaire connecté via une petite astuce de session
+                // ou on demande au serveur via /api/my-profile
+                const res = await fetch('/api/my-stats');
+                const data = await res.json();
+                
+                // On simule l'ID pour l'affichage (à lier à ton champ partnerID réel)
+                const partnerID = data.tickets[0]?.partnerID || "ALPHA-NODE"; 
+                
+                document.getElementById('ref-url').innerText = window.location.origin + "/inscription?ref=" + partnerID;
+                
+                // Mise à jour des stats parrainage (à lier à ta DB plus tard)
+                document.getElementById('count-ref').innerText = "0"; 
+                document.getElementById('gain-ref').innerText = "0 F";
+
+            } catch(e) {
+                document.getElementById('ref-url').innerText = window.location.origin + "/inscription?ref=ALPHA";
+            }
+        }
+
         function copyLink() {
             const link = document.getElementById('ref-url').innerText;
             navigator.clipboard.writeText(link);
-            alert("PROTOCOLE COPIÉ : Votre lien Ambassadeur est prêt à être partagé sur WhatsApp.");
-        }
-
-        async function loadRef() {
-            // ✅ Génération automatique du lien basé sur l'URL actuelle et l'ID Partenaire
-            // Simulation : Ici on récupère l'ID en session (AE-0001 par défaut pour le test)
-            const partnerID = "AE-0001"; 
-            document.getElementById('ref-url').innerText = window.location.origin + "/inscription?ref=" + partnerID;
+            alert("✅ PROTOCOLE ALPHA COPIÉ : Prêt pour déploiement sur WhatsApp.");
         }
         
-        window.onload = loadRef;
+        window.onload = loadRefSystem;
     </script>
 </body>
 </html>
