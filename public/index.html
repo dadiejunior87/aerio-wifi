@@ -3,22 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AERIO | L'Élite du WiFi Zone</title>
+    <title>AERIO | L'Élite du WiFi Zone Panafricain</title>
     <link href="https://fonts.googleapis.com" rel="stylesheet">
     <style>
         :root {
-            --primary: #00C2FF;
-            --secondary: #7000FF;
-            --accent: #00F5A0;
-            --danger: #FF4B4B;
-            --bg: #020617;
-            --glass: rgba(15, 23, 42, 0.6);
+            --primary: #00C2FF; --secondary: #7000FF; --accent: #00F5A0;
+            --danger: #FF4B4B; --bg: #020617; --glass: rgba(15, 23, 42, 0.6);
         }
-
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         body { background: var(--bg); color: white; overflow-x: hidden; min-height: 100vh; }
 
-        /* --- FOND ANIMÉ --- */
         .orb {
             position: absolute; width: 500px; height: 500px; border-radius: 50%;
             background: radial-gradient(circle, rgba(0, 194, 255, 0.1) 0%, transparent 70%);
@@ -31,27 +25,22 @@
             align-items: center; backdrop-filter: blur(15px); position: sticky; 
             top: 0; z-index: 1000; border-bottom: 1px solid rgba(255,255,255,0.05);
         }
-        
         .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
         .logo-text { font-weight: 900; font-size: 26px; color: var(--primary); letter-spacing: -1px; }
 
         .menu { display: flex; align-items: center; gap: 25px; }
         .menu a { color: #94a3b8; text-decoration: none; font-size: 13px; font-weight: 600; transition: 0.3s; }
         .menu a:hover { color: var(--primary); }
-        .menu a.active { color: var(--danger); font-weight: 800; }
-
         .btn-glow { 
             background: linear-gradient(45deg, var(--primary), var(--secondary));
             padding: 12px 25px; border-radius: 12px; color: white !important; font-weight: 800 !important;
             box-shadow: 0 0 20px rgba(112, 0, 255, 0.3); font-size: 12px !important;
         }
 
-        /* --- HERO SECTION --- */
         .hero { display: flex; align-items: center; padding: 80px 8%; gap: 60px; min-height: 80vh; }
         .hero-content { flex: 1.2; }
         .hero-content h1 { font-size: 4.5rem; font-weight: 900; line-height: 0.9; margin-bottom: 25px; letter-spacing: -3px; }
         .hero-content h1 span { background: linear-gradient(to right, var(--primary), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        
         .hero-content p { color: #64748b; font-size: 17px; line-height: 1.6; margin-bottom: 40px; max-width: 580px; }
 
         .btn-main { 
@@ -64,31 +53,14 @@
         .hero-visual { flex: 0.8; position: relative; }
         .card-preview {
             background: var(--glass); border: 1px solid rgba(255,255,255,0.1);
-            padding: 35px; border-radius: 35px; backdrop-filter: blur(20px);
+            padding: 40px; border-radius: 40px; backdrop-filter: blur(20px);
             transform: rotate(-5deg); box-shadow: 0 50px 100px rgba(0,0,0,0.5);
             animation: float 4s infinite alternate ease-in-out;
         }
         @keyframes float { from { transform: rotate(-5deg) translateY(0); } to { transform: rotate(-2deg) translateY(-25px); } }
 
-        /* --- BOUTIQUE DYNAMIQUE --- */
         #shop-section { display: none; padding: 60px 8%; text-align: center; }
         .tarif-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin-top: 40px; }
-        .tarif-card { 
-            background: var(--glass); border: 1px solid var(--accent); 
-            padding: 30px; border-radius: 25px; transition: 0.3s;
-        }
-        .tarif-card:hover { transform: scale(1.05); background: rgba(0, 245, 160, 0.05); }
-        .tarif-card h3 { font-size: 24px; margin-bottom: 10px; }
-        .tarif-card .price { font-size: 32px; font-weight: 900; color: var(--accent); margin-bottom: 20px; }
-        .tarif-card input { 
-            width: 100%; padding: 12px; border-radius: 10px; border: none; 
-            background: #020617; color: white; margin-bottom: 15px; text-align: center; outline: none;
-        }
-        .btn-buy { 
-            width: 100%; padding: 15px; border-radius: 12px; border: none; 
-            background: var(--accent); color: #020617; font-weight: 800; cursor: pointer; transition: 0.3s;
-        }
-        .btn-buy:hover { background: white; }
 
         .status-bar {
             position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%);
@@ -113,15 +85,12 @@
             <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org">
                 <circle cx="50" cy="50" r="48" stroke="#00C2FF" stroke-width="4" stroke-dasharray="10 5"/>
                 <path d="M50 25L25 75H35L50 45L65 75H75L50 25Z" fill="#00C2FF"/>
-                <circle cx="50" cy="85" r="5" fill="#00F5A0">
-                    <animate attributeName="opacity" values="1;0.2;1" dur="2s" repeatCount="indefinite" />
-                </circle>
+                <circle cx="50" cy="85" r="5" fill="#00F5A0"><animate attributeName="opacity" values="1;0.2;1" dur="2s" repeatCount="indefinite" /></circle>
             </svg>
             <span class="logo-text">AERIO</span>
         </a>
-        
         <div class="menu">
-            <a href="/" class="active">Accueil</a>
+            <a href="/">Accueil</a>
             <a href="/inscription">Partenariats</a>
             <a href="/recover">Récupérer Ticket</a>
             <a href="/map">Localisation WiFis</a>
@@ -129,38 +98,34 @@
         </div>
     </nav>
 
-    <!-- SECTION PRINCIPALE -->
     <section class="hero" id="hero-main">
         <div class="hero-content">
             <p style="color: var(--primary); font-weight: 800; letter-spacing: 4px; margin-bottom: 10px;">ÉLITE NETWORK AFRICA</p>
             <h1>Votre WiFi,<br><span>Vos Profits.</span></h1>
-            <!-- DESCRIPTION MISE À JOUR : 85% CACHÉ -->
-            <p>AERIO automatise la vente de vos accès internet via Mobile Money. Encaissez vos gains en temps réel avec la commission la plus compétitive du marché panafricain.</p>
+            <p>AERIO automatise la vente de vos accès internet via Mobile Money. Encaissez vos gains en temps réel avec la technologie la plus avancée du marché.</p>
             <div class="cta-group">
                 <a href="/inscription" class="btn-main">Devenir Partenaire</a>
             </div>
         </div>
+
         <div class="hero-visual">
             <div class="card-preview">
-                <p style="color: var(--primary); font-size: 10px; font-weight: 800; margin-bottom: 20px; text-transform: uppercase;">Flux de revenus en direct</p>
-                <h2 style="font-size: 34px; margin-bottom: 10px; font-weight: 900;">852.400 F</h2>
-                <p style="color: var(--accent); font-size: 12px; font-weight: 800;">● Système Sécurisé</p>
-                <div style="margin-top: 30px; height: 100px; border-bottom: 2px solid var(--primary); opacity: 0.2; border-left: 2px solid var(--primary);"></div>
+                <p style="color: var(--primary); font-size: 10px; font-weight: 800; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 2px;">⚡ PERFORMANCE RÉSEAU ALPHA</p>
+                <div style="font-size: 11px; color: #475569; margin-bottom: 5px; font-weight: 700;">ACTIFS NETS GÉNÉRÉS :</div>
+                <h2 id="counter" style="font-size: 38px; margin-bottom: 10px; font-weight: 900; color: #00F5A0; text-shadow: 0 0 20px rgba(0, 245, 160, 0.2);">0 F</h2>
+                <p style="color: white; font-size: 12px; font-weight: 800; background: rgba(0, 194, 255, 0.1); display: inline-block; padding: 5px 15px; border-radius: 50px; border: 1px solid var(--primary);">📈 +24% ce mois-ci</p>
+                <div style="margin-top: 30px;">
+                    <div style="display: flex; justify-content: space-between; font-size: 9px; color: #475569; font-weight: 800; margin-bottom: 8px;"><span>STABILITÉ DU FLUX</span><span>99.9%</span></div>
+                    <div style="height: 6px; background: rgba(255,255,255,0.05); border-radius: 10px;"><div style="width: 99%; height: 100%; background: var(--primary); border-radius: 10px; box-shadow: 0 0 15px var(--primary);"></div></div>
+                </div>
             </div>
         </div>
-    </section>
-
-    <!-- SECTION BOUTIQUE -->
-    <section id="shop-section">
-        <h1 id="shop-title" style="font-size: 3rem; font-weight: 900;">Boutique <span style="color: var(--accent);">WiFi</span></h1>
-        <p id="shop-welcome" style="color: #64748b; margin-top: 10px;">Choisissez votre forfait pour naviguer maintenant.</p>
-        <div class="tarif-grid" id="tarifs-container"></div>
     </section>
 
     <div class="status-bar">
         <span>RÉSEAU : <b>ACTIF</b></span>
         <span>PARTENAIRES : <b>120+</b></span>
-        <span>PAYS : <b>AFRIQUE 🌍</b></span>
+        <span>ZONE : <b>AFRIQUE 🌍</b></span>
     </div>
 
     <a href="https://wa.me." class="wa-btn" target="_blank">
@@ -168,53 +133,18 @@
     </a>
 
     <script>
-        const urlParams = new URLSearchParams(window.location.search);
-        const routerID = urlParams.get('id');
-
-        if (routerID) {
-            document.getElementById('hero-main').style.display = 'none';
-            document.getElementById('shop-section').style.display = 'block';
-            chargerTarifs(routerID);
+        // COMPTEUR DE GAINS ANIMÉ
+        function animateCounter(target, duration) {
+            let start = 0;
+            const increment = target / (duration / 16);
+            const counter = document.getElementById('counter');
+            const timer = setInterval(() => {
+                start += increment;
+                counter.innerText = Math.floor(start).toLocaleString() + " F";
+                if (start >= target) { clearInterval(timer); counter.innerText = target.toLocaleString() + " F"; }
+            }, 16);
         }
-
-        async function chargerTarifs(id) {
-            try {
-                const response = await fetch(`/api/get-rates?id=${id}`);
-                const rates = await response.json();
-                const container = document.getElementById('tarifs-container');
-                container.innerHTML = "";
-
-                if (rates.length === 0) {
-                    container.innerHTML = "<p>Initialisation des tarifs en cours...</p>";
-                    return;
-                }
-
-                rates.forEach(rate => {
-                    container.innerHTML += `
-                        <div class="tarif-card">
-                            <h3>FORFAIT ${rate.duree}</h3>
-                            <div class="price">${rate.prix} F</div>
-                            <input type="tel" id="phone-${rate.prix}" placeholder="Numéro Mobile Money" required>
-                            <button class="btn-buy" onclick="payer('${rate.prix}', '${rate.duree}', '${id}')">ACHETER MAINTENANT</button>
-                        </div>
-                    `;
-                });
-            } catch (e) { console.error("Erreur boutique Alpha."); }
-        }
-
-        async function payer(amount, duration, router_id) {
-            const phone = document.getElementById(`phone-${amount}`).value;
-            if (!phone) return alert("Veuillez entrer votre numéro !");
-
-            const res = await fetch('/api/pay', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ amount, duration, router_id, phone })
-            });
-            const data = await res.json();
-            if (data.checkout_url) window.location.href = data.checkout_url;
-            else alert("Erreur d'initialisation du flux de paiement.");
-        }
+        window.onload = () => { animateCounter(1285400, 2000); };
     </script>
 </body>
 </html>
