@@ -36,16 +36,16 @@
         .stat-card { background: var(--card); padding: 30px 25px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.05); transition: 0.4s; }
         
         .glass-panel { background: var(--card); border-radius: 35px; padding: 35px; border: 1px solid rgba(255,255,255,0.03); backdrop-filter: blur(10px); margin-bottom: 30px; }
-        .btn-qr { background: var(--primary); color: black; padding: 15px; border-radius: 15px; font-weight: 900; cursor: pointer; border: none; width: 100%; margin: 20px 0; }
+        .btn-qr { background: var(--primary); color: black; padding: 15px; border-radius: 15px; font-weight: 900; cursor: pointer; border: none; width: 100%; margin: 20px 0; transition: 0.3s; }
+        .btn-qr:hover { transform: scale(1.02); box-shadow: 0 0 20px var(--primary); }
         
-        /* Section Masquable */
         #admin-rank-section { display: none; }
     </style>
 </head>
 <body>
     <div class="sidebar">
         <div class="logo-box">
-            <svg width="40" height="40" viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="48" stroke="#00C2FF" stroke-width="4""")/>><path d="M50 25L25 75H35L50 45L65 75H75L50 25Z" fill="#00C2FF""")/>></svg>
+            <svg width="40" height="40" viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="48" stroke="#00C2FF" stroke-width="4"/><path d="M50 25L25 75H35L50 45L65 75H75L50 25Z" fill="#00C2FF"/></svg>
             <span class="logo-text">AERIO</span>
         </div>
 
@@ -55,7 +55,7 @@
         <div class="nav-group" id="tickets-group">
             <div class="nav-item" onclick="toggleMenu('tickets-sub', 'tickets-group')">
                 <span>🎟️ Mes Tickets</span>
-                <svg class="arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M6 9l6 6 6-6""")/>></svg>
+                <svg class="arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M6 9l6 6 6-6"/></svg>
             </div>
             <div id="tickets-sub" class="submenu">
                 <a href="/tickets/ajouter" class="sub-item">• Ajouter un ticket</a>
@@ -75,23 +75,35 @@
     <div class="main-content">
         <header style="display:flex; justify-content:space-between; align-items:center; margin-bottom:50px;">
             <div class="welcome-text"><h1>Console <span>Alpha v.1</span></h1><p>Analyse des actifs numériques</p></div>
+            <div id="admin-badge" style="display:none; background:var(--primary); color:black; padding:5px 15px; border-radius:50px; font-weight:900; font-size:10px;">PRO MASTER</div>
         </header>
 
-        <!-- ✅ CLASSEMENT ÉLITE (VISIBLE UNIQUEMENT PAR ADMIN) -->
         <div id="admin-rank-section" class="glass-panel">
-            <h3 style="font-size: 11px; color: var(--primary); letter-spacing: 2px; margin-bottom: 25px; text-transform: uppercase;">🏆 CLASSEMENT DES NŒUDS ALPHA (PRO)</h3>
+            <h3 style="font-size: 11px; color: var(--primary); letter-spacing: 2px; margin-bottom: 25px; text-transform: uppercase;">🏆 CLASSEMENT DES NŒUDS ALPHA</h3>
             <div id="top-list" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;"></div>
         </div>
 
         <div class="stats-grid">
-            <div class="stat-card" style="border-left: 4px solid var(--success);"><h3>GAIN NET (85%)</h3><div class="value" id="solde" style="font-size:32px; font-weight:900; color:var(--success)">0 F</div></div>
-            <div class="stat-card"><h3>SESSIONS</h3><div class="value" id="t-count" style="font-size:32px; font-weight:900; color:var(--primary)">0</div></div>
-            <div class="stat-card"><h3>SIMULATION</h3><button onclick="simulateSale()" style="background:none; border:1px solid var(--warning); color:var(--warning); padding:10px; border-radius:10px; width:100%; margin-top:10px; font-weight:800; cursor:pointer;">⚡ TESTER VENTE</button></div>
+            <div class="stat-card" style="border-left: 4px solid var(--primary);">
+                <h3>FLUX BRUT (100%)</h3>
+                <div class="value" id="flux-brut" style="font-size:32px; font-weight:900; color:var(--primary)">0 F</div>
+                <p style="font-size: 10px; color: #475569; margin-top: 5px;">Volume total traité</p>
+            </div>
+            <div class="stat-card" style="border-left: 4px solid var(--success);">
+                <h3>GAIN NET (85%)</h3>
+                <div class="value" id="solde" style="font-size:32px; font-weight:900; color:var(--success)">0 F</div>
+                <p style="font-size: 10px; color: #475569; margin-top: 5px;">Vos revenus réels</p>
+            </div>
+            <div class="stat-card">
+                <h3>SESSIONS</h3>
+                <div class="value" id="t-count" style="font-size:32px; font-weight:900; color:white">0</div>
+                <p style="font-size: 10px; color: #475569; margin-top: 5px;">Tickets actifs</p>
+            </div>
         </div>
 
         <div class="glass-panel">
             <h2 style="font-size: 14px; color: var(--primary); margin-bottom: 20px;">📈 FLUX DE TRESORERIE</h2>
-            <div style="height:250px;"><canvas id="salesChart"></canvas></div>
+            <div style="height:280px;"><canvas id="salesChart"></canvas></div>
         </div>
     </div>
 
@@ -103,33 +115,56 @@
 
         async function loadData() {
             try {
-                // 1. Charger tes propres stats
                 const res = await fetch('/api/my-stats');
-                const tickets = await res.json();
-                let net = 0;
-                tickets.forEach(t => net += (t.amount * 0.85));
-                document.getElementById('solde').innerText = net.toLocaleString() + " F";
-                document.getElementById('t-count').innerText = tickets.length;
+                const data = await res.json();
+                
+                // Mise à jour des compteurs réels (SANS SIMULATION)
+                document.getElementById('solde').innerText = Math.floor(data.summary.net).toLocaleString() + " F";
+                document.getElementById('flux-brut').innerText = data.summary.brut.toLocaleString() + " F";
+                document.getElementById('t-count').innerText = data.summary.count;
 
-                // 2. Tenter de charger le Top 3 (Seul AE-0001 peut)
+                // Gestion de la section Admin
                 const resTop = await fetch('/api/top-performers');
                 if (resTop.ok) {
                     const top = await resTop.json();
-                    const medals = ['🥇', '🥈', '🥉'];
                     document.getElementById('admin-rank-section').style.display = 'block';
+                    document.getElementById('admin-badge').style.display = 'block';
+                    const medals = ['🥇', '🥈', '🥉'];
                     document.getElementById('top-list').innerHTML = top.map((site, i) => `
-                        <div style="background: rgba(255,255,255,0.02); padding: 20px; border-radius: 20px; border-left: 3px solid ${i==0 ? 'var(--success)' : 'var(--primary)'};">
-                            <div style="font-size: 18px; margin-bottom: 10px;">${medals[i]} <span style="font-size: 12px; font-weight: 800;">${site.id}</span></div>
+                        <div style="background: rgba(255,255,255,0.02); padding: 20px; border-radius: 20px; border-left: 3px solid var(--primary);">
+                            <div style="font-size: 18px; margin-bottom: 5px;">${medals[i]} <span style="font-size: 10px; font-weight: 800;">${site.id}</span></div>
                             <div style="font-size: 18px; font-weight: 900;">${site.total.toLocaleString()} F</div>
                         </div>
                     `).join('');
                 }
-            } catch(e) { console.log("Liaison sécurisée."); }
+                
+                initChart(data.tickets);
+            } catch(e) { console.error("Liaison Alpha interrompue."); }
         }
 
-        async function simulateSale() {
-            await fetch('/api/simulate-sale', { method: 'POST' });
-            loadData();
+        function initChart(tickets) {
+            const ctx = document.getElementById('salesChart').getContext('2d');
+            // Logique de graphique simplifiée pour la performance
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: tickets.slice(0,10).map(t => new Date(t.date).toLocaleDateString()).reverse(),
+                    datasets: [{
+                        label: 'Ventes',
+                        data: tickets.slice(0,10).map(t => t.amount).reverse(),
+                        borderColor: '#00C2FF',
+                        backgroundColor: 'rgba(0, 194, 255, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: { y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' } }, x: { grid: { display: false } } }
+                }
+            });
         }
 
         window.onload = loadData;
