@@ -12,9 +12,10 @@ const app = express();
 
 // --- CONFIGURATION ÉLITE ---
 const PORT = process.env.PORT || 10000;
-const ADMIN_PHONE = "237691285152"; // ✅ TON COFFRE-FORT ORANGE MONEY
+const ADMIN_PHONE = "237691285152"; 
 const TICKETS_FILE = path.join(__dirname, "tickets.json");
 const PARTNERS_FILE = path.join(__dirname, "partners.json");
+const MONEROO_KEY = process.env.MONEROO_SECRET || "CLE_TEST_MONEROO"; // Sécurité Alpha
 
 // --- SÉCURITÉ BASTION ---
 app.use(helmet({ contentSecurityPolicy: false })); 
@@ -32,18 +33,6 @@ app.use(session({
     cookie: { secure: false, httpOnly: true, maxAge: 24 * 60 * 60 * 1000 }
 }));
 
-// ✅ MOTEUR EMAIL (Nodemailer) [1.2]
-const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: { user: 'votre-email@gmail.com', pass: 'votre-pass-app' }
-});
-
-// ✅ MOTEUR SMS (Twilio)
-const sid = process.env.TWILIO_ACCOUNT_SID || 'AC_TEMP';
-const token = process.env.TWILIO_AUTH_TOKEN || 'TOKEN_TEMP';
-let smsClient;
-if (sid.startsWith('AC')) smsClient = new twilio(sid, token);
-
 // --- INITIALISATION ---
 const initFile = (filePath) => {
     if (!fs.existsSync(filePath)) fs.writeFileSync(filePath, JSON.stringify([], null, 2));
@@ -56,51 +45,39 @@ function checkAuth(req, res, next) {
     else res.redirect("/connexion");
 }
 
-// ✅ FONCTIONS AUTOMATIQUES (MAIL & SMS)
-async function envoyerEmailBienvenue(email, name, partnerID) {
-    const mailOptions = {
-        from: '"AERIO ALPHA" <votre-email@gmail.com>',
-        to: email,
-        subject: '🚀 BIENVENUE DANS L’EMPIRE ALPHA',
-        html: `<div style="background:#020617;color:white;padding:30px;border:2px solid #00C2FF;border-radius:15px;">
-                <h2>Salut ${name} !</h2><p>Ton ID : <b>${partnerID}</b></p>
-                <p>Active ta licence à 5 000 F pour débloquer ton pack MikroTik.</p></div>`
+// ✅ ROUTE DÉMO : SIMULATION DE VENTE (Pour tes présentations)
+app.post("/api/simulate-sale", checkAuth, (req, res) => {
+    let tickets = JSON.parse(fs.readFileSync(TICKETS_FILE));
+    const fakeTicket = {
+        code: "SIM-" + Math.random().toString(36).substring(2, 7).toUpperCase(),
+        amount: 500,
+        partnerID: req.session.partnerID,
+        date: new Date(),
+        status: "SUCCESS"
     };
-    try { await transporter.sendMail(mailOptions); } catch (e) {}
-}
+    tickets.push(fakeTicket);
+    fs.writeFileSync(TICKETS_FILE, JSON.stringify(tickets, null, 2));
+    res.json({ success: true, ticket: fakeTicket });
+});
 
-async function envoyerEmailLicenceActive(email, partnerID) {
-    const mailOptions = {
-        from: '"AERIO HQ" <votre-email@gmail.com>',
-        to: email,
-        subject: '✅ LICENCE ALPHA ACTIVÉE',
-        html: `<div style="background:#020617;color:white;padding:30px;border:2px solid #00F5A0;border-radius:15px;">
-                <h2>LICENCE VALIDÉE 🛰️</h2><p>Télécharge ton pack MikroTik dans ton espace membre.</p></div>`
-    };
-    try { await transporter.sendMail(mailOptions); } catch (e) {}
-}
-
-// ✅ WEBHOOK MONEROO (AUTOMATISATION TOTALE) [1.3]
+// ✅ WEBHOOK MONEROO (AUTOMATISATION)
 app.post("/api/moneroo-webhook", async (req, res) => {
     const { status, metadata, amount } = req.body.data;
     if (status === "completed") {
-        if (metadata.type === "LICENSE_ACTIVATION") {
+        const { partnerID, type } = metadata;
+        
+        if (type === "LICENSE_ACTIVATION") {
             let partners = JSON.parse(fs.readFileSync(PARTNERS_FILE));
-            const idx = partners.findIndex(p => p.partnerID === metadata.partnerID);
+            const idx = partners.findIndex(p => p.partnerID === partnerID);
             if (idx !== -1) {
                 partners[idx].licence = "ACTIVE";
                 fs.writeFileSync(PARTNERS_FILE, JSON.stringify(partners, null, 2));
-                await envoyerEmailLicenceActive(partners[idx].email, metadata.partnerID);
             }
         } else {
-            const { router_id, duration, phone } = metadata;
             const wifiCode = "AE-" + Math.random().toString(36).substring(2, 8).toUpperCase();
             let tickets = JSON.parse(fs.readFileSync(TICKETS_FILE));
-            tickets.push({ code: wifiCode, amount, partnerID: router_id, duration, customer_phone: phone, date: new Date(), status: "SUCCESS" });
+            tickets.push({ code: wifiCode, amount, partnerID: metadata.router_id, date: new Date(), status: "SUCCESS" });
             fs.writeFileSync(TICKETS_FILE, JSON.stringify(tickets, null, 2));
-            if (phone && smsClient) {
-                await smsClient.messages.create({ body: `[AERIO] Ticket: ${wifiCode} (${duration})`, from: 'AERIO', to: phone });
-            }
         }
         res.status(200).send("OK");
     }
@@ -108,7 +85,6 @@ app.post("/api/moneroo-webhook", async (req, res) => {
 
 // ✅ ROUTES PAGES
 app.get("/", (req, res) => res.sendFile(path.join(__dirname, "public", "index.html")));
-app.get("/connexion", (req, res) => res.sendFile(path.join(__dirname, "public", "login-partenaire.html")));
 app.get("/dashboard", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "dashboard.html")));
 app.get("/wifi-zone", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "wifi-zone.html")));
 app.get("/tickets", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "tickets.html")));
@@ -116,19 +92,8 @@ app.get("/compta", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "p
 app.get("/parrainage", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "parrainage.html")));
 app.get("/profil", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "profil.html")));
 app.get("/guide", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "guide.html")));
-
-// ✅ API PAIEMENT LICENCE (5 000 F) [1.4]
-app.post("/api/pay-license", checkAuth, async (req, res) => {
-    try {
-        const response = await axios.post("https://api.moneroo.io", {
-            amount: 5000, currency: "XAF",
-            description: `Licence Alpha - ${req.session.partnerID}`,
-            metadata: { type: "LICENSE_ACTIVATION", partnerID: req.session.partnerID },
-            return_url: `${req.protocol}://${req.get('host')}/dashboard?success=true`
-        }, { headers: { 'Authorization': `Bearer ${process.env.MONEROO_SECRET}` } });
-        res.json({ checkout_url: response.data.data.checkout_url });
-    } catch (e) { res.status(500).json({ error: "Erreur" }); }
-});
+app.get("/faq", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "faq.html")));
+app.get("/connexion", (req, res) => res.sendFile(path.join(__dirname, "public", "login-partenaire.html")));
 
 // ✅ API AUTH
 app.post("/api/login-partenaire", (req, res) => {
@@ -145,9 +110,9 @@ app.post("/api/login-partenaire", (req, res) => {
 
 app.get("/api/my-stats", checkAuth, (req, res) => {
     const tickets = JSON.parse(fs.readFileSync(TICKETS_FILE));
-    res.json(tickets.filter(t => t.partnerID === req.session.partnerID));
+    res.json(tickets.filter(t => t.partnerID === req.session.partnerID).sort((a,b) => new Date(b.date) - new Date(a.date)));
 });
 
 app.get("/logout", (req, res) => { req.session.destroy(); res.redirect("/"); });
 
-app.listen(PORT, '0.0.0.0', () => console.log(`🚀 BASTION V3 LIVE SUR PORT ${PORT}`));
+app.listen(PORT, '0.0.0.0', () => console.log(`🚀 BASTION ALPHA V3 LIVE SUR PORT ${PORT}`));
