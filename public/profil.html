@@ -3,118 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AERIO | Mon Profil Élite</title>
+    <title>AERIO | Profil Partenaire</title>
     <link href="https://fonts.googleapis.com" rel="stylesheet">
     <style>
-        :root { --primary: #00C2FF; --secondary: #7000FF; --bg: #030712; --card: rgba(15, 23, 42, 0.7); }
+        :root { --primary: #00C2FF; --accent: #00F5A0; --bg: #020617; --glass: rgba(15, 23, 42, 0.7); }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        body { background: var(--bg); color: white; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        body { background: var(--bg); color: white; padding: 40px; display: flex; flex-direction: column; align-items: center; }
 
-        .profil-container {
-            background: var(--card); backdrop-filter: blur(20px);
-            padding: 40px; border-radius: 40px; width: 100%; max-width: 600px;
-            border: 1px solid rgba(255, 255, 255, 0.05); box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
-            animation: slideIn 0.6s ease-out; text-align: center;
+        .profile-header { text-align: center; margin-bottom: 50px; width: 100%; max-width: 600px; }
+        
+        /* CARTE HOLOGRAPHIQUE */
+        .id-card {
+            width: 100%; max-width: 450px; background: linear-gradient(135deg, #1e293b 0%, #020617 100%);
+            padding: 40px; border-radius: 30px; border: 1px solid rgba(0, 194, 255, 0.3);
+            position: relative; overflow: hidden; box-shadow: 0 25px 50px rgba(0,0,0,0.5);
         }
-        @keyframes slideIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        .id-card::before { content: ""; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(0,194,255,0.1) 0%, transparent 70%); animation: rotate 10s linear infinite; }
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-        /* LOGO BOX */
-        .logo-box { display: flex; align-items: center; justify-content: center; margin-bottom: 30px; }
-        .logo-text { font-weight: 800; font-size: 24px; color: var(--primary); margin-left: 10px; letter-spacing: -1px; }
+        .avatar-circle { width: 100px; height: 100px; background: #0f172a; border: 3px solid var(--primary); border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-size: 40px; font-weight: 900; position: relative; z-index: 2; }
+        
+        .id-details { position: relative; z-index: 2; text-align: center; }
+        .id-details h2 { font-size: 24px; font-weight: 900; letter-spacing: -1px; margin-bottom: 5px; }
+        .id-details p { color: #475569; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; }
 
-        /* GESTION AVATAR */
-        .avatar-section { text-align: center; margin-bottom: 40px; position: relative; }
-        .avatar-preview {
-            width: 110px; height: 110px; border-radius: 50%;
-            border: 3px solid var(--primary); margin: 0 auto 15px;
-            background: url('https://ui-avatars.com') center/cover;
-            box-shadow: 0 0 30px rgba(0, 194, 255, 0.2);
-        }
-        .btn-upload { font-size: 11px; color: var(--primary); cursor: pointer; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+        .partner-badge { background: var(--primary); color: black; padding: 5px 15px; border-radius: 50px; font-size: 10px; font-weight: 900; display: inline-block; margin-top: 15px; }
 
-        .grid-form { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; text-align: left; }
-        .full-width { grid-column: span 2; }
+        /* FORMULAIRE DE MISE À JOUR */
+        .settings-box { width: 100%; max-width: 450px; margin-top: 40px; background: var(--glass); padding: 30px; border-radius: 25px; border: 1px solid rgba(255,255,255,0.05); }
+        .input-group { margin-bottom: 20px; }
+        label { display: block; font-size: 10px; font-weight: 800; color: #475569; text-transform: uppercase; margin-bottom: 8px; margin-left: 10px; }
+        input { width: 100%; padding: 15px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; color: white; outline: none; }
+        
+        .btn-update { width: 100%; padding: 15px; background: none; border: 1px solid var(--primary); color: var(--primary); border-radius: 12px; font-weight: 800; cursor: pointer; transition: 0.3s; margin-top: 10px; }
+        .btn-update:hover { background: var(--primary); color: black; box-shadow: 0 0 20px var(--primary); }
 
-        label { display: block; font-size: 11px; font-weight: 700; color: #555; text-transform: uppercase; margin-left: 15px; margin-bottom: 8px; }
-        input {
-            width: 100%; padding: 15px 20px; background: rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 15px;
-            color: white; outline: none; transition: 0.3s;
-        }
-        input:focus { border-color: var(--primary); background: rgba(0, 194, 255, 0.05); }
-
-        .btn-update {
-            grid-column: span 2; padding: 18px; margin-top: 20px; border: none; border-radius: 15px;
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
-            color: white; font-weight: 800; cursor: pointer; transition: 0.4s;
-        }
-        .btn-update:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(112, 0, 255, 0.4); }
-
-        .back-link { display: block; text-align: center; margin-top: 25px; color: #444; text-decoration: none; font-size: 12px; font-weight: 600; }
-        .back-link:hover { color: var(--primary); }
+        .back-link { margin-top: 30px; color: #475569; text-decoration: none; font-size: 12px; font-weight: 600; }
     </style>
 </head>
 <body>
 
-    <div class="profil-container">
-        <!-- LOGO AERIO SVG ANIMÉ -->
-        <div class="logo-box">
-            <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org">
-                <circle cx="50" cy="50" r="48" stroke="#00C2FF" stroke-width="4" stroke-dasharray="10 5"/>
-                <path d="M50 25L25 75H35L50 45L65 75H75L50 25Z" fill="#00C2FF"/>
-                <path d="M40 60H60" stroke="#7000FF" stroke-width="5" stroke-linecap="round"/>
-                <circle cx="50" cy="85" r="5" fill="#00F5A0">
-                    <animate attributeName="opacity" values="1;0.2;1" dur="2s" repeatCount="indefinite" />
-                </circle>
-            </svg>
-            <span class="logo-text">AERIO</span>
-        </div>
-
-        <div class="avatar-section">
-            <div class="avatar-preview" id="avatar-img"></div>
-            <label class="btn-upload">
-                📷 Modifier le Logo / Photo
-                <input type="file" style="display: none;" onchange="previewFile()">
-            </label>
-        </div>
-
-        <form class="grid-form" action="/api/update-profile" method="POST">
-            <div class="full-width">
-                <label>Nom de l'entreprise / Partenaire</label>
-                <input type="text" name="name" placeholder="Votre nom" required>
-            </div>
-
-            <div>
-                <label>Email</label>
-                <input type="email" name="email" placeholder="votre@email.com" required>
-            </div>
-
-            <div>
-                <label>ID Partenaire (Fixe)</label>
-                <input type="text" value="AE-XXXX" disabled style="color: #444; cursor: not-allowed;">
-            </div>
-
-            <div class="full-width">
-                <label>Changer le mot de passe</label>
-                <input type="password" name="password" placeholder="Laissez vide pour conserver l'actuel">
-            </div>
-
-            <button type="submit" class="btn-update">ENREGISTRER LES MODIFICATIONS</button>
-        </form>
-
-        <a href="/dashboard" class="back-link">← Retour au Dashboard</a>
+    <div class="profile-header">
+        <h1 style="font-size: 28px; font-weight: 900;">Profil <span style="color:var(--primary)">Élite</span></h1>
+        <p style="color: #475569;">Gérez vos identifiants réseau et vos clés d'accès.</p>
     </div>
 
+    <div class="id-card">
+        <div class="avatar-circle" id="initials">A</div>
+        <div class="id-details">
+            <h2 id="display-name">Chargement...</h2>
+            <p id="display-email">votre@email.com</p>
+            <div class="partner-badge" id="display-id">ID: AE-XXXX</div>
+        </div>
+    </div>
+
+    <div class="settings-box">
+        <div class="input-group">
+            <label>Nom de l'Espace WiFi</label>
+            <input type="text" id="edit-name" placeholder="Nouveau nom">
+        </div>
+        <div class="input-group">
+            <label>Nouveau mot de passe</label>
+            <input type="password" id="edit-pass" placeholder="••••••••">
+        </div>
+        <button class="btn-update" onclick="alert('Protocole : Mise à jour sécurisée désactivée en mode Démo.')">METTRE À JOUR</button>
+    </div>
+
+    <a href="/dashboard" class="back-link">← RETOUR AU QG ALPHA</a>
+
     <script>
-        function previewFile() {
-            const preview = document.getElementById('avatar-img');
-            const file = document.querySelector('input[type=file]').files[0];
-            const reader = new FileReader();
-            reader.addEventListener("load", function () {
-                preview.style.backgroundImage = `url(${reader.result})`;
-            }, false);
-            if (file) { reader.readAsDataURL(file); }
+        async function loadProfile() {
+            // Dans une vraie app, on créerait une route /api/me
+            // Ici on simule pour l'ID AE-0001
+            const res = await fetch('/api/my-stats');
+            const data = await res.json();
+            
+            // Simulation des infos (en attendant de créer l'API de profil)
+            document.getElementById('display-name').innerText = "PARTENAIRE ALPHA";
+            document.getElementById('display-email').innerText = "admin@aerio.com";
+            document.getElementById('display-id').innerText = "ID: AE-0001";
+            document.getElementById('initials').innerText = "P";
         }
+        window.onload = loadProfile;
     </script>
 </body>
 </html>
