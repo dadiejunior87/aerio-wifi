@@ -4,24 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AERIO | Manuel d'Activation Alpha</title>
+    <!-- LIEN POPPINS RÉPARÉ -->
     <link href="https://fonts.googleapis.com" rel="stylesheet">
     <style>
         :root { --primary: #00C2FF; --secondary: #7000FF; --bg: #020617; --glass: rgba(15, 23, 42, 0.7); }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         body { background: var(--bg); color: white; line-height: 1.6; padding: 50px 8%; }
 
-        .header-guide { text-align: center; margin-bottom: 60px; }
+        .header-guide { text-align: center; margin-bottom: 60px; position: relative; }
+        
+        .back-btn-top { position: absolute; top: -30px; left: 0; color: #475569; text-decoration: none; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; border: 1px solid rgba(255,255,255,0.05); padding: 10px 20px; border-radius: 50px; transition: 0.3s; }
+        .back-btn-top:hover { color: var(--primary); border-color: var(--primary); background: rgba(0, 194, 255, 0.05); }
+
         .logo-box { display: flex; align-items: center; justify-content: center; margin-bottom: 20px; }
         .logo-text { font-weight: 900; font-size: 28px; color: var(--primary); margin-left: 15px; }
 
         .step-card {
             background: var(--glass); backdrop-filter: blur(20px); border-radius: 30px;
             padding: 40px; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 30px;
-            position: relative; overflow: hidden;
+            position: relative; overflow: hidden; transition: 0.3s;
         }
+        .step-card:hover { border-color: var(--primary); }
+
         .step-number { 
             position: absolute; top: -10px; right: 20px; font-size: 100px; 
-            font-weight: 900; color: rgba(255,255,255,0.02); z-index: -1; 
+            font-weight: 900; color: rgba(255,255,255,0.03); z-index: -1; 
         }
 
         h2 { color: var(--primary); font-size: 20px; margin-bottom: 20px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
@@ -36,59 +43,58 @@
         .btn-download {
             display: inline-block; padding: 15px 30px; background: var(--primary);
             color: #000; text-decoration: none; border-radius: 12px; font-weight: 900;
-            margin-top: 20px; transition: 0.3s;
+            margin-top: 20px; transition: 0.3s; border: none; cursor: pointer;
         }
-        .btn-download:hover { transform: scale(1.05); box-shadow: 0 0 20px var(--primary); }
+        .btn-download:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(0, 194, 255, 0.3); }
 
-        .footer-guide { text-align: center; margin-top: 50px; color: #475569; font-size: 12px; }
+        .footer-guide { text-align: center; margin-top: 80px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 30px; color: #475569; font-size: 11px; }
     </style>
 </head>
 <body>
 
     <div class="header-guide">
+        <a href="/dashboard" class="back-btn-top">← Retour Dashboard</a>
         <div class="logo-box">
             <svg width="45" height="45" viewBox="0 0 100 100" fill="none">
                 <circle cx="50" cy="50" r="48" stroke="#00C2FF" stroke-width="4" stroke-dasharray="10 5"/>
                 <path d="M50 25L25 75H35L50 45L65 75H75L50 25Z" fill="#00C2FF"/>
-                <circle cx="50" cy="85" r="5" fill="#00F5A0"><animate attributeName="opacity" values="1;0.2;1" dur="2s" repeatCount="indefinite" /></circle>
             </svg>
             <span class="logo-text">AERIO</span>
         </div>
-        <h1 style="font-size: 32px; font-weight: 900;">MANUEL D'ACTIVATION ALPHA</h1>
-        <p style="color: #64748b;">Suivez ces protocoles pour lier votre MikroTik au réseau AERIO.</p>
+        <h1 style="font-size: 32px; font-weight: 900; letter-spacing: -1px;">MANUEL D'ACTIVATION <span style="color:var(--primary)">ALPHA</span></h1>
+        <p style="color: #64748b; font-size: 14px;">Protocoles de synchronisation pour les partenaires du Cameroun 🇨🇲 et du Tchad 🇹🇩.</p>
     </div>
 
     <!-- ÉTAPE 1 -->
     <div class="step-card">
         <div class="step-number">01</div>
-        <span class="badge-tech">MIKROTIK API</span>
-        <h2>Ouvrir le flux de données</h2>
-        <p>Connectez-vous à votre routeur via <b>Winbox</b>, ouvrez un <b>New Terminal</b> et collez cette commande :</p>
+        <span class="badge-tech">API MIKROTIK</span>
+        <h2>1. Ouverture du canal de données</h2>
+        <p>Pour qu'AERIO puisse injecter les tickets dans votre routeur, vous devez activer l'API RouterOS.</p>
         <div class="code-block">/ip service set api disabled=no port=8728</div>
-        <p style="font-size: 13px; color: #64748b;">Ceci permet à AERIO de créer automatiquement vos tickets de connexion.</p>
+        <p style="font-size: 12px; color: #475569;">Vérifiez que votre pare-feu autorise les connexions sur le port 8728.</p>
     </div>
 
     <!-- ÉTAPE 2 -->
     <div class="step-card">
         <div class="step-number">02</div>
-        <span class="badge-tech">HOTSPOT FOLDER</span>
-        <h2>Installer l'interface Élite</h2>
-        <p>Téléchargez le pack de fichiers <b>AERIO-HOTSPOT</b> et glissez-le dans le dossier <b>flash/hotspot</b> de votre routeur.</p>
-        <a href="#" class="btn-download">📥 Télécharger le Pack (.ZIP)</a>
+        <span class="badge-tech">HOTSPOT INTERFACE</span>
+        <h2>2. Déploiement de l'Interface Client</h2>
+        <p>L'interface Élite permet à vos clients de payer directement par Mobile Money.</p>
+        <button class="btn-download" onclick="alert('Protocole Alpha : Le pack de fichiers sera disponible après la validation finale de votre licence.')">📥 TÉLÉCHARGER LE PACK HOTSPOT (.ZIP)</button>
     </div>
 
     <!-- ÉTAPE 3 -->
     <div class="step-card">
         <div class="step-number">03</div>
         <span class="badge-tech">PARTNER SYNC</span>
-        <h2>Lier votre ID Partenaire</h2>
-        <p>Dans votre dashboard AERIO, récupérez votre <b>ID Partenaire</b> (ex: AE-5821) et insérez-le dans les réglages du routeur.</p>
-        <div class="code-block">ID_PARTNER = "VOTRE_ID_ICI"</div>
+        <h2>3. Liaison du Noyau Alpha</h2>
+        <p>Remplacez la variable d'ID dans le fichier de config par votre identifiant unique AERIO.</p>
+        <div class="code-block">const PARTNER_ID = "AE-0001"; // Votre ID unique</div>
     </div>
 
     <div class="footer-guide">
-        <p>© 2026 AERIO NETWORK AFRICA - Système Sécurisé</p>
-        <a href="/dashboard" style="color: var(--primary); text-decoration: none; font-weight: 800; margin-top: 20px; display: block;">RETOUR AU DASHBOARD</a>
+        <p>© 2026 AERIO NETWORK AFRICA - PROTOCOLE ALPHA V.3 SÉCURISÉ</p>
     </div>
 
 </body>
