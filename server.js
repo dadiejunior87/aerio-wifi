@@ -5,16 +5,12 @@ const fs = require("fs");
 const path = require("path");
 const axios = require("axios");
 const session = require("express-session");
-const nodemailer = require("nodemailer"); 
-const twilio = require("twilio"); 
 const app = express();
 
 // --- CONFIGURATION ÉLITE ---
 const PORT = process.env.PORT || 10000;
-const ADMIN_PHONE = "237691285152"; 
 const TICKETS_FILE = path.join(__dirname, "tickets.json");
 const PARTNERS_FILE = path.join(__dirname, "partners.json");
-const MONEROO_KEY = process.env.MONEROO_SECRET || "CLE_TEST_MONEROO";
 
 // --- SÉCURITÉ BASTION ---
 app.use(helmet({ contentSecurityPolicy: false })); 
@@ -44,41 +40,16 @@ function checkAuth(req, res, next) {
     else res.redirect("/connexion");
 }
 
-// ✅ [PRO] ROUTE TOP 3 ALPHA - VERROUILLÉE AU QG (AE-0001) [1.2]
+// ✅ [PRO] ROUTE TOP 3 ALPHA - VERROUILLÉE AU QG (AE-0001)
 app.get("/api/top-performers", checkAuth, (req, res) => {
-    // 🛡️ SÉCURITÉ ADMIN : Seul le compte Maître peut voir ces données stratégiques
-    if (req.session.partnerID !== "AE-0001") {
-        return res.status(403).json({ error: "Accès réservé au QG Alpha" });
-    }
-
+    if (req.session.partnerID !== "AE-0001") return res.status(403).json({ error: "Accès refusé" });
     try {
         const tickets = JSON.parse(fs.readFileSync(TICKETS_FILE));
         const salesByPartner = {};
-
-        tickets.forEach(t => {
-            salesByPartner[t.partnerID] = (salesByPartner[t.partnerID] || 0) + t.amount;
-        });
-
-        const top3 = Object.entries(salesByPartner)
-            .map(([id, total]) => ({ id, total }))
-            .sort((a, b) => b.total - a.total)
-            .slice(0, 3);
-
+        tickets.forEach(t => { salesByPartner[t.partnerID] = (salesByPartner[t.partnerID] || 0) + t.amount; });
+        const top3 = Object.entries(salesByPartner).map(([id, total]) => ({ id, total })).sort((a, b) => b.total - a.total).slice(0, 3);
         res.json(top3);
     } catch (e) { res.json([]); }
-});
-
-// ✅ AJOUTER UN TARIF (POUR LE PARTENAIRE)
-app.post("/api/add-tarif", checkAuth, (req, res) => {
-    const { name, price, duration } = req.body;
-    let partners = JSON.parse(fs.readFileSync(PARTNERS_FILE));
-    const idx = partners.findIndex(p => p.partnerID === req.session.partnerID);
-    if (idx !== -1) {
-        if (!partners[idx].tarifs) partners[idx].tarifs = [];
-        partners[idx].tarifs.push({ id: "TRF-" + Date.now(), name, price, duration, active: true });
-        fs.writeFileSync(PARTNERS_FILE, JSON.stringify(partners, null, 2));
-        res.json({ success: true });
-    } else { res.status(404).json({ error: "Non trouvé" }); }
 });
 
 // ✅ RÉCUPÉRER LES TARIFS POUR LA BOUTIQUE
@@ -90,50 +61,20 @@ app.get("/api/get-shop-tarifs/:partnerID", (req, res) => {
     else res.json([{ name: "Pass Flash", price: 100, duration: "1H" }]);
 });
 
-// ✅ SIMULATION DE VENTE
-app.post("/api/simulate-sale", checkAuth, (req, res) => {
-    let tickets = JSON.parse(fs.readFileSync(TICKETS_FILE));
-    const fakeTicket = {
-        code: "SIM-" + Math.random().toString(36).substring(2, 7).toUpperCase(),
-        amount: 500,
-        partnerID: req.session.partnerID,
-        date: new Date(),
-        status: "SUCCESS"
-    };
-    tickets.push(fakeTicket);
-    fs.writeFileSync(TICKETS_FILE, JSON.stringify(tickets, null, 2));
-    res.json({ success: true, ticket: fakeTicket });
-});
-
-// ✅ WEBHOOK MONEROO
-app.post("/api/moneroo-webhook", async (req, res) => {
-    const { status, metadata, amount } = req.body.data;
-    if (status === "completed") {
-        const { partnerID, type, router_id } = metadata;
-        if (type === "LICENSE_ACTIVATION") {
-            let partners = JSON.parse(fs.readFileSync(PARTNERS_FILE));
-            const idx = partners.findIndex(p => p.partnerID === partnerID);
-            if (idx !== -1) {
-                partners[idx].licence = "ACTIVE";
-                fs.writeFileSync(PARTNERS_FILE, JSON.stringify(partners, null, 2));
-            }
-        } else {
-            const wifiCode = "AE-" + Math.random().toString(36).substring(2, 8).toUpperCase();
-            let tickets = JSON.parse(fs.readFileSync(TICKETS_FILE));
-            tickets.push({ code: wifiCode, amount, partnerID: router_id || partnerID, date: new Date(), status: "SUCCESS" });
-            fs.writeFileSync(TICKETS_FILE, JSON.stringify(tickets, null, 2));
-        }
-        res.status(200).send("OK");
-    }
-});
-
-// ✅ ROUTES PAGES & AUTH
+// ✅ ROUTES PAGES - RÉORGANISATION ALPHA [1.1, 1.2]
+// 1. Vitrine de Luxe (L'Accueil du site)
 app.get("/", (req, res) => res.sendFile(path.join(__dirname, "public", "index.html")));
+
+// 2. Portail de Vente (La page bleue de 100F pour les clients via QR Code)
+app.get("/boutique", (req, res) => res.sendFile(path.join(__dirname, "public", "boutique.html")));
+
+// 3. Espace Partenaire
 app.get("/dashboard", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "dashboard.html")));
 app.get("/wifi-zone", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "wifi-zone.html")));
 app.get("/tarifs", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "tarifs.html")));
 app.get("/connexion", (req, res) => res.sendFile(path.join(__dirname, "public", "login-partenaire.html")));
 
+// ✅ API AUTH
 app.post("/api/login-partenaire", (req, res) => {
     const { email, password } = req.body;
     if (email === "admin@aerio.com" && password === "admin123") {
@@ -153,4 +94,4 @@ app.get("/api/my-stats", checkAuth, (req, res) => {
 
 app.get("/logout", (req, res) => { req.session.destroy(); res.redirect("/"); });
 
-app.listen(PORT, '0.0.0.0', () => console.log(`🚀 BASTION ALPHA LIVE SUR PORT ${PORT}`));
+app.listen(PORT, '0.0.0.0', () => console.log(`🚀 EMPIRE AERIO ALPHA LIVE SUR PORT ${PORT}`));
