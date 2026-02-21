@@ -33,17 +33,6 @@ function checkAuth(req, res, next) {
     else res.redirect("/connexion");
 }
 
-// --- CHATBOT ALPHA ---
-app.post("/api/chatbot", (req, res) => {
-    const msg = req.body.message.toLowerCase();
-    let response = "Requête non reconnue par le noyau. Tapez 'AIDE' pour les protocoles.";
-    if (msg.includes("ticket") || msg.includes("perdu")) response = "Protocole de récupération 🎟️ : Allez sur la page RECOVER et saisissez votre numéro de paiement.";
-    else if (msg.includes("argent") || msg.includes("gain")) response = "Trésorerie 💰 : Le partenaire perçoit 85% net. Commission réseau 15%. Retrait via l'onglet COMPTA.";
-    else if (msg.includes("mikrotik")) response = "Activation ⚙️ : Consultez le GUIDE technique pour lier votre routeur en 3 étapes API.";
-    else if (msg.includes("aide") || msg.includes("bonjour")) response = "Système Alpha actif 🤖. Je peux vous aider sur : TICKETS, GAINS, MIKROTIK ou RETRAITS.";
-    res.json({ reply: response });
-});
-
 // --- ROUTES AUTHENTIFICATION ---
 app.post("/api/login-partenaire", (req, res) => {
     const { email, password } = req.body;
@@ -71,6 +60,56 @@ app.post("/api/register-account", (req, res) => {
     res.redirect("/success-init");
 });
 
+// --- SYSTÈME DE RETRAIT AUTOMATIQUE (PAYOUT) ---
+app.post("/api/request-payout", checkAuth, async (req, res) => {
+    const { amount, phone, network, country } = req.body;
+    const tickets = JSON.parse(fs.readFileSync(TICKETS_FILE));
+    
+    const mySales = tickets.filter(t => t.partnerID === req.session.partnerID);
+    const totalGains = mySales.reduce((sum, t) => sum + (t.amount * 0.85), 0);
+    
+    if (amount > totalGains) {
+        return res.json({ success: false, message: "SOLDE INSUFFISANT : Extraction hors limites." });
+    }
+
+    try {
+        await axios.post('https://api.moneroo.io', {
+            amount: parseInt(amount),
+            currency: (country === 'CM' || country === 'TD' || country === 'GA') ? 'XAF' : 'XOF',
+            method: network,
+            address: phone,
+            description: `Retrait AERIO - ID ${req.session.partnerID}`
+        }, { headers: { 'Authorization': `Bearer ${process.env.MONEROO_API_KEY}` } });
+
+        tickets.push({
+            code: "WITHDRAW-" + Math.random().toString(36).substring(2, 7).toUpperCase(),
+            amount: -Math.abs(amount / 0.85),
+            partnerID: req.session.partnerID,
+            date: new Date(),
+            status: "PAID_OUT"
+        });
+        fs.writeFileSync(TICKETS_FILE, JSON.stringify(tickets, null, 2));
+        res.json({ success: true, message: "TRANSFERT INJECTÉ : Vérifiez votre mobile." });
+    } catch (e) { res.status(500).json({ success: false, message: "ERREUR BANCAIRE : Échec de la liaison." }); }
+});
+
+// --- ROUTES ADMIN ALPHA (TON QG PRIVÉ) ---
+app.get("/admin-alpha", (req, res) => {
+    if (req.session.partnerID === "AE-0001") {
+        res.sendFile(path.join(__dirname, "public", "admin-alpha.html"));
+    } else {
+        res.send("ACCÈS REFUSÉ : Privilèges insuffisants.");
+    }
+});
+
+app.get("/api/admin-global-stats", (req, res) => {
+    if (req.session.partnerID !== "AE-0001") return res.status(403).json({error: "Interdit"});
+    const partners = JSON.parse(fs.readFileSync(PARTNERS_FILE));
+    const tickets = JSON.parse(fs.readFileSync(TICKETS_FILE));
+    const totalBrut = tickets.reduce((sum, t) => sum + t.amount, 0);
+    res.json({ partners, totalBrut });
+});
+
 // --- ROUTES API BOUTIQUE & STATS ---
 app.get("/api/get-rates", (req, res) => {
     const { id } = req.query;
@@ -82,13 +121,6 @@ app.get("/api/get-rates", (req, res) => {
 app.get("/api/my-stats", checkAuth, (req, res) => {
     const tickets = JSON.parse(fs.readFileSync(TICKETS_FILE));
     res.json(tickets.filter(t => t.partnerID === req.session.partnerID));
-});
-
-app.post("/api/simulate-sale", checkAuth, (req, res) => {
-    let tickets = JSON.parse(fs.readFileSync(TICKETS_FILE));
-    tickets.push({ code: "SIM-" + Math.random().toString(36).substring(2, 7).toUpperCase(), amount: 500, customer_phone: "SIMULATEUR", partnerID: req.session.partnerID, date: new Date(), status: "SUCCESS" });
-    fs.writeFileSync(TICKETS_FILE, JSON.stringify(tickets, null, 2));
-    res.json({ success: true });
 });
 
 app.post("/api/pay", async (req, res) => {
@@ -106,13 +138,8 @@ app.post("/api/pay", async (req, res) => {
 app.get("/", (req, res) => res.sendFile(path.join(__dirname, "public", "index.html")));
 app.get("/connexion", (req, res) => res.sendFile(path.join(__dirname, "public", "login-partenaire.html")));
 app.get("/inscription", (req, res) => res.sendFile(path.join(__dirname, "public", "register-partenaire.html")));
-app.get("/success-init", (req, res) => res.sendFile(path.join(__dirname, "public", "success-animation.html")));
 app.get("/dashboard", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "dashboard.html")));
-app.get("/recover", (req, res) => res.sendFile(path.join(__dirname, "public", "recover.html")));
-app.get("/guide", (req, res) => res.sendFile(path.join(__dirname, "public", "guide.html")));
-app.get("/faq", (req, res) => res.sendFile(path.join(__dirname, "public", "faq.html")));
-app.get("/contrat", (req, res) => res.sendFile(path.join(__dirname, "public", "contrat.html")));
 app.get("/compta", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "compta.html")));
 app.get("/logout", (req, res) => { req.session.destroy(); res.redirect("/"); });
 
-app.listen(PORT, () => console.log(`🚀 AERIO ALPHA V3 OPÉRATIONNEL SUR PORT ${PORT}`));
+app.listen(PORT, () => console.log(`🚀 AERIO ALPHA V3 LIVE SUR PORT ${PORT}`));
