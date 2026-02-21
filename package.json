@@ -11,6 +11,8 @@
     "mikronode-ng": "^1.0.1",
     "express-session": "^1.17.3",
     "nodemailer": "^6.9.7",
-    "node-cron": "^3.0.3"
+    "node-cron": "^3.0.3",
+    "helmet": "^7.1.0",
+    "express-rate-limit": "^7.1.5"
   }
 }
