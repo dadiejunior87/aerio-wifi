@@ -9,6 +9,8 @@
     "express": "^4.18.2",
     "axios": "^1.6.0",
     "mikronode-ng": "^1.0.1",
-    "express-session": "^1.17.3"
+    "express-session": "^1.17.3",
+    "nodemailer": "^6.9.7",
+    "node-cron": "^3.0.3"
   }
 }
