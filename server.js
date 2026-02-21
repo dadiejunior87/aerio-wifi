@@ -43,18 +43,6 @@ function checkAuth(req, res, next) {
 // ✅ APIS DE GESTION (LE CŒUR DU SYSTÈME)
 // ==========================================
 
-// 1. Statistiques Globales
-app.get("/api/global-stats", (req, res) => {
-    try {
-        const tickets = JSON.parse(fs.readFileSync(TICKETS_FILE));
-        const partners = JSON.parse(fs.readFileSync(PARTNERS_FILE));
-        let total = 0;
-        tickets.forEach(t => total += (t.amount || 0));
-        res.json({ total: total, nodeCount: partners.length });
-    } catch (e) { res.json({ total: 0, nodeCount: 0 }); }
-});
-
-// 2. Profil Partenaire (Résout le problème d'affichage du profil)
 app.get("/api/my-profile", checkAuth, (req, res) => {
     const partners = JSON.parse(fs.readFileSync(PARTNERS_FILE));
     const partner = partners.find(p => p.partnerID === req.session.partnerID);
@@ -62,19 +50,24 @@ app.get("/api/my-profile", checkAuth, (req, res) => {
     else res.status(404).send("Profil introuvable");
 });
 
-// 3. Stats Personnelles (Brut vs Net)
+// ✅ STATISTIQUES ÉPURÉES (UNIQUEMENT LE GAIN RÉEL 85%) [1.2, 1.3]
 app.get("/api/my-stats", checkAuth, (req, res) => {
     const tickets = JSON.parse(fs.readFileSync(TICKETS_FILE));
     const myTickets = tickets.filter(t => t.partnerID === req.session.partnerID);
-    let brut = 0;
-    myTickets.forEach(t => brut += (t.amount || 0));
+    
+    // On calcule uniquement ce que le partenaire perçoit réellement
+    let gainTotal = 0;
+    myTickets.forEach(t => gainTotal += (t.amount * 0.85));
+
     res.json({
         tickets: myTickets.sort((a,b) => new Date(b.date) - new Date(a.date)),
-        summary: { brut: brut, net: brut * 0.85, count: myTickets.length }
+        summary: { 
+            gain: Math.floor(gainTotal), // Montant net affiché
+            count: myTickets.length 
+        }
     });
 });
 
-// 4. Inscription & Authentification
 app.post("/api/inscription-partenaire", (req, res) => {
     const { name, email, password } = req.body;
     let partners = JSON.parse(fs.readFileSync(PARTNERS_FILE));
@@ -102,34 +95,21 @@ app.post("/api/login-partenaire", (req, res) => {
 });
 
 // ==========================================
-// ✅ ROUTES DES PAGES (OUVERTURE DES CANAUX) [1.1]
+// ✅ ROUTES DES PAGES
 // ==========================================
 
-// --- PUBLIC ---
 app.get("/", (req, res) => res.sendFile(path.join(__dirname, "public", "index.html")));
-app.get("/boutique", (req, res) => res.sendFile(path.join(__dirname, "public", "boutique.html")));
-app.get("/connexion", (req, res) => res.sendFile(path.join(__dirname, "public", "login-partenaire.html")));
-app.get("/inscription", (req, res) => res.sendFile(path.join(__dirname, "public", "inscription.html")));
-
-// --- PRIVÉ (DASHBOARD & GESTION) ---
 app.get("/dashboard", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "dashboard.html")));
 app.get("/profil", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "profil.html")));
 app.get("/compta", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "compta.html")));
-app.get("/parrainage", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "parrainage.html")));
-app.get("/guide", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "guide.html")));
-app.get("/affiche", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "affiche.html")));
-
-// --- 📡 SECTION WIFI ZONE RÉPARÉE ---
 app.get("/wifi-zone", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "wifi-zone.html")));
-app.get("/liste-wifi", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "liste-wifi.html"))); // ✅ CELLE-CI MANQUAIT
-
-// --- 🎟️ SECTION TICKETS ---
+app.get("/liste-wifi", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "liste-wifi.html")));
 app.get("/tickets", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "tickets.html")));
 app.get("/tickets/ajouter", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "ajouter-ticket.html")));
-app.get("/tickets/stats", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "stats-tickets.html")));
 app.get("/tarifs", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "tarifs.html")));
+app.get("/connexion", (req, res) => res.sendFile(path.join(__dirname, "public", "login-partenaire.html")));
+app.get("/inscription", (req, res) => res.sendFile(path.join(__dirname, "public", "inscription.html")));
 
-// --- SORTIE ---
 app.get("/logout", (req, res) => { req.session.destroy(); res.redirect("/"); });
 
 app.listen(PORT, '0.0.0.0', () => console.log(`🚀 EMPIRE AERIO LIVE SUR PORT ${PORT}`));
