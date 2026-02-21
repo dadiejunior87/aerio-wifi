@@ -44,18 +44,21 @@ function checkAuth(req, res, next) {
     else res.redirect("/connexion");
 }
 
-// ✅ [NOUVEAU] ROUTE TOP 3 ALPHA : ANALYSE DES CHAMPIONS [1.2]
+// ✅ [PRO] ROUTE TOP 3 ALPHA - VERROUILLÉE AU QG (AE-0001) [1.2]
 app.get("/api/top-performers", checkAuth, (req, res) => {
+    // 🛡️ SÉCURITÉ ADMIN : Seul le compte Maître peut voir ces données stratégiques
+    if (req.session.partnerID !== "AE-0001") {
+        return res.status(403).json({ error: "Accès réservé au QG Alpha" });
+    }
+
     try {
         const tickets = JSON.parse(fs.readFileSync(TICKETS_FILE));
         const salesByPartner = {};
 
-        // On cumule les ventes par partenaire
         tickets.forEach(t => {
             salesByPartner[t.partnerID] = (salesByPartner[t.partnerID] || 0) + t.amount;
         });
 
-        // On trie et on prend les 3 meilleurs
         const top3 = Object.entries(salesByPartner)
             .map(([id, total]) => ({ id, total }))
             .sort((a, b) => b.total - a.total)
