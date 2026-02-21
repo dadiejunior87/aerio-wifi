@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>AERIO | Votre Affiche de Vente Pro</title>
+    <!-- GOOGLE FONTS ÉLITE -->
     <link href="https://fonts.googleapis.com" rel="stylesheet">
+    <!-- MOTEUR QR CODE RÉPARÉ -->
     <script src="https://cdnjs.cloudflare.com"></script>
     <style>
         :root { --primary: #00C2FF; --bg: #020617; }
@@ -18,7 +20,6 @@
             box-shadow: 0 20px 50px rgba(0,0,0,0.2); position: relative; overflow: hidden;
         }
 
-        /* DÉCORATIONS ALPHA */
         .poster::before { content: ""; position: absolute; top: -100px; right: -100px; width: 300px; height: 300px; background: radial-gradient(circle, var(--primary) 0%, transparent 70%); opacity: 0.2; }
         
         .logo-area { display: flex; align-items: center; gap: 15px; margin-bottom: 40px; }
@@ -40,7 +41,7 @@
         .price-item { background: rgba(255,255,255,0.05); padding: 20px 40px; border-radius: 20px; border: 1px solid rgba(0, 194, 255, 0.2); }
         .price-item b { display: block; font-size: 32px; color: var(--primary); }
 
-        .footer { position: absolute; bottom: 60px; font-weight: 800; font-size: 18px; color: #475569; }
+        .footer { position: absolute; bottom: 60px; font-weight: 800; font-size: 18px; color: #475569; letter-spacing: 2px; }
 
         @media print {
             body { padding: 0; background: white; }
@@ -51,37 +52,39 @@
 </head>
 <body>
 
-    <button class="no-print" onclick="window.print()" style="margin-bottom: 20px; padding: 15px 30px; background: #00C2FF; border: none; border-radius: 10px; font-weight: 900; cursor: pointer;">🖨️ IMPRIMER L'AFFICHE</button>
+    <button class="no-print" onclick="window.print()" style="margin-bottom: 20px; padding: 15px 30px; background: #00C2FF; border: none; border-radius: 10px; font-weight: 900; cursor: pointer; text-transform: uppercase;">🖨️ IMPRIMER L'AFFICHE ALPHA</button>
 
     <div class="poster">
         <div class="logo-area">
-            <svg width="60" height="60" viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="48" stroke="#00C2FF" stroke-width="6""")/>><path d="M50 25L25 75H35L50 45L65 75H75L50 25Z" fill="#00C2FF""")/>></svg>
+            <svg width="60" height="60" viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="48" stroke="#00C2FF" stroke-width="6"/><path d="M50 25L25 75H35L50 45L65 75H75L50 25Z" fill="#00C2FF"/></svg>
             <span class="logo-text">AERIO</span>
         </div>
 
         <h1>ACCÈS WIFI<br><span>AUTOMATIQUE</span></h1>
-        <p class="instruction">Scannez le QR Code ci-dessous pour acheter votre ticket par Mobile Money.</p>
+        <p class="instruction">Scannez le QR Code pour payer par Mobile Money et obtenir votre code instantanément.</p>
 
         <div class="qr-frame" id="qrcode"></div>
 
         <div class="price-list">
-            <div class="price-item">100 F<b>1 HEURE</b></div>
-            <div class="price-item">500 F<b>24 HEURES</b></div>
+            <div class="price-item">100 F<b>FLASH</b></div>
+            <div class="price-item">500 F<b>MAXI</b></div>
         </div>
 
-        <div class="footer">PROPULSÉ PAR LE RÉSEAU ALPHA 🛰️</div>
+        <div class="footer">INFRASTRUCTURE RÉSEAU ALPHA 🛰️</div>
     </div>
 
     <script>
-        // Génération du QR Code lié à l'ID du partenaire
+        // ✅ REDIRECTION ALPHA VERS LA BOUTIQUE DYNAMIQUE [1.2, 1.5]
         const urlParams = new URLSearchParams(window.location.search);
         const partnerID = urlParams.get('id') || 'AE-0001';
-        const shopURL = window.location.origin + "/?partner=" + partnerID;
+        
+        // On pointe vers /boutique avec le paramètre partner
+        const shopURL = window.location.origin + "/boutique?partner=" + partnerID;
 
         new QRCode(document.getElementById("qrcode"), {
             text: shopURL,
-            width: 300,
-            height: 300,
+            width: 320,
+            height: 320,
             colorDark : "#000000",
             colorLight : "#ffffff",
             correctLevel : QRCode.CorrectLevel.H
