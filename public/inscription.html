@@ -4,65 +4,67 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AERIO | Devenir Partenaire Alpha</title>
+    <!-- ✅ POLICE POPPINS INJECTÉE CORRECTEMENT -->
     <link href="https://fonts.googleapis.com" rel="stylesheet">
     <style>
         :root { --primary: #00C2FF; --secondary: #7000FF; --accent: #00F5A0; --bg: #020617; --glass: rgba(15, 23, 42, 0.7); }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         body { background: var(--bg); height: 100vh; display: flex; justify-content: center; align-items: center; overflow: hidden; }
 
-        .glow-bg { position: absolute; width: 500px; height: 500px; background: radial-gradient(circle, rgba(112, 0, 255, 0.1) 0%, transparent 70%); top: -150px; right: -150px; z-index: -1; filter: blur(100px); animation: pulse 8s infinite alternate; }
+        .glow-bg { position: absolute; width: 600px; height: 600px; background: radial-gradient(circle, rgba(112, 0, 255, 0.1) 0%, transparent 70%); top: -150px; right: -150px; z-index: -1; filter: blur(100px); animation: pulse 8s infinite alternate; }
         @keyframes pulse { from { opacity: 0.5; transform: scale(1); } to { opacity: 1; transform: scale(1.2); } }
 
-        .login-card { background: var(--glass); backdrop-filter: blur(25px); padding: 50px 45px; border-radius: 40px; width: 90%; max-width: 480px; border: 1px solid rgba(255, 255, 255, 0.05); box-shadow: 0 40px 100px rgba(0, 0, 0, 0.8); text-align: center; animation: slideUp 0.6s ease-out; }
+        .login-card { background: var(--glass); backdrop-filter: blur(25px); padding: 50px 45px; border-radius: 40px; width: 90%; max-width: 480px; border: 1px solid rgba(255, 255, 255, 0.05); box-shadow: 0 40px 100px rgba(0, 0, 0, 0.8); text-align: center; animation: slideUp 0.6s ease-out; position: relative; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
         .logo-box { display: flex; align-items: center; justify-content: center; margin-bottom: 25px; }
         .logo-text { font-weight: 900; font-size: 28px; color: var(--primary); margin-left: 12px; letter-spacing: -1px; }
 
-        h2 { font-weight: 900; font-size: 24px; margin-bottom: 8px; color: white; }
-        p.subtitle { color: #475569; font-size: 13px; margin-bottom: 30px; }
+        h2 { font-weight: 900; font-size: 24px; margin-bottom: 8px; color: white; text-transform: uppercase; }
+        p.subtitle { color: #475569; font-size: 13px; margin-bottom: 30px; font-weight: 600; }
 
-        .input-group { margin-bottom: 20px; text-align: left; }
-        label { display: block; font-size: 10px; font-weight: 800; color: var(--primary); text-transform: uppercase; letter-spacing: 2px; margin-left: 20px; margin-bottom: 8px; }
-        input { width: 100%; padding: 16px 25px; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 20px; color: white; font-size: 14px; outline: none; text-align: center; transition: 0.3s; }
-        input:focus { border-color: var(--primary); background: rgba(0, 194, 255, 0.05); }
+        .form-group { margin-bottom: 20px; text-align: left; }
+        label { display: block; font-size: 10px; font-weight: 900; color: var(--primary); text-transform: uppercase; letter-spacing: 2px; margin-left: 20px; margin-bottom: 8px; }
+        input { width: 100%; padding: 16px 25px; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 20px; color: white; font-size: 14px; outline: none; text-align: center; transition: 0.3s; font-weight: 600; }
+        input:focus { border-color: var(--primary); background: rgba(0, 194, 255, 0.05); box-shadow: 0 0 15px rgba(0, 194, 255, 0.1); }
 
-        .btn-connect { width: 100%; padding: 18px; border: none; border-radius: 20px; background: linear-gradient(45deg, var(--primary), var(--secondary)); color: white; font-weight: 900; font-size: 15px; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; transition: 0.4s; margin-top: 15px; }
-        .btn-connect:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(112, 0, 255, 0.4); }
+        .btn-launch { width: 100%; padding: 20px; border: none; border-radius: 20px; background: linear-gradient(45deg, var(--primary), var(--secondary)); color: white; font-weight: 900; font-size: 15px; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; transition: 0.4s; margin-top: 15px; box-shadow: 0 10px 30px rgba(0, 194, 255, 0.2); }
+        .btn-launch:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(112, 0, 255, 0.4); filter: brightness(1.1); }
 
-        .footer-links { margin-top: 25px; font-size: 12px; color: #475569; }
-        .footer-links a { color: var(--primary); text-decoration: none; font-weight: 700; }
+        .footer-links { margin-top: 30px; font-size: 12px; color: #475569; font-weight: 700; }
+        .footer-links a { color: var(--primary); text-decoration: none; border-bottom: 1px dashed var(--primary); transition: 0.3s; }
+        .footer-links a:hover { color: white; border-color: white; }
     </style>
 </head>
 <body>
     <div class="glow-bg"></div>
     <div class="login-card">
         <div class="logo-box">
-            <svg width="40" height="40" viewBox="0 0 100 100"><circle cx="50" cy="50" r="48" stroke="#00C2FF" stroke-width="4""")/>><path d="M50 25L25 75H35L50 45L65 75H75L50 25Z" fill="#00C2FF""")/>></svg>
+            <svg width="40" height="40" viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="48" stroke="#00C2FF" stroke-width="6""")/>><path d="M50 25L25 75H35L50 45L65 75H75L50 25Z" fill="#00C2FF""")/>></svg>
             <span class="logo-text">AERIO</span>
         </div>
 
         <h2>REJOINDRE L'EMPIRE</h2>
-        <p class="subtitle">Créez votre nœud WiFi Alpha en 30 secondes</p>
+        <p class="subtitle">Activez votre infrastructure WiFi Alpha maintenant</p>
         
         <form action="/api/inscription-partenaire" method="POST">
-            <div class="input-group">
-                <label>Nom Complet</label>
+            <div class="form-group">
+                <label>Nom Complet de l'Agent</label>
                 <input type="text" name="name" placeholder="Ex: Dadie Junior" required>
             </div>
-            <div class="input-group">
-                <label>Identifiant Email</label>
+            <div class="form-group">
+                <label>Identifiant de Liaison (Email)</label>
                 <input type="email" name="email" placeholder="votre@email.com" required>
             </div>
-            <div class="input-group">
-                <label>Clé de sécurité Alpha</label>
+            <div class="form-group">
+                <label>Clé de Sécurité Maître</label>
                 <input type="password" name="password" placeholder="••••••••" required>
             </div>
-            <button type="submit" class="btn-connect">Lancer mon Empire</button>
+            <button type="submit" class="btn-launch">Lancer mon Nœud Réseau</button>
         </form>
 
         <div class="footer-links">
-            <p>Déjà membre du réseau ? <a href="/connexion">Connectez-vous</a></p>
+            <p>Déjà membre du bastion ? <a href="/connexion">Connectez-vous</a></p>
         </div>
     </div>
 </body>
