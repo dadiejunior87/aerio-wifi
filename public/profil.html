@@ -3,86 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AERIO | Profil Partenaire</title>
+    <title>AERIO | Identité Alpha</title>
     <link href="https://fonts.googleapis.com" rel="stylesheet">
     <style>
         :root { --primary: #00C2FF; --accent: #00F5A0; --bg: #020617; --glass: rgba(15, 23, 42, 0.7); }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        body { background: var(--bg); color: white; padding: 40px; display: flex; flex-direction: column; align-items: center; }
+        body { background: var(--bg); color: white; padding: 40px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
 
-        .profile-header { text-align: center; margin-bottom: 50px; width: 100%; max-width: 600px; }
-        
-        /* CARTE HOLOGRAPHIQUE */
+        /* CARTE D'IDENTITÉ NUMÉRIQUE */
         .id-card {
-            width: 100%; max-width: 450px; background: linear-gradient(135deg, #1e293b 0%, #020617 100%);
-            padding: 40px; border-radius: 30px; border: 1px solid rgba(0, 194, 255, 0.3);
-            position: relative; overflow: hidden; box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+            width: 100%; max-width: 480px; background: linear-gradient(135deg, #1e293b 0%, #020617 100%);
+            padding: 40px; border-radius: 40px; border: 1px solid rgba(0, 194, 255, 0.3);
+            position: relative; overflow: hidden; box-shadow: 0 30px 60px rgba(0,0,0,0.6);
+            margin-bottom: 40px;
         }
-        .id-card::before { content: ""; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(0,194,255,0.1) 0%, transparent 70%); animation: rotate 10s linear infinite; }
+        .id-card::before { content: ""; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(0,194,255,0.1) 0%, transparent 70%); animation: rotate 12s linear infinite; }
         @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-        .avatar-circle { width: 100px; height: 100px; background: #0f172a; border: 3px solid var(--primary); border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-size: 40px; font-weight: 900; position: relative; z-index: 2; }
+        .avatar-box { width: 110px; height: 110px; background: #0f172a; border: 4px solid var(--primary); border-radius: 50%; margin: 0 auto 25px; display: flex; align-items: center; justify-content: center; font-size: 45px; font-weight: 900; position: relative; z-index: 2; box-shadow: 0 0 30px rgba(0, 194, 255, 0.3); }
         
         .id-details { position: relative; z-index: 2; text-align: center; }
-        .id-details h2 { font-size: 24px; font-weight: 900; letter-spacing: -1px; margin-bottom: 5px; }
-        .id-details p { color: #475569; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; }
+        .id-details h2 { font-size: 26px; font-weight: 900; letter-spacing: -1px; color: white; }
+        .id-details p { color: #64748b; font-size: 13px; font-weight: 600; margin-top: 5px; }
 
-        .partner-badge { background: var(--primary); color: black; padding: 5px 15px; border-radius: 50px; font-size: 10px; font-weight: 900; display: inline-block; margin-top: 15px; }
+        .status-badge { background: rgba(0, 245, 160, 0.1); color: var(--accent); padding: 6px 18px; border-radius: 50px; font-size: 10px; font-weight: 900; display: inline-block; margin-top: 15px; border: 1px solid var(--accent); }
 
-        /* FORMULAIRE DE MISE À JOUR */
-        .settings-box { width: 100%; max-width: 450px; margin-top: 40px; background: var(--glass); padding: 30px; border-radius: 25px; border: 1px solid rgba(255,255,255,0.05); }
-        .input-group { margin-bottom: 20px; }
-        label { display: block; font-size: 10px; font-weight: 800; color: #475569; text-transform: uppercase; margin-bottom: 8px; margin-left: 10px; }
-        input { width: 100%; padding: 15px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; color: white; outline: none; }
-        
-        .btn-update { width: 100%; padding: 15px; background: none; border: 1px solid var(--primary); color: var(--primary); border-radius: 12px; font-weight: 800; cursor: pointer; transition: 0.3s; margin-top: 10px; }
-        .btn-update:hover { background: var(--primary); color: black; box-shadow: 0 0 20px var(--primary); }
+        /* SECTIONS DE RÉGLAGES */
+        .settings-container { width: 100%; max-width: 480px; display: grid; gap: 20px; }
+        .settings-card { background: var(--glass); padding: 30px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.05); backdrop-filter: blur(20px); }
+        .settings-card h3 { font-size: 11px; font-weight: 800; color: var(--primary); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 20px; }
 
-        .back-link { margin-top: 30px; color: #475569; text-decoration: none; font-size: 12px; font-weight: 600; }
+        .info-row { display: flex; justify-content: space-between; margin-bottom: 15px; font-size: 13px; border-bottom: 1px solid rgba(255,255,255,0.02); padding-bottom: 10px; }
+        .info-row span:first-child { color: #475569; font-weight: 600; }
+        .info-row span:last-child { color: white; font-weight: 800; }
+
+        .btn-action { width: 100%; padding: 15px; background: none; border: 1px solid rgba(255,255,255,0.1); color: white; border-radius: 15px; font-weight: 700; font-size: 12px; cursor: pointer; transition: 0.3s; margin-top: 10px; }
+        .btn-action:hover { border-color: var(--primary); color: var(--primary); background: rgba(0, 194, 255, 0.05); }
+
+        .back-btn { margin-top: 40px; color: #475569; text-decoration: none; font-size: 12px; font-weight: 700; transition: 0.3s; }
+        .back-btn:hover { color: var(--primary); }
     </style>
 </head>
 <body>
 
-    <div class="profile-header">
-        <h1 style="font-size: 28px; font-weight: 900;">Profil <span style="color:var(--primary)">Élite</span></h1>
-        <p style="color: #475569;">Gérez vos identifiants réseau et vos clés d'accès.</p>
-    </div>
-
     <div class="id-card">
-        <div class="avatar-circle" id="initials">A</div>
+        <div class="avatar-box" id="avatar">P</div>
         <div class="id-details">
-            <h2 id="display-name">Chargement...</h2>
-            <p id="display-email">votre@email.com</p>
-            <div class="partner-badge" id="display-id">ID: AE-XXXX</div>
+            <h2 id="p-name">Chargement...</h2>
+            <p id="p-email">---@---.com</p>
+            <div class="status-badge" id="p-id">ID ALPHA : AE-XXXX</div>
         </div>
     </div>
 
-    <div class="settings-box">
-        <div class="input-group">
-            <label>Nom de l'Espace WiFi</label>
-            <input type="text" id="edit-name" placeholder="Nouveau nom">
+    <div class="settings-container">
+        <!-- SECTION INFOS RÉSEAU -->
+        <div class="settings-card">
+            <h3>Infrastructure Réseau</h3>
+            <div class="info-row"><span>Type de Licence</span><span>Alpha Élite 🌍</span></div>
+            <div class="info-row"><span>Statut Serveur</span><span style="color:var(--accent)">Opérationnel</span></div>
+            <div class="info-row"><span>Région</span><span>Afrique Centrale 🇨🇲🇹🇩</span></div>
+            <button class="btn-action" onclick="alert('Protocole de migration désactivé en mode Alpha.')">CHANGER DE RÉGION</button>
         </div>
-        <div class="input-group">
-            <label>Nouveau mot de passe</label>
-            <input type="password" id="edit-pass" placeholder="••••••••">
+
+        <!-- SECTION SÉCURITÉ -->
+        <div class="settings-card">
+            <h3>Sécurité du Noyau</h3>
+            <div class="info-row"><span>Cryptage</span><span>AES-256 Actif</span></div>
+            <div class="info-row"><span>Dernier Login</span><span id="p-date">Aujourd'hui</span></div>
+            <button class="btn-action" style="color:var(--danger); border-color:rgba(255, 75, 75, 0.2);">RÉINITIALISER LE MOT DE PASSE</button>
         </div>
-        <button class="btn-update" onclick="alert('Protocole : Mise à jour sécurisée désactivée en mode Démo.')">METTRE À JOUR</button>
     </div>
 
-    <a href="/dashboard" class="back-link">← RETOUR AU QG ALPHA</a>
+    <a href="/dashboard" class="back-btn">← RETOUR AU QG ALPHA</a>
 
     <script>
         async function loadProfile() {
-            // Dans une vraie app, on créerait une route /api/me
-            // Ici on simule pour l'ID AE-0001
-            const res = await fetch('/api/my-stats');
-            const data = await res.json();
-            
-            // Simulation des infos (en attendant de créer l'API de profil)
-            document.getElementById('display-name').innerText = "PARTENAIRE ALPHA";
-            document.getElementById('display-email').innerText = "admin@aerio.com";
-            document.getElementById('display-id').innerText = "ID: AE-0001";
-            document.getElementById('initials').innerText = "P";
+            try {
+                // On simule les données basées sur la session
+                document.getElementById('p-name').innerText = "PARTENAIRE ALPHA";
+                document.getElementById('p-email').innerText = "admin@aerio.com";
+                document.getElementById('p-id').innerText = "ID ALPHA : AE-0001";
+                document.getElementById('avatar').innerText = "A";
+                document.getElementById('p-date').innerText = new Date().toLocaleDateString();
+            } catch(e) { console.error("Erreur de liaison Alpha."); }
         }
         window.onload = loadProfile;
     </script>
