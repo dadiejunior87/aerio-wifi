@@ -7,7 +7,7 @@
     <!-- LIEN POPPINS RÉPARÉ -->
     <link href="https://fonts.googleapis.com" rel="stylesheet">
     <style>
-        :root { --primary: #00C2FF; --secondary: #7000FF; --bg: #020617; --glass: rgba(15, 23, 42, 0.7); }
+        :root { --primary: #00C2FF; --secondary: #7000FF; --bg: #020617; --glass: rgba(15, 23, 42, 0.7); --accent: #00F5A0; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         body { background: var(--bg); color: white; line-height: 1.6; padding: 50px 8%; }
 
@@ -56,8 +56,8 @@
         <a href="/dashboard" class="back-btn-top">← Retour Dashboard</a>
         <div class="logo-box">
             <svg width="45" height="45" viewBox="0 0 100 100" fill="none">
-                <circle cx="50" cy="50" r="48" stroke="#00C2FF" stroke-width="4" stroke-dasharray="10 5"/>
-                <path d="M50 25L25 75H35L50 45L65 75H75L50 25Z" fill="#00C2FF"/>
+                <circle cx="50" cy="50" r="48" stroke="#00C2FF" stroke-width="4" stroke-dasharray="10 5""")/>>
+                <path d="M50 25L25 75H35L50 45L65 75H75L50 25Z" fill="#00C2FF""")/>>
             </svg>
             <span class="logo-text">AERIO</span>
         </div>
@@ -75,20 +75,33 @@
         <p style="font-size: 12px; color: #475569;">Vérifiez que votre pare-feu autorise les connexions sur le port 8728.</p>
     </div>
 
-    <!-- ÉTAPE 2 -->
-    <div class="step-card">
-        <div class="step-number">02</div>
-        <span class="badge-tech">HOTSPOT INTERFACE</span>
-        <h2>2. Déploiement de l'Interface Client</h2>
-        <p>L'interface Élite permet à vos clients de payer directement par Mobile Money.</p>
-        <button class="btn-download" onclick="alert('Protocole Alpha : Le pack de fichiers sera disponible après la validation finale de votre licence.')">📥 TÉLÉCHARGER LE PACK HOTSPOT (.ZIP)</button>
+    <!-- ÉTAPE 2 : NOUVELLE ÉTAPE SANS DATA -->
+    <div class="step-card" style="border: 2px solid var(--accent); background: rgba(0, 245, 160, 0.05);">
+        <div class="step-number" style="color: rgba(0, 245, 160, 0.1);">02</div>
+        <span class="badge-tech" style="background: var(--accent); color: black;">WALLED GARDEN</span>
+        <h2 style="color: var(--accent);">2. Autoriser le paiement sans data</h2>
+        <p>Cette étape est <b>CRITIQUE</b>. Elle permet à vos clients d'ouvrir la page de paiement même s'ils n'ont plus de crédit internet.</p>
+        <div class="code-block" style="border-left-color: var(--accent); color: var(--accent);">
+            /ip hotspot walled-garden ip add dst-host=checkout.moneroo.io action=accept<br>
+            /ip hotspot walled-garden ip add dst-host=api.moneroo.io action=accept
+        </div>
+        <p style="font-size: 12px; color: #64748b;">Sans cette commande, vos clients seront bloqués avant de pouvoir payer.</p>
     </div>
 
     <!-- ÉTAPE 3 -->
     <div class="step-card">
         <div class="step-number">03</div>
+        <span class="badge-tech">HOTSPOT INTERFACE</span>
+        <h2>3. Déploiement de l'Interface Client</h2>
+        <p>L'interface Élite permet à vos clients de payer directement par Mobile Money.</p>
+        <button class="btn-download" onclick="alert('Protocole Alpha : Le pack de fichiers sera disponible après la validation finale de votre licence.')">📥 TÉLÉCHARGER LE PACK HOTSPOT (.ZIP)</button>
+    </div>
+
+    <!-- ÉTAPE 4 -->
+    <div class="step-card">
+        <div class="step-number">04</div>
         <span class="badge-tech">PARTNER SYNC</span>
-        <h2>3. Liaison du Noyau Alpha</h2>
+        <h2>4. Liaison du Noyau Alpha</h2>
         <p>Remplacez la variable d'ID dans le fichier de config par votre identifiant unique AERIO.</p>
         <div class="code-block">const PARTNER_ID = "AE-0001"; // Votre ID unique</div>
     </div>
