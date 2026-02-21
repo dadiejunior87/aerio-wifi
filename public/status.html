@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AERIO | État du Système Alpha</title>
+    <link href="https://fonts.googleapis.com" rel="stylesheet">
+    <style>
+        :root { --primary: #00C2FF; --success: #00F5A0; --bg: #020617; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: var(--bg); color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
+
+        .status-container { width: 100%; max-width: 500px; text-align: center; }
+        .main-status { background: rgba(0, 245, 160, 0.1); border: 1px solid var(--success); padding: 40px; border-radius: 40px; margin-bottom: 30px; box-shadow: 0 0 50px rgba(0, 245, 160, 0.1); }
+        
+        .pulse-large { width: 80px; height: 80px; background: var(--success); border-radius: 50%; margin: 0 auto 20px; animation: ripple 2s infinite; display: flex; align-items: center; justify-content: center; font-size: 30px; }
+        @keyframes ripple { 0% { box-shadow: 0 0 0 0 rgba(0, 245, 160, 0.4); } 100% { box-shadow: 0 0 0 40px rgba(0, 245, 160, 0); } }
+
+        .uptime-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 20px; }
+        .service-card { background: rgba(255,255,255,0.03); padding: 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); }
+        .service-card h4 { font-size: 10px; color: #475569; text-transform: uppercase; margin-bottom: 5px; }
+        .service-card div { font-size: 14px; font-weight: 900; color: var(--success); }
+
+        .history-bar { display: flex; gap: 4px; margin-top: 30px; justify-content: center; }
+        .bar { width: 4px; height: 20px; background: var(--success); border-radius: 10px; opacity: 0.5; }
+
+        .back-link { margin-top: 40px; color: #475569; text-decoration: none; font-size: 12px; font-weight: 700; text-transform: uppercase; }
+    </style>
+</head>
+<body>
+
+    <div class="status-container">
+        <div class="main-status">
+            <div class="pulse-large">🛡️</div>
+            <h1 style="font-size: 24px; font-weight: 900;">SYSTÈME OPÉRATIONNEL</h1>
+            <p style="color: var(--success); font-weight: 800; font-size: 13px; margin-top: 10px;">Tous les nœuds Alpha sont actifs</p>
+        </div>
+
+        <div class="uptime-grid">
+            <div class="service-card"><h4>Serveur</h4><div>99.9%</div></div>
+            <div class="service-card"><h4>Paiements</h4><div>Stable</div></div>
+            <div class="service-card"><h4>SMS</h4><div>Actif</div></div>
+        </div>
+
+        <div class="history-bar">
+            <!-- 30 barres de statut pour les 30 derniers jours -->
+            <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar" style="opacity:1"></div><div class="bar"></div><div class="bar"></div><div class="bar" style="opacity:1"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar" style="opacity:1"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar" style="opacity:1"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+        </div>
+        <p style="font-size: 10px; color: #475569; margin-top: 10px;">HISTORIQUE DES 30 DERNIERS JOURS</p>
+
+        <a href="/" class="back-link">← RETOUR À L'ACCUEIL AERIO</a>
+    </div>
+
+</body>
+</html>
