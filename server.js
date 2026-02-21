@@ -6,7 +6,6 @@ const path = require("path");
 const axios = require("axios");
 const session = require("express-session");
 const nodemailer = require("nodemailer"); 
-const cron = require("node-cron"); 
 const twilio = require("twilio"); 
 const app = express();
 
@@ -45,38 +44,50 @@ function checkAuth(req, res, next) {
     else res.redirect("/connexion");
 }
 
-// ✅ [PRO] AJOUTER UN TARIF (POUR LE PARTENAIRE) [1.2]
+// ✅ [NOUVEAU] ROUTE TOP 3 ALPHA : ANALYSE DES CHAMPIONS [1.2]
+app.get("/api/top-performers", checkAuth, (req, res) => {
+    try {
+        const tickets = JSON.parse(fs.readFileSync(TICKETS_FILE));
+        const salesByPartner = {};
+
+        // On cumule les ventes par partenaire
+        tickets.forEach(t => {
+            salesByPartner[t.partnerID] = (salesByPartner[t.partnerID] || 0) + t.amount;
+        });
+
+        // On trie et on prend les 3 meilleurs
+        const top3 = Object.entries(salesByPartner)
+            .map(([id, total]) => ({ id, total }))
+            .sort((a, b) => b.total - a.total)
+            .slice(0, 3);
+
+        res.json(top3);
+    } catch (e) { res.json([]); }
+});
+
+// ✅ AJOUTER UN TARIF (POUR LE PARTENAIRE)
 app.post("/api/add-tarif", checkAuth, (req, res) => {
     const { name, price, duration } = req.body;
     let partners = JSON.parse(fs.readFileSync(PARTNERS_FILE));
     const idx = partners.findIndex(p => p.partnerID === req.session.partnerID);
-    
     if (idx !== -1) {
         if (!partners[idx].tarifs) partners[idx].tarifs = [];
         partners[idx].tarifs.push({ id: "TRF-" + Date.now(), name, price, duration, active: true });
         fs.writeFileSync(PARTNERS_FILE, JSON.stringify(partners, null, 2));
-        res.json({ success: true, message: "Tarif injecté dans votre catalogue." });
-    } else { res.status(404).json({ error: "Partenaire non trouvé" }); }
+        res.json({ success: true });
+    } else { res.status(404).json({ error: "Non trouvé" }); }
 });
 
-// ✅ [PRO] RÉCUPÉRER LES TARIFS POUR LA BOUTIQUE CLIENT [1.4]
+// ✅ RÉCUPÉRER LES TARIFS POUR LA BOUTIQUE
 app.get("/api/get-shop-tarifs/:partnerID", (req, res) => {
     const { partnerID } = req.params;
     const partners = JSON.parse(fs.readFileSync(PARTNERS_FILE));
     const partner = partners.find(p => p.partnerID === partnerID);
-    
-    if (partner && partner.tarifs && partner.tarifs.length > 0) {
-        res.json(partner.tarifs);
-    } else {
-        // Tarifs par défaut de sécurité
-        res.json([
-            { name: "Pass Flash", price: 100, duration: "1H" },
-            { name: "Pass Élite", price: 500, duration: "24H" }
-        ]);
-    }
+    if (partner && partner.tarifs) res.json(partner.tarifs);
+    else res.json([{ name: "Pass Flash", price: 100, duration: "1H" }]);
 });
 
-// ✅ ROUTE DÉMO : SIMULATION DE VENTE
+// ✅ SIMULATION DE VENTE
 app.post("/api/simulate-sale", checkAuth, (req, res) => {
     let tickets = JSON.parse(fs.readFileSync(TICKETS_FILE));
     const fakeTicket = {
@@ -113,20 +124,13 @@ app.post("/api/moneroo-webhook", async (req, res) => {
     }
 });
 
-// ✅ ROUTES PAGES
+// ✅ ROUTES PAGES & AUTH
 app.get("/", (req, res) => res.sendFile(path.join(__dirname, "public", "index.html")));
 app.get("/dashboard", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "dashboard.html")));
 app.get("/wifi-zone", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "wifi-zone.html")));
 app.get("/tarifs", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "tarifs.html")));
-app.get("/tickets", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "tickets.html")));
-app.get("/compta", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "compta.html")));
-app.get("/parrainage", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "parrainage.html")));
-app.get("/profil", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "profil.html")));
-app.get("/guide", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "guide.html")));
-app.get("/faq", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "faq.html")));
 app.get("/connexion", (req, res) => res.sendFile(path.join(__dirname, "public", "login-partenaire.html")));
 
-// ✅ API AUTH
 app.post("/api/login-partenaire", (req, res) => {
     const { email, password } = req.body;
     if (email === "admin@aerio.com" && password === "admin123") {
@@ -136,7 +140,7 @@ app.post("/api/login-partenaire", (req, res) => {
     let partners = JSON.parse(fs.readFileSync(PARTNERS_FILE));
     const partner = partners.find(p => p.email === email && p.password === password);
     if (partner) { req.session.partnerID = partner.partnerID; res.redirect("/dashboard"); }
-    else res.status(401).send("<script>alert('Identifiants invalides'); window.location.href='/connexion';</script>");
+    else res.status(401).send("Erreur");
 });
 
 app.get("/api/my-stats", checkAuth, (req, res) => {
@@ -146,4 +150,4 @@ app.get("/api/my-stats", checkAuth, (req, res) => {
 
 app.get("/logout", (req, res) => { req.session.destroy(); res.redirect("/"); });
 
-app.listen(PORT, '0.0.0.0', () => console.log(`🚀 EMPIRE AERIO ALPHA V3 LIVE SUR PORT ${PORT}`));
+app.listen(PORT, '0.0.0.0', () => console.log(`🚀 BASTION ALPHA LIVE SUR PORT ${PORT}`));
