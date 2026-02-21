@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AERIO | Matrice des Nœuds Alpha</title>
-    <!-- ✅ LIEN POLICE RÉPARÉ -->
+    <!-- ✅ POLICE POPPINS INJECTÉE CORRECTEMENT -->
     <link href="https://fonts.googleapis.com" rel="stylesheet">
     <style>
         :root { --primary: #00C2FF; --accent: #00F5A0; --bg: #020617; --glass: rgba(15, 23, 42, 0.7); --danger: #FF4B4B; }
@@ -80,14 +80,13 @@
         // ✅ CHARGEMENT DYNAMIQUE RÉEL [1.2, 1.4]
         async function loadPartnerNodes() {
             try {
-                // On récupère les infos du partenaire et de ses zones
                 const res = await fetch('/api/my-profile');
+                if(!res.ok) throw new Error();
                 const user = await res.json();
                 
                 const list = document.getElementById('node-list');
                 
-                // Simulation d'affichage des zones enregistrées dans partners.json
-                // On utilise l'ID réel pour générer le Code d'Intégration
+                // Injection des données réelles du partenaire
                 list.innerHTML = `
                     <tr>
                         <td>
@@ -98,7 +97,7 @@
                             <span class="node-info">Infrastructure Giga-Élite. Optimisée pour le Streaming et la Monétisation.</span>
                         </td>
                         <td>
-                            <span class="contact-tag">+237 6XX XX XX XX</span>
+                            <span class="contact-tag">${user.contact || '+237 6XX XX XX XX'}</span>
                         </td>
                         <td>
                             <a href="/boutique?partner=${user.id}" class="btn-link" target="_blank">Ouvrir le portail</a>
