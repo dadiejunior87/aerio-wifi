@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AERIO | Matrice des Nœuds Alpha</title>
+    <link href="https://fonts.googleapis.com" rel="stylesheet">
+    <style>
+        :root { --primary: #00C2FF; --accent: #00F5A0; --bg: #020617; --glass: rgba(15, 23, 42, 0.7); --danger: #FF4B4B; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: var(--bg); color: white; padding: 40px; min-height: 100vh; background-image: radial-gradient(circle at top right, rgba(0, 194, 255, 0.05), transparent); }
+
+        .header-list { display: flex; justify-content: space-between; align-items: center; margin-bottom: 50px; }
+        .btn-add { background: var(--primary); color: #000; padding: 14px 28px; border-radius: 15px; font-weight: 900; text-decoration: none; font-size: 11px; text-transform: uppercase; transition: 0.3s; box-shadow: 0 10px 30px rgba(0, 194, 255, 0.3); }
+        .btn-add:hover { transform: translateY(-3px); box-shadow: 0 15px 45px var(--primary); }
+
+        /* MATRICE DE GESTION [1.5] */
+        .table-container { 
+            background: var(--glass); border-radius: 40px; padding: 40px; 
+            border: 1px solid rgba(255,255,255,0.05); backdrop-filter: blur(30px);
+            box-shadow: 0 40px 100px rgba(0,0,0,0.5);
+        }
+
+        table { width: 100%; border-collapse: collapse; text-align: left; }
+        th { font-size: 10px; color: #475569; text-transform: uppercase; letter-spacing: 2px; padding-bottom: 25px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        td { padding: 25px 0; border-bottom: 1px solid rgba(255,255,255,0.02); font-size: 14px; }
+
+        .node-name { font-weight: 900; color: var(--primary); font-size: 16px; }
+        .node-desc { font-size: 12px; color: #64748b; max-width: 300px; line-height: 1.4; }
+        .node-contact { font-family: monospace; font-weight: 700; color: var(--accent); }
+
+        /* ACTIONS ÉLITE */
+        .action-group { display: flex; gap: 10px; }
+        .btn-action { 
+            width: 35px; height: 35px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1);
+            display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s;
+            background: rgba(255,255,255,0.02); color: white;
+        }
+        .btn-action:hover { background: var(--primary); color: #000; border-color: var(--primary); }
+        .btn-del:hover { background: var(--danger); border-color: var(--danger); }
+
+        .qr-badge { background: rgba(0, 194, 255, 0.1); color: var(--primary); padding: 5px 12px; border-radius: 50px; font-size: 10px; font-weight: 900; border: 1px solid var(--primary); text-decoration: none; }
+    </style>
+</head>
+<body>
+
+    <div class="header-list">
+        <div>
+            <h1 style="font-size: 32px; font-weight: 900; letter-spacing: -2px;">Matrice des <span style="color:var(--primary)">Nœuds</span></h1>
+            <p style="color: #475569; font-size: 14px; font-weight: 600;">Gestion centralisée de votre infrastructure WiFi.</p>
+        </div>
+        <a href="/wifi-zone" class="btn-add">+ AJOUTER UNE ZONE ALPHA</a>
+    </div>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>IDENTIFIANT NŒUD</th>
+                    <th>ARGUMENTAIRE / POSITION</th>
+                    <th>CONTACT SUPPORT</th>
+                    <th>VECTEUR DE VENTE</th>
+                    <th>COMMANDES TACTIQUES</th>
+                </tr>
+            </thead>
+            <tbody id="node-list">
+                <!-- ✅ INJECTION DYNAMIQUE ALPHA [1.4] -->
+                <tr>
+                    <td><span class="node-name">CONNEXIA PRO</span><br><small style="color:#475569">ID: AE-NOD-01</small></td>
+                    <td class="node-desc">Fibre optique ultra-stable située au centre-ville, Douala.</td>
+                    <td class="node-contact">+237 6XX XX XX XX</td>
+                    <td><a href="/boutique?partner=AE-0001" class="qr-badge">LIEN BOUTIQUE</a></td>
+                    <td>
+                        <div class="action-group">
+                            <div class="btn-action" title="Editer">✏️</div>
+                            <div class="btn-action" title="Affiche QR" onclick="location.href='/affiche'">🖼️</div>
+                            <div class="btn-action btn-del" title="Supprimer">🗑️</div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <a href="/dashboard" style="display:block; text-align:center; margin-top:50px; color:#475569; text-decoration:none; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:2px;">← Retour au Cockpit</a>
+
+</body>
+</html>
