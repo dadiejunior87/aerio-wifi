@@ -3,80 +3,124 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AERIO | Comptabilité & Retraits</title>
+    <title>AERIO | Trésorerie Alpha</title>
     <link href="https://fonts.googleapis.com" rel="stylesheet">
     <style>
-        :root { --primary: #00C2FF; --bg: #030712; --card: rgba(15, 23, 42, 0.7); --success: #00F5A0; }
+        :root { --primary: #00C2FF; --accent: #00F5A0; --bg: #020617; --glass: rgba(15, 23, 42, 0.7); --danger: #FF4B4B; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        body { background: var(--bg); color: white; padding: 40px; }
+        body { background: var(--bg); color: white; padding: 40px; min-height: 100vh; }
 
+        .header-compta { margin-bottom: 40px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 20px; }
+        
         .balance-card {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            padding: 40px; border-radius: 30px; text-align: center; margin-bottom: 40px;
-            box-shadow: 0 20px 40px rgba(0, 194, 255, 0.2);
+            background: linear-gradient(135deg, rgba(0, 194, 255, 0.1), rgba(112, 0, 255, 0.1));
+            padding: 40px; border-radius: 35px; border: 1px solid var(--primary);
+            text-align: center; margin-bottom: 40px; backdrop-filter: blur(20px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
         }
-        .balance-card h2 { font-size: 14px; text-transform: uppercase; opacity: 0.8; letter-spacing: 2px; }
-        .balance-card .amount { font-size: 48px; font-weight: 900; margin: 10px 0; }
+        .balance-card h2 { font-size: 12px; text-transform: uppercase; letter-spacing: 3px; color: var(--primary); margin-bottom: 10px; }
+        .balance-card .amount { font-size: 48px; font-weight: 900; text-shadow: 0 0 20px var(--primary); }
+
+        .payout-form {
+            background: var(--glass); padding: 40px; border-radius: 30px;
+            max-width: 500px; margin: 0 auto; border: 1px solid rgba(255,255,255,0.05);
+        }
+        .payout-form h3 { font-size: 18px; margin-bottom: 25px; text-align: center; font-weight: 800; }
+
+        .input-group { margin-bottom: 20px; text-align: left; }
+        label { display: block; font-size: 10px; font-weight: 800; color: #475569; text-transform: uppercase; margin-bottom: 8px; margin-left: 10px; }
+        
+        input, select {
+            width: 100%; padding: 15px 20px; background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 15px;
+            color: white; outline: none; transition: 0.3s; font-weight: 600;
+        }
+        input:focus, select:focus { border-color: var(--primary); background: rgba(0, 194, 255, 0.05); }
 
         .btn-withdraw {
-            background: white; color: black; border: none; padding: 15px 30px;
-            border-radius: 15px; font-weight: 800; cursor: pointer; transition: 0.3s;
+            width: 100%; padding: 20px; border: none; border-radius: 15px;
+            background: var(--accent); color: #020617; font-weight: 900;
+            cursor: pointer; text-transform: uppercase; letter-spacing: 1px;
+            transition: 0.4s; box-shadow: 0 10px 20px rgba(0, 245, 160, 0.2);
         }
-        .btn-withdraw:hover { transform: scale(1.05); box-shadow: 0 10px 20px rgba(255,255,255,0.2); }
+        .btn-withdraw:hover { transform: scale(1.02); box-shadow: 0 15px 30px rgba(0, 245, 160, 0.4); }
 
-        .history-card { background: var(--card); border-radius: 25px; padding: 30px; border: 1px solid rgba(255,255,255,0.05); }
-        table { width: 100%; border-collapse: collapse; text-align: left; }
-        th { font-size: 11px; color: #555; padding-bottom: 20px; border-bottom: 1px solid #222; }
-        td { padding: 15px 0; border-bottom: 1px solid #111; font-size: 14px; }
-        .status-paid { color: var(--success); font-weight: bold; }
-
-        .back-link { margin-top: 30px; display: block; color: #444; text-decoration: none; font-size: 12px; }
+        .back-link { display: block; text-align: center; margin-top: 30px; color: #475569; text-decoration: none; font-size: 12px; font-weight: 600; }
     </style>
 </head>
 <body>
 
+    <div class="header-compta">
+        <h1 style="font-size: 24px; font-weight: 900;">Gestion des <span style="color:var(--primary)">Actifs</span></h1>
+        <p style="color: #475569; font-size: 13px;">Extraction automatisée vers Mobile Money (Orange, MTN, Airtel, Moov).</p>
+    </div>
+
     <div class="balance-card">
-        <h2>Solde Disponible (85%)</h2>
-        <div class="amount" id="current-balance">0 XAF</div>
-        <button class="btn-withdraw" onclick="demanderRetrait()">💸 Retirer vers mon Mobile Money</button>
+        <h2>Solde Disponible (Net 85%)</h2>
+        <div class="amount" id="current-balance">0 F</div>
     </div>
 
-    <div class="history-card">
-        <h3 style="margin-bottom: 20px;">Historique des Versements</h3>
-        <table>
-            <thead>
-                <tr>
-                    <th>DATE</th>
-                    <th>NUMÉRO</th>
-                    <th>MONTANT NET</th>
-                    <th>MÉTHODE</th>
-                    <th>STATUT</th>
-                </tr>
-            </thead>
-            <tbody id="payout-list">
-                <!-- Les virements s'afficheront ici -->
-            </tbody>
-        </table>
+    <div class="payout-form">
+        <h3>CONFIGURER LE RETRAIT</h3>
+        <form id="payoutForm">
+            <div class="input-group">
+                <label>Montant à retirer (XAF/XOF)</label>
+                <input type="number" id="amount" placeholder="Ex: 5000" required>
+            </div>
+            <div class="input-group">
+                <label>Numéro de réception</label>
+                <input type="text" id="phone" placeholder="Ex: 692487922" required>
+            </div>
+            <div class="input-group">
+                <label>Réseau Mobile</label>
+                <select id="network" required>
+                    <option value="orange_cm">🇨🇲 Orange Money Cameroun</option>
+                    <option value="mtn_cm">🇨🇲 MTN Mobile Money Cameroun</option>
+                    <option value="airtel_td">🇹🇩 Airtel Money Tchad</option>
+                    <option value="moov_td">🇹🇩 Moov Money Tchad</option>
+                    <option value="orange_ci">🇨🇮 Orange Money CI</option>
+                    <option value="wave_ci">🇨🇮 Wave CI</option>
+                </select>
+            </div>
+            <button type="submit" class="btn-withdraw">INITIALISER L'INJECTION</button>
+        </form>
     </div>
 
-    <a href="/dashboard" class="back-link">← Retour au Dashboard</a>
+    <a href="/dashboard" class="back-link">← Retour au Dashboard Alpha</a>
 
     <script>
-        async function loadCompta() {
+        async function loadBalance() {
             const res = await fetch('/api/my-stats');
             const tickets = await res.json();
-            let totalNet = 0;
-            
-            tickets.forEach(t => {
-                totalNet += (t.amount * 0.85);
-            });
-            document.getElementById('current-balance').innerText = totalNet.toFixed(0) + " XAF";
+            const balance = tickets.reduce((sum, t) => sum + (t.amount * 0.85), 0);
+            document.getElementById('current-balance').innerText = balance.toFixed(0) + " F";
         }
 
-        function demanderRetrait() {
-            alert("Votre demande a été envoyée. Le virement de 85% sera effectué sur votre numéro enregistré.");
-        }
-        window.onload = loadCompta;
+        document.getElementById('payoutForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const btn = document.querySelector('.btn-withdraw');
+            btn.innerText = "CONNEXION BANCAIRE...";
+            btn.disabled = true;
+
+            const data = {
+                amount: document.getElementById('amount').value,
+                phone: document.getElementById('phone').value,
+                network: document.getElementById('network').value,
+                country: document.getElementById('network').value.split('_')[1].toUpperCase()
+            };
+
+            const res = await fetch('/api/request-payout', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+
+            const result = await res.json();
+            alert(result.message);
+            location.reload();
+        };
+
+        window.onload = loadBalance;
     </script>
 </body>
 </html>
