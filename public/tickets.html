@@ -3,18 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AERIO | Gestion des Tickets</title>
+    <title>AERIO | Gestion des Tickets Alpha</title>
     <link href="https://fonts.googleapis.com" rel="stylesheet">
     <style>
-        :root { --primary: #00C2FF; --bg: #030712; --card: rgba(15, 23, 42, 0.7); }
+        :root { --primary: #00C2FF; --bg: #030712; --card: rgba(15, 23, 42, 0.7); --accent: #00F5A0; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        body { background: var(--bg); color: white; padding: 40px; }
+        body { background: var(--bg); color: white; padding: 40px; min-height: 100vh; }
 
         .header-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
         .btn-print { 
             background: var(--primary); color: #000; padding: 12px 25px; border-radius: 12px; 
-            font-weight: 800; cursor: pointer; border: none; text-transform: uppercase; font-size: 12px;
+            font-weight: 800; cursor: pointer; border: none; text-transform: uppercase; font-size: 12px; transition: 0.3s;
         }
+        .btn-print:hover { transform: scale(1.05); box-shadow: 0 0 20px var(--primary); }
 
         .table-container { 
             background: var(--card); border-radius: 30px; padding: 30px; 
@@ -22,38 +23,38 @@
         }
 
         table { width: 100%; border-collapse: collapse; text-align: left; }
-        th { font-size: 11px; color: #555; text-transform: uppercase; padding-bottom: 20px; border-bottom: 1px solid #222; }
-        td { padding: 15px 0; border-bottom: 1px solid #111; font-size: 14px; color: #ccc; }
-        .ticket-code { color: var(--primary); font-weight: 900; letter-spacing: 2px; font-size: 18px; }
+        th { font-size: 11px; color: #475569; text-transform: uppercase; padding-bottom: 20px; border-bottom: 1px solid #1e293b; }
+        td { padding: 15px 0; border-bottom: 1px solid #0f172a; font-size: 14px; color: #cbd5e1; }
+        .ticket-code { color: var(--primary); font-weight: 900; letter-spacing: 2px; font-size: 18px; text-shadow: 0 0 10px rgba(0, 194, 255, 0.2); }
 
-        /* STYLE POUR L'IMPRESSION */
         @media print {
-            body { background: white; color: black; padding: 0; }
-            .btn-print, .header-actions p, .back-link { display: none; }
-            .table-container { border: none; background: white; padding: 0; }
-            th { color: #000; border-bottom: 2px solid #000; }
-            td { color: #000; border-bottom: 1px solid #ddd; }
-            .ticket-code { color: #000; text-decoration: underline; }
+            body { background: white !important; color: black !important; padding: 20px !important; }
+            .btn-print, .header-actions p, .back-link { display: none !important; }
+            .table-container { border: none !important; background: white !important; padding: 0 !important; }
+            th { color: #000 !important; border-bottom: 2px solid #000 !important; }
+            td { color: #000 !important; border-bottom: 1px solid #ddd !important; }
+            .ticket-code { color: #000 !important; text-decoration: underline !important; text-shadow: none !important; }
         }
 
-        .back-link { margin-top: 30px; display: block; color: #444; text-decoration: none; font-size: 12px; }
+        .back-link { margin-top: 30px; display: inline-block; color: #475569; text-decoration: none; font-size: 12px; font-weight: 600; }
+        .back-link:hover { color: var(--primary); }
     </style>
 </head>
 <body>
 
     <div class="header-actions">
         <div>
-            <h1 style="font-size: 28px; font-weight: 800;">Mes Tickets <span style="color:var(--primary)">AERIO</span></h1>
-            <p>Historique et impression de vos codes de connexion.</p>
+            <h1 style="font-size: 28px; font-weight: 900; letter-spacing: -1px;">Archive <span style="color:var(--primary)">Tickets</span></h1>
+            <p style="color: #475569; font-size: 13px;">Historique sécurisé de vos codes de connexion générés.</p>
         </div>
-        <button class="btn-print" onclick="window.print()">🖨️ Imprimer la liste</button>
+        <button class="btn-print" onclick="window.print()">🖨️ IMPRIMER L'ARCHIVE</button>
     </div>
 
     <div class="table-container">
         <table>
             <thead>
                 <tr>
-                    <th>DATE DE CRÉATION</th>
+                    <th>HORODATAGE</th>
                     <th>CODE TICKET</th>
                     <th>DURÉE</th>
                     <th>MONTANT</th>
@@ -61,12 +62,12 @@
                 </tr>
             </thead>
             <tbody id="ticket-list">
-                <!-- Données chargées dynamiquement -->
+                <!-- Injection via JS -->
             </tbody>
         </table>
     </div>
 
-    <a href="/dashboard" class="back-link">← Retour au Tableau de bord</a>
+    <a href="/dashboard" class="back-link">← RETOUR AU QG ALPHA</a>
 
     <script>
         async function loadTickets() {
@@ -75,18 +76,31 @@
                 const tickets = await response.json();
                 const container = document.getElementById('ticket-list');
                 
+                // Nettoyage avant injection
+                container.innerHTML = "";
+                
+                if (tickets.length === 0) {
+                    container.innerHTML = "<tr><td colspan='5' style='text-align:center; padding:50px; color:#475569;'>Aucun ticket détecté dans le flux.</td></tr>";
+                    return;
+                }
+
                 tickets.reverse().forEach(t => {
+                    const statusColor = t.status === "PAID_OUT" ? "#FF4B4B" : "#00F5A0";
+                    const statusText = t.status === "PAID_OUT" ? "RETRAIT" : "VALIDÉ";
+
                     container.innerHTML += `
                         <tr>
                             <td>${new Date(t.date).toLocaleString('fr-FR')}</td>
                             <td class="ticket-code">${t.code}</td>
-                            <td>${t.duration || '1h'}</td>
-                            <td>${t.amount} XAF</td>
-                            <td style="color:#00F5A0; font-weight:800; font-size:10px;">VALIDÉ</td>
+                            <td>${t.duration || '---'}</td>
+                            <td>${t.amount.toLocaleString()} F</td>
+                            <td style="color:${statusColor}; font-weight:900; font-size:11px;">${statusText}</td>
                         </tr>
                     `;
                 });
-            } catch (e) { alert("Erreur de chargement des tickets."); }
+            } catch (e) { 
+                console.error("Erreur de liaison Alpha.");
+            }
         }
         window.onload = loadTickets;
     </script>
