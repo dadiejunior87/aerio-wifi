@@ -39,38 +39,57 @@ function checkAuth(req, res, next) {
     else res.redirect("/connexion");
 }
 
-// ✅ [NOUVEAU] PROTOCOLE DE PURGE ALPHA (RÉSERVÉ AE-0001) [1.2]
-// Tape ://ton-site.com pour remettre les compteurs à 0 F
+// ✅ [NOUVEAU] SYSTÈME D'INSCRIPTION AUTOMATIQUE ALPHA [1.1, 1.2]
+app.post("/api/inscription-partenaire", (req, res) => {
+    const { name, email, password } = req.body;
+    let partners = JSON.parse(fs.readFileSync(PARTNERS_FILE));
+
+    // Vérifier si l'email existe déjà
+    if (partners.find(p => p.email === email)) return res.send("Email déjà utilisé.");
+
+    // Générer un nouvel ID (ex: AE-0002)
+    const newID = "AE-" + (partners.length + 1).toString().padStart(4, '0');
+
+    const newPartner = {
+        partnerID: newID,
+        name,
+        email,
+        password, // Pour la prod, il faudrait crypter ici
+        licence: "INACTIVE",
+        tarifs: [],
+        dateInscription: new Date()
+    };
+
+    partners.push(newPartner);
+    fs.writeFileSync(PARTNERS_FILE, JSON.stringify(partners, null, 2));
+    
+    res.redirect("/connexion?signup=success");
+});
+
+// ✅ PROTOCOLE DE PURGE ALPHA (RÉSERVÉ AE-0001)
 app.get("/api/admin/purge", checkAuth, (req, res) => {
     if (req.session.partnerID !== "AE-0001") return res.status(403).send("ACCÈS REFUSÉ");
-    
-    // On écrase les ventes de test par un tableau vide
     fs.writeFileSync(TICKETS_FILE, JSON.stringify([], null, 2));
+    res.send("<script>alert('EMPIRE PURGÉ : Compteurs à 0 F.'); window.location.href='/dashboard';</script>");
+});
+
+// ✅ STATISTIQUES AVEC FLUX BRUT (100%) ET NET (85%) [1.4]
+app.get("/api/my-stats", checkAuth, (req, res) => {
+    const tickets = JSON.parse(fs.readFileSync(TICKETS_FILE));
+    const myTickets = tickets.filter(t => t.partnerID === req.session.partnerID);
     
-    res.send("<script>alert('EMPIRE PURGÉ : Toutes les données de test ont été supprimées. Votre compteur affiche désormais 0 F CFA.'); window.location.href='/dashboard';</script>");
-});
+    let brutTotal = 0;
+    let netTotal = 0;
+    
+    myTickets.forEach(t => {
+        brutTotal += t.amount;
+        netTotal += (t.amount * 0.85);
+    });
 
-// ✅ ROUTE TOP 3 ALPHA - SÉCURISÉE [1.2]
-app.get("/api/top-performers", checkAuth, (req, res) => {
-    if (req.session.partnerID !== "AE-0001") return res.status(403).json({ error: "Accès réservé" });
-    try {
-        const tickets = JSON.parse(fs.readFileSync(TICKETS_FILE));
-        if (tickets.length === 0) return res.json([]); // Renvoie vide si pas de ventes
-
-        const salesByPartner = {};
-        tickets.forEach(t => { salesByPartner[t.partnerID] = (salesByPartner[t.partnerID] || 0) + t.amount; });
-        const top3 = Object.entries(salesByPartner).map(([id, total]) => ({ id, total })).sort((a, b) => b.total - a.total).slice(0, 3);
-        res.json(top3);
-    } catch (e) { res.json([]); }
-});
-
-// ✅ RÉCUPÉRER LES TARIFS POUR LA BOUTIQUE
-app.get("/api/get-shop-tarifs/:partnerID", (req, res) => {
-    const { partnerID } = req.params;
-    const partners = JSON.parse(fs.readFileSync(PARTNERS_FILE));
-    const partner = partners.find(p => p.partnerID === partnerID);
-    if (partner && partner.tarifs) res.json(partner.tarifs);
-    else res.json([{ name: "Pass Flash", price: 100, duration: "1H" }]);
+    res.json({
+        tickets: myTickets.sort((a,b) => new Date(b.date) - new Date(a.date)),
+        summary: { brut: brutTotal, net: netTotal, count: myTickets.length }
+    });
 });
 
 // ✅ ROUTES PAGES
@@ -80,6 +99,7 @@ app.get("/dashboard", checkAuth, (req, res) => res.sendFile(path.join(__dirname,
 app.get("/wifi-zone", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "wifi-zone.html")));
 app.get("/tarifs", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "tarifs.html")));
 app.get("/connexion", (req, res) => res.sendFile(path.join(__dirname, "public", "login-partenaire.html")));
+app.get("/inscription", (req, res) => res.sendFile(path.join(__dirname, "public", "inscription.html")));
 
 // ✅ API AUTH
 app.post("/api/login-partenaire", (req, res) => {
@@ -91,14 +111,9 @@ app.post("/api/login-partenaire", (req, res) => {
     let partners = JSON.parse(fs.readFileSync(PARTNERS_FILE));
     const partner = partners.find(p => p.email === email && p.password === password);
     if (partner) { req.session.partnerID = partner.partnerID; res.redirect("/dashboard"); }
-    else res.status(401).send("Identifiants invalides.");
-});
-
-app.get("/api/my-stats", checkAuth, (req, res) => {
-    const tickets = JSON.parse(fs.readFileSync(TICKETS_FILE));
-    res.json(tickets.filter(t => t.partnerID === req.session.partnerID).sort((a,b) => new Date(b.date) - new Date(a.date)));
+    else res.status(401).send("Erreur.");
 });
 
 app.get("/logout", (req, res) => { req.session.destroy(); res.redirect("/"); });
 
-app.listen(PORT, '0.0.0.0', () => console.log(`🚀 BASTION ALPHA LIVE SUR PORT ${PORT}`));
+app.listen(PORT, '0.0.0.0', () => console.log(`🚀 EMPIRE AERIO LIVE SUR PORT ${PORT}`));
