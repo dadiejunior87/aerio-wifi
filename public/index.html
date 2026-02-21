@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AERIO | L'Élite du WiFi Zone</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com" rel="stylesheet">
     <style>
         :root {
             --primary: #00C2FF;
@@ -134,7 +134,8 @@
         <div class="hero-content">
             <p style="color: var(--primary); font-weight: 800; letter-spacing: 4px; margin-bottom: 10px;">ÉLITE NETWORK AFRICA</p>
             <h1>Votre WiFi,<br><span>Vos Profits.</span></h1>
-            <p>Automatisez la vente de vos accès internet via Mobile Money. Encaissez vos gains en temps réel avec la technologie la plus avancée.</p>
+            <!-- DESCRIPTION MISE À JOUR : 85% CACHÉ -->
+            <p>AERIO automatise la vente de vos accès internet via Mobile Money. Encaissez vos gains en temps réel avec la commission la plus compétitive du marché panafricain.</p>
             <div class="cta-group">
                 <a href="/inscription" class="btn-main">Devenir Partenaire</a>
             </div>
@@ -153,23 +154,20 @@
     <section id="shop-section">
         <h1 id="shop-title" style="font-size: 3rem; font-weight: 900;">Boutique <span style="color: var(--accent);">WiFi</span></h1>
         <p id="shop-welcome" style="color: #64748b; margin-top: 10px;">Choisissez votre forfait pour naviguer maintenant.</p>
-        <div class="tarif-grid" id="tarifs-container">
-            <!-- Les tarifs seront injectés ici par le script -->
-        </div>
+        <div class="tarif-grid" id="tarifs-container"></div>
     </section>
 
     <div class="status-bar">
         <span>RÉSEAU : <b>ACTIF</b></span>
         <span>PARTENAIRES : <b>120+</b></span>
-        <span>PAYS : <b>CAMEROUN 🇨🇲</b></span>
+        <span>PAYS : <b>AFRIQUE 🌍</b></span>
     </div>
 
-    <a href="https://wa.me" class="wa-btn" target="_blank">
+    <a href="https://wa.me." class="wa-btn" target="_blank">
         <img src="https://upload.wikimedia.org" width="30" alt="WhatsApp">
     </a>
 
     <script>
-        // LOGIQUE POUR AFFICHER LA BOUTIQUE SI L'URL CONTIENT UN ID ROUTEUR
         const urlParams = new URLSearchParams(window.location.search);
         const routerID = urlParams.get('id');
 
@@ -184,9 +182,10 @@
                 const response = await fetch(`/api/get-rates?id=${id}`);
                 const rates = await response.json();
                 const container = document.getElementById('tarifs-container');
+                container.innerHTML = "";
 
                 if (rates.length === 0) {
-                    container.innerHTML = "<p>Aucun tarif configuré pour cette zone.</p>";
+                    container.innerHTML = "<p>Initialisation des tarifs en cours...</p>";
                     return;
                 }
 
@@ -200,9 +199,7 @@
                         </div>
                     `;
                 });
-            } catch (e) {
-                console.error("Erreur de chargement des tarifs");
-            }
+            } catch (e) { console.error("Erreur boutique Alpha."); }
         }
 
         async function payer(amount, duration, router_id) {
@@ -216,7 +213,7 @@
             });
             const data = await res.json();
             if (data.checkout_url) window.location.href = data.checkout_url;
-            else alert("Erreur lors de l'initialisation du paiement.");
+            else alert("Erreur d'initialisation du flux de paiement.");
         }
     </script>
 </body>
