@@ -1,0 +1,31 @@
+[
+  {
+    "partnerID": "AE-0001",
+    "name": "Admin AERIO",
+    "email": "admin@aerio.com",
+    "password": "admin123",
+    "licence": "ACTIVE",
+    "dateInscription": "2026-02-21T21:57:00.000Z",
+    "zones": [
+      {
+        "id": "Z-01",
+        "name": "STATION ALPHA 01",
+        "description": "WiFi haute performance situé au centre-ville. Idéal pour le travail et le divertissement.",
+        "contact": "+237 6XX XX XX XX",
+        "ip": "192.168.88.1"
+      }
+    ],
+    "tarifs": [
+      {
+        "name": "PASS ÉCLAIR",
+        "price": 100,
+        "duration": "1 Heure"
+      },
+      {
+        "name": "PASS PREMIUM",
+        "price": 500,
+        "duration": "24 Heures"
+      }
+    ]
+  }
+]
