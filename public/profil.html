@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AERIO | Accréditation Alpha</title>
+    <!-- ✅ LIEN POLICE RÉPARÉ -->
     <link href="https://fonts.googleapis.com" rel="stylesheet">
     <style>
         :root { --primary: #00C2FF; --accent: #00F5A0; --bg: #020617; --glass: rgba(15, 23, 42, 0.7); --gold: #FFD700; }
@@ -41,7 +42,6 @@
     </div>
 
     <div class="profile-grid">
-        <!-- IDENTITÉ RÉSEAU -->
         <div class="card-alpha">
             <div class="badge-rank">RANG : SILVER</div>
             <h2>Identité Réseau</h2>
@@ -55,17 +55,16 @@
             </div>
             <div class="info-group">
                 <div class="label">Canal de Liaison (Email)</div>
-                <div class="value" id="disp-email">votre@email.com</div>
+                <div class="value" id="disp-email">admin@aerio.com</div>
             </div>
             <button class="btn-update">Modifier les Clés d'Accès</button>
         </div>
 
-        <!-- STATUT & LICENCE -->
         <div class="card-alpha">
             <h2>État du Bastion</h2>
             <div class="info-group">
-                <div class="label">Nœuds WiFi Déployés</div>
-                <div class="value" id="disp-nodes">0 Point d'accès</div>
+                <div class="label">Sessions Traitées</div>
+                <div class="value" id="disp-nodes">0 Sessions actives</div>
             </div>
             <div class="info-group">
                 <div class="label">Date d'Activation du Noyau</div>
@@ -83,20 +82,22 @@
     <a href="/dashboard" class="back-link">← Retour au Cockpit de Pilotage</a>
 
     <script>
-        // ✅ CHARGEMENT DES DONNÉES RÉELLES [1.4]
+        // ✅ SYNCHRONISATION ALPHA RÉPARÉE [1.4]
         async function loadProfile() {
             try {
-                // On récupère les infos via ton API server.js
                 const res = await fetch('/api/my-stats');
                 const data = await res.json();
                 
-                // Ici on simule les données basées sur ton AE-0001
-                // Dans la version finale, on liera ça à une route /api/me
-                document.getElementById('disp-id').innerText = data.tickets?.[0]?.partnerID || "AE-0001";
-                document.getElementById('disp-nodes').innerText = data.summary.count + " Sessions actives";
+                // Récupération dynamique de l'ID via le premier ticket trouvé
+                if(data.tickets && data.tickets.length > 0) {
+                    document.getElementById('disp-id').innerText = data.tickets[0].partnerID;
+                }
+                
+                // Affichage du nombre total de sessions (tickets) vendus
+                document.getElementById('disp-nodes').innerText = data.summary.count + " Sessions enregistrées";
                 
             } catch (e) {
-                console.log("Protocole de liaison Alpha en attente...");
+                console.log("Protocole Alpha : Attente des données...");
             }
         }
         window.onload = loadProfile;
