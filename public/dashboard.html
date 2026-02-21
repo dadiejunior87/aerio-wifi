@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AERIO | Console Alpha de Pilotage</title>
     <link href="https://fonts.googleapis.com" rel="stylesheet">
-    <!-- LIEN CHART.JS INTÉGRAL -->
+    <!-- LIEN CHART.JS CORRIGÉ -->
     <script src="https://cdn.jsdelivr.net"></script>
     <style>
         :root {
@@ -37,7 +37,7 @@
         header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 50px; }
         .welcome-text h1 { font-size: 32px; font-weight: 900; letter-spacing: -1px; }
 
-        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 25px; margin-bottom: 40px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; margin-bottom: 40px; }
         .stat-card {
             background: var(--card); padding: 30px 25px; border-radius: 30px;
             border: 1px solid rgba(255,255,255,0.05); transition: 0.4s;
@@ -78,7 +78,6 @@
         <a href="/tickets" class="nav-item">🎟️ Tickets</a>
         <a href="/compta" class="nav-item">💰 Revenus</a>
         <a href="/profil" class="nav-item">👤 Profil</a>
-        <!-- BOUTON QR CODE -->
         <button class="btn-qr" onclick="genererAffiche()">🖼️ MON AFFICHE QR</button>
         <a href="/logout" class="nav-item" style="margin-top: 50px; color: var(--danger);">🚪 Déconnexion</a>
     </div>
@@ -93,27 +92,24 @@
         </header>
 
         <div class="stats-grid">
-    <!-- CARTE REVENU NET (LE "WOW" EFFECT) -->
-    <div class="stat-card" style="border-left: 3px solid var(--success);">
-        <h3>VOTRE GAIN NET (85%)</h3>
-        <div class="value green" id="solde">0 F</div>
-        <div class="trend" style="color: var(--success); font-size: 10px;">Injection immédiate après vente</div>
-    </div>
-    
-    <!-- VOLUME BRUT -->
-    <div class="stat-card">
-        <h3>FLUX BRUT GÉNÉRÉ</h3>
-        <div class="value" id="revenue" style="opacity: 0.7;">0 F</div>
-        <div class="trend">Volume total encaissé</div>
-    </div>
+            <div class="stat-card" style="border-left: 3px solid var(--success);">
+                <h3>VOTRE GAIN NET (85%)</h3>
+                <div class="value green" id="solde">0 F</div>
+                <div class="trend" style="color: var(--success); font-size: 10px;">Injection immédiate après vente</div>
+            </div>
+            
+            <div class="stat-card">
+                <h3>FLUX BRUT GÉNÉRÉ</h3>
+                <div class="value" id="revenue" style="opacity: 0.7;">0 F</div>
+                <div class="trend">Volume total encaissé</div>
+            </div>
 
-    <!-- NOMBRE DE VENTES -->
-    <div class="stat-card">
-        <h3>SESSIONS ACTIVES</h3>
-        <div class="value blue" id="t-count">0</div>
-        <div class="trend">Tickets en circulation</div>
-    </div>
-</div>
+            <div class="stat-card">
+                <h3>SESSIONS ACTIVES</h3>
+                <div class="value blue" id="t-count">0</div>
+                <div class="trend">Tickets en circulation</div>
+            </div>
+        </div>
 
         <div class="glass-panel">
             <h2 style="font-size: 14px; font-weight: 800; color: var(--primary);">📈 FLUX DE TRESORERIE</h2>
@@ -123,7 +119,7 @@
         <div class="glass-panel">
             <h2 style="font-size: 14px; font-weight: 800; margin-bottom: 20px;">Dernières Transactions</h2>
             <table>
-                <thead><tr><th>DATE</th><th>CODE</th><th>BRUT</th><th>GAIN NET</th><th>ÉTAT</th></tr></thead>
+                <thead><tr><th>DATE</th><th>CODE</th><th>BRUT</th><th>VOTRE GAIN (85%)</th><th>ÉTAT</th></tr></thead>
                 <tbody id="t-list"></tbody>
             </table>
         </div>
@@ -134,18 +130,27 @@
             try {
                 const res = await fetch('/api/my-stats');
                 const data = await res.json();
-                let brut = 0; let list = "";
+                let brut = 0; let net = 0; let list = "";
+                
                 data.reverse().forEach(t => {
                     brut += t.amount;
-                    list += `<tr><td>${new Date(t.date).toLocaleDateString()}</td><td><b style="color:var(--primary)">${t.code}</b></td><td>${t.amount} F</td><td style="color:var(--success)">${(t.amount * 0.85).toFixed(0)} F</td><td><span class="badge">SUCCÈS</span></td></tr>`;
+                    let gainNet = t.amount * 0.85;
+                    net += gainNet;
+                    list += `<tr>
+                        <td>${new Date(t.date).toLocaleDateString()}</td>
+                        <td><b style="color:var(--primary)">${t.code}</b></td>
+                        <td style="opacity:0.6">${t.amount} F</td>
+                        <td style="color:var(--success); font-weight:800">+ ${gainNet.toFixed(0)} F</td>
+                        <td><span class="badge">SUCCÈS</span></td>
+                    </tr>`;
                 });
+                
                 document.getElementById('revenue').innerText = brut + " F";
-                document.getElementById('solde').innerText = (brut * 0.85).toFixed(0) + " F";
-                document.getElementById('comm').innerText = (brut * 0.15).toFixed(0) + " F";
+                document.getElementById('solde').innerText = net.toFixed(0) + " F";
                 document.getElementById('t-count').innerText = data.length;
                 document.getElementById('t-list').innerHTML = list;
                 initChart(data);
-            } catch(e) { console.error("Erreur système de données."); }
+            } catch(e) { console.error("Erreur de chargement des données"); }
         }
 
         function initChart(tickets) {
@@ -156,15 +161,20 @@
                 data: {
                     labels: ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'],
                     datasets: [{
-                        label: 'Ventes', 
-                        data: [5000, 8000, 4000, 9500, 12000, 7000, 15000],
-                        borderColor: '#00C2FF', 
-                        backgroundColor: 'rgba(0, 194, 255, 0.1)',
+                        label: 'Gains Nets', 
+                        data: [425, 1200, 850, 3400, 2100, 5000, 4200], // Exemple
+                        borderColor: '#00C2FF', backgroundColor: 'rgba(0, 194, 255, 0.1)',
                         fill: true, tension: 0.4, borderWidth: 3, pointRadius: 2
                     }]
                 },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
-                    scales: { y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#475569' } }, x: { grid: { display: false }, ticks: { color: '#475569' } } }
+                options: { 
+                    responsive: true, 
+                    maintainAspectRatio: false, 
+                    plugins: { legend: { display: false } },
+                    scales: { 
+                        y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#475569' } }, 
+                        x: { grid: { display: false }, ticks: { color: '#475569' } } 
+                    }
                 }
             });
         }
@@ -178,36 +188,11 @@
             const partnerID = "AE-0001"; 
             const urlAerio = window.location.origin + "/?id=" + partnerID;
             const qrUrl = `https://api.qrserver.com{encodeURIComponent(urlAerio)}&color=00C2FF&bgcolor=020617`;
-            
             const win = window.open("", "_blank");
-            win.document.write(`
-                <html>
-                <head><title>AERIO | Affiche Officielle</title>
-                <link href="https://fonts.googleapis.com" rel="stylesheet">
-                <style>
-                    body { background: #020617; color: white; text-align: center; font-family: 'Poppins', sans-serif; padding: 50px; border: 15px solid #00C2FF; height: 90vh; }
-                    h1 { font-size: 60px; color: #00C2FF; margin: 0; }
-                    .badge { background: #FF4B4B; padding: 10px 30px; border-radius: 50px; font-size: 15px; font-weight: bold; }
-                    .qr-box { margin: 50px auto; padding: 20px; background: white; display: inline-block; border-radius: 20px; }
-                    p { font-size: 20px; color: #94a3b8; }
-                    .footer-id { margin-top: 50px; font-size: 12px; opacity: 0.5; }
-                </style>
-                </head>
-                <body>
-                    <h1>AERIO</h1>
-                    <div class="badge">WIFI HAUT DÉBIT ICI</div>
-                    <p style="margin-top:40px;">Scannez pour payer par <b>Mobile Money</b></p>
-                    <div class="qr-box"><img src="\${qrUrl}" /></div>
-                    <p>Connectez-vous, payez, surfez !</p>
-                    <div class="footer-id">ZONE CERTIFIÉE : \${partnerID}</div>
-                    <script>window.print();<\/script>
-                </body>
-                </html>
-            `);
+            win.document.write(`<html><head><title>Affiche AERIO</title><style>body{background:#020617;color:white;text-align:center;font-family:sans-serif;padding:50px;border:20px solid #00C2FF;height:85vh;}h1{font-size:80px;color:#00C2FF;margin:0;}.badge{background:#FF4B4B;padding:15px;border-radius:50px;font-weight:bold;}.qr{margin:40px;background:white;padding:20px;border-radius:20px;display:inline-block;}</style></head><body><h1>AERIO</h1><div class="badge">WIFI HAUT DÉBIT ICI</div><p>Scannez pour payer par Mobile Money</p><div class="qr"><img src="\${qrUrl}"></div><p>ID ZONE : \${partnerID}</p><script>window.print();<\/script><\/body><\/html>`);
         }
 
         window.onload = loadDash;
     </script>
 </body>
 </html>
-
