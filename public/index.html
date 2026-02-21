@@ -4,123 +4,83 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AERIO | L'Élite du WiFi Zone Panafricain</title>
-    <!-- GOOGLE FONTS ÉLITE -->
     <link href="https://fonts.googleapis.com" rel="stylesheet">
     <style>
-        :root {
-            --primary: #00C2FF; --secondary: #7000FF; --accent: #00F5A0;
-            --bg: #020617; --glass: rgba(15, 23, 42, 0.7);
-        }
+        :root { --primary: #00C2FF; --accent: #00F5A0; --bg: #020617; --glass: rgba(15, 23, 42, 0.7); }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         
         body { 
-            background: linear-gradient(rgba(2, 6, 23, 0.85), rgba(2, 6, 23, 0.95)), 
+            background: linear-gradient(rgba(2, 6, 23, 0.9), rgba(2, 6, 23, 0.95)), 
                         url('https://images.unsplash.com');
-            background-size: cover; background-position: center; background-attachment: fixed;
-            color: white; overflow-x: hidden; min-height: 100vh; 
+            background-size: cover; background-position: center; color: white; overflow-x: hidden; min-height: 100vh; 
         }
 
-        nav { display: flex; justify-content: space-between; padding: 20px 8%; align-items: center; backdrop-filter: blur(15px); position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .logo-text { font-weight: 900; font-size: 26px; color: var(--primary); letter-spacing: -1.5px; }
+        nav { display: flex; justify-content: space-between; padding: 25px 8%; align-items: center; backdrop-filter: blur(15px); border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .logo-text { font-weight: 900; font-size: 28px; color: var(--primary); letter-spacing: -2px; }
 
-        .hero { padding: 60px 8% 20px; text-align: center; }
-        .hero h1 { font-size: 3.5rem; font-weight: 900; margin-bottom: 15px; letter-spacing: -2px; }
-        .hero h1 span { color: var(--primary); text-shadow: 0 0 30px rgba(0, 194, 255, 0.3); }
-        .hero p { color: #94a3b8; font-size: 15px; font-weight: 600; }
+        .hero { display: flex; align-items: center; padding: 80px 8%; gap: 60px; min-height: 85vh; }
+        .hero-content { flex: 1.2; }
+        .hero-content h1 { font-size: 4rem; font-weight: 900; line-height: 1; margin-bottom: 25px; letter-spacing: -2px; }
+        .hero-content h1 span { color: var(--primary); text-shadow: 0 0 30px rgba(0, 194, 255, 0.3); }
 
-        /* BOUTIQUE DYNAMIQUE ALPHA */
-        #shop-section { padding: 40px 8% 100px; }
-        .tarif-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
-        
-        .tarif-card { 
-            background: var(--glass); padding: 45px 35px; border-radius: 45px; border: 1px solid rgba(255,255,255,0.08);
-            backdrop-filter: blur(25px); text-align: center; transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative; overflow: hidden;
+        .btn-main { 
+            display: inline-block; padding: 20px 45px; border-radius: 20px; 
+            text-decoration: none; font-weight: 900; font-size: 15px;
+            background: var(--primary); color: black; transition: 0.4s;
+            text-transform: uppercase; letter-spacing: 1px;
         }
-        .tarif-card:hover { border-color: var(--primary); transform: translateY(-12px); box-shadow: 0 25px 50px rgba(0, 194, 255, 0.2); }
-        
-        .duration-label { font-size: 10px; font-weight: 900; color: var(--primary); text-transform: uppercase; letter-spacing: 3px; margin-bottom: 10px; }
-        .price { font-size: 48px; font-weight: 900; color: var(--accent); margin: 15px 0; text-shadow: 0 0 25px rgba(0, 245, 160, 0.4); }
-        
-        .btn-buy { 
-            background: var(--primary); color: black; padding: 20px; border-radius: 20px; 
-            font-weight: 900; border: none; cursor: pointer; width: 100%; margin-top: 25px;
-            text-transform: uppercase; letter-spacing: 1.5px; transition: 0.3s;
-            box-shadow: 0 10px 20px rgba(0, 194, 255, 0.2);
-        }
-        .btn-buy:hover { filter: brightness(1.2); transform: scale(1.03); box-shadow: 0 15px 30px var(--primary); }
+        .btn-main:hover { transform: translateY(-5px); box-shadow: 0 15px 50px var(--primary); }
 
-        .status-bar { position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); background: rgba(15, 23, 42, 0.95); padding: 12px 35px; border-radius: 50px; font-size: 10px; font-weight: 800; border: 1px solid rgba(255,255,255,0.05); letter-spacing: 2px; text-transform: uppercase; z-index: 1000; }
+        /* COMPTEUR RÉEL ALPHA */
+        .card-preview {
+            background: var(--glass); border: 1px solid rgba(255,255,255,0.1);
+            padding: 40px; border-radius: 40px; backdrop-filter: blur(25px);
+            border-left: 5px solid var(--primary);
+        }
+        .counter-label { font-size: 11px; color: #475569; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px; }
+        #counter { font-size: 50px; font-weight: 900; color: var(--accent); text-shadow: 0 0 30px rgba(0, 245, 160, 0.3); }
     </style>
 </head>
 <body>
 
     <nav>
         <div class="logo-text">AERIO</div>
-        <div class="menu"><a href="/connexion" style="color:#475569; text-decoration:none; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:1px;">Accès Partenaire</a></div>
+        <div class="menu"><a href="/connexion" style="color:white; text-decoration:none; font-weight:800; font-size:11px; border:1px solid var(--primary); padding:10px 20px; border-radius:12px;">ACCÈS PRO</a></div>
     </nav>
 
     <section class="hero">
-        <h1 id="welcome-title">CHARGEMENT <span>DU NŒUD</span></h1>
-        <p id="partner-status">📡 Initialisation du protocole de liaison...</p>
-    </section>
+        <div class="hero-content">
+            <p style="color: var(--primary); font-weight: 900; letter-spacing: 5px; margin-bottom: 15px; font-size: 11px;">🛰️ RÉSEAU PANAFRICAIN ALPHA</p>
+            <h1>Monétisez votre<br><span>WiFi Zone.</span></h1>
+            <p style="color: #94a3b8; margin: 30px 0;">Transformez votre MikroTik en source de revenus avec Orange & MTN Money. Pas de faux chiffres, juste la performance réelle.</p>
+            <a href="/inscription" class="btn-main">Déployer ma Zone</a>
+        </div>
 
-    <section id="shop-section">
-        <div class="tarif-grid" id="tarif-list">
-            <!-- ✅ LE MOTEUR ALPHA INJECTE LES TARIFS ICI -->
-            <p style="text-align: center; width: 100%; color: #475569; font-weight: 700;">Synchronisation avec la base de données locale...</p>
+        <div class="hero-visual">
+            <div class="card-preview">
+                <div class="counter-label">Flux Réseau Global</div>
+                <h2 id="counter">0 F</h2>
+                <p style="font-size: 10px; color: #475569; margin-top: 15px; font-weight: 800;">POINT D'ACCÈS ACTIFS : <span id="nodes">0</span></p>
+            </div>
         </div>
     </section>
 
-    <div class="status-bar" id="status-text">RÉSEAU ALPHA SÉCURISÉ 🛰️</div>
-
     <script>
-        // ✅ LE MOTEUR DE BOUTIQUE ALPHA (SUPÉRIEUR AUX CONCURRENTS) [1.2, 1.4]
-        async function chargerLaBoutiqueDuPartenaire() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const partnerID = urlParams.get('partner') || 'AE-0001'; 
-            
+        // ✅ CHARGEMENT DU FLUX RÉEL DEPUIS TON SERVEUR [1.2, 1.4]
+        async function fetchGlobalData() {
             try {
-                const res = await fetch(`/api/get-shop-tarifs/${partnerID}`);
-                const tarifs = await res.json();
+                const res = await fetch('/api/global-stats');
+                const data = await res.json();
                 
-                const container = document.getElementById('tarif-list');
-                container.innerHTML = ""; 
-
-                if (tarifs.length === 0) {
-                    container.innerHTML = "<p style='color:#475569; grid-column: 1/-1; text-align:center;'>Aucune offre disponible pour ce point d'accès.</p>";
-                    return;
-                }
-
-                tarifs.forEach(t => {
-                    container.innerHTML += `
-                        <div class="tarif-card">
-                            <div class="duration-label">${t.name}</div>
-                            <div class="price">${t.price} F</div>
-                            <p style="font-size:13px; color:#64748b; margin-top:10px;">⏱️ Accès : <b>${t.duration}</b></p>
-                            <button class="btn-buy" onclick="lancerPaiementAlpha('${t.price}', '${partnerID}', '${t.duration}')">
-                                PAYER PAR MOBILE MONEY
-                            </button>
-                        </div>
-                    `;
-                });
+                // On anime le compteur de 0 vers le chiffre réel (même si c'est 0 pour l'instant)
+                document.getElementById('counter').innerText = data.total.toLocaleString() + " F";
+                document.getElementById('nodes').innerText = data.nodeCount;
                 
-                document.getElementById('welcome-title').innerHTML = `WIFI ZONE : <span>${partnerID}</span>`;
-                document.getElementById('partner-status').innerText = "📡 Nœud Réseau Opérationnel";
-
             } catch (e) {
-                console.error("ERREUR CRITIQUE : Échec de la liaison.");
-                document.getElementById('tarif-list').innerHTML = "<p style='color:red'>Erreur de connexion au serveur Alpha.</p>";
+                console.log("Mode Initialisation : En attente du premier flux...");
             }
         }
-
-        // ✅ FONCTION DE PAIEMENT ALPHA
-        function lancerPaiementAlpha(montant, partnerID, duree) {
-            alert(`[AERIO PAY] Initialisation du paiement sécurisé...\n\nOffre : ${duree}\nMontant : ${montant} F CFA\nPartenaire : ${partnerID}`);
-            // Ici le système basculera vers l'API Moneroo
-        }
-
-        window.onload = chargerLaBoutiqueDuPartenaire;
+        window.onload = fetchGlobalData;
     </script>
 </body>
 </html>
