@@ -40,6 +40,10 @@
         
         .badge-tech { background: rgba(0, 194, 255, 0.1); color: var(--primary); padding: 5px 12px; border-radius: 5px; font-size: 10px; font-weight: 800; margin-bottom: 10px; display: inline-block; }
 
+        /* SELECTEUR STYLE */
+        .selector-box { background: rgba(0,0,0,0.3); padding: 20px; border-radius: 15px; margin-top: 10px; border: 1px solid rgba(255,255,255,0.1); }
+        select { width: 100%; padding: 12px; background: #0f172a; color: white; border: 1px solid var(--primary); border-radius: 8px; outline: none; cursor: pointer; }
+
         .btn-download {
             display: inline-block; padding: 15px 30px; background: var(--primary);
             color: #000; text-decoration: none; border-radius: 12px; font-weight: 900;
@@ -62,7 +66,7 @@
             <span class="logo-text">AERIO</span>
         </div>
         <h1 style="font-size: 32px; font-weight: 900; letter-spacing: -1px;">MANUEL D'ACTIVATION <span style="color:var(--primary)">ALPHA</span></h1>
-        <p style="color: #64748b; font-size: 14px;">Protocoles de synchronisation pour les partenaires du Cameroun 🇨🇲 et du Tchad 🇹🇩.</p>
+        <p style="color: #64748b; font-size: 14px;">Protocoles de synchronisation MikroTik pour le Cameroun 🇨🇲 et le Tchad 🇹🇩.</p>
     </div>
 
     <!-- ÉTAPE 1 -->
@@ -70,31 +74,39 @@
         <div class="step-number">01</div>
         <span class="badge-tech">API MIKROTIK</span>
         <h2>1. Ouverture du canal de données</h2>
-        <p>Pour qu'AERIO puisse injecter les tickets dans votre routeur, vous devez activer l'API RouterOS.</p>
+        <p>Activez le service API (Port 8728) pour permettre la génération de tickets en temps réel.</p>
         <div class="code-block">/ip service set api disabled=no port=8728</div>
-        <p style="font-size: 12px; color: #475569;">Vérifiez que votre pare-feu autorise les connexions sur le port 8728.</p>
     </div>
 
-    <!-- ÉTAPE 2 : NOUVELLE ÉTAPE SANS DATA -->
+    <!-- ÉTAPE 2 -->
     <div class="step-card" style="border: 2px solid var(--accent); background: rgba(0, 245, 160, 0.05);">
         <div class="step-number" style="color: rgba(0, 245, 160, 0.1);">02</div>
         <span class="badge-tech" style="background: var(--accent); color: black;">WALLED GARDEN</span>
         <h2 style="color: var(--accent);">2. Autoriser le paiement sans data</h2>
-        <p>Cette étape est <b>CRITIQUE</b>. Elle permet à vos clients d'ouvrir la page de paiement même s'ils n'ont plus de crédit internet.</p>
+        <p>Autorisez les flux financiers pour permettre l'achat même sans crédit internet.</p>
         <div class="code-block" style="border-left-color: var(--accent); color: var(--accent);">
             /ip hotspot walled-garden ip add dst-host=checkout.moneroo.io action=accept<br>
             /ip hotspot walled-garden ip add dst-host=api.moneroo.io action=accept
         </div>
-        <p style="font-size: 12px; color: #64748b;">Sans cette commande, vos clients seront bloqués avant de pouvoir payer.</p>
     </div>
 
     <!-- ÉTAPE 3 -->
     <div class="step-card">
         <div class="step-number">03</div>
-        <span class="badge-tech">HOTSPOT INTERFACE</span>
-        <h2>3. Déploiement de l'Interface Client</h2>
-        <p>L'interface Élite permet à vos clients de payer directement par Mobile Money.</p>
-        <button class="btn-download" onclick="alert('Protocole Alpha : Le pack de fichiers sera disponible après la validation finale de votre licence.')">📥 TÉLÉCHARGER LE PACK HOTSPOT (.ZIP)</button>
+        <span class="badge-tech">HARDWARE SYNC</span>
+        <h2>3. Téléchargement du Pack MikroTik</h2>
+        <p>Sélectionnez votre architecture pour obtenir un pack 100% compatible avec votre processeur.</p>
+        
+        <div class="selector-box">
+            <select id="model-select">
+                <option value="SMIPS">SMIPS (hAP lite, hAP mini...)</option>
+                <option value="MIPSBE" selected>MIPSBE (RB750, RB951, hAP ac...)</option>
+                <option value="ARM">ARM (hAP ac2, RB4011, L009...)</option>
+                <option value="TILE">TILE (Cloud Core Routers - CCR...)</option>
+            </select>
+        </div>
+
+        <button class="btn-download" onclick="checkDownload()">📥 TÉLÉCHARGER LE PACK (.ZIP)</button>
     </div>
 
     <!-- ÉTAPE 4 -->
@@ -102,7 +114,7 @@
         <div class="step-number">04</div>
         <span class="badge-tech">PARTNER SYNC</span>
         <h2>4. Liaison du Noyau Alpha</h2>
-        <p>Remplacez la variable d'ID dans le fichier de config par votre identifiant unique AERIO.</p>
+        <p>Remplacez la variable d'ID dans votre configuration par votre identifiant unique.</p>
         <div class="code-block">const PARTNER_ID = "AE-0001"; // Votre ID unique</div>
     </div>
 
@@ -110,5 +122,11 @@
         <p>© 2026 AERIO NETWORK AFRICA - PROTOCOLE ALPHA V.3 SÉCURISÉ</p>
     </div>
 
+    <script>
+        function checkDownload() {
+            const model = document.getElementById('model-select').value;
+            alert("PROTOCOLE ALPHA : Votre licence pour l'architecture " + model + " est en cours de validation. Le pack sera débloqué après activation de votre licence (5 000 F).");
+        }
+    </script>
 </body>
 </html>
