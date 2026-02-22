@@ -10,106 +10,98 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         body { background: var(--bg); color: white; min-height: 100vh; background-image: radial-gradient(circle at top right, rgba(0, 194, 255, 0.1), transparent); overflow-x: hidden; }
 
-        /* ✅ NAVIGATION */
-        nav { display: flex; justify-content: space-between; align-items: center; padding: 30px 8%; position: fixed; width: 100%; top: 0; z-index: 1000; backdrop-filter: blur(15px); border-bottom: 1px solid rgba(255,255,255,0.03); }
-        .logo { font-weight: 900; font-size: 24px; color: var(--primary); letter-spacing: -1.5px; }
-        .btn-pro { background: linear-gradient(45deg, var(--primary), var(--neon)); color: white; padding: 12px 25px; border-radius: 12px; font-weight: 900; text-decoration: none; box-shadow: 0 10px 30px rgba(0, 194, 255, 0.3); font-size: 11px; }
+        /* ✅ NAVIGATION RESPONSIVE */
+        nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 8%; position: fixed; width: 100%; top: 0; z-index: 1000; backdrop-filter: blur(15px); border-bottom: 1px solid rgba(255,255,255,0.03); }
+        .logo { font-weight: 900; font-size: 20px; color: var(--primary); letter-spacing: -1.5px; }
+        .nav-links { display: flex; gap: 20px; align-items: center; }
+        .hide-mobile { display: none; }
+        @media (min-width: 1024px) { 
+            .hide-mobile { display: block; color: #64748b; text-decoration: none; font-size: 13px; font-weight: 600; transition: 0.3s; }
+            .logo { font-size: 24px; }
+        }
+        .btn-pro { background: linear-gradient(45deg, var(--primary), var(--neon)); color: white; padding: 10px 20px; border-radius: 12px; font-weight: 900; text-decoration: none; font-size: 10px; text-transform: uppercase; box-shadow: 0 10px 30px rgba(0, 194, 255, 0.3); }
 
-        /* ✅ HERO */
-        .hero { display: flex; align-items: center; justify-content: space-between; padding: 150px 8% 80px; min-height: 80vh; }
-        .hero-text h1 { font-size: 82px; font-weight: 900; line-height: 1; margin-bottom: 30px; letter-spacing: -4px; }
-        .live-card { background: var(--glass); backdrop-filter: blur(40px); padding: 40px; border-radius: 40px; width: 420px; text-align: center; border: 1px solid rgba(255,255,255,0.05); }
+        /* ✅ HERO ADAPTATIF */
+        .hero { display: flex; flex-direction: column; align-items: center; padding: 120px 8% 50px; text-align: center; }
+        @media (min-width: 1024px) { .hero { flex-direction: row; justify-content: space-between; text-align: left; padding: 180px 8% 100px; min-height: 85vh; } }
 
-        /* ✅ SECTION 1 : ARSENAL TACTIQUE (SLIDER HORIZONTAL) */
-        .arsenal { padding: 100px 0; background: rgba(0,0,0,0.2); }
-        .carousel-container { width: 100%; overflow: hidden; padding: 20px 0; }
-        .carousel-track { display: flex; gap: 30px; width: max-content; animation: scrollArsenal 40s linear infinite; }
-        .info-card { width: 350px; background: var(--glass); padding: 40px; border-radius: 35px; border: 1px solid rgba(255,255,255,0.03); backdrop-filter: blur(20px); }
-        .info-card h3 { color: var(--primary); font-weight: 900; font-size: 16px; margin: 15px 0; }
-        .info-card p { color: #64748b; font-size: 13px; line-height: 1.6; }
+        .hero-text h1 { font-size: 42px; font-weight: 900; line-height: 1.1; margin-bottom: 25px; letter-spacing: -2px; }
+        @media (min-width: 1024px) { .hero-text h1 { font-size: 82px; letter-spacing: -4px; } }
+        .hero-text p { color: #64748b; font-size: 15px; margin-bottom: 35px; line-height: 1.6; max-width: 500px; }
 
-        @keyframes scrollArsenal { from { transform: translateX(0); } to { transform: translateX(calc(-380px * 4)); } }
+        .live-card { background: var(--glass); backdrop-filter: blur(40px); padding: 30px; border-radius: 40px; width: 100%; max-width: 420px; border: 1px solid rgba(255,255,255,0.05); margin-top: 50px; }
+        @media (min-width: 1024px) { .live-card { margin-top: 0; padding: 45px; } }
 
-        /* ✅ SECTION 2 : EXPANSION MONDIALE (SLIDER DRAPEAUX) */
-        .global { padding: 100px 8%; text-align: center; }
-        .flag-track { display: flex; gap: 40px; width: max-content; animation: scrollFlags 30s linear infinite; margin-top: 50px; }
-        .flag-card { background: var(--glass); padding: 20px 40px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column; align-items: center; min-width: 220px; }
-        .flag-card b { font-size: 14px; margin-top: 10px; }
-        .flag-card span { font-size: 9px; color: var(--primary); font-weight: 900; }
+        /* ✅ SLIDERS INFINIS */
+        .carousel-track { display: flex; gap: 20px; width: max-content; animation: scroll 40s linear infinite; }
+        @keyframes scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+        .info-card { width: 280px; background: var(--glass); padding: 30px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.03); }
+        .flag-card { min-width: 180px; background: var(--glass); padding: 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column; align-items: center; }
 
-        @keyframes scrollFlags { from { transform: translateX(0); } to { transform: translateX(calc(-260px * 4)); } }
-
-        .whatsapp-float { position: fixed; bottom: 40px; right: 40px; background: #25D366; width: 70px; height: 70px; border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 2000; box-shadow: 0 20px 40px rgba(37, 211, 102, 0.3); }
+        .whatsapp-float { position: fixed; bottom: 30px; right: 30px; background: #25D366; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 2000; box-shadow: 0 15px 30px rgba(37, 211, 102, 0.3); }
     </style>
 </head>
 <body>
-
     <nav>
         <div class="logo">🛰️ AERIO</div>
-        <div style="display:flex; gap:30px; align-items:center;">
-            <a href="/" style="color:white; text-decoration:none; font-size:13px; font-weight:600;">Accueil</a>
-            <a href="/inscription" style="color:#64748b; text-decoration:none; font-size:13px; font-weight:600;">Partenariats</a>
-            <a href="/connexion" class="btn-pro">ESPACE PRO</a>
+        <div class="nav-links">
+            <a href="/" class="hide-mobile">Accueil</a>
+            <a href="/inscription" class="hide-mobile">Partenariats</a>
+            <a href="/connexion" class="btn-pro">Espace Pro</a>
         </div>
     </nav>
 
     <section class="hero">
         <div class="hero-text">
-            <p style="color:var(--primary); font-weight:900; font-size:11px; letter-spacing:3px;">🛰️ PROTOCOLE ALPHA ACTIVÉ</p>
+            <p style="color:var(--primary); font-weight:900; font-size:10px; letter-spacing:3px;">🛰️ PROTOCOLE ALPHA ACTIVÉ</p>
             <h1>Le Futur du <br><span style="color:var(--primary)">WiFi Zone.</span></h1>
-            <p>Déployez votre empire MikroTik à l'échelle internationale avec la puissance du Mobile Money.</p>
-            <a href="/inscription" style="background:white; color:black; padding:20px 40px; border-radius:20px; text-decoration:none; font-weight:900; display:inline-block;">Devenir Partenaire</a>
+            <p>Monétisez votre connexion MikroTik avec la puissance du Mobile Money à l'échelle internationale.</p>
+            <a href="/inscription" style="background:white; color:black; padding:18px 35px; border-radius:18px; text-decoration:none; font-weight:900; display:inline-block; font-size:15px;">Devenir Partenaire</a>
         </div>
         <div class="live-card">
-            <h3 style="font-size:10px; color:#475569; letter-spacing:2px; margin-bottom:20px;">FLUX GÉNÉRÉ EN LIVE</h3>
-            <div id="global-flow" style="font-size:56px; font-weight:900; color:var(--primary);">128 500 F</div>
-            <div style="width:100%; height:6px; background:rgba(255,255,255,0.05); border-radius:10px; margin-top:20px;"><div style="width:75%; height:100%; background:var(--primary); box-shadow:0 0 20px var(--primary);"></div></div>
+            <h3 style="font-size:9px; color:#475569; letter-spacing:2px; margin-bottom:15px;">FLUX GÉNÉRÉ EN LIVE</h3>
+            <div id="global-flow" style="font-size:42px; font-weight:900; color:var(--primary);">128 500 F</div>
+            <div style="width:100%; height:6px; background:rgba(255,255,255,0.05); border-radius:10px; margin:20px 0;"><div style="width:75%; height:100%; background:var(--primary); box-shadow:0 0 20px var(--primary);"></div></div>
         </div>
     </section>
 
-    <!-- ✅ SECTION 1 : ARSENAL TACTIQUE -->
-    <section class="arsenal">
-        <h2 style="text-align:center; margin-bottom:50px; font-weight:900;">L'ARSENAL <span style="color:var(--primary)">TACTIQUE</span></h2>
-        <div class="carousel-container">
-            <div class="carousel-track">
-                <div class="info-card"><h3>🛰️ DÉPLOIEMENT</h3><p>Importation CSV MikroTik industrielle en 1 seconde.</p></div>
-                <div class="info-card"><h3>💸 VENTE AUTO</h3><p>Paiements Mobile Money sécurisés et sans data.</p></div>
-                <div class="info-card"><h3>📈 RADAR PERF</h3><p>Suivi des recettes brutes en temps réel 24h/7j.</p></div>
-                <div class="info-card"><h3>🔓 ZERO DATA</h3><p>Le Walled Garden permet de payer sans forfait internet.</p></div>
-                <!-- Doublon pour effet infini -->
-                <div class="info-card"><h3>🛰️ DÉPLOIEMENT</h3><p>Importation CSV MikroTik industrielle en 1 seconde.</p></div>
-                <div class="info-card"><h3>💸 VENTE AUTO</h3><p>Paiements Mobile Money sécurisés et sans data.</p></div>
-            </div>
-        </div>
+    <!-- ARSENAL -->
+    <section style="padding: 80px 0; background: rgba(0,0,0,0.2);">
+        <h2 style="text-align:center; margin-bottom:40px; font-weight:900; font-size:28px;">L'ARSENAL <span style="color:var(--primary)">TACTIQUE</span></h2>
+        <div style="width:100%; overflow:hidden;"><div class="carousel-track">
+            <div class="info-card"><h3>🛰️ DÉPLOIEMENT</h3><p>Importation CSV MikroTik industrielle en 1 seconde.</p></div>
+            <div class="info-card"><h3>💸 VENTE AUTO</h3><p>Paiements Mobile Money sécurisés et sans data.</p></div>
+            <div class="info-card"><h3>📈 RADAR PERF</h3><p>Suivi des recettes brutes en temps réel 24h/7j.</p></div>
+            <div class="info-card"><h3>🔓 ZERO DATA</h3><p>Le Walled Garden permet de payer sans forfait internet.</p></div>
+            <div class="info-card"><h3>🛰️ DÉPLOIEMENT</h3><p>Importation CSV MikroTik industrielle en 1 seconde.</p></div>
+            <div class="info-card"><h3>💸 VENTE AUTO</h3><p>Paiements Mobile Money sécurisés et sans data.</p></div>
+        </div></div>
     </section>
 
-    <!-- ✅ SECTION 2 : HUB INTERNATIONAL -->
-    <section class="global">
-        <span>🌍 EXPANSION SANS FRONTIÈRES</span>
-        <h2 style="font-weight:900; font-size:42px; margin-top:10px;">HUB <span style="color:var(--primary)">INTERNATIONAL</span></h2>
-        <div class="carousel-container">
-            <div class="flag-track">
-                <div class="flag-card">🇨🇲 <b>CAMEROUN</b><span>Hub Central</span></div>
-                <div class="flag-card">🇨🇮 <b>CÔTE D'IVOIRE</b><span>Nœud Actif</span></div>
-                <div class="flag-card">🇫🇷 <b>FRANCE</b><span>Passerelle Europe</span></div>
-                <div class="flag-card">🇧🇷 <b>BRÉSIL</b><span>Liaison Latam</span></div>
-                <div class="flag-card">🇸🇳 <b>SÉNÉGAL</b><span>Liaison Établie</span></div>
-                <!-- Doublon pour effet infini -->
-                <div class="flag-card">🇨🇲 <b>CAMEROUN</b><span>Hub Central</span></div>
-                <div class="flag-card">🇨🇮 <b>CÔTE D'IVOIRE</b><span>Nœud Actif</span></div>
-            </div>
-        </div>
+    <!-- HUB -->
+    <section style="padding: 80px 0; text-align:center;">
+        <h2 style="font-weight:900; font-size:28px;">HUB <span style="color:var(--primary)">INTERNATIONAL</span></h2>
+        <div style="width:100%; overflow:hidden; margin-top:40px;"><div class="carousel-track" style="animation-duration: 30s;">
+            <div class="flag-card">🇨🇲 <b>CAMEROUN</b><span>Hub Central</span></div>
+            <div class="flag-card">🇨🇮 <b>CÔTE D'IVOIRE</b><span>Nœud Actif</span></div>
+            <div class="flag-card">🇫🇷 <b>FRANCE</b><span>Passerelle Europe</span></div>
+            <div class="flag-card">🇧🇷 <b>BRÉSIL</b><span>Liaison Latam</span></div>
+            <div class="flag-card">🇸🇳 <b>SÉNÉGAL</b><span>Liaison Établie</span></div>
+            <div class="flag-card">🇨🇲 <b>CAMEROUN</b><span>Hub Central</span></div>
+            <div class="flag-card">🇨🇮 <b>CÔTE D'IVOIRE</b><span>Nœud Actif</span></div>
+        </div></div>
     </section>
 
-    <a href="https://wa.me" class="whatsapp-float" target="_blank"><img src="https://upload.wikimedia.org" width="35"></a>
+    <a href="https://wa.me" class="whatsapp-float" target="_blank">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z""")/>></svg>
+    </a>
 
     <script>
-        function animateFlow() {
+        window.onload = function() {
             const flow = document.getElementById('global-flow');
             let start = 128500;
             setInterval(() => { start += Math.floor(Math.random() * 50); flow.innerText = start.toLocaleString() + " F"; }, 3000);
-        }
-        window.onload = animateFlow;
+        };
     </script>
 </body>
 </html>
