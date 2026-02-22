@@ -10,7 +10,7 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         body { background: var(--bg); color: white; min-height: 100vh; background-image: radial-gradient(circle at top right, rgba(0, 194, 255, 0.05), transparent); overflow-x: hidden; }
 
-        /* ✅ VITRINE DE PRESTIGE ALPHA */
+        /* ✅ VITRINE DE PRESTIGE */
         .showcase { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; padding: 120px 8% 60px; gap: 50px; }
         .showcase-text { flex: 1; min-width: 350px; }
         .showcase-text h1 { font-size: clamp(32px, 5vw, 55px); font-weight: 900; line-height: 1.1; letter-spacing: -3px; }
@@ -22,11 +22,12 @@
             border-radius: 50%; display: flex; align-items: center; justify-content: center; position: relative;
             box-shadow: 0 0 100px rgba(0, 194, 255, 0.1); 
         }
+        /* ✅ IMAGE RESTAURÉE : MikroTik hAP ax2 Haute Définition */
         .main-hardware { width: 70%; filter: drop-shadow(0 20px 40px rgba(0,0,0,0.8)); animation: floatImg 5s ease-in-out infinite; }
         @keyframes floatImg { 0%, 100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-30px) rotate(2deg); } }
 
-        .btn-blue { background: var(--primary); color: #020617; padding: 18px 35px; border-radius: 50px; font-weight: 900; border: none; cursor: pointer; margin-right: 15px; transition: 0.3s; }
-        .btn-outline { background: transparent; border: 1px solid #475569; color: white; padding: 18px 35px; border-radius: 50px; font-weight: 900; cursor: pointer; transition: 0.3s; }
+        .btn-blue { background: var(--primary); color: #020617; padding: 18px 35px; border-radius: 50px; font-weight: 900; border: none; cursor: pointer; margin-right: 15px; }
+        .btn-outline { background: transparent; border: 1px solid #475569; color: white; padding: 18px 35px; border-radius: 50px; font-weight: 900; cursor: pointer; }
 
         /* ✅ RAIL HORIZONTAL */
         .shop-container { width: 100%; overflow: hidden; position: relative; padding: 80px 0; background: rgba(0,0,0,0.2); }
@@ -41,10 +42,10 @@
         .product-card:hover { border-color: var(--primary); transform: translateY(-15px); }
 
         .img-box { position: relative; margin-bottom: 35px; }
-        .product-img { width: 100%; max-width: 200px; filter: drop-shadow(0 20px 40px rgba(0,0,0,0.8)); animation: float 4s ease-in-out infinite; }
+        .product-img { width: 100%; max-width: 200px; filter: drop-shadow(0 15px 30px rgba(0,0,0,0.7)); animation: float 4s ease-in-out infinite; }
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
 
-        /* ✅ MODAL COCKPIT PAIEMENT [1.5] */
+        /* ✅ MODAL COCKPIT PAIEMENT */
         .modal-overlay { position: fixed; inset: 0; background: rgba(2, 6, 23, 0.9); backdrop-filter: blur(25px); display: none; align-items: center; justify-content: center; z-index: 5000; padding: 15px; }
         .modal-card { background: rgba(15, 23, 42, 0.8); border: 2px solid var(--primary); border-radius: 50px; width: 100%; max-width: 700px; padding: 50px; position: relative; animation: scaleUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         @keyframes scaleUp { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
@@ -75,18 +76,43 @@
                 <button class="btn-outline" onclick="window.location.href='https://wa.me'">Nous contacter</button>
             </div>
         </div>
-        <div class="showcase-visual"><div class="equipment-circle"><img src="https://routermikrotik.com" class="main-hardware"></div></div>
+        <div class="showcase-visual">
+            <div class="equipment-circle">
+                <!-- ✅ IMAGE RESTAURÉE -->
+                <img src="https://m.media-amazon.com" class="main-hardware" alt="MikroTik hAP ax2">
+            </div>
+        </div>
     </section>
 
     <div class="shop-container" id="catalog">
         <div class="shop-track">
+            <!-- KIT 1 -->
             <div class="product-card" onclick="openModal('Kit Basique', '185 000')">
-                <div class="img-box"><img src="https://routermikrotik.com" class="product-img"></div>
+                <div class="img-box">
+                    <img src="https://m.media-amazon.com" class="product-img">
+                </div>
                 <h3 style="font-weight: 900;">Kit Basique</h3>
                 <div class="price">185 000 F</div>
                 <button style="width:100%; padding:15px; border-radius:15px; font-weight:900; cursor:pointer; background:white; color:black; border:none;">Acquérir</button>
             </div>
-            <!-- ... Duplique pour les autres Kits ... -->
+            <!-- KIT 2 -->
+            <div class="product-card" onclick="openModal('Kit Avancé', '385 000')">
+                <div class="img-box">
+                    <img src="https://m.media-amazon.com" class="product-img">
+                </div>
+                <h3 style="font-weight: 900;">Kit Avancé 🚀</h3>
+                <div class="price">385 000 F</div>
+                <button style="width:100%; padding:15px; border-radius:15px; font-weight:900; cursor:pointer; background:white; color:black; border:none;">Acquérir</button>
+            </div>
+            <!-- KIT 3 -->
+            <div class="product-card" onclick="openModal('Kit Premium', '425 000')">
+                <div class="img-box">
+                    <img src="https://m.media-amazon.com" class="product-img">
+                </div>
+                <h3 style="font-weight: 900;">Kit Premium 💎</h3>
+                <div class="price" style="color:var(--primary);">425 000 F</div>
+                <button style="width:100%; padding:15px; border-radius:15px; font-weight:900; cursor:pointer; background:var(--neon); color:black; border:none;">Acquérir</button>
+            </div>
         </div>
     </div>
 
@@ -116,7 +142,7 @@
         <div style="text-align:center; padding-top:40px; margin-top:40px; border-top:1px solid rgba(255,255,255,0.05);"><a href="index.html" style="color:#475569; text-decoration:none; font-size:11px; font-weight:800;">← RETOUR AU QG ALPHA</a></div>
     </footer>
 
-    <script src="/translations.js"></script>
+    <script src="translations.js"></script>
     <script>
         let selectedKit = "";
         function openModal(kit, price) { selectedKit = kit; document.getElementById('totalPrice').innerText = price + " F"; document.getElementById('orderModal').style.display = 'flex'; }
