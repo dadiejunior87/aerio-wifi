@@ -4,13 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AERIO | Déploiement Nœud Alpha</title>
+    <!-- ✅ POLICE POPPINS & MOTEUR GPS RÉPARÉS -->
     <link href="https://fonts.googleapis.com" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com" />
     <script src="https://unpkg.com"></script>
     <style>
         :root { --primary: #00C2FF; --bg: #020617; --glass: rgba(15, 23, 42, 0.7); --accent: #00F5A0; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        body { background: var(--bg); color: white; padding: 40px; background-image: radial-gradient(circle at top right, rgba(0, 194, 255, 0.05), transparent); }
+        body { background: var(--bg); color: white; padding: 40px; background-image: radial-gradient(circle at top right, rgba(0, 194, 255, 0.05), transparent); overflow-x: hidden; }
 
         .setup-card { background: var(--glass); backdrop-filter: blur(30px); padding: 50px; border-radius: 40px; border: 1px solid rgba(255,255,255,0.05); max-width: 1000px; margin: 0 auto; }
         
@@ -20,14 +21,22 @@
         input { width: 100%; padding: 18px 25px; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 20px; color: white; font-size: 14px; outline: none; transition: 0.3s; }
         input:focus { border-color: var(--primary); box-shadow: 0 0 20px rgba(0, 194, 255, 0.1); }
 
-        /* ✅ EXPLICATIONS RÉINVENTÉES (VERSION ÉLITE) */
         .alpha-hint { font-size: 10px; color: #475569; margin-top: 10px; font-weight: 700; line-height: 1.5; }
         .alpha-hint b { color: var(--accent); text-transform: uppercase; }
 
-        #map { height: 350px; border-radius: 30px; border: 2px solid rgba(0, 194, 255, 0.2); filter: invert(100%) hue-rotate(180deg) brightness(1.2); margin-top: 15px; }
+        /* ✅ FIX DU RADAR GPS */
+        #map { 
+            height: 350px !important; 
+            width: 100%;
+            border-radius: 30px; 
+            border: 2px solid rgba(0, 194, 255, 0.2); 
+            filter: invert(100%) hue-rotate(180deg) brightness(1.2); 
+            margin-top: 15px;
+            z-index: 1;
+        }
         
         .btn-deploy { grid-column: 1 / -1; background: var(--primary); color: #020617; padding: 22px; border-radius: 20px; font-weight: 900; border: none; text-transform: uppercase; letter-spacing: 2px; cursor: pointer; margin-top: 30px; transition: 0.4s; }
-        .btn-deploy:hover { transform: translateY(-5px); box-shadow: 0 15px 40px rgba(0, 194, 255, 0.4); }
+        .btn-deploy:hover { transform: translateY(-5px); box-shadow: 0 15px 40px rgba(0, 194, 255, 0.4); filter: brightness(1.1); }
     </style>
 </head>
 <body>
@@ -37,38 +46,34 @@
         <p style="color: #64748b; font-size: 14px;">Initialisation des protocoles MikroTik 🛰️</p>
 
         <form class="form-grid" id="wifiForm">
-            <!-- NOM DU RESEAU -->
             <div class="input-group">
                 <label>Identifiant du Nœud</label>
                 <input type="text" id="name" placeholder="Ex: Cyber Café Central" required>
-                <p class="alpha-hint"><b>Protocole :</b> Nom public affiché sur l'affiche QR et la boutique du partenaire.</p>
+                <p class="alpha-hint"><b>Protocole :</b> Nom public affiché sur l'affiche QR.</p>
             </div>
 
-            <!-- DESCRIPTION -->
             <div class="input-group">
                 <label>Signature Commerciale</label>
                 <input type="text" id="desc" placeholder="Ex: Ultra-Haut Débit..." required>
-                <p class="alpha-hint"><b>Vecteur :</b> Expliquez les avantages (vitesse, stabilité) pour attirer vos clients.</p>
+                <p class="alpha-hint"><b>Vecteur :</b> Argument de vente pour attirer vos clients.</p>
             </div>
 
-            <!-- PASSERELLE IP -->
             <div class="input-group">
                 <label>Passerelle d'Injection (IP/DNS)</label>
                 <input type="text" id="ip" placeholder="Ex: 192.168.88.1" required>
-                <p class="alpha-hint"><b>Sécurité :</b> Liaison technique permettant la connexion automatique après le paiement.</p>
+                <p class="alpha-hint"><b>Sécurité :</b> Liaison technique pour la connexion automatique.</p>
             </div>
 
-            <!-- CONTACT -->
             <div class="input-group">
                 <label>Canal d'Assistance Directe</label>
                 <input type="text" id="contact" placeholder="Ex: +237 6XX..." required>
-                <p class="alpha-hint"><b>Liaison :</b> Numéro prioritaire utilisé par vos clients pour obtenir du support.</p>
+                <p class="alpha-hint"><b>Liaison :</b> Votre numéro de support prioritaire.</p>
             </div>
 
             <div style="grid-column: 1 / -1; margin-top: 20px;">
                 <label>Radar de Positionnement Satellite</label>
                 <div id="map"></div>
-                <p class="alpha-hint" style="text-align: center;">📍 <b>Scan :</b> Glissez le marqueur sur votre zone géographique réelle.</p>
+                <p class="alpha-hint" style="text-align: center;">📍 <b>Scan :</b> Glissez le marqueur sur votre zone réelle.</p>
             </div>
 
             <button type="submit" class="btn-deploy">LANCER LE PROTOCOLE DE VENTE</button>
@@ -76,15 +81,25 @@
     </div>
 
     <script>
-        const map = L.map('map').setView([7.3697, 12.3547], 6);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-        const marker = L.marker([7.3697, 12.3547], { draggable: true }).addTo(map);
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialisation centrée sur le Cameroun/Tchad
+            const map = L.map('map').setView([7.3697, 12.3547], 6);
+            
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© AERIO ALPHA'
+            }).addTo(map);
 
-        document.getElementById('wifiForm').onsubmit = (e) => {
-            e.preventDefault();
-            alert("🚀 TRANSMISSION RÉUSSIE : Nœud WiFi actif sur le réseau !");
-            window.location.href = "/liste-wifi";
-        };
+            const marker = L.marker([7.3697, 12.3547], { draggable: true }).addTo(map);
+
+            // Correction du bug d'affichage initial
+            setTimeout(() => { map.invalidateSize(); }, 400);
+
+            document.getElementById('wifiForm').onsubmit = (e) => {
+                e.preventDefault();
+                alert("🚀 TRANSMISSION RÉUSSIE : Nœud WiFi actif !");
+                window.location.href = "/liste-wifi";
+            };
+        });
     </script>
 </body>
 </html>
