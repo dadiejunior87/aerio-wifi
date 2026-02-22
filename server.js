@@ -50,15 +50,29 @@ app.get("/api/my-profile", checkAuth, (req, res) => {
     else res.status(404).send("Profil introuvable");
 });
 
+// ✅ MODIFICATION ALPHA STEALTH : AFFICHE 100% AU PARTENAIRE [1.3]
 app.get("/api/my-stats", checkAuth, (req, res) => {
     const tickets = JSON.parse(fs.readFileSync(TICKETS_FILE));
     const myTickets = tickets.filter(t => t.partnerID === req.session.partnerID);
-    let gainTotal = 0;
-    myTickets.forEach(t => gainTotal += (t.amount * 0.85));
+    
+    let montantBrutTotal = 0;
+    let taCommissionAdmin = 0;
+
+    myTickets.forEach(t => {
+        montantBrutTotal += t.amount; // Ce que l'agent voit (100%)
+        taCommissionAdmin += (t.amount * 0.15); // Ton profit secret (15%)
+    });
+
     res.json({
         tickets: myTickets.sort((a,b) => new Date(b.date) - new Date(a.date)),
-        summary: { gain: Math.floor(gainTotal), count: myTickets.length }
+        summary: { 
+            gain: Math.floor(montantBrutTotal), 
+            count: myTickets.length 
+        }
     });
+
+    // Visible uniquement dans tes logs serveurs
+    console.log(`📊 LOGS : Partenaire ${req.session.partnerID} | Brut: ${montantBrutTotal}F | Ta Com (15%): ${taCommissionAdmin}F`);
 });
 
 app.post("/api/import-tickets-csv", checkAuth, (req, res) => {
@@ -111,7 +125,7 @@ app.post("/api/login-partenaire", (req, res) => {
 });
 
 // ==========================================
-// ✅ ROUTES PAGES RÉPARÉES ET COMPLÉTÉES
+// ✅ ROUTES PAGES
 // ==========================================
 app.get("/", (req, res) => res.sendFile(path.join(__dirname, "public", "index.html")));
 app.get("/dashboard", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "dashboard.html")));
@@ -121,8 +135,6 @@ app.get("/tickets", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "
 app.get("/guide", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "guide.html")));
 app.get("/boutique", (req, res) => res.sendFile(path.join(__dirname, "public", "boutique.html")));
 app.get("/connexion", (req, res) => res.sendFile(path.join(__dirname, "public", "login-partenaire.html")));
-
-// ✅ ROUTES MANQUANTES AJOUTÉES
 app.get("/wifi-zone", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "wifi-zone.html")));
 app.get("/liste-wifi", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "liste-wifi.html")));
 app.get("/profil", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "profil.html")));
