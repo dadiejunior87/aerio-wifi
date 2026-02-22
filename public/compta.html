@@ -9,7 +9,21 @@
     <style>
         :root { --primary: #00C2FF; --accent: #00F5A0; --bg: #020617; --glass: rgba(15, 23, 42, 0.7); --warning: #FFB800; --danger: #FF4B4B; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        body { background: var(--bg); color: white; padding: 40px; min-height: 100vh; background-image: radial-gradient(circle at top right, rgba(0, 194, 255, 0.05), transparent); }
+        body { background: var(--bg); color: white; padding: 40px; min-height: 100vh; background-image: radial-gradient(circle at top right, rgba(0, 194, 255, 0.05), transparent); overflow-x: hidden; }
+
+        /* ✅ NOTIFICATIONS TOAST ALPHA [1.5] */
+        #toast-container { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 10000; }
+        .toast-alpha {
+            background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(15px);
+            border: 1px solid var(--primary); color: white; padding: 16px 30px;
+            border-radius: 20px; font-weight: 800; font-size: 12px; display: flex;
+            align-items: center; gap: 12px; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            animation: slideDownAlpha 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+        .toast-alpha.error { border-color: var(--danger); }
+        @keyframes slideDownAlpha { from { opacity: 0; transform: translateY(-50px); } to { opacity: 1; transform: translateY(0); } }
+        .slideUpAlpha { animation: slideUpAlpha 0.5s forwards !important; }
+        @keyframes slideUpAlpha { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(-50px); } }
 
         .header-compta { margin-bottom: 40px; }
         .header-compta h1 { font-size: 28px; font-weight: 900; letter-spacing: -1.5px; }
@@ -28,7 +42,6 @@
         input, select { width: 100%; padding: 18px 25px; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 20px; color: white; font-size: 14px; outline: none; transition: 0.3s; }
         input:focus { border-color: var(--primary); }
         
-        /* ✅ STYLE DU MESSAGE D'ALERTE */
         .limit-hint { font-size: 10px; color: var(--danger); font-weight: 800; margin-top: 10px; display: block; letter-spacing: 1px; }
 
         .btn-withdraw { grid-column: 1 / -1; background: var(--accent); color: #020617; padding: 22px; border-radius: 20px; font-weight: 900; border: none; text-transform: uppercase; letter-spacing: 2px; cursor: pointer; transition: 0.4s; }
@@ -44,6 +57,8 @@
     </style>
 </head>
 <body>
+
+    <div id="toast-container"></div>
 
     <div class="header-compta">
         <h1>Gestion <span style="color:var(--primary)">Financière</span> Alpha</h1>
@@ -79,7 +94,6 @@
             </div>
             <div class="form-group" style="grid-column: 1 / -1;">
                 <label>Montant à extraire (XAF)</label>
-                <!-- ✅ VERROU PHYSIQUE À 5000 -->
                 <input type="number" id="amount" placeholder="Entrez 5000 ou plus" min="5000" required>
                 <span class="limit-hint">🛡️ SEUIL DE SÉCURITÉ : 5 000 F MINIMUM</span>
             </div>
@@ -108,6 +122,19 @@
     <a href="/dashboard" class="back-link">← Retour au QG Alpha</a>
 
     <script>
+        // ✅ MOTEUR DE NOTIFICATION ÉLITE [1.4]
+        function showNotify(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast-alpha ${type}`;
+            toast.innerHTML = `<span>⚡</span> ${message}`;
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.classList.add('slideUpAlpha');
+                setTimeout(() => toast.remove(), 500);
+            }, 4000);
+        }
+
         async function loadCompta() {
             try {
                 const res = await fetch('/api/my-stats');
@@ -138,15 +165,15 @@
 
                 const result = await res.json();
                 if (res.ok) {
-                    alert("🚀 PROTOCOLE RÉUSSI : " + result.message);
-                    window.location.reload();
+                    showNotify("PROTOCOLE RÉUSSI : Extraction en cours ✅");
+                    setTimeout(() => window.location.reload(), 2000);
                 } else {
-                    alert("❌ " + result.error);
+                    showNotify(result.error, 'error');
                     btn.disabled = false;
                     btn.innerText = "🚀 INITIALISER L'EXTRACTION";
                 }
             } catch (err) {
-                alert("❌ Erreur de liaison satellite.");
+                showNotify("Erreur de liaison satellite ❌", 'error');
                 btn.disabled = false;
             }
         };
