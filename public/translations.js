@@ -1,8 +1,9 @@
-// ✅ LE CERVEAU MULTILINGUE GLOBAL AERIO (ZÉRO PERTE - 4 LANGUES ACTIVÉES)
+// ✅ LE CERVEAU MULTILINGUE GLOBAL AERIO (ZÉRO PERTE - VERSION MANUEL INCLUS)
 const translations = {
     fr: {
+        // --- ACCUEIL & DASHBOARD ---
         nav_home: "Accueil", nav_partners: "Partenariats", nav_docs: "Documentation", nav_pro: "ESPACE PRO",
-        hero_tag: "🛰️ PROTOCOLE ALPHA ACTIVÉ",
+        hero_tag: "🛰️ RÉSEAU ALPHA DÉPLOYÉ",
         hero_title: "Le Futur du <br><span style='color:#00C2FF'>WiFi Zone.</span>",
         hero_p: "Monétisez votre connexion MikroTik avec la puissance du Mobile Money à l'échelle internationale.",
         btn_partner: "Devenir Partenaire",
@@ -22,11 +23,20 @@ const translations = {
         dash_nav_compta: "💰 Ma Comptabilité", dash_sub_payout: "• Effectuer un retrait", dash_sub_revenue: "• Mes Recettes",
         dash_q_profile: "Mon Profil", dash_q_profile_s: "Identité Alpha", dash_q_support: "Support Chat",
         dash_q_docs: "Contacts & Docs", dash_q_docs_s: "Base Documentaire",
-        dash_stat_gain: "GAIN RÉEL DISPONIBLE", dash_stat_stock: "SESSIONS EN STOCK"
+        dash_stat_gain: "GAIN RÉEL DISPONIBLE", dash_stat_stock: "SESSIONS EN STOCK",
+
+        // --- MANUEL GUIDE (NOUVEAU) ---
+        guide_title: "MANUEL DE CONFIGURATION <span style='color:#00C2FF'>ALPHA</span>",
+        guide_step_1: "1. CONFIGURATION DU WALLED GARDEN",
+        guide_desc_1: "Autorisez les domaines de paiement pour que vos clients payent sans internet.",
+        guide_step_2: "2. INJECTION DU SCRIPT MIKROTIK",
+        guide_desc_2: "Copiez ce script dans votre terminal pour lier votre routeur au noyau AERIO.",
+        btn_copy: "COPIER LE SCRIPT ALPHA",
+        guide_warning: "⚠️ ATTENTION : Ne modifiez pas votre ID Partenaire dans le script."
     },
     en: {
         nav_home: "Home", nav_partners: "Partnerships", nav_docs: "Documentation", nav_pro: "PRO SPACE",
-        hero_tag: "🛰️ ALPHA PROTOCOL ACTIVATED",
+        hero_tag: "🛰️ ALPHA NETWORK DEPLOYED",
         hero_title: "The Future of <br><span style='color:#00C2FF'>WiFi Zone.</span>",
         hero_p: "Monetize your MikroTik connection with the power of Mobile Money on an international scale.",
         btn_partner: "Become a Partner",
@@ -46,9 +56,18 @@ const translations = {
         dash_nav_compta: "💰 My Accounting", dash_sub_payout: "• Make a withdrawal", dash_sub_revenue: "• My Revenue",
         dash_q_profile: "My Profile", dash_q_profile_s: "Alpha Identity", dash_q_support: "Support Chat",
         dash_q_docs: "Contacts & Docs", dash_q_docs_s: "Documentation Base",
-        dash_stat_gain: "REAL AVAILABLE GAIN", dash_stat_stock: "SESSIONS IN STOCK"
+        dash_stat_gain: "REAL AVAILABLE GAIN", dash_stat_stock: "SESSIONS IN STOCK",
+
+        // --- GUIDE MANUAL (NEW) ---
+        guide_title: "ALPHA <span style='color:#00C2FF'>CONFIGURATION MANUAL</span>",
+        guide_step_1: "1. WALLED GARDEN SETUP",
+        guide_desc_1: "Authorize payment domains so your customers can pay without internet.",
+        guide_step_2: "2. MIKROTIK SCRIPT INJECTION",
+        guide_desc_2: "Copy this script into your terminal to link your router to the AERIO core.",
+        btn_copy: "COPY ALPHA SCRIPT",
+        guide_warning: "⚠️ WARNING: Do not modify your Partner ID in the script."
     },
-    pt: { // ✅ NOUVEAU : PORTUGAIS
+    pt: {
         nav_home: "Início", nav_partners: "Parcerias", nav_docs: "Documentação", nav_pro: "ESPAÇO PRO",
         hero_tag: "🛰️ PROTOCOLO ALPHA ATIVADO",
         hero_title: "O Futuro da <br><span style='color:#00C2FF'>WiFi Zone.</span>",
@@ -70,9 +89,18 @@ const translations = {
         dash_nav_compta: "💰 Minha Contabilidade", dash_sub_payout: "• Fazer um saque", dash_sub_revenue: "• Minha Receita",
         dash_q_profile: "Meu Perfil", dash_q_profile_s: "Identidade Alpha", dash_q_support: "Chat de Suporte",
         dash_q_docs: "Contatos e Docs", dash_q_docs_s: "Base de Documentação",
-        dash_stat_gain: "GANHO REAL DISPONÍVEL", dash_stat_stock: "SESSÕES EM ESTOQUE"
+        dash_stat_gain: "GANHO REAL DISPONÍVEL", dash_stat_stock: "SESSÕES EM ESTOQUE",
+
+        // --- GUIA MANUAL (NEW) ---
+        guide_title: "MANUAL DE CONFIGURAÇÃO <span style='color:#00C2FF'>ALPHA</span>",
+        guide_step_1: "1. CONFIGURAÇÃO DO WALLED GARDEN",
+        guide_desc_1: "Autorize domínios de pagamento para que seus clientes paguem sem internet.",
+        guide_step_2: "2. INJEÇÃO DE SCRIPT MIKROTIK",
+        guide_desc_2: "Copie este script em seu terminal para vincular seu roteador ao núcleo AERIO.",
+        btn_copy: "COPIAR SCRIPT ALPHA",
+        guide_warning: "⚠️ AVISO: Não modifique seu Partner ID no script."
     },
-    es: { // ✅ NOUVEAU : ESPAGNOL
+    es: {
         nav_home: "Inicio", nav_partners: "Asociaciones", nav_docs: "Documentación", nav_pro: "ESPACIO PRO",
         hero_tag: "🛰️ PROTOCOLO ALPHA ACTIVADO",
         hero_title: "El Futuro de la <br><span style='color:#00C2FF'>WiFi Zone.</span>",
@@ -94,11 +122,20 @@ const translations = {
         dash_nav_compta: "💰 Mi Contabilidad", dash_sub_payout: "• Realizar un retiro", dash_sub_revenue: "• Mis Ingresos",
         dash_q_profile: "Mi Perfil", dash_q_profile_s: "Identidad Alpha", dash_q_support: "Chat de Soporte",
         dash_q_docs: "Contactos y Docs", dash_q_docs_s: "Base Documental",
-        dash_stat_gain: "GANANCIA REAL DISPONIBLE", dash_stat_stock: "SESIONES EN STOCK"
+        dash_stat_gain: "GANANCIA REAL DISPONIBLE", dash_stat_stock: "SESIONES EN STOCK",
+
+        // --- GUÍA MANUAL (NEW) ---
+        guide_title: "MANUAL DE CONFIGURACIÓN <span style='color:#00C2FF'>ALPHA</span>",
+        guide_step_1: "1. CONFIGURACIÓN DEL WALLED GARDEN",
+        guide_desc_1: "Autorice los dominios de pago para que sus clientes paguen sin internet.",
+        guide_step_2: "2. INYECCIÓN DE SCRIPT MIKROTIK",
+        guide_desc_2: "Copie este script en su terminal para vincular su enrutador al núcleo de AERIO.",
+        btn_copy: "COPIAR SCRIPT ALPHA",
+        guide_warning: "⚠️ ADVERTENCIA: No modifique su ID de socio en el script."
     }
 };
 
-// ⚙️ MOTEUR DE CHANGEMENT DE LANGUE (4 LANGUES UNIVERSELLES)
+// ⚙️ MOTEUR DE CHANGEMENT DE LANGUE (ULTRA-FLUIDE)
 function setLang(lang) {
     localStorage.setItem('aerio_lang', lang);
     applyTranslations();
