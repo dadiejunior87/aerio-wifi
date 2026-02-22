@@ -9,101 +9,94 @@
     <style>
         :root { --primary: #00C2FF; --secondary: #7000FF; --bg: #020617; --glass: rgba(15, 23, 42, 0.7); --accent: #00F5A0; --danger: #FF4B4B; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        body { background: var(--bg); color: white; line-height: 1.6; padding: 50px 8%; background-image: radial-gradient(circle at top right, rgba(0, 194, 255, 0.05), transparent); }
+        body { background: var(--bg); color: white; line-height: 1.6; padding: 50px 8%; background-image: radial-gradient(circle at top right, rgba(0, 194, 255, 0.05), transparent); overflow-x: hidden; }
+
+        /* ✅ NOTIFICATIONS TOAST ALPHA [1.5] */
+        #toast-container { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 10000; }
+        .toast-alpha {
+            background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(15px);
+            border: 1px solid var(--primary); color: white; padding: 16px 30px;
+            border-radius: 20px; font-weight: 800; font-size: 12px; display: flex;
+            align-items: center; gap: 12px; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            animation: slideDownAlpha 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+        @keyframes slideDownAlpha { from { opacity: 0; transform: translateY(-50px); } to { opacity: 1; transform: translateY(0); } }
+        .slideUpAlpha { animation: slideUpAlpha 0.5s forwards !important; }
+        @keyframes slideUpAlpha { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(-50px); } }
 
         .header-guide { text-align: center; margin-bottom: 80px; position: relative; }
         .back-btn-top { position: absolute; top: -30px; left: 0; color: #475569; text-decoration: none; font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; border: 1px solid rgba(255,255,255,0.05); padding: 12px 25px; border-radius: 50px; transition: 0.4s; backdrop-filter: blur(10px); }
         .back-btn-top:hover { color: var(--primary); border-color: var(--primary); background: rgba(0, 194, 255, 0.05); }
 
-        .logo-box { display: flex; align-items: center; justify-content: center; margin-bottom: 25px; }
-        .logo-text { font-weight: 900; font-size: 32px; color: var(--primary); margin-left: 15px; letter-spacing: -2px; }
-
-        .step-card { background: var(--glass); backdrop-filter: blur(30px); border-radius: 40px; padding: 50px; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 40px; position: relative; overflow: hidden; transition: 0.5s; }
-        .step-card:hover { border-color: var(--primary); transform: translateY(-5px); }
-
-        .step-number { position: absolute; top: -20px; right: 20px; font-size: 140px; font-weight: 900; color: rgba(255,255,255,0.02); z-index: -1; }
-        h2 { color: var(--primary); font-size: 22px; margin-bottom: 25px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; }
+        .step-card { background: var(--glass); backdrop-filter: blur(30px); border-radius: 40px; padding: 50px; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 40px; position: relative; overflow: hidden; }
+        h2 { color: var(--primary); font-size: 22px; margin-bottom: 25px; font-weight: 900; text-transform: uppercase; }
         
-        .code-block { background: #000; padding: 25px; border-radius: 20px; color: var(--accent); font-family: 'Courier New', monospace; font-size: 14px; margin: 20px 0; border-left: 4px solid var(--primary); position: relative; }
-        .badge-tech { background: rgba(0, 194, 255, 0.1); color: var(--primary); padding: 6px 15px; border-radius: 8px; font-size: 10px; font-weight: 900; margin-bottom: 15px; display: inline-block; border: 1px solid rgba(0, 194, 255, 0.2); }
-
-        /* ✅ BOUTON DE TÉLÉCHARGEMENT ÉLITE */
-        .btn-download { display: inline-block; padding: 20px 40px; background: var(--accent); color: #000; text-decoration: none; border-radius: 18px; font-weight: 900; margin-top: 30px; border: none; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: 0.4s; }
-        .btn-download:hover { transform: translateY(-5px); box-shadow: 0 15px 40px var(--accent); filter: brightness(1.1); }
-
-        .footer-guide { text-align: center; margin-top: 100px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 40px; color: #475569; font-size: 11px; font-weight: 700; }
+        .code-block { background: #000; padding: 25px; border-radius: 20px; color: var(--accent); font-family: 'Courier New', monospace; font-size: 14px; border-left: 4px solid var(--primary); }
+        
+        .btn-download { display: inline-block; padding: 20px 40px; background: var(--accent); color: #000; text-decoration: none; border-radius: 18px; font-weight: 900; margin-top: 30px; border: none; cursor: pointer; text-transform: uppercase; transition: 0.4s; }
+        .btn-download:hover { transform: translateY(-5px); box-shadow: 0 15px 40px var(--accent); }
     </style>
 </head>
 <body>
 
+    <div id="toast-container"></div>
+
     <div class="header-guide">
         <a href="/dashboard" class="back-btn-top">← RETOUR AU QG ALPHA</a>
-        <div class="logo-box">
-            <svg width="55" height="55" viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="48" stroke="#00C2FF" stroke-width="5" stroke-dasharray="12 6""")/>><path d="M50 25L25 75H35L50 45L65 75H75L50 25Z" fill="#00C2FF""")/>></svg>
-            <span class="logo-text">AERIO</span>
-        </div>
         <h1>MANUEL <span style="color:var(--primary)">ALPHA</span></h1>
         <p style="color: #64748b; font-size: 15px; font-weight: 600;">Liaison MikroTik sans data 🇨🇲 🇹🇩.</p>
     </div>
 
     <!-- ÉTAPE 1 : SCRIPT -->
     <div class="step-card">
-        <div class="step-number">01</div>
-        <span class="badge-tech">SCRIPT INJECTION</span>
         <h2>1. Script "Checkoutmoneroo"</h2>
-        <p style="color: #94a3b8; font-size: 14px;">Synchronisez vos ventes avec le noyau AERIO via ce script.</p>
         <div class="code-block">/tool fetch url="https://aerio.onrender.com" mode=https</div>
-    </div>
-
-    <!-- ÉTAPE 2 : WALLED GARDEN -->
-    <div class="step-card">
-        <div class="step-number">02</div>
-        <span class="badge-tech" style="background: var(--accent); color: black;">ZERO DATA</span>
-        <h2 style="color: var(--accent);">2. Libération du Flux</h2>
-        <p style="color: #94a3b8; font-size: 14px;">Autorisez les paiements sans forfait internet actif.</p>
-        <div class="code-block" style="border-left-color: var(--accent);">/ip hotspot walled-garden ip add dst-host=checkout.moneroo.io action=accept</div>
     </div>
 
     <!-- ÉTAPE 3 : LICENCE ET TÉLÉCHARGEMENT -->
     <div class="step-card" id="licence-box" style="border: 1px solid var(--primary); text-align: center;">
-        <div class="step-number">03</div>
-        <span class="badge-tech">CERTIFICATION</span>
         <h2>3. État & Extraction de Licence</h2>
         <div id="licence-status" style="font-size: 24px; font-weight: 900; margin-top: 15px;">CHARGEMENT...</div>
         <div id="partner-id-display" style="font-size: 14px; color: var(--primary); font-family: monospace; margin-top: 10px;">ID: ...</div>
         
-        <!-- ✅ BOUTON DE TÉLÉCHARGEMENT INJECTÉ -->
         <button class="btn-download" onclick="downloadCertificate()">📥 TÉLÉCHARGER MON ACCRÉDITATION</button>
     </div>
 
-    <div class="footer-guide">
-        <p>© 2026 AERIO NETWORK AFRICA - PROTOCOLE ALPHA V.3</p>
-    </div>
-
     <script>
+        // ✅ FONCTION DE NOTIFICATION DÉROULANTE [1.4]
+        function showNotify(message) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'toast-alpha';
+            toast.innerHTML = `<span>⚡</span> ${message}`;
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.classList.add('slideUpAlpha');
+                setTimeout(() => toast.remove(), 500);
+            }, 4000);
+        }
+
         async function loadGuide() {
             try {
                 const res = await fetch('/api/my-profile');
                 const user = await res.json();
                 document.getElementById('partner-id-display').innerText = `PARTNER_ID = "${user.partnerID}"`;
                 const lStatus = document.getElementById('licence-status');
-                const lBox = document.getElementById('licence-box');
-
                 if (user.licence === "ACTIVE") {
                     lStatus.innerText = "LICENCE ALPHA : ACTIVE ✅";
                     lStatus.style.color = "var(--accent)";
-                    lBox.style.borderColor = "var(--accent)";
                 } else {
                     lStatus.innerText = "LICENCE : INACTIVE ⚠️";
                     lStatus.style.color = "var(--danger)";
-                    lBox.style.borderColor = "var(--danger)";
                 }
             } catch (e) { console.log("Erreur Alpha."); }
         }
 
+        // ✅ PLUS DE FENÊTRE BLANCHE ! [1.5]
         function downloadCertificate() {
-            alert("🔒 PROTOCOLE : Préparation de votre certificat PDF... Extraction en cours.");
+            showNotify("🔒 PROTOCOLE : Préparation de votre certificat PDF... Extraction en cours.");
         }
+        
         window.onload = loadGuide;
     </script>
 </body>
