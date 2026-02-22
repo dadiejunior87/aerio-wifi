@@ -11,75 +11,102 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         body { background: var(--bg); color: white; min-height: 100vh; background-image: radial-gradient(circle at top right, rgba(0, 194, 255, 0.05), transparent); overflow-x: hidden; }
 
-        /* ✅ HEADER DE PROPULSION */
-        .shop-header { text-align: center; margin-bottom: 60px; padding: 80px 5% 0; }
-        .shop-header h1 { font-size: 38px; font-weight: 900; letter-spacing: -2px; text-transform: uppercase; }
-        .shop-header p { color: var(--primary); font-weight: 900; font-size: 10px; letter-spacing: 4px; margin-top: 10px; }
+        /* ✅ VITRINE DE PRESTIGE (STYLE IMAGE SOUHAITÉ) [1.5] */
+        .showcase { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; padding: 120px 8% 60px; gap: 50px; }
+        .showcase-text { flex: 1; min-width: 350px; }
+        .showcase-text h1 { font-size: clamp(32px, 5vw, 55px); font-weight: 900; line-height: 1.1; letter-spacing: -3px; }
+        
+        .showcase-visual { flex: 1; display: flex; justify-content: center; position: relative; }
+        .equipment-circle { 
+            width: clamp(300px, 40vw, 450px); height: clamp(300px, 40vw, 450px); 
+            background: rgba(0, 194, 255, 0.05); border: 1px solid var(--primary); 
+            border-radius: 50%; display: flex; align-items: center; justify-content: center; position: relative;
+            box-shadow: 0 0 100px rgba(0, 194, 255, 0.1); 
+        }
+        .main-hardware { width: 70%; filter: drop-shadow(0 20px 40px rgba(0,0,0,0.8)); animation: floatImg 5s ease-in-out infinite; }
+        @keyframes floatImg { 0%, 100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-30px) rotate(2deg); } }
 
-        /* ✅ RAIL DE DÉFILEMENT HORIZONTAL INFINI [1.5] */
-        .shop-container { width: 100%; overflow: hidden; position: relative; padding: 40px 0; }
+        .btn-blue { background: var(--primary); color: #020617; padding: 18px 35px; border-radius: 50px; font-weight: 900; border: none; cursor: pointer; margin-right: 15px; transition: 0.3s; }
+        .btn-blue:hover { transform: scale(1.05); box-shadow: 0 0 20px var(--primary); }
+        .btn-outline { background: transparent; border: 1px solid #475569; color: white; padding: 18px 35px; border-radius: 50px; font-weight: 900; cursor: pointer; transition: 0.3s; }
+        .btn-outline:hover { border-color: white; background: rgba(255,255,255,0.05); }
+
+        /* ✅ RAIL DE DÉFILEMENT HORIZONTAL INFINI */
+        .shop-container { width: 100%; overflow: hidden; position: relative; padding: 80px 0; background: rgba(0,0,0,0.2); }
         .shop-track { display: flex; gap: 40px; width: max-content; animation: scroll-shop 60s linear infinite; }
-        .shop-track:hover { animation-play-state: paused; } /* Pause pour inspection */
-
+        .shop-track:hover { animation-play-state: paused; }
         @keyframes scroll-shop { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
-        /* ✅ CARTES PRODUITS EN LÉVITATION [1.5] */
         .product-card { 
             width: 350px; background: var(--glass); backdrop-filter: blur(40px); border-radius: 50px; padding: 50px; 
             border: 1px solid rgba(255,255,255,0.05); text-align: center; transition: 0.5s; position: relative; 
         }
-        .product-card:hover { border-color: var(--primary); transform: translateY(-15px); box-shadow: 0 40px 80px rgba(0, 194, 255, 0.15); }
+        .product-card:hover { border-color: var(--primary); transform: translateY(-15px); }
 
         .img-box { position: relative; margin-bottom: 35px; }
-        .product-img { width: 100%; max-width: 220px; filter: drop-shadow(0 20px 40px rgba(0,0,0,0.8)); animation: float 4s ease-in-out infinite; }
+        .product-img { width: 100%; max-width: 200px; filter: drop-shadow(0 20px 40px rgba(0,0,0,0.8)); animation: float 4s ease-in-out infinite; }
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
 
         .price { font-size: 32px; font-weight: 900; color: var(--accent); margin: 20px 0; }
-        .btn-buy { width: 100%; padding: 20px; background: white; color: #020617; border-radius: 20px; font-weight: 900; border: none; cursor: pointer; text-transform: uppercase; transition: 0.3s; }
-        .btn-buy:hover { background: var(--primary); transform: scale(1.05); }
-
-        /* ✅ FOOTER TACTIQUE FINAL [1.5] */
-        footer { margin-top: 100px; padding: 60px 8%; background: rgba(0,0,0,0.4); border-top: 1px solid var(--primary); backdrop-filter: blur(20px); }
+        
+        /* ✅ FOOTER TACTIQUE */
+        footer { padding: 80px 8% 40px; background: rgba(0,0,0,0.4); border-top: 1px solid var(--primary); backdrop-filter: blur(20px); }
         .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 40px; max-width: 1000px; margin: 0 auto; }
         .info-box-footer { border-left: 4px solid var(--primary); padding-left: 20px; }
     </style>
 </head>
 <body>
 
-    <div class="shop-header">
-        <p>📡 ARSENAL DE GRADE MILITAIRE</p>
-        <h1 data-lang="nav_shop">Hardware <span style="color:var(--primary)">Alpha Arsenal</span></h1>
-    </div>
+    <!-- ✅ VITRINE DE PRESTIGE ALPHA -->
+    <section class="showcase">
+        <div class="showcase-text">
+            <p style="color:var(--primary); font-weight:900; font-size:10px; letter-spacing:4px; margin-bottom:15px;">🛰️ ARSENAL HARDWARE ALPHA</p>
+            <h1>Mise en place de votre <br><span style="color:var(--primary)">WiFi Zone automatisée.</span></h1>
+            <ul style="list-style: none; margin: 30px 0; color: #64748b; font-size: 14px; line-height: 2.2;">
+                <li><span style="color:var(--accent)">✔</span> Configuration et automatisation incluses</li>
+                <li><span style="color:var(--accent)">✔</span> Intégration plateforme Ticket WiFi Zone</li>
+                <li><span style="color:var(--accent)">✔</span> Accompagnement Alpha personnalisé</li>
+            </ul>
+            <div style="margin-top: 40px;">
+                <button class="btn-blue" onclick="document.getElementById('catalog').scrollIntoView({behavior: 'smooth'})">Voir nos offres</button>
+                <button class="btn-outline" onclick="window.location.href='https://wa.me'">Nous contacter</button>
+            </div>
+        </div>
 
-    <div class="shop-container">
+        <div class="showcase-visual">
+            <div class="equipment-circle">
+                <img src="https://routermikrotik.com" class="main-hardware" alt="MikroTik">
+            </div>
+        </div>
+    </section>
+
+    <!-- ✅ CATALOGUE SUR RAIL HORIZONTAL -->
+    <div class="shop-container" id="catalog">
         <div class="shop-track">
-            <!-- KIT 1 : MIKROTIK hAP ax2 -->
             <div class="product-card">
                 <div class="img-box"><img src="https://routermikrotik.com" class="product-img"></div>
                 <h3 style="font-weight: 900;">MikroTik hAP ax²</h3>
                 <div class="price">85 000 F</div>
-                <button class="btn-buy" onclick="alert('Liaison satellite...')">Acquérir</button>
+                <button style="width:100%; padding:20px; border-radius:20px; font-weight:900; cursor:pointer;" onclick="window.location.href='https://wa.me'">Acquérir</button>
             </div>
-            <!-- KIT 2 : KIT AVANCÉ -->
             <div class="product-card">
                 <div class="img-box"><img src="https://m.media-amazon.com" class="product-img"></div>
                 <h3 style="font-weight: 900;">Kit Avancé 🚀</h3>
                 <div class="price">385 000 F</div>
-                <button class="btn-buy" onclick="alert('Liaison satellite...')">Acquérir</button>
+                <button style="width:100%; padding:20px; border-radius:20px; font-weight:900; cursor:pointer;" onclick="window.location.href='https://wa.me'">Acquérir</button>
             </div>
-            <!-- KIT 3 : KIT PREMIUM ALPHA -->
             <div class="product-card" style="border-color: var(--neon);">
                 <div class="img-box"><img src="https://m.media-amazon.com" class="product-img"></div>
                 <h3 style="font-weight: 900;">Kit Premium 💎</h3>
                 <div class="price" style="color:var(--primary);">425 000 F</div>
-                <button class="btn-buy" style="background:var(--neon); color:white;">Acquérir</button>
+                <button style="width:100%; padding:20px; border-radius:20px; font-weight:900; cursor:pointer;" onclick="window.location.href='https://wa.me'">Acquérir</button>
             </div>
-            <!-- Duplicate pour boucle infinie -->
+            <!-- Duplication pour boucle -->
             <div class="product-card">
                 <div class="img-box"><img src="https://routermikrotik.com" class="product-img"></div>
                 <h3 style="font-weight: 900;">MikroTik hAP ax²</h3>
                 <div class="price">85 000 F</div>
-                <button class="btn-buy">Acquérir</button>
+                <button style="width:100%; padding:20px; border-radius:20px; font-weight:900; cursor:pointer;">Acquérir</button>
             </div>
         </div>
     </div>
@@ -89,12 +116,12 @@
             <div class="info-box-footer">
                 <div style="font-size: 20px; margin-bottom: 10px;">🚚</div>
                 <b style="color:var(--primary); font-size:12px; text-transform:uppercase;">Logistique Alpha</b>
-                <p style="font-size: 13px; color: #64748b; margin-top: 10px;">Frais de livraison à la charge du partenaire pour un déploiement sécurisé.</p>
+                <p style="font-size: 13px; color: #64748b; margin-top: 10px;">Livraison internationale sécurisée sous 24/48h.</p>
             </div>
             <div class="info-box-footer" style="border-color: var(--accent);">
                 <div style="font-size: 20px; margin-bottom: 10px;">🛡️</div>
-                <b style="color:var(--accent); font-size:12px; text-transform:uppercase;">Solution Clé en Main</b>
-                <p style="font-size: 13px; color: #64748b; margin-top: 10px;">Infrastructure robuste pour rentabiliser votre réseau WiFi immédiatement.</p>
+                <b style="color:var(--accent); font-size:12px; text-transform:uppercase;">Support Expert</b>
+                <p style="font-size: 13px; color: #64748b; margin-top: 10px;">Accompagnement personnalisé pour le déploiement de votre noeud.</p>
             </div>
         </div>
         <div style="text-align:center; padding-top:40px; margin-top:40px; border-top:1px solid rgba(255,255,255,0.05);">
