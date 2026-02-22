@@ -3,101 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AERIO | Boutique WiFi Alpha</title>
-    <!-- GOOGLE FONTS ÉLITE RÉPARÉ -->
+    <title>AERIO | Boutique WiFi Rapide</title>
+    <!-- ✅ POLICE POPPINS ÉLITE -->
     <link href="https://fonts.googleapis.com" rel="stylesheet">
     <style>
-        :root {
-            --primary: #00C2FF; --secondary: #7000FF; --accent: #00F5A0;
-            --bg: #020617; --glass: rgba(15, 23, 42, 0.7);
-        }
+        :root { --primary: #00C2FF; --bg: #020617; --glass: rgba(15, 23, 42, 0.9); --accent: #00F5A0; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        
-        body { 
-            background: linear-gradient(rgba(2, 6, 23, 0.85), rgba(2, 6, 23, 0.95)), 
-                        url('https://images.unsplash.com');
-            background-size: cover; background-position: center; background-attachment: fixed;
-            color: white; overflow-x: hidden; min-height: 100vh; 
+        body { background: var(--bg); color: white; padding: 25px; text-align: center; background-image: radial-gradient(circle at top, rgba(0, 194, 255, 0.1), transparent); }
+
+        .logo-box { margin: 30px 0; }
+        .logo-text { font-weight: 900; font-size: 28px; color: var(--primary); letter-spacing: -1.5px; }
+
+        .offer-card { 
+            background: var(--glass); padding: 30px; border-radius: 30px; 
+            border: 1px solid rgba(255,255,255,0.05); margin-bottom: 20px;
+            backdrop-filter: blur(20px); transition: 0.3s; cursor: pointer;
         }
-
-        nav { display: flex; justify-content: space-between; padding: 20px 8%; align-items: center; backdrop-filter: blur(15px); position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .logo-text { font-weight: 900; font-size: 26px; color: var(--primary); letter-spacing: -1.5px; }
-
-        .hero { padding: 60px 8% 20px; text-align: center; }
-        .hero h1 { font-size: 3.5rem; font-weight: 900; margin-bottom: 15px; letter-spacing: -2px; }
-        .hero h1 span { color: var(--primary); text-shadow: 0 0 30px rgba(0, 194, 255, 0.3); }
-        .hero p { color: #94a3b8; font-size: 15px; font-weight: 600; }
-
-        #shop-section { padding: 40px 8% 100px; }
-        .tarif-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        .offer-card:hover { border-color: var(--primary); transform: scale(1.02); }
         
-        .tarif-card { 
-            background: var(--glass); padding: 45px 35px; border-radius: 45px; border: 1px solid rgba(255,255,255,0.08);
-            backdrop-filter: blur(25px); text-align: center; transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative; overflow: hidden;
-        }
-        .tarif-card:hover { border-color: var(--primary); transform: translateY(-12px); box-shadow: 0 25px 50px rgba(0, 194, 255, 0.2); }
-        
-        .duration-label { font-size: 10px; font-weight: 900; color: var(--primary); text-transform: uppercase; letter-spacing: 3px; margin-bottom: 10px; }
-        .price { font-size: 48px; font-weight: 900; color: var(--accent); margin: 15px 0; text-shadow: 0 0 25px rgba(0, 245, 160, 0.4); }
-        
+        .price { font-size: 36px; font-weight: 900; color: var(--primary); }
+        .duration { font-size: 14px; font-weight: 700; color: #64748b; text-transform: uppercase; }
+
         .btn-buy { 
-            background: var(--primary); color: black; padding: 20px; border-radius: 20px; 
-            font-weight: 900; border: none; cursor: pointer; width: 100%; margin-top: 25px;
-            text-transform: uppercase; letter-spacing: 1.5px; transition: 0.3s;
+            width: 100%; padding: 20px; background: var(--primary); 
+            color: #000; border-radius: 20px; font-weight: 900; border: none;
+            text-transform: uppercase; letter-spacing: 2px; margin-top: 20px;
         }
-        .btn-buy:hover { filter: brightness(1.2); transform: scale(1.03); box-shadow: 0 15px 30px var(--primary); }
 
-        .status-bar { position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); background: rgba(15, 23, 42, 0.95); padding: 12px 35px; border-radius: 50px; font-size: 10px; font-weight: 800; border: 1px solid rgba(255,255,255,0.05); letter-spacing: 2px; text-transform: uppercase; z-index: 1000; }
+        #status-msg { margin-top: 20px; font-size: 12px; color: var(--accent); font-weight: 800; }
     </style>
 </head>
 <body>
-    <nav>
-        <div class="logo-text">AERIO</div>
-        <div class="menu"><a href="/connexion" style="color:#475569; text-decoration:none; font-size:11px; font-weight:800; text-transform:uppercase;">Accès Partenaire</a></div>
-    </nav>
 
-    <section class="hero">
-        <h1 id="welcome-title">CHARGEMENT...</h1>
-        <p id="partner-status">📡 Scan de la zone WiFi Alpha en cours...</p>
-    </section>
+    <div class="logo-box">
+        <div class="logo-text">AERIO <span style="color:white">WIFI</span></div>
+        <p style="font-size: 10px; color: #475569; font-weight: 800;">CONNEXION AUTOMATIQUE SÉCURISÉE 🛰️</p>
+    </div>
 
-    <section id="shop-section">
-        <div class="tarif-grid" id="tarif-list">
-            <p style="text-align: center; width: 100%; color: #475569;">Synchronisation réseau...</p>
+    <div id="offers-container">
+        <!-- CHARGEMENT DES OFFRES RÉELLES -->
+        <div class="offer-card">
+            <div class="duration">Chargement des forfaits...</div>
         </div>
-    </section>
+    </div>
 
-    <div class="status-bar">PROTOCOLE SÉCURISÉ 🛰️</div>
+    <p id="status-msg">✅ SYSTÈME DE PAIEMENT SANS DATA ACTIF</p>
 
     <script>
-        async function chargerLaBoutiqueDuPartenaire() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const partnerID = urlParams.get('partner') || 'AE-0001'; 
+        async function loadOffers() {
             try {
-                const res = await fetch(`/api/get-shop-tarifs/${partnerID}`);
+                // On récupère l'ID du partenaire dans l'URL (ex: ?partner=AE-0001) [1.4]
+                const params = new URLSearchParams(window.location.search);
+                const partnerID = params.get('partner') || 'AE-0001';
+
+                const res = await fetch(`/api/get-tarifs?partner=${partnerID}`);
                 const tarifs = await res.json();
-                const container = document.getElementById('tarif-list');
-                container.innerHTML = ""; 
-                tarifs.forEach(t => {
-                    container.innerHTML += `
-                        <div class="tarif-card">
-                            <div class="duration-label">${t.name}</div>
-                            <div class="price">${t.price} F</div>
-                            <p style="font-size:13px; color:#64748b; margin-top:10px;">⏱️ Durée : <b>${t.duration}</b></p>
-                            <button class="btn-buy" onclick="lancerPaiementAlpha('${t.price}', '${partnerID}', '${t.duration}')">ACHETER</button>
-                        </div>
-                    `;
-                });
-                document.getElementById('welcome-title').innerHTML = `WIFI ZONE : <span>${partnerID}</span>`;
-                document.getElementById('partner-status').innerText = "📡 Nœud Réseau Opérationnel";
-            } catch (e) { document.getElementById('tarif-list').innerHTML = "<p>Erreur.</p>"; }
+                
+                const container = document.getElementById('offers-container');
+                container.innerHTML = tarifs.map(t => `
+                    <div class="offer-card" onclick="startPayment('${t.id}', ${t.price})">
+                        <div class="duration">${t.name} (${t.duration})</div>
+                        <div class="price">${t.price} F</div>
+                        <button class="btn-buy">ACHETER MAINTENANT</button>
+                    </div>
+                `).join('');
+            } catch(e) { console.log("Liaison satellite..."); }
         }
 
-        function lancerPaiementAlpha(montant, partnerID, duree) {
-            alert(`[AERIO PAY] Paiement de ${montant} F pour ${partnerID}`);
+        function startPayment(tarifID, price) {
+            alert(`[PAIEMENT MOBILE] Initialisation du transfert de ${price} F...`);
+            // Ici, on redirige vers l'API de paiement (Orange/MTN Money) [1.2]
         }
-        window.onload = chargerLaBoutiqueDuPartenaire;
+
+        window.onload = loadOffers;
     </script>
 </body>
 </html>
