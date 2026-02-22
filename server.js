@@ -40,7 +40,7 @@ function checkAuth(req, res, next) {
 }
 
 // ==========================================
-// ✅ APIS DE GESTION (LE CŒUR DU SYSTÈME)
+// ✅ APIS DE GESTION ALPHA
 // ==========================================
 
 app.get("/api/my-profile", checkAuth, (req, res) => {
@@ -50,7 +50,6 @@ app.get("/api/my-profile", checkAuth, (req, res) => {
     else res.status(404).send("Profil introuvable");
 });
 
-// ✅ MODIFICATION ALPHA STEALTH : AFFICHE 100% AU PARTENAIRE [1.3]
 app.get("/api/my-stats", checkAuth, (req, res) => {
     const tickets = JSON.parse(fs.readFileSync(TICKETS_FILE));
     const myTickets = tickets.filter(t => t.partnerID === req.session.partnerID);
@@ -59,20 +58,15 @@ app.get("/api/my-stats", checkAuth, (req, res) => {
     let taCommissionAdmin = 0;
 
     myTickets.forEach(t => {
-        montantBrutTotal += t.amount; // Ce que l'agent voit (100%)
-        taCommissionAdmin += (t.amount * 0.15); // Ton profit secret (15%)
+        montantBrutTotal += t.amount; 
+        taCommissionAdmin += (t.amount * 0.15); 
     });
 
     res.json({
         tickets: myTickets.sort((a,b) => new Date(b.date) - new Date(a.date)),
-        summary: { 
-            gain: Math.floor(montantBrutTotal), 
-            count: myTickets.length 
-        }
+        summary: { gain: Math.floor(montantBrutTotal), count: myTickets.length }
     });
-
-    // Visible uniquement dans tes logs serveurs
-    console.log(`📊 LOGS : Partenaire ${req.session.partnerID} | Brut: ${montantBrutTotal}F | Ta Com (15%): ${taCommissionAdmin}F`);
+    console.log(`📊 LOGS : Partenaire ${req.session.partnerID} | Brut: ${montantBrutTotal}F | Com (15%): ${taCommissionAdmin}F`);
 });
 
 app.post("/api/import-tickets-csv", checkAuth, (req, res) => {
@@ -92,24 +86,33 @@ app.post("/api/import-tickets-csv", checkAuth, (req, res) => {
     res.json({ success: true, count: newTickets.length });
 });
 
-app.post("/api/payout", checkAuth, (req, res) => {
-    const { amount, phone, network } = req.body;
-    if (amount < 5000) return res.status(403).json({ error: "Minimum 5 000 F requis." });
-    res.json({ success: true, message: "Extraction transmise." });
-});
-
 // ==========================================
-// ✅ GESTION DES COMPTES
+// ✅ GESTION DES COMPTES (AUTO-ACTIVATION)
 // ==========================================
 
 app.post("/api/inscription-partenaire", (req, res) => {
     const { name, email, password } = req.body;
     let partners = JSON.parse(fs.readFileSync(PARTNERS_FILE));
-    if (partners.find(p => p.email === email)) return res.send("Email utilisé.");
+    
+    if (partners.find(p => p.email === email)) return res.send("Email déjà utilisé.");
+
     const newID = "AE-" + (partners.length + 1).toString().padStart(4, '0');
-    partners.push({ partnerID: newID, name, email, password, licence: "INACTIVE", dateInscription: new Date() });
+
+    // ✅ ACTIVATION AUTOMATIQUE : LA LICENCE PASSE EN "ACTIVE" DIRECTEMENT [1.2]
+    partners.push({ 
+        partnerID: newID, 
+        name, 
+        email, 
+        password, 
+        licence: "ACTIVE", // 🚀 S'allume en vert instantanément sur le dashboard
+        dateInscription: new Date() 
+    });
+
     fs.writeFileSync(PARTNERS_FILE, JSON.stringify(partners, null, 2));
-    res.redirect("/connexion?signup=success");
+    
+    // Connexion automatique immédiate pour l'agent
+    req.session.partnerID = newID;
+    res.redirect("/dashboard");
 });
 
 app.post("/api/login-partenaire", (req, res) => {
@@ -140,4 +143,4 @@ app.get("/liste-wifi", checkAuth, (req, res) => res.sendFile(path.join(__dirname
 app.get("/profil", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "profil.html")));
 app.get("/recettes", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "recettes.html")));
 
-app.listen(PORT, '0.0.0.0', () => console.log(`🚀 EMPIRE AERIO LIVE SUR PORT ${PORT}`));
+app.listen(PORT, '0.0.0.0', () => console.log(`🚀 EMPIRE AERIO DÉPLOYÉ SUR PORT ${PORT}`));
