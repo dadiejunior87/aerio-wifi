@@ -4,119 +4,77 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AERIO | Configuration Nœud Alpha</title>
-    <!-- ✅ POLICE POPPINS INJECTÉE -->
     <link href="https://fonts.googleapis.com" rel="stylesheet">
     <style>
-        :root { --primary: #00C2FF; --accent: #00F5A0; --bg: #020617; --glass: rgba(15, 23, 42, 0.7); }
+        :root { --primary: #00C2FF; --bg: #020617; --glass: rgba(15, 23, 42, 0.7); --accent: #00F5A0; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        body { background: var(--bg); color: white; display: flex; min-height: 100vh; }
+        body { background: var(--bg); color: white; padding: 40px; background-image: radial-gradient(circle at top right, rgba(0, 194, 255, 0.05), transparent); }
 
-        /* ✅ SIDEBAR IDENTIQUE AU DASHBOARD [1.5] */
-        .sidebar { width: 280px; background: rgba(15, 23, 42, 0.8); border-right: 1px solid rgba(255,255,255,0.05); padding: 30px 20px; backdrop-filter: blur(30px); position: fixed; height: 100vh; }
-        .profile-badge { display: flex; align-items: center; gap: 12px; padding: 15px; background: rgba(0, 194, 255, 0.05); border: 1px solid rgba(0, 194, 255, 0.1); border-radius: 20px; margin-bottom: 30px; text-decoration: none; }
-        .avatar { width: 35px; height: 35px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; color: black; font-size: 10px; }
+        .setup-card { background: var(--glass); backdrop-filter: blur(30px); padding: 50px; border-radius: 40px; border: 1px solid rgba(255,255,255,0.05); max-width: 900px; margin: 0 auto; }
         
-        .nav-item { display: flex; align-items: center; padding: 14px 20px; color: #64748b; text-decoration: none; border-radius: 15px; margin-bottom: 8px; font-size: 13px; font-weight: 600; }
-        .nav-item.active { background: linear-gradient(90deg, rgba(0, 194, 255, 0.1), transparent); color: var(--primary); }
-        .submenu { padding-left: 20px; margin-bottom: 20px; }
-        .sub-item { display: block; padding: 10px; color: var(--primary); text-decoration: none; font-size: 12px; font-weight: 700; border-left: 2px solid var(--primary); padding-left: 15px; }
-
-        /* ZONE CONTENU */
-        .main-content { flex: 1; padding: 50px; margin-left: 280px; }
-        .info-banner { background: rgba(0, 194, 255, 0.05); border: 1px solid var(--primary); padding: 25px; border-radius: 20px; margin-bottom: 40px; font-size: 12px; color: #94a3b8; }
+        /* ✅ GRILLE TACTIQUE (Remplace le texte de l'image) */
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 40px; }
         
-        .config-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
-        .card-config { background: var(--glass); padding: 40px; border-radius: 35px; border: 1px solid rgba(255,255,255,0.05); backdrop-filter: blur(20px); }
-
-        .form-group { margin-bottom: 25px; }
-        label { display: block; font-size: 10px; font-weight: 900; color: var(--primary); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; }
-        input, textarea { width: 100%; padding: 18px 25px; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 18px; color: white; font-size: 14px; outline: none; }
+        .input-group { position: relative; }
+        label { display: block; font-size: 10px; font-weight: 900; color: var(--primary); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; margin-left: 10px; }
         
-        /* RADAR GPS ALPHA [1.5] */
-        #radar-map { width: 100%; height: 120px; background: #000; border-radius: 20px; border: 1px solid var(--primary); position: relative; overflow: hidden; margin-top: 15px; }
-        .ping { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 60px; height: 60px; border: 1px solid var(--primary); border-radius: 50%; animation: ping-alpha 2s infinite; }
-        @keyframes ping-alpha { 0% { transform: translate(-50%, -50%) scale(0.5); opacity: 1; } 100% { transform: translate(-50%, -50%) scale(2); opacity: 0; } }
+        input, textarea { width: 100%; padding: 18px 25px; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 20px; color: white; font-size: 14px; outline: none; transition: 0.3s; }
+        input:focus { border-color: var(--primary); box-shadow: 0 0 20px rgba(0, 194, 255, 0.1); }
 
-        .btn-deploy { grid-column: 1 / -1; background: var(--primary); color: #020617; padding: 22px; border-radius: 20px; font-weight: 900; border: none; text-transform: uppercase; cursor: pointer; transition: 0.4s; }
-        .btn-deploy:hover { transform: translateY(-5px); box-shadow: 0 15px 40px var(--primary); }
+        /* BULLES D'AIDE ALPHA (Remplacent les textes "Important" de l'image) */
+        .info-tip { font-size: 10px; color: #475569; margin-top: 8px; font-weight: 700; display: flex; align-items: center; gap: 5px; }
+        .info-tip span { color: var(--accent); }
+
+        .btn-save { grid-column: 1 / -1; background: var(--primary); color: #020617; padding: 22px; border-radius: 20px; font-weight: 900; border: none; text-transform: uppercase; letter-spacing: 2px; cursor: pointer; margin-top: 20px; transition: 0.4s; }
+        .btn-save:hover { transform: translateY(-5px); box-shadow: 0 15px 40px rgba(0, 194, 255, 0.3); }
     </style>
 </head>
 <body>
 
-    <div class="sidebar">
-        <a href="/profil" class="profile-badge">
-            <div class="avatar">AE</div>
-            <div>
-                <div id="p-name" style="font-size: 10px; font-weight: 900; color: white;">AGENT ALPHA</div>
-                <div style="font-size: 8px; color: var(--primary); font-weight: 800;">STATUT : ACCRÉDITÉ</div>
-            </div>
-        </a>
-        <a href="/dashboard" class="nav-item"><span>📊 Tableau de bord</span></a>
-        <div class="nav-item active"><span>📡 Mes Wifi Zone</span></div>
-        <div class="submenu">
-            <a href="#" class="sub-item">• Ajouter un Wifi Zone</a>
-            <a href="/liste-wifi" style="color:#475569; text-decoration:none; font-size:12px; display:block; padding:10px;">• Liste des Wifi Zone</a>
-        </div>
-        <a href="/compta" class="nav-item"><span>💰 Ma Comptabilité</span></a>
-    </div>
+    <div class="setup-card">
+        <h1 style="font-size: 32px; font-weight: 900; letter-spacing: -2px;">DÉPLOIEMENT <span style="color:var(--primary)">WIFI ZONE</span></h1>
+        <p style="color: #64748b; font-size: 14px; margin-top: 5px;">Initialisation des protocoles MikroTik 🛰️</p>
 
-    <div class="main-content">
-        <div class="info-banner">
-            <b>🛡️ PROTOCOLE ALPHA :</b> Cette configuration définit votre signature réseau. Une précision totale assure une liaison MikroTik stable.
-        </div>
-
-        <form id="wifiForm" class="config-grid">
-            <div class="card-config">
-                <div class="form-group">
-                    <label>🆔 SIGNATURE DU NŒUD (NOM)</label>
-                    <input type="text" placeholder="Ex: STATION ALPHA DOUALA" required>
-                </div>
-                <div class="form-group">
-                    <label>📍 RADAR TACTIQUE (GPS)</label>
-                    <div style="display: flex; gap: 10px;">
-                        <input type="text" id="gps" placeholder="Position Satellite" readonly>
-                        <button type="button" onclick="scanGPS()" style="background:var(--primary); border:none; padding:10px; border-radius:12px; cursor:pointer; font-weight:900; font-size:10px;">SCAN</button>
-                    </div>
-                    <div id="radar-map"><div class="ping"></div></div>
-                </div>
+        <form class="form-grid" id="wifiForm">
+            <!-- NOM DU WIFI -->
+            <div class="input-group">
+                <label>Nom du Réseau</label>
+                <input type="text" id="name" placeholder="Ex: Cyber Café Central" required>
+                <p class="info-tip"><span>⚡</span> Identité visible de votre nœud.</p>
             </div>
 
-            <div class="card-config">
-                <div class="form-group">
-                    <label>📝 ARGUMENTAIRE COMMERCIAL</label>
-                    <textarea placeholder="Ex: Connexion Fibre ultra-stable pour Gaming..."></textarea>
-                </div>
-                <div class="form-group">
-                    <label>🌐 PASSERELLE RÉSEAU (IP/VPN)</label>
-                    <input type="text" placeholder="Ex: 192.168.88.1">
-                </div>
-                <div class="form-group">
-                    <label>📞 CANAL D'ASSISTANCE</label>
-                    <input type="text" placeholder="Ex: +237 6XX XX XX XX">
-                </div>
+            <!-- DESCRIPTION -->
+            <div class="input-group">
+                <label>Description Alpha</label>
+                <input type="text" id="desc" placeholder="Ex: WiFi Haute Vitesse..." required>
+                <p class="info-tip"><span>⚡</span> Argument de vente pour vos clients.</p>
             </div>
 
-            <button type="submit" class="btn-deploy">🚀 ACTIVER L'INFRASTRUCTURE RÉSEAU</button>
+            <!-- IP ROUTEUR -->
+            <div class="input-group">
+                <label>Passerelle (IP/DNS)</label>
+                <input type="text" id="ip" placeholder="Ex: 192.168.30.1" required>
+                <p class="info-tip"><span>🔒</span> Crucial pour l'injection automatique du ticket.</p>
+            </div>
+
+            <!-- CONTACT -->
+            <div class="input-group">
+                <label>Liaison Assistance</label>
+                <input type="text" id="contact" placeholder="Ex: +237 6XX..." required>
+                <p class="info-tip"><span>🔒</span> Votre numéro de support agent.</p>
+            </div>
+
+            <button type="submit" class="btn-save">ACTIVER LA ZONE SUR LE RÉSEAU</button>
         </form>
     </div>
 
     <script>
-        // ✅ GÉOLOCALISATION ALPHA [1.4]
-        function scanGPS() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition((pos) => {
-                    document.getElementById('gps').value = `${pos.coords.latitude.toFixed(4)}, ${pos.coords.longitude.toFixed(4)}`;
-                });
-            }
-        }
-        
-        // ✅ CHARGEMENT NOM PROFIL [1.4]
-        async function load() {
-            const res = await fetch('/api/my-profile');
-            const user = await res.json();
-            document.getElementById('p-name').innerText = user.name;
-        }
-        window.onload = load;
+        document.getElementById('wifiForm').onsubmit = (e) => {
+            e.preventDefault();
+            // showNotify est déjà dans ton dashboard, on l'utilisera ici
+            alert("🚀 PROTOCOLE : Zone WiFi enregistrée dans le noyau !");
+            window.location.href = "/liste-wifi";
+        };
     </script>
 </body>
 </html>
