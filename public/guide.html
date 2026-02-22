@@ -45,11 +45,12 @@
     <div class="header-guide">
         <a href="/dashboard" class="back-btn-top">← RETOUR AU QG ALPHA</a>
         <h1>MANUEL <span style="color:var(--primary)">ALPHA</span></h1>
-        <p style="color: #64748b; font-size: 15px; font-weight: 600;">Liaison MikroTik sans data 🇨🇲 🇹🇩.</p>
+        <p style="color: #64748b; font-size: 14px; font-weight: 600;">Protocoles de liaison MikroTik sans frontières.</p>
     </div>
 
     <div class="step-card">
         <h2>1. Script "Checkoutmoneroo"</h2>
+        <p style="color: #94a3b8; font-size: 13px; margin-bottom: 15px;">Injectez ce protocole pour synchroniser vos ventes avec le réseau AERIO.</p>
         <div class="code-block">/tool fetch url="https://aerio.onrender.com" mode=https</div>
     </div>
 
@@ -90,10 +91,8 @@
             } catch (e) { console.log("Erreur Alpha."); }
         }
 
-        // ✅ CONFIRMATION VISUELLE ET TÉLÉCHARGEMENT RÉEL [1.2, 1.4]
         function downloadCertificate() {
             const btn = document.querySelector('.btn-download');
-            
             showNotify("🔒 PROTOCOLE : Préparation de votre certificat PDF...");
             btn.innerText = "GÉNÉRATION... ⏳";
             btn.disabled = true;
@@ -102,10 +101,8 @@
                 showNotify("✅ EXTRACTION RÉUSSIE : Votre licence est prête.");
                 btn.innerText = "📥 TÉLÉCHARGER MON ACCRÉDITATION";
                 btn.disabled = false;
-
-                // Déclenchement du téléchargement navigateur [1.2]
                 const link = document.createElement('a');
-                link.href = '#'; // Destination finale du PDF
+                link.href = '#';
                 link.download = 'Licence_AERIO_Alpha.pdf';
                 link.click();
             }, 2500);
