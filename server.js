@@ -111,7 +111,7 @@ app.post("/api/login-partenaire", (req, res) => {
 });
 
 // ==========================================
-// ✅ ROUTES PAGES RÉPARÉES
+// ✅ ROUTES PAGES RÉPARÉES ET COMPLÉTÉES
 // ==========================================
 app.get("/", (req, res) => res.sendFile(path.join(__dirname, "public", "index.html")));
 app.get("/dashboard", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "dashboard.html")));
@@ -126,5 +126,6 @@ app.get("/connexion", (req, res) => res.sendFile(path.join(__dirname, "public", 
 app.get("/wifi-zone", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "wifi-zone.html")));
 app.get("/liste-wifi", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "liste-wifi.html")));
 app.get("/profil", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "profil.html")));
+app.get("/recettes", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "recettes.html")));
 
 app.listen(PORT, '0.0.0.0', () => console.log(`🚀 EMPIRE AERIO LIVE SUR PORT ${PORT}`));
