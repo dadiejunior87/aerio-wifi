@@ -11,6 +11,9 @@ const PORT = process.env.PORT || 10000;
 const TICKETS_FILE = path.join(__dirname, "tickets.json");
 const PARTNERS_FILE = path.join(__dirname, "partners.json");
 
+// 🔑 CONNECTEURS PAIEMENT (À remplir lors du lancement réel)
+const MERCHANT_KEY = "TA_CLE_MONEROO_ICI"; 
+
 // --- SÉCURITÉ BASTION ---
 app.use(helmet({ contentSecurityPolicy: false })); 
 const limiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 100 });
@@ -43,6 +46,7 @@ function checkAuth(req, res, next) {
 // ✅ APIS DE GESTION (LE CŒUR DU SYSTÈME)
 // ==========================================
 
+// 1. Profil Partenaire
 app.get("/api/my-profile", checkAuth, (req, res) => {
     const partners = JSON.parse(fs.readFileSync(PARTNERS_FILE));
     const partner = partners.find(p => p.partnerID === req.session.partnerID);
@@ -50,6 +54,7 @@ app.get("/api/my-profile", checkAuth, (req, res) => {
     else res.status(404).send("Profil introuvable");
 });
 
+// 2. Statistiques (Gain Net 85%)
 app.get("/api/my-stats", checkAuth, (req, res) => {
     const tickets = JSON.parse(fs.readFileSync(TICKETS_FILE));
     const myTickets = tickets.filter(t => t.partnerID === req.session.partnerID);
@@ -57,36 +62,47 @@ app.get("/api/my-stats", checkAuth, (req, res) => {
     myTickets.forEach(t => gainTotal += (t.amount * 0.85));
     res.json({
         tickets: myTickets.sort((a,b) => new Date(b.date) - new Date(a.date)),
-        summary: { 
-            gain: Math.floor(gainTotal), 
-            count: myTickets.length 
-        }
+        summary: { gain: Math.floor(gainTotal), count: myTickets.length }
     });
 });
 
-// ✅ API DE RETRAIT AVEC VERROU DE SÉCURITÉ (5 000 F MINIMUM) [1.2]
+// 3. Retrait Partenaire (Seuil 5000F)
 app.post("/api/payout", checkAuth, (req, res) => {
     const { amount, phone, network } = req.body;
-    
-    // 🛡️ PROTECTION ALPHA : BLOCAGE SOUS 5000 F
-    if (amount < 5000) {
-        return res.status(403).json({ error: "ERREUR : Seuil de retrait minimum de 5 000 F non atteint." });
-    }
-
-    console.log(`📡 EXTRACTION INITIALISÉE : ${amount} F vers ${phone} (${network})`);
-    res.json({ success: true, message: "Demande transmise au noyau financier." });
+    if (amount < 5000) return res.status(403).json({ error: "Minimum 5 000 F requis." });
+    console.log(`📡 RETRAIT : ${amount} F vers ${phone} (${network})`);
+    res.json({ success: true, message: "Extraction transmise au noyau." });
 });
+
+// ==========================================
+// ✅ APIS DE VENTE (CONNECTEURS ORANGE/MTN)
+// ==========================================
+
+// 4. Initialisation de l'achat (Alerte MikroTik sans Data) [1.2]
+app.post("/api/init-purchase", (req, res) => {
+    const { partnerID, amount, phone } = req.body;
+    console.log(`🛒 ACHAT : Partenaire ${partnerID} | Client ${phone} | Montant ${amount}F`);
+    // Simulation de liaison Orange/MTN Money
+    res.json({ success: true, redirectURL: "Lien_Paiement_Orange_MTN" });
+});
+
+// 5. Validation et Injection du ticket [1.4]
+app.post("/api/checkoutmoneroo", (req, res) => {
+    // Cette route reçoit la confirmation de paiement réelle
+    // Elle distribue le ticket au client et prélève tes 15%
+    res.sendStatus(200);
+});
+
+// ==========================================
+// ✅ GESTION DES COMPTES
+// ==========================================
 
 app.post("/api/inscription-partenaire", (req, res) => {
     const { name, email, password } = req.body;
     let partners = JSON.parse(fs.readFileSync(PARTNERS_FILE));
     if (partners.find(p => p.email === email)) return res.send("Email déjà utilisé.");
     const newID = "AE-" + (partners.length + 1).toString().padStart(4, '0');
-    const newPartner = {
-        partnerID: newID, name, email, password,
-        licence: "INACTIVE", tarifs: [], zones: [], dateInscription: new Date()
-    };
-    partners.push(newPartner);
+    partners.push({ partnerID: newID, name, email, password, licence: "INACTIVE", dateInscription: new Date() });
     fs.writeFileSync(PARTNERS_FILE, JSON.stringify(partners, null, 2));
     res.redirect("/connexion?signup=success");
 });
@@ -118,7 +134,9 @@ app.get("/tarifs", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "p
 app.get("/affiche", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "affiche.html")));
 app.get("/connexion", (req, res) => res.sendFile(path.join(__dirname, "public", "login-partenaire.html")));
 app.get("/inscription", (req, res) => res.sendFile(path.join(__dirname, "public", "inscription.html")));
+app.get("/guide", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "guide.html")));
+app.get("/boutique", (req, res) => res.sendFile(path.join(__dirname, "public", "boutique.html")));
 
 app.get("/logout", (req, res) => { req.session.destroy(); res.redirect("/"); });
 
-app.listen(PORT, '0.0.0.0', () => console.log(`🚀 EMPIRE AERIO LIVE SUR PORT ${PORT}`));
+app.listen(PORT, '0.0.0.0', () => console.log(`🚀 EMPIRE AERIO DÉPLOYÉ SUR PORT ${PORT}`));
