@@ -42,6 +42,7 @@
         .live-data-panel { position: absolute; top: 20px; right: 20px; width: 220px; background: rgba(0,0,0,0.7); border: 1px solid var(--primary); padding: 15px; border-radius: 20px; backdrop-filter: blur(10px); z-index: 100; font-size: 10px; }
         .data-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-family: 'Courier New', monospace; }
 
+        /* ✅ LIEN DE RETOUR CORRIGÉ */
         .back-link { display: block; text-align: center; margin-top: 40px; color: #475569; text-decoration: none; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 3px; }
     </style>
 </head>
@@ -83,9 +84,9 @@
         <div class="node" style="top: 20%; left: 20%;" onclick="showNode('Alpha-3')"></div>
     </div>
 
+    <!-- ✅ LIEN VERS index.html (ÉVITE LE Cannot GET /) -->
     <a href="index.html" class="back-link">← <span data-lang="nav_home">RETOUR AU COCKPIT ALPHA</span></a>
 
-    <!-- ✅ LIAISON AU CERVEAU MULTILINGUE [1.4] -->
     <script src="/translations.js"></script>
     <script>
         function simulateGPS() {
@@ -96,9 +97,11 @@
         }
         setInterval(() => {
             const rev = document.getElementById('revenue-live');
-            let current = parseInt(rev.innerText.replace(/\s/g, ''));
-            current += Math.floor(Math.random() * 50);
-            rev.innerText = current.toLocaleString() + " F";
+            if(rev) {
+                let current = parseInt(rev.innerText.replace(/\s/g, ''));
+                current += Math.floor(Math.random() * 50);
+                rev.innerText = current.toLocaleString() + " F";
+            }
         }, 3000);
         window.onload = applyTranslations;
     </script>
