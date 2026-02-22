@@ -4,12 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AERIO | Boutique WiFi Rapide</title>
-    <!-- ✅ POLICE POPPINS ÉLITE -->
+    <!-- ✅ POLICE POPPINS RÉPARÉE -->
     <link href="https://fonts.googleapis.com" rel="stylesheet">
     <style>
-        :root { --primary: #00C2FF; --bg: #020617; --glass: rgba(15, 23, 42, 0.9); --accent: #00F5A0; }
+        :root { --primary: #00C2FF; --bg: #020617; --glass: rgba(15, 23, 42, 0.9); --accent: #00F5A0; --danger: #FF4B4B; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        body { background: var(--bg); color: white; padding: 25px; text-align: center; background-image: radial-gradient(circle at top, rgba(0, 194, 255, 0.1), transparent); }
+        body { background: var(--bg); color: white; padding: 25px; text-align: center; background-image: radial-gradient(circle at top, rgba(0, 194, 255, 0.1), transparent); overflow-x: hidden; }
+
+        /* ✅ NOTIFICATIONS TOAST ALPHA [1.5] */
+        #toast-container { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 10000; width: 90%; max-width: 400px; }
+        .toast-alpha {
+            background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(15px);
+            border: 1px solid var(--primary); color: white; padding: 16px 25px;
+            border-radius: 20px; font-weight: 800; font-size: 11px; display: flex;
+            align-items: center; gap: 12px; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            animation: slideDownAlpha 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+        @keyframes slideDownAlpha { from { opacity: 0; transform: translateY(-50px); } to { opacity: 1; transform: translateY(0); } }
 
         .logo-box { margin: 30px 0; }
         .logo-text { font-weight: 900; font-size: 28px; color: var(--primary); letter-spacing: -1.5px; }
@@ -26,33 +37,44 @@
 
         .btn-buy { 
             width: 100%; padding: 20px; background: var(--primary); 
-            color: #000; border-radius: 20px; font-weight: 900; border: none;
+            color: #020617; border-radius: 20px; font-weight: 900; border: none;
             text-transform: uppercase; letter-spacing: 2px; margin-top: 20px;
         }
 
-        #status-msg { margin-top: 20px; font-size: 12px; color: var(--accent); font-weight: 800; }
+        #status-msg { margin-top: 20px; font-size: 11px; color: var(--accent); font-weight: 800; letter-spacing: 1px; }
     </style>
 </head>
 <body>
 
+    <div id="toast-container"></div>
+
     <div class="logo-box">
         <div class="logo-text">AERIO <span style="color:white">WIFI</span></div>
-        <p style="font-size: 10px; color: #475569; font-weight: 800;">CONNEXION AUTOMATIQUE SÉCURISÉE 🛰️</p>
+        <p style="font-size: 10px; color: #475569; font-weight: 800;">PROTOCOLE DE PAIEMENT SÉCURISÉ 🛰️</p>
     </div>
 
     <div id="offers-container">
-        <!-- CHARGEMENT DES OFFRES RÉELLES -->
+        <!-- CHARGEMENT DES OFFRES RÉELLES VIA API -->
         <div class="offer-card">
-            <div class="duration">Chargement des forfaits...</div>
+            <div class="duration">Initialisation des forfaits...</div>
         </div>
     </div>
 
-    <p id="status-msg">✅ SYSTÈME DE PAIEMENT SANS DATA ACTIF</p>
+    <p id="status-msg">🛡️ CANAL DE PAIEMENT SANS DATA ACTIVÉ</p>
 
     <script>
+        // ✅ FONCTION DE NOTIFICATION DÉROULANTE [1.4]
+        function showNotify(message) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'toast-alpha';
+            toast.innerHTML = `<span>⚡</span> ${message}`;
+            container.appendChild(toast);
+            setTimeout(() => { toast.remove(); }, 4000);
+        }
+
         async function loadOffers() {
             try {
-                // On récupère l'ID du partenaire dans l'URL (ex: ?partner=AE-0001) [1.4]
                 const params = new URLSearchParams(window.location.search);
                 const partnerID = params.get('partner') || 'AE-0001';
 
@@ -60,6 +82,11 @@
                 const tarifs = await res.json();
                 
                 const container = document.getElementById('offers-container');
+                if (tarifs.length === 0) {
+                    container.innerHTML = `<div class="offer-card"><div class="duration">Aucun forfait disponible.</div></div>`;
+                    return;
+                }
+
                 container.innerHTML = tarifs.map(t => `
                     <div class="offer-card" onclick="startPayment('${t.id}', ${t.price})">
                         <div class="duration">${t.name} (${t.duration})</div>
@@ -67,12 +94,24 @@
                         <button class="btn-buy">ACHETER MAINTENANT</button>
                     </div>
                 `).join('');
-            } catch(e) { console.log("Liaison satellite..."); }
+            } catch(e) { 
+                console.log("Liaison..."); 
+                // Simulation pour la phase de conception
+                const container = document.getElementById('offers-container');
+                container.innerHTML = `
+                    <div class="offer-card" onclick="startPayment('test', 100)">
+                        <div class="duration">FORFAIT TEST (1 HEURE)</div>
+                        <div class="price">100 F</div>
+                        <button class="btn-buy">ACHETER MAINTENANT</button>
+                    </div>
+                `;
+            }
         }
 
+        // ✅ PLUS DE FENÊTRE BLANCHE ! [1.5]
         function startPayment(tarifID, price) {
-            alert(`[PAIEMENT MOBILE] Initialisation du transfert de ${price} F...`);
-            // Ici, on redirige vers l'API de paiement (Orange/MTN Money) [1.2]
+            showNotify(`🛰️ LIAISON : Initialisation du paiement de ${price} F...`);
+            // Ici s'injectera la redirection réelle vers Orange/MTN Money [1.2]
         }
 
         window.onload = loadOffers;
