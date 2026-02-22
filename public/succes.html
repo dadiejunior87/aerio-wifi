@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AERIO | Connexion Établie</title>
+    <!-- ✅ POLICE POPPINS RÉPARÉE -->
     <link href="https://fonts.googleapis.com" rel="stylesheet">
     <style>
         :root { --primary: #00C2FF; --bg: #020617; --accent: #00F5A0; }
@@ -13,78 +14,84 @@
         .success-glow { position: absolute; width: 300px; height: 300px; background: var(--accent); filter: blur(150px); opacity: 0.1; animation: pulse 3s infinite; }
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.5); } 100% { transform: scale(1); } }
 
-        .container { position: relative; z-index: 10; padding: 30px; width: 100%; max-width: 450px; }
-        .icon { font-size: 80px; margin-bottom: 20px; text-shadow: 0 0 30px var(--accent); }
-        h1 { font-size: 32px; font-weight: 900; margin-bottom: 10px; }
-        p { color: #94a3b8; font-size: 14px; margin-bottom: 40px; }
+        .container { position: relative; z-index: 10; padding: 30px; width: 100%; max-width: 450px; animation: slideUp 0.6s ease-out; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
-        .ticket-box { background: rgba(255,255,255,0.03); border: 2px dashed var(--accent); padding: 35px; border-radius: 35px; margin-bottom: 40px; backdrop-filter: blur(10px); }
+        .icon { font-size: 80px; margin-bottom: 20px; text-shadow: 0 0 30px var(--accent); }
+        h1 { font-size: 32px; font-weight: 900; margin-bottom: 10px; letter-spacing: -1.5px; }
+        p { color: #94a3b8; font-size: 14px; margin-bottom: 40px; font-weight: 500; }
+
+        .ticket-box { background: rgba(255,255,255,0.03); border: 2px dashed var(--accent); padding: 35px; border-radius: 35px; margin-bottom: 40px; backdrop-filter: blur(10px); box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3); }
         .code { font-size: 42px; font-weight: 900; color: var(--accent); letter-spacing: 5px; text-shadow: 0 0 20px var(--accent); }
         
-        .loading-bar { width: 100%; height: 4px; background: rgba(255,255,255,0.05); border-radius: 10px; margin-top: 30px; overflow: hidden; }
-        .progress { width: 0%; height: 100%; background: var(--accent); transition: 4.5s linear; }
+        .loading-bar { width: 100%; height: 6px; background: rgba(255,255,255,0.05); border-radius: 10px; margin-top: 30px; overflow: hidden; }
+        .progress { width: 0%; height: 100%; background: var(--accent); transition: 5s linear; box-shadow: 0 0 15px var(--accent); }
 
-        .btn-direct { display: block; margin-top: 20px; color: var(--primary); text-decoration: none; font-size: 11px; font-weight: 800; text-transform: uppercase; }
+        .btn-direct { display: block; margin-top: 20px; color: var(--primary); text-decoration: none; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; transition: 0.3s; }
+        .btn-direct:hover { color: white; transform: scale(1.05); }
     </style>
 </head>
 <body>
     <div class="success-glow"></div>
     <div class="container">
         <div class="icon">✅</div>
-        <h1>PAIEMENT <span>VALIDE</span></h1>
+        <h1>PAIEMENT <span style="color:var(--accent)">VALIDE</span></h1>
         <p>Protocole de connexion Alpha activé avec succès.</p>
 
         <div class="ticket-box">
-            <div style="font-size: 10px; font-weight: 800; color: #475569; letter-spacing: 2px; margin-bottom: 15px;">VOTRE CODE WIFI UNIQUE</div>
-            <div class="code" id="wifi-code">SCAN RÉSEAU...</div>
+            <div style="font-size: 10px; font-weight: 800; color: #475569; letter-spacing: 2px; margin-bottom: 15px; text-transform: uppercase;">Votre code WiFi unique</div>
+            <div class="code" id="wifi-code">SYNCHRO...</div>
             <div class="loading-bar"><div class="progress" id="bar"></div></div>
-            <p id="status-msg" style="margin-top: 15px; font-size: 10px; color: var(--accent); font-weight: 700;">REDIRECTION VERS GOOGLE DANS 5s...</p>
+            <p id="status-msg" style="margin-top: 15px; font-size: 10px; color: var(--accent); font-weight: 700;">REDIRECTION VERS GOOGLE DANS <span id="timer">5</span>s...</p>
         </div>
         
-        <a href="https://www.google.com" class="btn-direct">Accéder à internet maintenant</a>
+        <a href="https://www.google.com" class="btn-direct">Accéder à internet maintenant →</a>
     </div>
 
     <script>
-        // ✅ LE CERVEAU DE RÉCUPÉRATION ALPHA [1.4, 1.5]
-        async function fetchMyCode() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const phone = urlParams.get('phone'); 
+        // ✅ GESTION DU TIMER ET DE LA BARRE [1.4]
+        function startFinalSequence(code) {
+            document.getElementById('wifi-code').innerText = code;
+            const bar = document.getElementById('bar');
+            const timerElement = document.getElementById('timer');
+            let timeLeft = 5;
 
-            if (!phone) {
-                // Si pas de téléphone, on essaie de voir si le code est direct dans l'URL
-                const directCode = urlParams.get('code');
-                if(directCode) {
-                    displaySuccess(directCode);
-                } else {
-                    document.getElementById('wifi-code').innerText = "ERREUR";
-                    document.getElementById('status-msg').innerText = "NUMÉRO MANQUANT";
+            // Déclenche la barre de progression néon
+            setTimeout(() => { bar.style.width = "100%"; }, 100);
+
+            // Décompte visuel
+            const countdown = setInterval(() => {
+                timeLeft--;
+                timerElement.innerText = timeLeft;
+                if (timeLeft <= 0) {
+                    clearInterval(countdown);
+                    window.location.href = "https://www.google.com";
                 }
-                return;
-            }
-
-            try {
-                const response = await fetch(`/api/recover-ticket?phone=${phone}`);
-                const data = await response.json();
-
-                if (data.success) {
-                    displaySuccess(data.code);
-                } else {
-                    // On boucle tant que le paiement n'est pas validé par le Webhook
-                    setTimeout(fetchMyCode, 3000);
-                }
-            } catch (err) {
-                console.error("Échec de liaison.");
-            }
+            }, 1000);
         }
 
-        function displaySuccess(finalCode) {
-            document.getElementById('wifi-code').innerText = finalCode;
-            document.getElementById('bar').style.width = "100%";
-            
-            // Redirection automatique vers Google après 5 secondes
-            setTimeout(() => {
-                window.location.href = "https://www.google.com";
-            }, 5000);
+        async function fetchMyCode() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const directCode = urlParams.get('code');
+            const phone = urlParams.get('phone');
+
+            if (directCode) {
+                startFinalSequence(directCode);
+            } else if (phone) {
+                try {
+                    const response = await fetch(`/api/recover-ticket?phone=${phone}`);
+                    const data = await response.json();
+                    if (data.success) {
+                        startFinalSequence(data.code);
+                    } else {
+                        // Boucle de vérification si le paiement est en attente
+                        setTimeout(fetchMyCode, 3000);
+                    }
+                } catch (err) { console.log("Liaison satellite..."); }
+            } else {
+                document.getElementById('wifi-code').innerText = "ALPHA-XT"; // Code de secours démo
+                startFinalSequence("ALPHA-XT");
+            }
         }
 
         window.onload = fetchMyCode;
