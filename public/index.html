@@ -21,11 +21,11 @@
             background: var(--bg); 
             color: white; 
             min-height: 100vh; 
-            background-image: radial-gradient(circle at top right, rgba(0, 194, 255, 0.1), transparent); 
+            background-image: radial-gradient(circle at top right, rgba(0, 194, 255, 0.15), transparent); 
             overflow-x: hidden; 
         }
 
-        /* --- ANIMATIONS NÉON --- */
+        /* --- ANIMATIONS NÉON ÉLITE --- */
         @keyframes neonFlow {
             0% { left: -100%; }
             100% { left: 100%; }
@@ -37,27 +37,24 @@
             100% { box-shadow: 0 0 5px var(--primary); }
         }
 
-        /* ✅ NAVIGATION ÉPURÉE (INTACTE) */
+        @keyframes spin {
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        /* ✅ NAVIGATION */
         nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 5%; position: fixed; width: 100%; top: 0; z-index: 1000; backdrop-filter: blur(15px); border-bottom: 1px solid rgba(255,255,255,0.03); }
         .logo { font-weight: 900; font-size: 20px; color: var(--primary); letter-spacing: -1.5px; }
         .nav-links { display: flex; gap: 15px; align-items: center; }
         .nav-links a { color: #64748b; text-decoration: none; font-size: 10px; font-weight: 700; text-transform: uppercase; transition: 0.3s; }
         .nav-links a:hover { color: white; }
-        @media (max-width: 1150px) { .nav-hide { display: none; } }
 
         .lang-switcher { display: flex; gap: 4px; background: rgba(255,255,255,0.05); padding: 4px; border-radius: 12px; }
         .lang-btn { background: none; border: none; color: #475569; font-size: 8px; font-weight: 900; cursor: pointer; padding: 4px 6px; border-radius: 8px; }
         .lang-btn.active { background: var(--primary); color: #020617; box-shadow: 0 0 10px var(--primary); }
         .btn-pro { background: linear-gradient(45deg, var(--primary), var(--neon)); color: white; padding: 10px 15px; border-radius: 10px; font-weight: 900; text-decoration: none; font-size: 9px; text-transform: uppercase; animation: pulseGlow 3s infinite; }
 
-        /* ✅ DESIGN IMAGE 4 : BOUTIQUE / SHOP SECTION */
-        .shop-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 30px;
-            padding: 40px 0;
-        }
-
+        /* ✅ CARDS ÉLITE AVEC NÉON TOURNANT */
         .elite-card {
             background: var(--card-bg);
             backdrop-filter: blur(20px);
@@ -65,32 +62,31 @@
             padding: 40px;
             border: 1px solid rgba(255,255,255,0.08);
             position: relative;
-            overflow: hidden; /* Pour l'animation néon */
+            overflow: hidden;
             transition: 0.4s;
         }
+        .elite-card:hover { transform: translateY(-10px); border-color: var(--primary); }
 
-        .elite-card:hover {
-            transform: translateY(-10px);
-            border-color: var(--primary);
-        }
-
-        /* La ligne néon qui bouge */
         .neon-line {
             position: absolute;
-            top: 0;
-            width: 100%;
-            height: 2px;
+            top: 0; left: 0;
+            width: 100%; height: 2px;
             background: linear-gradient(90deg, transparent, var(--primary), var(--accent), transparent);
             animation: neonFlow 3s linear infinite;
         }
 
-        /* ✅ SLIDERS INFINIS (INTACTS) */
+        /* ✅ RECOMMANDATIONS STYLE COCHE */
+        .check-item { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; }
+        .check-icon { 
+            width: 22px; height: 22px; background: var(--primary); border-radius: 50%; 
+            display: flex; align-items: center; justify-content: center; font-size: 12px; 
+            font-weight: 900; color: #020617; box-shadow: 0 0 15px var(--primary);
+        }
+
+        /* ✅ SLIDERS INFINIS */
         .carousel-track { display: flex; gap: 20px; width: max-content; animation: scroll 40s linear infinite; }
         @keyframes scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-        .info-card { width: 300px; background: var(--glass); padding: 30px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.03); backdrop-filter: blur(20px); position: relative; }
         .flag-card { min-width: 180px; background: var(--glass); padding: 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column; align-items: center; }
-
-        .whatsapp-float { position: fixed; bottom: 30px; right: 30px; background: #25D366; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 2000; box-shadow: 0 15px 30px rgba(37, 211, 102, 0.3); }
     </style>
 </head>
 <body>
@@ -99,50 +95,31 @@
         <div class="logo">🛰️ AERIO</div>
         <div class="nav-links">
             <a href="/" data-lang="nav_home">Accueil</a>
-            <a href="/recuperer" class="nav-hide" data-lang="nav_recover">Récupérer Ticket</a>
-            <a href="/localisation" class="nav-hide" data-lang="nav_loc">Localisation WiFis</a>
+            <a href="/recuperer" class="nav-hide" data-lang="nav_recover">Ticket</a>
             <a href="/shop" class="nav-hide" data-lang="nav_shop">Shop</a>
-            <a href="/vpn" class="nav-hide" style="color:#FF4B4B;">VPN</a>
             <div class="lang-switcher">
                 <button onclick="setLang('fr')" class="lang-btn active">FR</button>
                 <button onclick="setLang('en')" class="lang-btn">EN</button>
-                <button onclick="setLang('pt')" class="lang-btn">PT</button>
-                <button onclick="setLang('es')" class="lang-btn">ES</button>
             </div>
             <a href="/connexion" class="btn-pro" data-lang="nav_pro">Espace Pro</a>
         </div>
     </nav>
 
-    <section style="padding: 180px 8% 100px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap;">
-        <div class="hero-text" style="max-width: 600px;">
-            <p style="color:var(--primary); font-weight:900; font-size:10px; letter-spacing:3px;" data-lang="hero_tag">🛰️ PROTOCOLE ALPHA ACTIVÉ</p>
-            <h1 data-lang="hero_title" style="font-size: 82px; font-weight: 900; line-height: 1.1; margin-bottom: 25px; letter-spacing: -4px;">Le Futur du <br><span style="color:var(--primary)">WiFi Zone.</span></h1>
-            <p data-lang="hero_p" style="color: #64748b; font-size: 15px; margin-bottom: 35px; line-height: 1.6;">Monétisez votre connexion MikroTik avec la puissance du Mobile Money à l'échelle internationale.</p>
-            <a href="/inscription" style="background:white; color:black; padding:18px 35px; border-radius:18px; text-decoration:none; font-weight:900; display:inline-block; font-size:15px; box-shadow: 0 10px 40px rgba(255,255,255,0.2);" data-lang="btn_partner">Devenir Partenaire</a>
-        </div>
+    <section style="padding: 180px 8% 100px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 50px;">
+        <div class="hero-text" style="flex: 1; min-width: 320px; max-width: 650px;">
+            <p style="color:var(--accent); font-weight:900; font-size:10px; letter-spacing:4px; margin-bottom: 15px;">🛰️ PROTOCOLE ALPHA ACTIVÉ</p>
+            <h1 style="font-size: clamp(40px, 6vw, 75px); font-weight: 900; line-height: 1.1; margin-bottom: 25px; letter-spacing: -4px;">
+                Exploisez votre <br><span style="color:var(--primary)">Rendement WiFi.</span>
+            </h1>
+            <p style="color: #64748b; font-size: 16px; margin-bottom: 35px; line-height: 1.6;">
+                AERIO transforme votre simple routeur en une infrastructure de vente automatisée. Monétisez chaque octet avec précision.
+            </p>
 
-        <div class="elite-card" style="width:100%; max-width:420px; text-align:center;">
-            <div class="neon-line"></div>
-            <h3 style="font-size:9px; color:#475569; letter-spacing:2px; margin-bottom:15px;" data-lang="live_title">VOTRE BUSINESS EN LIVE</h3>
-            <div id="global-flow" style="font-size:42px; font-weight:900; color:var(--primary); text-shadow: 0 0 20px rgba(0, 194, 255, 0.4);">128 500 F</div>
-            <div style="width:100%; height:6px; background:rgba(255,255,255,0.05); border-radius:10px; margin:20px 0;"><div style="width:75%; height:100%; background:var(--primary); box-shadow:0 0 20px var(--primary);"></div></div>
-            <div style="display:flex; justify-content:space-between; font-size:8px; font-weight:900; color:#475569; text-transform:uppercase;">
-                <div data-lang="live_status">Réseau: <span style="color:var(--accent)">Actif</span></div>
-                <div data-lang="live_hub">Hub: International</div>
-            </div>
-        </div>
-    </section>
-
-    <section style="padding: 80px 0; background: rgba(0,0,0,0.2);">
-        <h2 style="text-align:center; margin-bottom:40px; font-weight:900; font-size:28px;" data-lang="arsenal_title">L'ARSENAL <span style="color:var(--primary)">TACTIQUE</span></h2>
-        <div style="width:100%; overflow:hidden;">
-            <div class="carousel-track">
-                <div class="elite-card" style="width: 300px; padding: 30px;">
-                    <div class="neon-line"></div>
-                    <h3 data-lang="card_1_t">🛰️ DÉPLOIEMENT</h3>
-                    <p data-lang="card_1_p" style="font-size: 13px; color: #94a3b8; margin-top: 10px;">Importation CSV MikroTik industrielle en 1 seconde.</p>
+            <div style="margin-bottom: 40px;">
+                <div class="check-item">
+                    <div class="check-icon">✓</div>
+                    <span style="font-weight: 700; color: #f8fafc;">Algorithme de Vente Auto-Pilote 24h/7j</span>
                 </div>
-                <div class="elite-card" style="width: 300px; padding: 30px;">
-                    <div class="neon-line"></div>
-                    <h3 data-lang="card_2_t">💸 VENTE AUTO</h3>
-                    <p data-lang="card_2_p" style="font-size: 13px; color: #94a3b8; margin-top: 10px;">Paiements Mobile Money sécurisés
+                <div class="check-item">
+                    <div class="check-icon" style="background: var(--accent); box-shadow: 0 0 15px var(--accent);">✓</div>
+                    <span style="font-weight: 700; color: #f8fafc;">Passerelles Mobile Money Élite (Airtel, Moov, Orange
