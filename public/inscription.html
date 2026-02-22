@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AERIO | Accréditation Globale Alpha</title>
+    <!-- ✅ POLICE POPPINS ÉLITE -->
     <link href="https://fonts.googleapis.com" rel="stylesheet">
     <style>
         :root { --primary: #00C2FF; --bg: #020617; --glass: rgba(15, 23, 42, 0.7); --accent: #00F5A0; }
@@ -11,21 +12,22 @@
         body { background: var(--bg); color: white; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 40px 5%; background-image: radial-gradient(circle at top right, rgba(0, 194, 255, 0.05), transparent); overflow-x: hidden; }
 
         /* ✅ DESIGN GLASSMORPHISM "GLOBAL" [1.5] */
-        .join-card { background: var(--glass); backdrop-filter: blur(40px); padding: 50px; border-radius: 40px; border: 1px solid rgba(255,255,255,0.05); width: 100%; max-width: 650px; text-align: center; box-shadow: 0 25px 50px rgba(0,0,0,0.5); border-bottom: 4px solid var(--primary); }
+        .join-card { background: var(--glass); backdrop-filter: blur(40px); padding: 50px; border-radius: 40px; border: 1px solid rgba(255,255,255,0.05); width: 100%; max-width: 750px; text-align: center; box-shadow: 0 25px 50px rgba(0,0,0,0.5); border-bottom: 4px solid var(--primary); }
         
         h1 { font-size: 32px; font-weight: 900; margin-bottom: 10px; letter-spacing: -1px; text-transform: uppercase; }
         .global-badge { display: inline-block; padding: 5px 15px; background: rgba(0, 194, 255, 0.1); color: var(--primary); border-radius: 50px; font-size: 10px; font-weight: 900; letter-spacing: 2px; margin-bottom: 30px; border: 1px solid var(--primary); }
 
         /* ✅ FORMULAIRE MULTI-PAYS TACTIQUE */
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; text-align: left; }
-        @media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 768px) { .form-grid { grid-template-columns: 1fr; } }
 
         .input-group { display: flex; flex-direction: column; gap: 8px; }
-        label { font-size: 10px; font-weight: 900; color: #64748b; letter-spacing: 1px; text-transform: uppercase; }
-        input { width: 100%; padding: 18px 25px; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; color: white; font-size: 14px; outline: none; transition: 0.3s; }
+        label { font-size: 9px; font-weight: 900; color: var(--primary); letter-spacing: 1px; text-transform: uppercase; }
+        input { width: 100%; padding: 16px 22px; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 18px; color: white; font-size: 13px; outline: none; transition: 0.3s; }
         input:focus { border-color: var(--primary); box-shadow: 0 0 20px rgba(0, 194, 255, 0.1); }
 
         .btn-join { grid-column: span 2; padding: 22px; background: var(--primary); color: #020617; border-radius: 22px; font-weight: 900; border: none; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; margin-top: 20px; transition: 0.4s; font-size: 14px; }
+        @media (max-width: 768px) { .btn-join { grid-column: span 1; } }
         .btn-join:hover { transform: translateY(-5px); box-shadow: 0 15px 40px rgba(0, 194, 255, 0.3); background: white; }
 
         .back-link { display: block; margin-top: 40px; color: #475569; text-decoration: none; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 3px; }
@@ -36,7 +38,7 @@
     <div class="join-card">
         <div class="global-badge">🌍 PROTOCOLE MULTI-PAYS ACTIVÉ</div>
         <h1>Accréditation <span style="color:var(--primary)">Partenaire.</span></h1>
-        <p style="color: #64748b; font-size: 13px; margin-bottom: 40px;">Rejoignez l'infrastructure AERIO. Votre pays est notre terrain de jeu. Remplissez votre manifeste de déploiement.</p>
+        <p style="color: #64748b; font-size: 13px; margin-bottom: 40px;">Rejoignez l'infrastructure AERIO. Votre pays est notre terrain de jeu. Remplissez votre manifeste de déploiement mondial.</p>
 
         <!-- ✅ LIAISON DIRECTE VERS TON WHATSAPP (+237) -->
         <form class="form-grid" id="alphaForm" onsubmit="sendAlphaRequest(event)">
@@ -49,19 +51,34 @@
                 <input type="text" id="whatsapp" placeholder="Ex: +33 / +237 / +221" required>
             </div>
             <div class="input-group">
-                <label>Pays de l'Opération *</label>
-                <input type="text" id="country" placeholder="Ex: Cameroun, France, Mali..." required>
+                <label>Adresse Email Stratégique *</label>
+                <input type="email" id="email" placeholder="agent@aerio.com" required>
             </div>
             <div class="input-group">
-                <label>Ville de Déploiement *</label>
-                <input type="text" id="city" placeholder="Ex: Maroua, Paris, Dakar..." required>
+                <label>Pays de l'Opération (Multi-Pays) *</label>
+                <input type="text" id="country" placeholder="Cameroun, France, Mali..." required>
             </div>
+            <div class="input-group">
+                <label>Mot de passe Alpha *</label>
+                <input type="password" placeholder="••••••••" required>
+            </div>
+            <div class="input-group">
+                <label>Confirmation *</label>
+                <input type="password" placeholder="••••••••" required>
+            </div>
+            
+            <div style="grid-column: span 2; display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+                <input type="checkbox" style="width:18px; height:18px;" required>
+                <label style="color:#64748b; text-transform:none; font-size:11px;">J'accepte les termes et conditions du protocole AERIO.</label>
+            </div>
+
             <button type="submit" class="btn-join">Lancer ma demande d'accréditation mondiale</button>
         </form>
 
-        <a href="index.html" class="back-link">← RETOUR AU QG ALPHA</a>
+        <a href="index.html" class="back-link">← <span data-lang="nav_home">RETOUR AU QG ALPHA</span></a>
     </div>
 
+    <script src="/translations.js"></script>
     <script>
         function sendAlphaRequest(e) {
             e.preventDefault();
@@ -73,6 +90,7 @@
             const message = `SOLLICITATION%20ALPHA%0AAgent%20:%20${name}%0APays%20:%20${country}%0AContact%20:%20${whatsapp}`;
             window.location.href = `https://wa.me{message}`;
         }
+        window.onload = applyTranslations;
     </script>
 </body>
 </html>
