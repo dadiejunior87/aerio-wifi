@@ -43,7 +43,6 @@ function checkAuth(req, res, next) {
 // ✅ APIS DE GESTION (LE CŒUR DU SYSTÈME)
 // ==========================================
 
-// 1. Profil & Stats
 app.get("/api/my-profile", checkAuth, (req, res) => {
     const partners = JSON.parse(fs.readFileSync(PARTNERS_FILE));
     const partner = partners.find(p => p.partnerID === req.session.partnerID);
@@ -55,18 +54,16 @@ app.get("/api/my-stats", checkAuth, (req, res) => {
     const tickets = JSON.parse(fs.readFileSync(TICKETS_FILE));
     const myTickets = tickets.filter(t => t.partnerID === req.session.partnerID);
     let gainTotal = 0;
-    myTickets.forEach(t => gainTotal += (t.amount * 0.85)); // Gain partenaire
+    myTickets.forEach(t => gainTotal += (t.amount * 0.85));
     res.json({
         tickets: myTickets.sort((a,b) => new Date(b.date) - new Date(a.date)),
         summary: { gain: Math.floor(gainTotal), count: myTickets.length }
     });
 });
 
-// 2. ✅ NOUVEAU : MOTEUR D'IMPORTATION MASSIVE CSV [1.1, 1.2]
 app.post("/api/import-tickets-csv", checkAuth, (req, res) => {
     const { tickets, amount, duration } = req.body; 
     let allTickets = JSON.parse(fs.readFileSync(TICKETS_FILE));
-
     const newTickets = tickets.map(code => ({
         ticketID: "TK-" + Math.random().toString(36).substr(2, 9).toUpperCase(),
         partnerID: req.session.partnerID,
@@ -76,29 +73,25 @@ app.post("/api/import-tickets-csv", checkAuth, (req, res) => {
         status: "ACTIF",
         date: new Date()
     }));
-
     allTickets = [...allTickets, ...newTickets];
     fs.writeFileSync(TICKETS_FILE, JSON.stringify(allTickets, null, 2));
-
-    console.log(`📦 IMPORTATION : ${newTickets.length} tickets injectés pour ${req.session.partnerID}`);
     res.json({ success: true, count: newTickets.length });
 });
 
-// 3. Retrait Partenaire
 app.post("/api/payout", checkAuth, (req, res) => {
     const { amount, phone, network } = req.body;
     if (amount < 5000) return res.status(403).json({ error: "Minimum 5 000 F requis." });
-    res.json({ success: true, message: "Extraction transmise au noyau." });
+    res.json({ success: true, message: "Extraction transmise." });
 });
 
 // ==========================================
-// ✅ GESTION DES COMPTES & PAGES
+// ✅ GESTION DES COMPTES
 // ==========================================
 
 app.post("/api/inscription-partenaire", (req, res) => {
     const { name, email, password } = req.body;
     let partners = JSON.parse(fs.readFileSync(PARTNERS_FILE));
-    if (partners.find(p => p.email === email)) return res.send("Email déjà utilisé.");
+    if (partners.find(p => p.email === email)) return res.send("Email utilisé.");
     const newID = "AE-" + (partners.length + 1).toString().padStart(4, '0');
     partners.push({ partnerID: newID, name, email, password, licence: "INACTIVE", dateInscription: new Date() });
     fs.writeFileSync(PARTNERS_FILE, JSON.stringify(partners, null, 2));
@@ -117,7 +110,9 @@ app.post("/api/login-partenaire", (req, res) => {
     else res.status(401).send("Erreur.");
 });
 
-// ROUTES PAGES (Statiques)
+// ==========================================
+// ✅ ROUTES PAGES RÉPARÉES
+// ==========================================
 app.get("/", (req, res) => res.sendFile(path.join(__dirname, "public", "index.html")));
 app.get("/dashboard", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "dashboard.html")));
 app.get("/compta", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "compta.html")));
@@ -126,5 +121,10 @@ app.get("/tickets", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "
 app.get("/guide", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "guide.html")));
 app.get("/boutique", (req, res) => res.sendFile(path.join(__dirname, "public", "boutique.html")));
 app.get("/connexion", (req, res) => res.sendFile(path.join(__dirname, "public", "login-partenaire.html")));
+
+// ✅ ROUTES MANQUANTES AJOUTÉES
+app.get("/wifi-zone", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "wifi-zone.html")));
+app.get("/liste-wifi", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "liste-wifi.html")));
+app.get("/profil", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "profil.html")));
 
 app.listen(PORT, '0.0.0.0', () => console.log(`🚀 EMPIRE AERIO LIVE SUR PORT ${PORT}`));
