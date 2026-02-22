@@ -4,14 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AERIO | Journal des Recettes Alpha</title>
+    <!-- ✅ POLICE POPPINS ÉLITE -->
     <link href="https://fonts.googleapis.com" rel="stylesheet">
     <style>
         :root { --primary: #00C2FF; --bg: #020617; --glass: rgba(15, 23, 42, 0.7); --accent: #00F5A0; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         body { background: var(--bg); color: white; padding: 40px; background-image: radial-gradient(circle at top left, rgba(0, 194, 255, 0.05), transparent); }
 
-        .header-recettes { margin-bottom: 40px; display: flex; justify-content: space-between; align-items: center; }
-        h1 { font-size: 28px; font-weight: 900; letter-spacing: -1.5px; }
+        /* ✅ SÉLECTEUR DE LANGUE RECETTES */
+        .top-nav-recettes { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
+        .lang-switcher { display: flex; gap: 5px; background: rgba(255,255,255,0.05); padding: 4px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); }
+        .lang-btn { background: none; border: none; color: #475569; font-size: 9px; font-weight: 900; cursor: pointer; padding: 4px 8px; border-radius: 8px; transition: 0.3s; }
+        .lang-btn.active { background: var(--primary); color: #020617; box-shadow: 0 0 10px var(--primary); }
+
+        .header-recettes h1 { font-size: 28px; font-weight: 900; letter-spacing: -1.5px; }
 
         /* ✅ DESIGN CHIFFRE D'AFFAIRES STYLISÉ */
         .stats-banner { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px; }
@@ -29,65 +35,72 @@
 </head>
 <body>
 
-    <div class="header-recettes">
-        <h1>Journal des <span style="color:var(--primary)">Recettes</span></h1>
-        <p style="color: #475569; font-size: 14px;">Suivi des encaissements bruts générés.</p>
+    <div class="top-nav-recettes">
+        <div class="header-recettes">
+            <h1 data-lang="dash_sub_revenue">Journal des <span style="color:var(--primary)">Recettes</span></h1>
+        </div>
+        <div class="lang-switcher">
+            <button onclick="setLang('fr')" class="lang-btn active">FR</button>
+            <button onclick="setLang('en')" class="lang-btn">EN</button>
+            <button onclick="setLang('pt')" class="lang-btn">PT</button>
+            <button onclick="setLang('es')" class="lang-btn">ES</button>
+        </div>
     </div>
 
-    <!-- ✅ BLOC STATS STEALTH INJECTÉ -->
+    <!-- ✅ BLOC STATS ALPHA -->
     <div class="stats-banner">
         <div class="stat-mini">
-            <p style="font-size: 10px; color: #475569; font-weight: 900;">UNITÉS VENDUES</p>
+            <p data-lang="dash_stat_stock" style="font-size: 10px; color: #475569; font-weight: 900;">UNITÉS VENDUES</p>
             <div id="total-count" style="font-size: 32px; font-weight: 900; color: var(--primary);">0</div>
         </div>
         <div class="stat-mini">
-            <p style="font-size: 10px; color: #475569; font-weight: 900;">CHIFFRE D'AFFAIRES GÉNÉRÉ</p>
+            <p data-lang="live_flow" style="font-size: 10px; color: #475569; font-weight: 900;">CHIFFRE D'AFFAIRES GÉNÉRÉ</p>
             <div id="total-gain" style="font-size: 32px; font-weight: 900; color: var(--accent);">0 F</div>
         </div>
     </div>
 
-    <!-- ✅ TABLEAU STEALTH INJECTÉ -->
+    <!-- ✅ TABLEAU TACTIQUE -->
     <div class="table-card">
         <table>
             <thead>
                 <tr>
-                    <th>DATE / HEURE</th>
-                    <th>CODE WIFI</th>
-                    <th>VALEUR DU TICKET</th> <!-- ✅ PLUS DE MENTION DE COM -->
+                    <th data-lang="date_time">DATE / HEURE</th>
+                    <th data-lang="wifi_code">CODE WIFI</th>
+                    <th data-lang="ticket_value">VALEUR DU TICKET</th>
                 </tr>
             </thead>
             <tbody id="recettes-list">
-                <tr><td colspan="3" style="text-align:center; padding:50px; color:#475569;">Aucune recette enregistrée pour le moment.</td></tr>
+                <tr><td colspan="3" style="text-align:center; padding:50px; color:#475569;">Sync...</td></tr>
             </tbody>
         </table>
     </div>
 
-    <a href="/dashboard" class="back-link">← Retour au QG Alpha</a>
+    <a href="/dashboard" class="back-link">← <span data-lang="dash_nav_home">Retour au QG Alpha</span></a>
 
+    <!-- ✅ IMPORT DU CERVEAU -->
+    <script src="/translations.js"></script>
     <script>
         async function loadRecettes() {
             try {
                 const res = await fetch('/api/my-stats');
                 const data = await res.json();
-                
-                // On filtre les tickets vendus (simulation d'historique)
                 const soldTickets = data.tickets.filter(t => t.status === 'VENDU');
                 
                 document.getElementById('total-count').innerText = soldTickets.length;
-                // ✅ LE JS AFFICHE MAINTENANT 100% (AMOUNT BRUT)
                 document.getElementById('total-gain').innerText = Math.floor(soldTickets.reduce((sum, t) => sum + t.amount, 0)) + " F";
 
                 if (soldTickets.length > 0) {
                     const container = document.getElementById('recettes-list');
                     container.innerHTML = soldTickets.map(t => `
                         <tr>
-                            <td>${new Date(t.date).toLocaleString('fr-FR')}</td>
+                            <td>${new Date(t.date).toLocaleString()}</td>
                             <td><span style="font-family:monospace; color:var(--primary)">${t.code}</span></td>
                             <td class="gain-text">${t.amount} F</td>
                         </tr>
                     `).join('');
                 }
-            } catch(e) { console.log("Synchronisation..."); }
+                applyTranslations(); // ✅ Applique les langues au chargement
+            } catch(e) { console.log("Liaison satellite..."); }
         }
         window.onload = loadRecettes;
     </script>
