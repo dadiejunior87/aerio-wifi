@@ -1,1 +1,97 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AERIO | Bastion VPN Alpha</title>
+    <!-- ✅ POLICE POPPINS ÉLITE -->
+    <link href="https://fonts.googleapis.com" rel="stylesheet">
+    <style>
+        :root { --primary: #00C2FF; --bg: #020617; --glass: rgba(15, 23, 42, 0.7); --accent: #FF4B4B; --neon: #00F5A0; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: var(--bg); color: white; min-height: 100vh; padding: 60px 5%; background-image: radial-gradient(circle at top right, rgba(255, 75, 75, 0.05), transparent); overflow-x: hidden; }
+
+        .vpn-container { max-width: 1100px; margin: 0 auto; }
+        
+        /* ✅ HEADER SATELLITE */
+        .hero-vpn { text-align: center; margin-bottom: 80px; }
+        .hero-vpn h1 { font-size: clamp(30px, 6vw, 55px); font-weight: 900; letter-spacing: -3px; line-height: 1.1; }
+        .status-badge { display: inline-block; padding: 8px 20px; background: rgba(255, 75, 75, 0.1); color: var(--accent); border-radius: 50px; font-size: 10px; font-weight: 900; border: 1px solid var(--accent); margin-bottom: 20px; letter-spacing: 2px; }
+
+        /* ✅ FORMULAIRE DE COMMANDE TACTIQUE [1.5] */
+        .order-form { background: var(--glass); backdrop-filter: blur(40px); padding: 50px; border-radius: 40px; border: 1px solid rgba(255,255,255,0.05); display: grid; grid-template-columns: repeat(2, 1fr); gap: 30px; position: relative; box-shadow: 0 40px 80px rgba(0,0,0,0.5); }
+        @media (max-width: 768px) { .order-form { grid-template-columns: 1fr; } }
+        
+        .input-group { display: flex; flex-direction: column; gap: 10px; }
+        label { font-size: 10px; font-weight: 900; color: var(--accent); letter-spacing: 1px; text-transform: uppercase; }
+        input { background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); padding: 18px 25px; border-radius: 15px; color: white; outline: none; transition: 0.3s; font-size: 14px; }
+        input:focus { border-color: var(--accent); box-shadow: 0 0 20px rgba(255, 75, 75, 0.2); }
+
+        .full-width { grid-column: span 2; }
+        @media (max-width: 768px) { .full-width { grid-column: span 1; } }
+
+        /* ✅ BADGE DE GARANTIE SATELLITE (BASÉ SUR IMAGE 3) */
+        .guarantee-box { background: rgba(0, 245, 160, 0.05); border: 1px dashed var(--neon); padding: 30px; border-radius: 25px; text-align: center; margin-top: 20px; }
+        
+        .btn-order { grid-column: span 2; padding: 22px; background: var(--accent); color: white; border-radius: 20px; font-weight: 900; border: none; cursor: pointer; text-transform: uppercase; letter-spacing: 3px; margin-top: 20px; transition: 0.4s; box-shadow: 0 15px 30px rgba(255, 75, 75, 0.3); }
+        .btn-order:hover { background: white; color: var(--accent); transform: scale(1.02); }
+
+        .back-link { display: block; text-align: center; margin-top: 50px; color: #475569; text-decoration: none; font-size: 11px; font-weight: 800; letter-spacing: 3px; transition: 0.3s; }
+        .back-link:hover { color: white; letter-spacing: 5px; }
+    </style>
+</head>
+<body>
+
+    <div class="vpn-container">
+        <div class="hero-vpn">
+            <div class="status-badge">🛰️ LIAISON POINT-À-POINT SÉCURISÉE</div>
+            <h1>Bastion <span style="color:var(--accent)">VPN Alpha</span></h1>
+            <p style="color:#64748b; font-size: 15px; margin-top: 25px; max-width: 800px; margin-left: auto; margin-right: auto; line-height: 1.8;">
+                Accédez à distance à votre infrastructure <b>Winbox, Mikhmon et Webfig</b>. Notre tunnel crypté AERIO de grade militaire permet un pilotage total de vos ventes WiFi partout dans le monde.
+            </p>
+        </div>
+
+        <!-- ✅ FORMULAIRE DE COMMANDE LIÉ À TON WHATSAPP -->
+        <form class="order-form" onsubmit="event.preventDefault(); window.location.href='https://wa.me';">
+            <div class="input-group">
+                <label>Identité de l'Agent Alpha *</label>
+                <input type="text" placeholder="Votre nom complet" required>
+            </div>
+            <div class="input-group">
+                <label>Nom du WiFi Zone *</label>
+                <input type="text" placeholder="Ex: AERIO_SATELLITE" required>
+            </div>
+            <div class="input-group">
+                <label>Sous-réseau MikroTik *</label>
+                <input type="text" placeholder="Ex: 192.168.88.0/24" required>
+            </div>
+            <div class="input-group">
+                <label>Canal de Liaison Email *</label>
+                <input type="email" placeholder="agent@aerio.com" required>
+            </div>
+            
+            <!-- ✅ BLOC DE GARANTIE DÉPLOIEMENT -->
+            <div class="full-width">
+                <div class="guarantee-box">
+                    <div style="font-size: 24px; margin-bottom: 10px;">⚡</div>
+                    <b style="color:var(--neon); font-size: 11px; letter-spacing: 2px; text-transform: uppercase;">Déploiement Prioritaire</b>
+                    <p style="font-size: 13px; color: #cbd5e1; margin-top: 10px; line-height: 1.6;">
+                        Une fois votre commande validée, vous recevrez vos identifiants par email <b>sous 24h</b>, accompagnés de votre <b>Guide de Configuration Alpha</b> simplifié.
+                    </p>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-order">Activer mon Tunnel VPN</button>
+            <p style="grid-column: span 2; font-size: 9px; color: #475569; text-align: center; font-weight: 800; text-transform: uppercase; margin-top: 10px;">
+                Cryptage AES-256 | Support Alpha inclus | 100% de rassurance technique
+            </p>
+        </form>
+
+        <a href="index.html" class="back-link">← RETOUR AU QUARTIER GÉNÉRAL</a>
+    </div>
+
+    <script src="/translations.js"></script>
+    <script>window.onload = applyTranslations;</script>
+</body>
+</html>
 
