@@ -3,76 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AERIO | Configuration Nœud Alpha</title>
+    <title>AERIO | Déploiement Nœud Alpha</title>
     <link href="https://fonts.googleapis.com" rel="stylesheet">
+    <!-- ✅ MOTEUR CARTOGRAPHIQUE ÉLITE -->
+    <link rel="stylesheet" href="https://unpkg.com" />
+    <script src="https://unpkg.com"></script>
     <style>
         :root { --primary: #00C2FF; --bg: #020617; --glass: rgba(15, 23, 42, 0.7); --accent: #00F5A0; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         body { background: var(--bg); color: white; padding: 40px; background-image: radial-gradient(circle at top right, rgba(0, 194, 255, 0.05), transparent); }
 
-        .setup-card { background: var(--glass); backdrop-filter: blur(30px); padding: 50px; border-radius: 40px; border: 1px solid rgba(255,255,255,0.05); max-width: 900px; margin: 0 auto; }
+        .setup-card { background: var(--glass); backdrop-filter: blur(30px); padding: 50px; border-radius: 40px; border: 1px solid rgba(255,255,255,0.05); max-width: 1000px; margin: 0 auto; }
         
-        /* ✅ GRILLE TACTIQUE (Remplace le texte de l'image) */
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 40px; }
-        
         .input-group { position: relative; }
-        label { display: block; font-size: 10px; font-weight: 900; color: var(--primary); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; margin-left: 10px; }
+        label { display: block; font-size: 10px; font-weight: 900; color: var(--primary); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; }
         
-        input, textarea { width: 100%; padding: 18px 25px; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 20px; color: white; font-size: 14px; outline: none; transition: 0.3s; }
+        input { width: 100%; padding: 18px 25px; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 20px; color: white; font-size: 14px; outline: none; transition: 0.3s; }
         input:focus { border-color: var(--primary); box-shadow: 0 0 20px rgba(0, 194, 255, 0.1); }
 
-        /* BULLES D'AIDE ALPHA (Remplacent les textes "Important" de l'image) */
-        .info-tip { font-size: 10px; color: #475569; margin-top: 8px; font-weight: 700; display: flex; align-items: center; gap: 5px; }
-        .info-tip span { color: var(--accent); }
+        /* ✅ RADAR GPS ALPHA [1.5] */
+        #map-container { grid-column: 1 / -1; margin-top: 20px; }
+        #map { height: 350px; border-radius: 30px; border: 2px solid rgba(0, 194, 255, 0.2); filter: invert(100%) hue-rotate(180deg) brightness(1.2) contrast(0.9); }
+        
+        .map-hint { font-size: 10px; color: #475569; font-weight: 800; margin-top: 15px; text-align: center; text-transform: uppercase; letter-spacing: 1px; }
 
-        .btn-save { grid-column: 1 / -1; background: var(--primary); color: #020617; padding: 22px; border-radius: 20px; font-weight: 900; border: none; text-transform: uppercase; letter-spacing: 2px; cursor: pointer; margin-top: 20px; transition: 0.4s; }
-        .btn-save:hover { transform: translateY(-5px); box-shadow: 0 15px 40px rgba(0, 194, 255, 0.3); }
+        .btn-deploy { grid-column: 1 / -1; background: var(--primary); color: #020617; padding: 22px; border-radius: 20px; font-weight: 900; border: none; text-transform: uppercase; letter-spacing: 2px; cursor: pointer; margin-top: 30px; transition: 0.4s; }
+        .btn-deploy:hover { transform: translateY(-5px); box-shadow: 0 15px 40px rgba(0, 194, 255, 0.4); }
     </style>
 </head>
 <body>
 
     <div class="setup-card">
         <h1 style="font-size: 32px; font-weight: 900; letter-spacing: -2px;">DÉPLOIEMENT <span style="color:var(--primary)">WIFI ZONE</span></h1>
-        <p style="color: #64748b; font-size: 14px; margin-top: 5px;">Initialisation des protocoles MikroTik 🛰️</p>
+        <p style="color: #64748b; font-size: 14px;">Initialisation des protocoles MikroTik 🛰️</p>
 
         <form class="form-grid" id="wifiForm">
-            <!-- NOM DU WIFI -->
             <div class="input-group">
                 <label>Nom du Réseau</label>
                 <input type="text" id="name" placeholder="Ex: Cyber Café Central" required>
-                <p class="info-tip"><span>⚡</span> Identité visible de votre nœud.</p>
             </div>
 
-            <!-- DESCRIPTION -->
             <div class="input-group">
                 <label>Description Alpha</label>
                 <input type="text" id="desc" placeholder="Ex: WiFi Haute Vitesse..." required>
-                <p class="info-tip"><span>⚡</span> Argument de vente pour vos clients.</p>
             </div>
 
-            <!-- IP ROUTEUR -->
             <div class="input-group">
                 <label>Passerelle (IP/DNS)</label>
                 <input type="text" id="ip" placeholder="Ex: 192.168.30.1" required>
-                <p class="info-tip"><span>🔒</span> Crucial pour l'injection automatique du ticket.</p>
             </div>
 
-            <!-- CONTACT -->
             <div class="input-group">
                 <label>Liaison Assistance</label>
                 <input type="text" id="contact" placeholder="Ex: +237 6XX..." required>
-                <p class="info-tip"><span>🔒</span> Votre numéro de support agent.</p>
             </div>
 
-            <button type="submit" class="btn-save">ACTIVER LA ZONE SUR LE RÉSEAU</button>
+            <!-- SECTION RADAR GPS -->
+            <div id="map-container">
+                <label>Localisation Satellite</label>
+                <div id="map"></div>
+                <p class="map-hint">📍 Glissez le marqueur pour définir les coordonnées de votre zone.</p>
+                <input type="hidden" id="coords" name="coords">
+            </div>
+
+            <button type="submit" class="btn-deploy">ACTIVER LA ZONE SUR LE RÉSEAU</button>
         </form>
     </div>
 
     <script>
+        // ✅ INITIALISATION DU RADAR GPS (CENTRE SUR LE CAMEROUN/TCHAD)
+        const map = L.map('map').setView([7.3697, 12.3547], 6);
+        
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© AERIO'
+        }).addTo(map);
+
+        const marker = L.marker([7.3697, 12.3547], { draggable: true }).addTo(map);
+
+        marker.on('dragend', function() {
+            const pos = marker.getLatLng();
+            document.getElementById('coords').value = `${pos.lat},${pos.lng}`;
+            console.log(`📍 COORDONNÉES ALPHA : ${pos.lat},${pos.lng}`);
+        });
+
         document.getElementById('wifiForm').onsubmit = (e) => {
             e.preventDefault();
-            // showNotify est déjà dans ton dashboard, on l'utilisera ici
-            alert("🚀 PROTOCOLE : Zone WiFi enregistrée dans le noyau !");
+            alert("🚀 PROTOCOLE : Zone WiFi enregistrée avec succès !");
             window.location.href = "/liste-wifi";
         };
     </script>
