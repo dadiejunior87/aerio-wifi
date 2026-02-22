@@ -4,135 +4,109 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AERIO | Injecteur de Tickets Alpha</title>
-    <!-- ✅ POLICE POPPINS RÉPARÉE -->
     <link href="https://fonts.googleapis.com" rel="stylesheet">
     <style>
         :root { --primary: #00C2FF; --accent: #00F5A0; --bg: #020617; --glass: rgba(15, 23, 42, 0.7); --danger: #FF4B4B; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         body { background: var(--bg); color: white; display: flex; align-items: center; justify-content: center; min-height: 100vh; background-image: radial-gradient(circle at bottom right, rgba(0, 194, 255, 0.05), transparent); overflow-x: hidden; }
 
-        /* ✅ NOTIFICATIONS TOAST ALPHA [1.5] */
+        /* ✅ NOTIFICATIONS TOAST ALPHA */
         #toast-container { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 10000; }
-        .toast-alpha {
-            background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(15px);
-            border: 1px solid var(--primary); color: white; padding: 16px 30px;
-            border-radius: 20px; font-weight: 800; font-size: 12px; display: flex;
-            align-items: center; gap: 12px; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-            animation: slideDownAlpha 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-        }
-        .toast-alpha.error { border-color: var(--danger); }
+        .toast-alpha { background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(15px); border: 1px solid var(--primary); color: white; padding: 16px 30px; border-radius: 20px; font-weight: 800; font-size: 12px; display: flex; align-items: center; gap: 12px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); animation: slideDownAlpha 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
         @keyframes slideDownAlpha { from { opacity: 0; transform: translateY(-50px); } to { opacity: 1; transform: translateY(0); } }
-        .slideUpAlpha { animation: slideUpAlpha 0.5s forwards !important; }
-        @keyframes slideUpAlpha { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(-50px); } }
 
-        .container { width: 90%; max-width: 500px; animation: fadeIn 0.6s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-
-        .card-injector {
-            background: var(--glass); backdrop-filter: blur(30px); padding: 50px 40px;
-            border-radius: 40px; border: 1px solid rgba(255,255,255,0.05);
-            box-shadow: 0 40px 100px rgba(0,0,0,0.6); text-align: center;
-        }
-
-        h1 { font-size: 28px; font-weight: 900; margin-bottom: 10px; letter-spacing: -1px; text-transform: uppercase; }
-        p.subtitle { color: #475569; font-size: 13px; margin-bottom: 35px; font-weight: 600; }
-
-        .form-group { text-align: left; margin-bottom: 25px; }
-        label { display: block; font-size: 10px; font-weight: 900; color: var(--primary); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; margin-left: 15px; }
+        .card-injector { background: var(--glass); backdrop-filter: blur(30px); padding: 40px; border-radius: 40px; border: 1px solid rgba(255,255,255,0.05); width: 95%; max-width: 550px; text-align: center; }
+        h1 { font-size: 24px; font-weight: 900; text-transform: uppercase; margin-bottom: 10px; }
         
-        input {
-            width: 100%; padding: 18px 25px; background: rgba(0,0,0,0.4);
-            border: 1px solid rgba(255,255,255,0.08); border-radius: 20px;
-            color: white; font-size: 15px; font-weight: 600; outline: none; transition: 0.3s;
-        }
-        input:focus { border-color: var(--primary); background: rgba(0, 194, 255, 0.05); }
+        .tab-btn { background: none; border: none; color: #475569; font-weight: 800; cursor: pointer; padding: 10px 20px; transition: 0.3s; }
+        .tab-btn.active { color: var(--primary); border-bottom: 2px solid var(--primary); }
 
-        .btn-inject {
-            width: 100%; padding: 20px; border: none; border-radius: 20px;
-            background: var(--primary); color: #020617; font-weight: 900;
-            text-transform: uppercase; letter-spacing: 2px; cursor: pointer;
-            transition: 0.4s; margin-top: 10px;
-        }
-        .btn-inject:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(0, 194, 255, 0.4); }
+        .form-group { text-align: left; margin-top: 20px; }
+        label { display: block; font-size: 10px; font-weight: 900; color: var(--primary); text-transform: uppercase; margin-bottom: 8px; margin-left: 10px; }
+        input { width: 100%; padding: 16px 20px; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.08); border-radius: 15px; color: white; outline: none; }
 
-        .back-link { display: block; text-align: center; margin-top: 30px; color: #475569; text-decoration: none; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
+        .btn-inject { width: 100%; padding: 18px; border-radius: 15px; background: var(--primary); color: #020617; font-weight: 900; border: none; cursor: pointer; margin-top: 20px; text-transform: uppercase; }
+        
+        /* ✅ ZONE CSV STYLE IMAGE [1.5] */
+        .csv-box { border: 2px dashed rgba(255,255,255,0.1); padding: 25px; border-radius: 20px; margin-top: 15px; transition: 0.3s; }
+        .csv-box:hover { border-color: var(--primary); background: rgba(0, 194, 255, 0.05); }
     </style>
 </head>
 <body>
-
     <div id="toast-container"></div>
-
-    <div class="container">
-        <div class="card-injector">
-            <div style="color: var(--primary); font-size: 40px; margin-bottom: 20px;">🎟️</div>
-            <h1>INJECTEUR <span style="color:var(--primary)">TICKET</span></h1>
-            <p class="subtitle">Émission manuelle d'actifs numériques.</p>
-
-            <form id="addTicketForm">
-                <div class="form-group">
-                    <label>Code WiFi (MikroTik)</label>
-                    <input type="text" id="code" placeholder="Ex: AE-88HS" required>
-                </div>
-                <div class="form-group">
-                    <label>Valeur brute (F CFA)</label>
-                    <input type="number" id="amount" placeholder="Ex: 100" required>
-                </div>
-                <div class="form-group">
-                    <label>Durée d'accès</label>
-                    <input type="text" id="duration" placeholder="Ex: 1 Heure, 24H..." required>
-                </div>
-                <button type="submit" class="btn-inject">Injecter au Système</button>
-            </form>
-
-            <a href="/dashboard" class="back-link">← Annuler la Mission</a>
+    <div class="card-injector">
+        <h1>Injecteur <span style="color:var(--primary)">Alpha</span></h1>
+        
+        <div style="margin-bottom: 20px;">
+            <button class="tab-btn active" onclick="switchTab('manual')">MANUEL</button>
+            <button class="tab-btn" onclick="switchTab('massive')">MASSCHIF (.CSV)</button>
         </div>
+
+        <!-- ✅ FORMULAIRE MASSCHIF (TYPE IMAGE) [1.1] -->
+        <form id="massiveForm" style="display: none;">
+            <div class="form-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div class="form-group"><label>Tarif (F)</label><input type="number" id="m-amount" placeholder="Ex: 100" required></div>
+                <div class="form-group"><label>Durée</label><input type="text" id="m-duration" placeholder="Ex: 1H" required></div>
+            </div>
+            <div class="csv-box">
+                <label style="margin-left: 0; text-align: center;">Importer fichier (.CSV)</label>
+                <input type="file" id="csvFile" accept=".csv" style="padding: 10px; font-size: 10px;">
+            </div>
+            <button type="submit" class="btn-inject">🚀 Lancer l'injection massive</button>
+        </form>
+
+        <form id="addTicketForm">
+            <div class="form-group"><label>Code WiFi</label><input type="text" id="code" placeholder="Ex: AE-88HS" required></div>
+            <div class="form-group"><label>Valeur (F)</label><input type="number" id="amount" required></div>
+            <div class="form-group"><label>Durée</label><input type="text" id="duration" required></div>
+            <button type="submit" class="btn-inject">Injecter au Système</button>
+        </form>
+
+        <a href="/dashboard" style="display:block; margin-top:20px; color:#475569; text-decoration:none; font-size:10px; font-weight:800;">← ANNULER LA MISSION</a>
     </div>
 
     <script>
-        // ✅ MOTEUR DE NOTIFICATION ALPHA [1.4]
-        function showNotify(message, type = 'success') {
+        function showNotify(msg, type='success') {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
             toast.className = `toast-alpha ${type}`;
-            toast.innerHTML = `<span>⚡</span> ${message}`;
+            toast.innerHTML = `<span>⚡</span> ${msg}`;
             container.appendChild(toast);
-            setTimeout(() => {
-                toast.classList.add('slideUpAlpha');
-                setTimeout(() => toast.remove(), 500);
-            }, 4000);
+            setTimeout(() => toast.remove(), 4000);
         }
 
-        document.getElementById('addTicketForm').onsubmit = async (e) => {
+        function switchTab(type) {
+            document.getElementById('addTicketForm').style.display = type === 'manual' ? 'block' : 'none';
+            document.getElementById('massiveForm').style.display = type === 'massive' ? 'block' : 'none';
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active'));
+        }
+
+        // ✅ LOGIQUE D'IMPORTATION CSV [1.1, 1.4]
+        document.getElementById('massiveForm').onsubmit = async (e) => {
             e.preventDefault();
-            const btn = document.querySelector('.btn-inject');
-            const data = {
-                code: document.getElementById('code').value.toUpperCase(),
-                amount: parseInt(document.getElementById('amount').value),
-                duration: document.getElementById('duration').value
-            };
+            const file = document.getElementById('csvFile').files[0];
+            if(!file) return showNotify("Fichier manquant", "error");
 
-            btn.innerText = "SYNCHRONISATION...";
-            btn.disabled = true;
+            const reader = new FileReader();
+            reader.onload = async (event) => {
+                const codes = event.target.result.split(/\r?\n/).filter(l => l.trim() !== "");
+                showNotify(`🛰️ ANALYSE : ${codes.length} codes détectés...`);
 
-            try {
-                const res = await fetch('/api/simulate-sale', {
+                const res = await fetch('/api/import-tickets-csv', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data)
+                    body: JSON.stringify({ 
+                        tickets: codes, 
+                        amount: document.getElementById('m-amount').value,
+                        duration: document.getElementById('m-duration').value 
+                    })
                 });
-
                 if (res.ok) {
-                    showNotify(`PROTOCOLE RÉUSSI : Ticket ${data.code} injecté ✅`);
+                    showNotify(`✅ SUCCÈS : ${codes.length} tickets injectés !`);
                     setTimeout(() => window.location.href = "/tickets", 2000);
-                } else {
-                    showNotify("Échec de l'injection ❌", "error");
-                    btn.disabled = false;
-                    btn.innerText = "RÉESSAYER L'INJECTION";
                 }
-            } catch (err) {
-                showNotify("Liaison satellite interrompue ❌", "error");
-                btn.disabled = false;
-            }
+            };
+            reader.readAsText(file);
         };
     </script>
 </body>
