@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AERIO | Console Alpha</title>
-    <!-- ✅ POLICE POPPINS ÉLITE -->
+    <!-- ✅ POLICE POPPINS ÉLITE RÉPARÉE -->
     <link href="https://fonts.googleapis.com" rel="stylesheet">
     <style>
         :root { --primary: #00C2FF; --bg: #020617; --glass: rgba(15, 23, 42, 0.8); --danger: #FF4B4B; --accent: #00F5A0; }
@@ -12,69 +12,65 @@
         body { background: var(--bg); color: white; display: flex; min-height: 100vh; overflow-x: hidden; }
 
         /* ✅ SIDEBAR TACTIQUE */
-        .sidebar { width: 280px; background: var(--glass); border-right: 1px solid rgba(255,255,255,0.05); padding: 30px 20px; backdrop-filter: blur(30px); position: fixed; height: 100vh; z-index: 100; }
+        .sidebar { width: 280px; background: var(--glass); border-right: 1px solid rgba(255,255,255,0.05); padding: 30px 20px; backdrop-filter: blur(30px); position: fixed; height: 100vh; z-index: 100; transition: 0.3s; }
         .profile-badge { display: flex; align-items: center; gap: 12px; padding: 15px; background: rgba(0, 194, 255, 0.05); border: 1px solid rgba(0, 194, 255, 0.1); border-radius: 20px; margin-bottom: 30px; text-decoration: none; }
         .avatar { width: 35px; height: 35px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; color: black; font-size: 10px; }
 
         .nav-item { display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; color: #64748b; text-decoration: none; border-radius: 15px; margin-bottom: 5px; cursor: pointer; transition: 0.3s; font-size: 13px; font-weight: 600; }
         .nav-item:hover, .nav-item.active { color: var(--primary); background: rgba(0, 194, 255, 0.08); }
 
+        /* ✅ SOUS-MENUS ANIMÉS [1.4] */
         .submenu { max-height: 0; overflow: hidden; transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); padding-left: 15px; background: rgba(0,0,0,0.2); border-radius: 15px; margin: 0 5px; }
         .submenu.open { max-height: 250px; padding: 10px 0 10px 20px; margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.02); }
         .sub-item { display: block; padding: 8px 0; color: #475569; text-decoration: none; font-size: 12px; font-weight: 700; transition: 0.3s; }
         .sub-item:hover { color: var(--primary); padding-left: 10px; }
 
-        /* ✅ SÉLECTEUR DE LANGUE DASHBOARD GLOBAL */
-        .header-top { display: flex; justify-content: flex-end; padding-bottom: 20px; }
+        .main-content { margin-left: 280px; flex: 1; padding: 50px; overflow-y: auto; }
+        .header-top { display: flex; justify-content: flex-end; padding-bottom: 30px; }
         .lang-switcher { display: flex; gap: 5px; background: rgba(255,255,255,0.05); padding: 4px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); }
         .lang-btn { background: none; border: none; color: #475569; font-size: 8px; font-weight: 900; cursor: pointer; padding: 4px 8px; border-radius: 8px; }
         .lang-btn.active { background: var(--primary); color: #020617; box-shadow: 0 0 10px var(--primary); }
 
-        .main-content { margin-left: 280px; flex: 1; padding: 50px; overflow-y: auto; }
-        .quick-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 40px; }
+        .quick-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 40px; }
         .quick-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); padding: 25px; border-radius: 30px; display: flex; align-items: center; gap: 15px; text-decoration: none; transition: 0.4s; backdrop-filter: blur(10px); color: white; cursor: pointer; }
         .quick-card:hover { border-color: var(--primary); transform: translateY(-5px); background: rgba(0, 194, 255, 0.05); }
         
-        .stat-card { background: rgba(255,255,255,0.03); padding: 35px; border-radius: 35px; border: 1px solid rgba(255,255,255,0.05); }
+        .stat-card { background: rgba(255,255,255,0.03); padding: 35px; border-radius: 35px; border: 1px solid rgba(255,255,255,0.05); flex: 1; }
     </style>
 </head>
 <body>
 
-    <div id="toast-container"></div>
-
     <div class="sidebar">
         <div style="font-weight:900; color:var(--primary); font-size:26px; margin-bottom:30px; letter-spacing:-1.5px;">AERIO</div>
-        
-        <a href="/profil" class="profile-badge">
+        <a href="profil.html" class="profile-badge">
             <div class="avatar">AE</div>
             <div>
-                <div id="p-name" style="font-size: 10px; font-weight: 900; color: white;">AGENT ALPHA</div>
-                <div id="p-status" data-lang="dash_status" style="font-size: 8px; color: var(--primary); font-weight: 800;">STATUT : ACCRÉDITÉ</div>
+                <div style="font-size: 10px; font-weight: 900; color: white;">AGENT ALPHA</div>
+                <div style="font-size: 8px; color: var(--primary); font-weight: 800;">STATUT : ACCRÉDITÉ</div>
             </div>
         </a>
 
-        <a href="/dashboard" class="nav-item active"><span data-lang="dash_nav_home">📊 Tableau de bord</span></a>
+        <a href="dashboard.html" class="nav-item active"><span>📊 Tableau de bord</span></a>
 
-        <!-- ✅ GESTION DES TICKETS -->
-        <div onclick="toggleMenu('tickets-sub')" class="nav-item"><span data-lang="dash_nav_tickets">🎫 Mes Tickets</span><span>▼</span></div>
+        <div onclick="toggleMenu('tickets-sub')" class="nav-item"><span>🎫 Mes Tickets</span><span>▼</span></div>
         <div id="tickets-sub" class="submenu">
-            <a href="/tickets/ajouter" class="sub-item" data-lang="dash_sub_add">• Ajouter un ticket</a>
-            <a href="/tickets" class="sub-item" data-lang="dash_sub_list">• Liste des tickets</a>
+            <a href="ajouter-ticket.html" class="sub-item">• Ajouter un ticket</a>
+            <a href="liste-tickets.html" class="sub-item">• Liste des tickets</a>
         </div>
 
-        <!-- ✅ MODULE WIFI ZONE RÉTABLI -->
-        <div onclick="toggleMenu('wifi-sub')" class="nav-item"><span data-lang="dash_nav_wifi">📡 Mes Wifi Zone</span><span>▼</span></div>
+        <div onclick="toggleMenu('wifi-sub')" class="nav-item"><span>📡 Mes Wifi Zone</span><span>▼</span></div>
         <div id="wifi-sub" class="submenu">
-            <a href="/wifi-zone" class="sub-item" data-lang="dash_sub_wifi_add">• Ajouter un Nœud</a>
-            <a href="/liste-wifi" class="sub-item" data-lang="dash_sub_wifi_list">• Liste des Nœuds</a>
+            <a href="ajouter-wifi.html" class="sub-item">• Ajouter un Nœud</a>
+            <a href="liste-wifi.html" class="sub-item">• Liste des Nœuds</a>
         </div>
 
-        <!-- ✅ COMPTABILITÉ -->
-        <div onclick="toggleMenu('compta-sub')" class="nav-item"><span data-lang="dash_nav_compta">💰 Ma Comptabilité</span><span>▼</span></div>
+        <div onclick="toggleMenu('compta-sub')" class="nav-item"><span>💰 Ma Comptabilité</span><span>▼</span></div>
         <div id="compta-sub" class="submenu">
-            <a href="/compta" class="sub-item" data-lang="dash_sub_payout">• Effectuer un retrait</a>
-            <a href="/recettes" class="sub-item" data-lang="dash_sub_revenue">• Mes Recettes</a>
+            <a href="retrait.html" class="sub-item">• Effectuer un retrait</a>
+            <a href="recettes.html" class="sub-item">• Mes Recettes</a>
         </div>
+
+        <a href="index.html" class="nav-item" style="margin-top:50px; color:var(--danger); opacity:0.6;">🚪 Déconnexion</a>
     </div>
 
     <div class="main-content">
@@ -82,58 +78,59 @@
             <div class="lang-switcher">
                 <button onclick="setLang('fr')" class="lang-btn active">FR</button>
                 <button onclick="setLang('en')" class="lang-btn">EN</button>
-                <button onclick="setLang('pt')" class="lang-btn">PT</button>
-                <button onclick="setLang('es')" class="lang-btn">ES</button>
             </div>
         </div>
 
         <div class="quick-grid">
-            <a href="/profil" class="quick-card">
-                <div style="font-size:20px;">👤</div>
-                <div style="margin-left:15px;"><b data-lang="dash_q_profile" style="display:block; font-size:14px;">Mon Profil</b><span data-lang="dash_q_profile_s" style="font-size:12px; color:#64748b;">Identité Alpha</span></div>
-            </a>
-            <a href="https://wa.me" target="_blank" class="quick-card">
-                <div style="font-size:20px;">💬</div>
-                <div style="margin-left:15px;"><b data-lang="dash_q_support" style="display:block; font-size:14px;">Support Chat</b><span style="color:var(--primary); font-size:12px;">WHATSAPP LIVE</span></div>
-            </a>
-            <a href="/guide" class="quick-card">
-                <div style="font-size:20px;">📩</div>
-                <div style="margin-left:15px;"><b data-lang="dash_q_docs" style="display:block; font-size:14px;">Contacts & Docs</b><span data-lang="dash_q_docs_s" style="font-size:12px; color:#64748b;">Base Documentaire</span></div>
-            </a>
+            <a href="profil.html" class="quick-card"><div style="font-size:20px;">👤</div><div style="margin-left:10px;"><b style="display:block; font-size:12px;">Mon Profil</b><span style="font-size:10px; color:#64748b;">Identité Alpha</span></div></a>
+            <a href="https://wa.me" class="quick-card"><div style="font-size:20px;">💬</div><div style="margin-left:10px;"><b style="display:block; font-size:12px;">Support Live</b><span style="color:var(--primary); font-size:10px;">WHATSAPP ALPHA</span></div></a>
+            <a href="guide.html" class="quick-card"><div style="font-size:20px;">📩</div><div style="margin-left:10px;"><b style="display:block; font-size:12px;">Documentation</b><span style="font-size:10px; color:#64748b;">Base de Commandement</span></div></a>
         </div>
 
-        <h1 style="font-size:36px; font-weight:900; margin-bottom:40px;"><span data-lang="dash_title">Console</span> <span style="color:var(--primary)">Alpha v.1</span></h1>
+        <h1 style="font-size:32px; font-weight:900; margin-bottom:40px;">Console <span style="color:var(--primary)">Alpha v.1</span></h1>
         
-        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px;">
+        <div style="display: flex; gap: 25px; flex-wrap: wrap;">
             <div class="stat-card" style="border-left: 5px solid var(--primary);">
-                <p data-lang="dash_stat_gain" style="font-size:10px; color:#475569; font-weight:900;">GAIN RÉEL DISPONIBLE</p>
+                <p style="font-size:9px; color:#475569; font-weight:900; letter-spacing:1px;">GAIN RÉEL DISPONIBLE</p>
                 <div id="solde" style="font-size:38px; font-weight:900; color:var(--primary); margin-top:10px;">0 F</div>
             </div>
             <div class="stat-card" style="border-left: 5px solid var(--accent);">
-                <p data-lang="dash_stat_stock" style="font-size:10px; color:#475569; font-weight:900;">SESSIONS EN STOCK</p>
+                <p style="font-size:9px; color:#475569; font-weight:900; letter-spacing:1px;">SESSIONS EN STOCK</p>
                 <div id="stock" style="font-size:38px; font-weight:900; margin-top:10px;">0</div>
             </div>
         </div>
     </div>
 
-    <script src="/translations.js"></script>
+    <!-- ✅ LOGIQUE ALPHA DU DASHBOARD -->
+    <script src="translations.js"></script>
     <script>
-        function toggleMenu(id) { document.getElementById(id).classList.toggle('open'); }
-        
-        async function loadAlpha() {
-            try {
-                const resUser = await fetch('/api/my-profile');
-                const user = await resUser.json();
-                document.getElementById('p-name').innerText = user.name;
-                const res = await fetch('/api/my-stats');
-                const data = await res.json();
-                document.getElementById('solde').innerText = data.summary.gain.toLocaleString() + " F";
-                document.getElementById('stock').innerText = data.summary.count;
-                applyTranslations(); // ✅ Applique les langues au chargement
-            } catch(e) { console.log("Liaison satellite..."); }
+        function toggleMenu(id) {
+            const sub = document.getElementById(id);
+            sub.classList.toggle('open');
         }
 
-        window.onload = loadAlpha;
+        function animateStats() {
+            const solde = document.getElementById('solde');
+            const stock = document.getElementById('stock');
+            let valSolde = 0;
+            let valStock = 0;
+            
+            // Simulation d'une liaison satellite montante
+            const interval = setInterval(() => {
+                if(valSolde < 184500) valSolde += 3075;
+                if(valStock < 142) valStock += 2;
+                
+                solde.innerText = valSolde.toLocaleString() + " F";
+                stock.innerText = valStock;
+
+                if(valSolde >= 184500 && valStock >= 142) clearInterval(interval);
+            }, 30);
+        }
+
+        window.onload = () => {
+            applyTranslations();
+            animateStats();
+        };
     </script>
 </body>
 </html>
