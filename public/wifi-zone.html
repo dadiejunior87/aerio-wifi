@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AERIO | Déploiement Nœud Alpha</title>
-    <!-- ✅ POLICE POPPINS & MOTEUR GPS RÉPARÉS -->
+    <!-- ✅ POLICE POPPINS & MOTEURS GPS CORRIGÉS -->
     <link href="https://fonts.googleapis.com" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com" />
     <script src="https://unpkg.com"></script>
@@ -24,15 +24,15 @@
         .alpha-hint { font-size: 10px; color: #475569; margin-top: 10px; font-weight: 700; line-height: 1.5; }
         .alpha-hint b { color: var(--accent); text-transform: uppercase; }
 
-        /* ✅ FIX DU RADAR GPS */
+        /* ✅ RADAR GPS SATELLITE RÉEL [1.5] */
         #map { 
             height: 350px !important; 
             width: 100%;
             border-radius: 30px; 
             border: 2px solid rgba(0, 194, 255, 0.2); 
-            filter: invert(100%) hue-rotate(180deg) brightness(1.2); 
             margin-top: 15px;
             z-index: 1;
+            /* On enlève l'inversion pour voir les vraies couleurs de la terre */
         }
         
         .btn-deploy { grid-column: 1 / -1; background: var(--primary); color: #020617; padding: 22px; border-radius: 20px; font-weight: 900; border: none; text-transform: uppercase; letter-spacing: 2px; cursor: pointer; margin-top: 30px; transition: 0.4s; }
@@ -82,17 +82,18 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Initialisation centrée sur le Cameroun/Tchad
+            // ✅ INITIALISATION DU RADAR AVEC VUE SATELLITE RÉELLE [1.2]
             const map = L.map('map').setView([7.3697, 12.3547], 6);
             
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '© AERIO ALPHA'
+            // On utilise ESRI pour avoir les vraies images satellites
+            L.tileLayer('https://server.arcgisonline.com{z}/{y}/{x}', {
+                attribution: '© AERIO ALPHA | Satellite Imagery'
             }).addTo(map);
 
             const marker = L.marker([7.3697, 12.3547], { draggable: true }).addTo(map);
 
-            // Correction du bug d'affichage initial
-            setTimeout(() => { map.invalidateSize(); }, 400);
+            // Force l'affichage si le conteneur a mis du temps à charger
+            setTimeout(() => { map.invalidateSize(); }, 600);
 
             document.getElementById('wifiForm').onsubmit = (e) => {
                 e.preventDefault();
