@@ -10,29 +10,32 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         body { background: var(--bg); color: white; min-height: 100vh; background-image: radial-gradient(circle at top right, rgba(0, 194, 255, 0.1), transparent); overflow-x: hidden; }
 
-        /* ✅ NAVIGATION */
-        nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 8%; position: fixed; width: 100%; top: 0; z-index: 1000; backdrop-filter: blur(15px); border-bottom: 1px solid rgba(255,255,255,0.03); }
+        /* ✅ NAVIGATION COMPLÈTE RESTAURÉE [1.5] */
+        nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 5%; position: fixed; width: 100%; top: 0; z-index: 1000; backdrop-filter: blur(15px); border-bottom: 1px solid rgba(255,255,255,0.03); }
         .logo { font-weight: 900; font-size: 20px; color: var(--primary); letter-spacing: -1.5px; }
         .nav-links { display: flex; gap: 15px; align-items: center; }
-        .lang-switcher { display: flex; gap: 4px; background: rgba(255,255,255,0.05); padding: 4px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); }
-        .lang-btn { background: none; border: none; color: #475569; font-size: 8px; font-weight: 900; cursor: pointer; padding: 4px 6px; border-radius: 8px; transition: 0.3s; }
+        .nav-links a { color: #64748b; text-decoration: none; font-size: 10px; font-weight: 700; text-transform: uppercase; transition: 0.3s; }
+        .nav-links a:hover { color: white; }
+        @media (max-width: 1150px) { .nav-hide { display: none; } }
+
+        .lang-switcher { display: flex; gap: 4px; background: rgba(255,255,255,0.05); padding: 4px; border-radius: 12px; }
+        .lang-btn { background: none; border: none; color: #475569; font-size: 8px; font-weight: 900; cursor: pointer; padding: 4px 6px; border-radius: 8px; }
         .lang-btn.active { background: var(--primary); color: #020617; box-shadow: 0 0 10px var(--primary); }
-        .btn-pro { background: linear-gradient(45deg, var(--primary), var(--neon)); color: white; padding: 10px 15px; border-radius: 10px; font-weight: 900; text-decoration: none; font-size: 9px; text-transform: uppercase; }
+        .btn-pro { background: linear-gradient(45deg, var(--primary), var(--neon)); color: white; padding: 10px 15px; border-radius: 10px; font-weight: 900; text-decoration: none; font-size: 9px; text-transform: uppercase; box-shadow: 0 10px 30px rgba(0, 194, 255, 0.3); }
 
         /* ✅ HERO */
         .hero { display: flex; flex-direction: column; align-items: center; padding: 120px 8% 50px; text-align: center; }
         @media (min-width: 1024px) { .hero { flex-direction: row; justify-content: space-between; text-align: left; padding: 180px 8% 100px; min-height: 85vh; } }
         .hero-text h1 { font-size: 42px; font-weight: 900; line-height: 1.1; margin-bottom: 25px; letter-spacing: -2px; }
         @media (min-width: 1024px) { .hero-text h1 { font-size: 82px; letter-spacing: -4px; } }
+        .live-card { background: var(--glass); backdrop-filter: blur(40px); padding: 35px; border-radius: 40px; width: 100%; max-width: 420px; text-align: center; border: 1px solid rgba(255,255,255,0.05); }
 
-        /* ✅ CARROUSELS */
+        /* ✅ SLIDERS */
         .carousel-track { display: flex; gap: 20px; width: max-content; animation: scroll 40s linear infinite; }
         @keyframes scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
         .info-card { width: 300px; background: var(--glass); padding: 30px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.03); backdrop-filter: blur(20px); }
         .flag-card { min-width: 180px; background: var(--glass); padding: 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column; align-items: center; }
 
-        /* ✅ CONTACT SECTION */
-        .contact-box { background: rgba(0, 194, 255, 0.05); border: 1px solid var(--primary); padding: 40px; border-radius: 40px; text-align: center; margin: 50px 8%; }
         .whatsapp-float { position: fixed; bottom: 30px; right: 30px; background: #25D366; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 2000; box-shadow: 0 15px 30px rgba(37, 211, 102, 0.3); }
     </style>
 </head>
@@ -41,6 +44,12 @@
     <nav>
         <div class="logo">🛰️ AERIO</div>
         <div class="nav-links">
+            <a href="/" data-lang="nav_home">Accueil</a>
+            <a href="/inscription" data-lang="nav_partners">Partenariats</a>
+            <a href="/recuperer" class="nav-hide" data-lang="nav_recover">Récupérer Ticket</a>
+            <a href="/localisation" class="nav-hide" data-lang="nav_loc">Localisation WiFis</a>
+            <a href="/shop" class="nav-hide" data-lang="nav_shop">Shop</a>
+            <a href="/vpn" class="nav-hide" style="color:#FF4B4B;">VPN</a>
             <div class="lang-switcher">
                 <button onclick="setLang('fr')" class="lang-btn active">FR</button>
                 <button onclick="setLang('en')" class="lang-btn">EN</button>
@@ -58,7 +67,7 @@
             <p data-lang="hero_p">Monétisez votre connexion MikroTik avec la puissance du Mobile Money à l'échelle internationale.</p>
             <a href="/inscription" style="background:white; color:black; padding:18px 35px; border-radius:18px; text-decoration:none; font-weight:900; display:inline-block; font-size:15px;" data-lang="btn_partner">Devenir Partenaire</a>
         </div>
-        <div class="live-card" style="background:var(--glass); padding:35px; border-radius:40px; width:100%; max-width:420px; text-align:center; border: 1px solid rgba(255,255,255,0.05);">
+        <div class="live-card">
             <h3 style="font-size:9px; color:#475569; letter-spacing:2px; margin-bottom:15px;" data-lang="live_title">VOTRE BUSINESS EN LIVE</h3>
             <div id="global-flow" style="font-size:42px; font-weight:900; color:var(--primary);">128 500 F</div>
             <div style="width:100%; height:6px; background:rgba(255,255,255,0.05); border-radius:10px; margin:20px 0;"><div style="width:75%; height:100%; background:var(--primary); box-shadow:0 0 20px var(--primary);"></div></div>
@@ -69,7 +78,7 @@
         </div>
     </section>
 
-    <!-- ARSENAL TACTIQUE -->
+    <!-- ✅ ARSENAL TACTIQUE (8 CARTES) -->
     <section style="padding: 80px 0; background: rgba(0,0,0,0.2);">
         <h2 style="text-align:center; margin-bottom:40px; font-weight:900; font-size:28px;" data-lang="arsenal_title">L'ARSENAL <span style="color:var(--primary)">TACTIQUE</span></h2>
         <div style="width:100%; overflow:hidden;">
@@ -77,14 +86,15 @@
                 <div class="info-card"><h3 data-lang="card_1_t">🛰️ DÉPLOIEMENT</h3><p data-lang="card_1_p">Importation CSV MikroTik industrielle en 1 seconde.</p></div>
                 <div class="info-card"><h3 data-lang="card_2_t">💸 VENTE AUTO</h3><p data-lang="card_2_p">Paiements Mobile Money sécurisés et sans data.</p></div>
                 <div class="info-card"><h3 data-lang="card_3_t">📈 RADAR PERF</h3><p data-lang="card_3_p">Suivi des recettes brutes en temps réel 24h/7j.</p></div>
-                <div class="info-card"><h3 data-lang="card_4_t">🔓 ZERO DATA</h3><p data-lang="card_4_p">Le Walled Garden permet de payer sans forfait internet.</p></div>
+                <div class="info-card"><h3 data-lang="card_4_t">🔓 ZERO DATA</h3><p data-lang="card_4_p">The Walled Garden permet de payer sans forfait internet.</p></div>
+                <!-- Duplicate for loop -->
                 <div class="info-card"><h3 data-lang="card_1_t">🛰️ DÉPLOIEMENT</h3><p data-lang="card_1_p">Importation CSV MikroTik industrielle en 1 seconde.</p></div>
                 <div class="info-card"><h3 data-lang="card_2_t">💸 VENTE AUTO</h3><p data-lang="card_2_p">Paiements Mobile Money sécurisés et sans data.</p></div>
             </div>
         </div>
     </section>
 
-    <!-- HUB INTERNATIONAL -->
+    <!-- ✅ HUB INTERNATIONAL (5 DRAPEAUX) -->
     <section style="padding: 80px 0; text-align:center;">
         <h2 style="font-weight:900; font-size:28px;" data-lang="hub_title">HUB <span style="color:var(--primary)">INTERNATIONAL</span></h2>
         <div style="width:100%; overflow:hidden; margin-top:40px;">
@@ -94,26 +104,23 @@
                 <div class="flag-card">🇫🇷 <b data-lang="flag_3">FRANCE</b><span data-lang="flag_3_s">Passerelle Europe</span></div>
                 <div class="flag-card">🇧🇷 <b data-lang="flag_4">BRÉSIL</b><span data-lang="flag_4_s">Liaison Latam</span></div>
                 <div class="flag-card">🇸🇳 <b data-lang="flag_5">SÉNÉGAL</b><span data-lang="flag_5_s">Liaison Établie</span></div>
+                <!-- Duplicate for loop -->
                 <div class="flag-card">🇨🇲 <b data-lang="flag_1">CAMEROUN</b><span data-lang="flag_1_s">Hub Central</span></div>
                 <div class="flag-card">🇨🇮 <b data-lang="flag_2">CÔTE D'IVOIRE</b><span data-lang="flag_2_s">Nœud Actif</span></div>
             </div>
         </div>
     </section>
 
-    <!-- ✅ SECTION CONTACT GIGA-ÉLITE -->
+    <!-- ✅ LIAISON STRATÉGIQUE -->
     <section style="padding: 100px 8%; text-align: center;">
         <span style="color:var(--primary); font-weight:900; font-size:10px; letter-spacing:4px;" data-lang="contact_sub">🛰️ LIAISON STRATÉGIQUE</span>
         <h2 style="font-size: 38px; font-weight: 900; margin-top: 10px; letter-spacing: -2px;" data-lang="contact_title">Propulsez votre <span style="color:var(--primary)">Infrastructure WiFi.</span></h2>
-        
         <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-top: 40px;">
             <div class="info-card" style="width: 320px; border: 1px solid var(--accent); background: rgba(0, 245, 160, 0.05);">
-                <div style="font-size: 24px; margin-bottom: 10px;">🟢</div>
                 <b style="display:block; font-size:12px; color:var(--accent); margin-bottom:5px;">WHATSAPP ALPHA</b>
                 <a href="https://wa.me" style="color: white; text-decoration: none; font-size: 18px; font-weight: 900;">+237 692 487 922</a>
             </div>
-
             <div class="info-card" style="width: 320px; border: 1px solid var(--primary); background: rgba(0, 194, 255, 0.05);">
-                <div style="font-size: 24px; margin-bottom: 10px;">✉️</div>
                 <b style="display:block; font-size:12px; color:var(--primary); margin-bottom:5px;">CANAL EMAIL</b>
                 <a href="mailto:aeriozonewifi@gmail.com" style="color: white; text-decoration: none; font-size: 14px; font-weight: 700;">aeriozonewifi@gmail.com</a>
             </div>
@@ -129,7 +136,7 @@
         function animateFlow() {
             const flow = document.getElementById('global-flow');
             let start = 128500;
-            setInterval(() => { start += Math.floor(Math.random() * 50); flow.innerText = start.toLocaleString() + " F"; }, 3000);
+            setInterval(() => { start += Math.floor(Math.random() * 50); if(flow) flow.innerText = start.toLocaleString() + " F"; }, 3000);
         }
         window.onload = () => { animateFlow(); applyTranslations(); };
     </script>
