@@ -11,31 +11,24 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         body { background: var(--bg); color: white; line-height: 1.6; padding: 50px 8%; background-image: radial-gradient(circle at top right, rgba(0, 194, 255, 0.05), transparent); overflow-x: hidden; }
 
-        /* ✅ NOTIFICATIONS TOAST ALPHA [1.5] */
+        /* ✅ NOTIFICATIONS TOAST ALPHA */
         #toast-container { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 10000; }
-        .toast-alpha {
-            background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(15px);
-            border: 1px solid var(--primary); color: white; padding: 16px 30px;
-            border-radius: 20px; font-weight: 800; font-size: 12px; display: flex;
-            align-items: center; gap: 12px; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-            animation: slideDownAlpha 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-        }
+        .toast-alpha { background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(15px); border: 1px solid var(--primary); color: white; padding: 16px 30px; border-radius: 20px; font-weight: 800; font-size: 12px; display: flex; align-items: center; gap: 12px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); animation: slideDownAlpha 0.5s forwards; }
         @keyframes slideDownAlpha { from { opacity: 0; transform: translateY(-50px); } to { opacity: 1; transform: translateY(0); } }
         .slideUpAlpha { animation: slideUpAlpha 0.5s forwards !important; }
-        @keyframes slideUpAlpha { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(-50px); } }
 
-        .header-guide { text-align: center; margin-bottom: 80px; position: relative; }
-        .back-btn-top { position: absolute; top: -30px; left: 0; color: #475569; text-decoration: none; font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; border: 1px solid rgba(255,255,255,0.05); padding: 12px 25px; border-radius: 50px; transition: 0.4s; backdrop-filter: blur(10px); }
-        .back-btn-top:hover { color: var(--primary); border-color: var(--primary); background: rgba(0, 194, 255, 0.05); }
+        .header-guide { text-align: center; margin-bottom: 60px; position: relative; }
+        .back-btn-top { position: absolute; top: -30px; left: 0; color: #475569; text-decoration: none; font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; border: 1px solid rgba(255,255,255,0.05); padding: 12px 25px; border-radius: 50px; transition: 0.4s; }
+        .back-btn-top:hover { color: var(--primary); border-color: var(--primary); }
 
-        .step-card { background: var(--glass); backdrop-filter: blur(30px); border-radius: 40px; padding: 50px; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 40px; position: relative; overflow: hidden; }
-        h2 { color: var(--primary); font-size: 22px; margin-bottom: 25px; font-weight: 900; text-transform: uppercase; }
+        .step-card { background: var(--glass); backdrop-filter: blur(30px); border-radius: 40px; padding: 50px; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 30px; position: relative; overflow: hidden; }
+        h2 { color: var(--primary); font-size: 22px; margin-bottom: 15px; font-weight: 900; text-transform: uppercase; }
         
-        .code-block { background: #000; padding: 25px; border-radius: 20px; color: var(--accent); font-family: 'Courier New', monospace; font-size: 14px; border-left: 4px solid var(--primary); }
-        
+        .code-block { background: #000; padding: 25px; border-radius: 20px; color: var(--accent); font-family: 'Courier New', monospace; font-size: 13px; border-left: 4px solid var(--primary); margin-top: 15px; overflow-x: auto; }
+        .badge-tech { background: rgba(0, 194, 255, 0.1); color: var(--primary); padding: 6px 15px; border-radius: 8px; font-size: 10px; font-weight: 900; margin-bottom: 15px; display: inline-block; }
+
         .btn-download { display: inline-block; padding: 20px 40px; background: var(--accent); color: #020617; text-decoration: none; border-radius: 18px; font-weight: 900; margin-top: 30px; border: none; cursor: pointer; text-transform: uppercase; transition: 0.4s; }
         .btn-download:hover:not(:disabled) { transform: translateY(-5px); box-shadow: 0 15px 40px var(--accent); }
-        .btn-download:disabled { background: #475569; cursor: not-allowed; }
     </style>
 </head>
 <body>
@@ -48,17 +41,32 @@
         <p style="color: #64748b; font-size: 14px; font-weight: 600;">Protocoles de liaison MikroTik sans frontières.</p>
     </div>
 
+    <!-- 1. SCRIPT DE SYNCHRO -->
     <div class="step-card">
+        <span class="badge-tech">STEP 01</span>
         <h2>1. Script "Checkoutmoneroo"</h2>
-        <p style="color: #94a3b8; font-size: 13px; margin-bottom: 15px;">Injectez ce protocole pour synchroniser vos ventes avec le réseau AERIO.</p>
+        <p style="color: #94a3b8; font-size: 13px;">Synchronisez vos ventes avec le réseau AERIO.</p>
         <div class="code-block">/tool fetch url="https://aerio.onrender.com" mode=https</div>
     </div>
 
+    <!-- ✅ 2. CONFIGURATION ZERO DATA RÉINJECTÉE -->
+    <div class="step-card" style="border-left: 5px solid var(--accent);">
+        <span class="badge-tech" style="background: var(--accent); color: #000;">STEP 02 - CRITIQUE</span>
+        <h2 style="color: var(--accent);">2. Protocole "Zero Data" (Walled Garden)</h2>
+        <p style="color: #94a3b8; font-size: 13px;">Autorisez les flux de paiement pour vos clients sans forfait internet.</p>
+        <div class="code-block" style="border-left-color: var(--accent); color: var(--accent);">
+            /ip hotspot walled-garden ip add dst-host=api.moneroo.io action=accept<br>
+            /ip hotspot walled-garden ip add dst-host=checkout.moneroo.io action=accept<br>
+            /ip hotspot walled-garden ip add dst-host=aerio.onrender.com action=accept
+        </div>
+    </div>
+
+    <!-- 3. LICENCE -->
     <div class="step-card" id="licence-box" style="border: 1px solid var(--primary); text-align: center;">
+        <span class="badge-tech">STEP 03</span>
         <h2>3. État & Extraction de Licence</h2>
         <div id="licence-status" style="font-size: 24px; font-weight: 900; margin-top: 15px;">CHARGEMENT...</div>
         <div id="partner-id-display" style="font-size: 14px; color: var(--primary); font-family: monospace; margin-top: 10px;">ID: ...</div>
-        
         <button class="btn-download" onclick="downloadCertificate()">📥 TÉLÉCHARGER MON ACCRÉDITATION</button>
     </div>
 
@@ -69,10 +77,7 @@
             toast.className = 'toast-alpha';
             toast.innerHTML = `<span>⚡</span> ${message}`;
             container.appendChild(toast);
-            setTimeout(() => {
-                toast.classList.add('slideUpAlpha');
-                setTimeout(() => toast.remove(), 500);
-            }, 4000);
+            setTimeout(() => { toast.classList.add('slideUpAlpha'); setTimeout(() => toast.remove(), 500); }, 4000);
         }
 
         async function loadGuide() {
@@ -107,7 +112,6 @@
                 link.click();
             }, 2500);
         }
-        
         window.onload = loadGuide;
     </script>
 </body>
