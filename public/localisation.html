@@ -4,80 +4,108 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AERIO | Radar de Localisation Alpha</title>
-    <!-- ✅ POLICE POPPINS ÉLITE -->
-    <link href="https://fonts.googleapis.com" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;900&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #00C2FF; --bg: #020617; --glass: rgba(15, 23, 42, 0.7); --accent: #00F5A0; }
+        :root { --primary: #00C2FF; --bg: #020617; --glass: rgba(15, 23, 42, 0.7); --accent: #00F5A0; --radar-line: rgba(0, 194, 255, 0.3); }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        body { background: var(--bg); color: white; min-height: 100vh; padding: 40px 8%; background-image: radial-gradient(circle at top right, rgba(0, 194, 255, 0.05), transparent); overflow-x: hidden; }
+        body { background: var(--bg); color: white; min-height: 100vh; padding: 40px 5%; background-image: radial-gradient(circle at top right, rgba(0, 194, 255, 0.08), transparent); overflow-x: hidden; }
 
-        /* ✅ HEADER RADAR [1.5] */
-        .radar-header { text-align: center; margin-bottom: 50px; }
-        .radar-header h1 { font-size: 32px; font-weight: 900; letter-spacing: -1.5px; text-transform: uppercase; }
-        .radar-status { display: inline-block; padding: 6px 15px; background: rgba(0, 245, 160, 0.1); color: var(--accent); border-radius: 50px; font-size: 10px; font-weight: 900; margin-top: 10px; border: 1px solid var(--accent); animation: pulseStatus 2s infinite; }
-        @keyframes pulseStatus { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
+        /* ✅ HEADER STYLE "COMMAND CENTER" */
+        .radar-header { text-align: center; margin-bottom: 40px; }
+        .radar-header h1 { font-size: clamp(24px, 5vw, 40px); font-weight: 900; letter-spacing: -2px; text-transform: uppercase; }
+        .radar-status { display: inline-block; padding: 8px 20px; background: rgba(0, 194, 255, 0.1); color: var(--primary); border-radius: 50px; font-size: 11px; font-weight: 900; border: 1px solid var(--primary); margin-top: 15px; letter-spacing: 2px; }
 
         /* ✅ RECHERCHE TACTIQUE */
-        .search-box { background: var(--glass); backdrop-filter: blur(40px); padding: 30px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.05); display: flex; gap: 15px; margin-bottom: 30px; }
-        input { flex: 1; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); padding: 15px 25px; border-radius: 15px; color: white; font-size: 14px; outline: none; }
-        input:focus { border-color: var(--primary); box-shadow: 0 0 15px rgba(0, 194, 255, 0.2); }
-        .btn-gps { background: var(--primary); color: #020617; padding: 0 25px; border-radius: 15px; font-weight: 900; border: none; cursor: pointer; text-transform: uppercase; font-size: 10px; transition: 0.3s; }
-        .btn-gps:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0, 194, 255, 0.3); }
+        .search-container { max-width: 800px; margin: 0 auto 40px; background: var(--glass); backdrop-filter: blur(20px); padding: 20px; border-radius: 25px; border: 1px solid rgba(255,255,255,0.05); display: flex; gap: 15px; }
+        input { flex: 1; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); padding: 15px 25px; border-radius: 15px; color: white; outline: none; transition: 0.3s; }
+        input:focus { border-color: var(--primary); box-shadow: 0 0 20px rgba(0, 194, 255, 0.2); }
+        .btn-gps { background: var(--primary); color: #020617; padding: 0 30px; border-radius: 15px; font-weight: 900; border: none; cursor: pointer; text-transform: uppercase; font-size: 11px; transition: 0.3s; white-space: nowrap; }
+        .btn-gps:hover { transform: scale(1.05); box-shadow: 0 0 30px var(--primary); }
 
-        /* ✅ CARTE SATELLITE (SIMULATION ÉLITE) */
-        .map-container { background: var(--glass); height: 500px; border-radius: 40px; border: 1px solid var(--primary); position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; background-image: url('https://www.google.com'); background-size: cover; background-position: center; }
-        .map-overlay { position: absolute; inset: 0; background: rgba(2, 6, 23, 0.4); backdrop-filter: saturate(0.5) brightness(0.7); }
+        /* ✅ INTERFACE MAP RADAR LIVE */
+        .map-viewport { position: relative; width: 100%; height: 600px; border-radius: 40px; border: 2px solid var(--primary); overflow: hidden; background: #010409; box-shadow: 0 0 50px rgba(0, 194, 255, 0.1); }
         
-        .pulse-node { position: absolute; width: 25px; height: 25px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; cursor: pointer; z-index: 10; }
-        .pulse-node::after { content: ''; position: absolute; width: 100%; height: 100%; background: var(--primary); border-radius: 50%; animation: pulse-ring 2s infinite; }
-        @keyframes pulse-ring { 0% { transform: scale(0.5); opacity: 1; } 100% { transform: scale(3); opacity: 0; } }
+        /* Effet Grille & Scan Line */
+        .map-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(0,194,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0,194,255,0.05) 1px, transparent 1px); background-size: 50px 50px; }
+        .scan-line { position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: var(--primary); box-shadow: 0 0 20px var(--primary); opacity: 0.5; animation: scanMove 4s linear infinite; z-index: 5; }
+        
+        @keyframes scanMove { 0% { top: -5%; } 100% { top: 105%; } }
 
-        .back-link { display: block; text-align: center; margin-top: 40px; color: #475569; text-decoration: none; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; transition: 0.3s; }
-        .back-link:hover { color: white; letter-spacing: 4px; }
+        /* Nœuds Pulsatiles (Points WiFi) */
+        .node { position: absolute; width: 20px; height: 20px; background: var(--primary); border-radius: 50%; cursor: pointer; z-index: 10; transform: translate(-50%, -50%); }
+        .node::before { content: ""; position: absolute; inset: -10px; border-radius: 50%; background: var(--primary); opacity: 0.2; animation: pulseNode 2s infinite; }
+        .node::after { content: ""; position: absolute; inset: -20px; border-radius: 50%; border: 1px solid var(--primary); opacity: 0; animation: pulseRing 2s infinite; }
+
+        @keyframes pulseNode { 0%, 100% { transform: scale(1); opacity: 0.2; } 50% { transform: scale(1.5); opacity: 0.4; } }
+        @keyframes pulseRing { 0% { transform: scale(0.5); opacity: 0.8; } 100% { transform: scale(3); opacity: 0; } }
+
+        /* Panneau de données Live latéral */
+        .live-data-panel { position: absolute; top: 20px; right: 20px; width: 220px; background: rgba(0,0,0,0.7); border: 1px solid var(--primary); padding: 15px; border-radius: 20px; backdrop-filter: blur(10px); z-index: 100; font-size: 10px; }
+        .data-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-family: 'Courier New', monospace; }
+        .status-on { color: var(--accent); font-weight: bold; }
+
+        .back-link { display: block; text-align: center; margin-top: 40px; color: #475569; text-decoration: none; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 3px; transition: 0.3s; }
+        .back-link:hover { color: var(--primary); }
     </style>
 </head>
 <body>
 
     <div class="radar-header">
-        <h1 data-lang="nav_loc">Scanner de Nœuds <span style="color:var(--primary)">AERIO</span></h1>
-        <div class="radar-status">🛰️ SCAN SATELLITE EN COURS...</div>
+        <h1>RADAR SATELLITE <span style="color:var(--primary)">AERIO</span></h1>
+        <div class="radar-status">🛰️ PROTOCOLE DE SCAN ALPHA ACTIF</div>
     </div>
 
-    <div class="search-box">
-        <input type="text" id="addressInput" placeholder="Entrez une ville ou une adresse..." data-lang="contact_p">
-        <button class="btn-gps" onclick="activateGPS()">ACTIVER GPS</button>
+    <div class="search-container">
+        <input type="text" placeholder="RECHERCHE DE RÉSEAU DANS VOTRE ZONE...">
+        <button class="btn-gps" onclick="simulateGPS()">LANCER LE SCAN GPS</button>
     </div>
 
-    <div class="map-container">
-        <div class="map-overlay"></div>
-        <!-- Simulation de Nœuds Live -->
-        <div class="pulse-node" style="top: 30%; left: 40%;" onclick="alert('Nœud Alpha-1 : Signal Excellent')">📶</div>
-        <div class="pulse-node" style="top: 60%; left: 75%;" onclick="alert('Nœud Alpha-2 : Signal Stable')">📶</div>
-        <div class="pulse-node" style="top: 15%; left: 15%;" onclick="alert('Nœud Alpha-3 : Zone Dense')">📶</div>
+    <div class="map-viewport">
+        <div class="map-grid"></div>
+        <div class="scan-line"></div>
+        
+        <div class="live-data-panel">
+            <p style="color:var(--primary); font-weight:900; margin-bottom:10px;">FLUX RÉSEAU LIVE</p>
+            <div class="data-row"><span>NODES CONNECTÉS:</span> <span class="status-on">142</span></div>
+            <div class="data-row"><span>SIGNAL MOYEN:</span> <span style="color:var(--primary)">98%</span></div>
+            <div class="data-row"><span>LATENCE:</span> <span class="status-on">12ms</span></div>
+            <hr style="border:0; border-top:1px solid rgba(0,194,255,0.2); margin:10px 0;">
+            <div class="data-row"><span>ENCOURS:</span> <span id="revenue-live">183 475 F</span></div>
+        </div>
+
+        <div class="node" style="top: 30%; left: 40%;" onclick="showNode('Alpha-1')"></div>
+        <div class="node" style="top: 55%; left: 65%;" onclick="showNode('Alpha-2')"></div>
+        <div class="node" style="top: 20%; left: 20%;" onclick="showNode('Alpha-3')"></div>
+        <div class="node" style="top: 75%; left: 35%;" onclick="showNode('Alpha-4')"></div>
+        <div class="node" style="top: 45%; left: 80%;" onclick="showNode('Alpha-5')"></div>
     </div>
 
-    <a href="/" class="back-link">← <span data-lang="nav_home">Retour au QG Alpha</span></a>
+    <a href="index.html" class="back-link">← RETOUR AU COCKPIT ALPHA</a>
 
-    <script src="/translations.js"></script>
     <script>
-        // ✅ MOTEUR DE LOCALISATION LIVE ALPHA [1.4]
-        function activateGPS() {
-            if (navigator.geolocation) {
-                alert("🛰️ PROTOCOLE ALPHA : Recherche de votre position GPS...");
-                navigator.geolocation.getCurrentPosition(position => {
-                    const lat = position.coords.latitude;
-                    const lng = position.coords.longitude;
-                    alert(`✅ POSITION VERROUILLÉE : Latitude ${lat}, Longitude ${lng}. Centrage du satellite...`);
-                }, () => {
-                    alert("⚠️ ERREUR : Signal satellite bloqué. Veuillez autoriser la localisation.");
-                });
-            } else {
-                alert("⚠️ PROTOCOLE ÉCHOUÉ : Votre navigateur ne supporte pas le scan GPS.");
-            }
+        function simulateGPS() {
+            const btn = document.querySelector('.btn-gps');
+            btn.innerHTML = "SCAN EN COURS...";
+            btn.style.background = "#00F5A0";
+            
+            setTimeout(() => {
+                alert("🛰️ GPS VERROUILLÉ. Recherche de nœuds AERIO à proximité de votre position...");
+                btn.innerHTML = "LANCER LE SCAN GPS";
+                btn.style.background = "#00C2FF";
+            }, 2000);
         }
 
-        window.onload = applyTranslations;
+        function showNode(name) {
+            alert("📶 RÉSEAU " + name + " : ACTIF\nQualité du signal : Optimale\nMode de paiement : Mobile Money OK");
+        }
+
+        // Animation de revenus live (pour l'effet "Live")
+        setInterval(() => {
+            const rev = document.getElementById('revenue-live');
+            let current = parseInt(rev.innerText.replace(/\s/g, ''));
+            current += Math.floor(Math.random() * 50);
+            rev.innerText = current.toLocaleString() + " F";
+        }, 3000);
     </script>
 </body>
 </html>
-
