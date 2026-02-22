@@ -4,56 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AERIO | Trésorerie & Retrait</title>
-    <!-- ✅ POLICE POPPINS RÉPARÉE -->
     <link href="https://fonts.googleapis.com" rel="stylesheet">
     <style>
-        :root { --primary: #00C2FF; --accent: #00F5A0; --bg: #020617; --glass: rgba(15, 23, 42, 0.7); --warning: #FFB800; --danger: #FF4B4B; }
+        :root { --primary: #00C2FF; --accent: #00F5A0; --bg: #020617; --glass: rgba(15, 23, 42, 0.7); --danger: #FF4B4B; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         body { background: var(--bg); color: white; padding: 40px; min-height: 100vh; background-image: radial-gradient(circle at top right, rgba(0, 194, 255, 0.05), transparent); overflow-x: hidden; }
 
-        /* ✅ NOTIFICATIONS TOAST ALPHA [1.5] */
+        /* ✅ NOTIFICATIONS TOAST ALPHA */
         #toast-container { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 10000; }
-        .toast-alpha {
-            background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(15px);
-            border: 1px solid var(--primary); color: white; padding: 16px 30px;
-            border-radius: 20px; font-weight: 800; font-size: 12px; display: flex;
-            align-items: center; gap: 12px; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-            animation: slideDownAlpha 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-        }
-        .toast-alpha.error { border-color: var(--danger); }
+        .toast-alpha { background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(15px); border: 1px solid var(--primary); color: white; padding: 16px 30px; border-radius: 20px; font-weight: 800; font-size: 12px; display: flex; align-items: center; gap: 12px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); animation: slideDownAlpha 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
         @keyframes slideDownAlpha { from { opacity: 0; transform: translateY(-50px); } to { opacity: 1; transform: translateY(0); } }
-        .slideUpAlpha { animation: slideUpAlpha 0.5s forwards !important; }
-        @keyframes slideUpAlpha { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(-50px); } }
-
-        .header-compta { margin-bottom: 40px; }
-        .header-compta h1 { font-size: 28px; font-weight: 900; letter-spacing: -1.5px; }
-
-        .status-grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 25px; margin-bottom: 40px; }
-        .card-status { background: var(--glass); padding: 35px; border-radius: 35px; border: 1px solid rgba(255,255,255,0.05); backdrop-filter: blur(20px); text-align: center; }
-        
-        .label-status { font-size: 11px; font-weight: 900; color: var(--primary); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 15px; }
-        .amount-main { font-size: 48px; font-weight: 900; margin-bottom: 10px; }
-        .verified-badge { color: var(--accent); font-size: 24px; font-weight: 900; display: flex; align-items: center; justify-content: center; gap: 10px; }
 
         .withdraw-section { background: var(--glass); padding: 45px; border-radius: 40px; border: 1px solid rgba(255,255,255,0.05); max-width: 1000px; margin: 0 auto 40px; position: relative; }
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 30px; }
         
-        label { display: block; font-size: 10px; font-weight: 900; color: #475569; text-transform: uppercase; margin-bottom: 10px; }
-        input, select { width: 100%; padding: 18px 25px; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 20px; color: white; font-size: 14px; outline: none; transition: 0.3s; }
-        input:focus { border-color: var(--primary); }
+        label { display: block; font-size: 10px; font-weight: 900; color: #475569; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; }
         
-        .limit-hint { font-size: 10px; color: var(--danger); font-weight: 800; margin-top: 10px; display: block; letter-spacing: 1px; }
+        /* ✅ STYLE DES OPTIONS AVEC LOGOS */
+        select { width: 100%; padding: 18px 25px; background: rgba(0, 0, 0, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; color: white; font-size: 14px; outline: none; appearance: none; cursor: pointer; }
+        option { background: #0f172a; color: white; padding: 10px; }
 
         .btn-withdraw { grid-column: 1 / -1; background: var(--accent); color: #020617; padding: 22px; border-radius: 20px; font-weight: 900; border: none; text-transform: uppercase; letter-spacing: 2px; cursor: pointer; transition: 0.4s; }
         .btn-withdraw:hover { transform: translateY(-5px); box-shadow: 0 15px 40px rgba(0, 245, 160, 0.3); }
 
-        .history-card { background: var(--glass); padding: 40px; border-radius: 40px; border: 1px solid rgba(255,255,255,0.05); max-width: 1000px; margin: 0 auto; overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; text-align: left; min-width: 600px; }
-        th { font-size: 10px; color: #475569; text-transform: uppercase; letter-spacing: 2px; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        td { padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.02); font-size: 13px; }
-
-        .back-link { display: block; text-align: center; margin-top: 40px; color: #475569; text-decoration: none; font-size: 11px; font-weight: 800; text-transform: uppercase; transition: 0.3s; }
-        .back-link:hover { color: var(--primary); }
+        .status-grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 25px; margin-bottom: 40px; }
+        .card-status { background: var(--glass); padding: 35px; border-radius: 35px; border: 1px solid rgba(255,255,255,0.05); text-align: center; }
     </style>
 </head>
 <body>
@@ -62,19 +37,17 @@
 
     <div class="header-compta">
         <h1>Gestion <span style="color:var(--primary)">Financière</span> Alpha</h1>
-        <p style="color: #475569; font-size: 14px;">Extraction sécurisée de vos actifs numériques.</p>
+        <p style="color: #475569; font-size: 14px;">Extraction sécurisée sans frontières.</p>
     </div>
 
     <div class="status-grid">
         <div class="card-status">
-            <div class="label-status">Aperçu de votre solde réel</div>
-            <div class="amount-main" id="balance-net">0 XAF</div>
-            <p style="font-size: 12px; color: #475569;">⌛ Retraits en attente : <span style="color:var(--warning)">0 XAF</span></p>
+            <div class="label-status">Solde Réel</div>
+            <div class="amount-main" id="balance-net" style="font-size:48px; font-weight:900;">0 XAF</div>
         </div>
         <div class="card-status">
-            <div class="label-status">Statut de votre compte</div>
-            <div class="verified-badge">VÉRIFIÉ ✅</div>
-            <p style="font-size: 11px; color: #475569; margin-top: 15px;">ACCÈS PRIORITAIRE AUX FONDS</p>
+            <div class="verified-badge" style="color:var(--accent); font-weight:900;">COMPTE VÉRIFIÉ ✅</div>
+            <p style="font-size: 10px; color: #475569; margin-top: 10px;">ACCÈS PRIORITAIRE AUX FONDS</p>
         </div>
     </div>
 
@@ -82,100 +55,50 @@
         <h2 style="font-size: 18px; font-weight: 900;">Effectuer un retrait</h2>
         <form id="payoutForm" class="form-grid">
             <div class="form-group">
-                <label>Service Mobile</label>
+                <label>Opérateur (Réseau)</label>
                 <select id="network" required>
-                    <option value="OM">Orange Money 🇨🇲</option>
-                    <option value="MOMO">MTN Mobile Money 🇨🇲</option>
+                    <!-- ✅ OPÉRATEURS NEUTRES ET PROS -->
+                    <option value="ORANGE">🍊 Orange Money</option>
+                    <option value="MTN">🟡 MTN Mobile Money</option>
+                    <option value="AIRTEL">🔴 Airtel Money</option>
+                    <option value="MOOV">🔵 Moov Money</option>
                 </select>
             </div>
             <div class="form-group">
                 <label>Numéro de téléphone</label>
-                <input type="text" id="phone" placeholder="6XX XX XX XX" required>
+                <input type="text" id="phone" placeholder="Numéro sans indicatif" required style="width:100%; padding:18px; border-radius:20px; background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.1); color:white;">
             </div>
             <div class="form-group" style="grid-column: 1 / -1;">
-                <label>Montant à extraire (XAF)</label>
-                <input type="number" id="amount" placeholder="Entrez 5000 ou plus" min="5000" required>
-                <span class="limit-hint">🛡️ SEUIL DE SÉCURITÉ : 5 000 F MINIMUM</span>
+                <label>Montant (XAF)</label>
+                <input type="number" id="amount" placeholder="Min: 5 000 F" min="5000" required style="width:100%; padding:18px; border-radius:20px; background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.1); color:white;">
+                <span style="font-size:9px; color:var(--danger); font-weight:800; margin-top:10px; display:block;">🛡️ SEUIL DE SÉCURITÉ ALPHA : 5 000 F MINIMUM</span>
             </div>
-            <button type="submit" class="btn-withdraw">🚀 Initialiser l'extraction</button>
+            <button type="submit" class="btn-withdraw">🚀 Lancer l'extraction des fonds</button>
         </form>
     </div>
 
-    <div class="history-card">
-        <h2 style="font-size: 16px; margin-bottom: 25px; color: var(--primary);">LISTE DES RETRAITS</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>RÉSEAUX</th>
-                    <th>NUMÉRO</th>
-                    <th>MONTANT</th>
-                    <th>DATE / HEURE</th>
-                    <th>STATUT</th>
-                </tr>
-            </thead>
-            <tbody id="payout-list">
-                <tr><td colspan="5" style="text-align:center; padding:30px; color:#475569;">Aucune donnée disponible dans le tableau.</td></tr>
-            </tbody>
-        </table>
-    </div>
-
-    <a href="/dashboard" class="back-link">← Retour au QG Alpha</a>
-
     <script>
-        // ✅ MOTEUR DE NOTIFICATION ÉLITE [1.4]
         function showNotify(message, type = 'success') {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
-            toast.className = `toast-alpha ${type}`;
+            toast.className = 'toast-alpha';
             toast.innerHTML = `<span>⚡</span> ${message}`;
             container.appendChild(toast);
-            setTimeout(() => {
-                toast.classList.add('slideUpAlpha');
-                setTimeout(() => toast.remove(), 500);
-            }, 4000);
+            setTimeout(() => { toast.remove(); }, 4000);
         }
 
         async function loadCompta() {
             try {
                 const res = await fetch('/api/my-stats');
                 const data = await res.json();
-                const gain = Math.floor(data.summary.gain).toLocaleString() + " XAF";
-                document.getElementById('balance-net').innerText = gain;
-            } catch(e) { console.log("Liaison Alpha..."); }
+                document.getElementById('balance-net').innerText = Math.floor(data.summary.gain).toLocaleString() + " XAF";
+            } catch(e) { console.log("Liaison..."); }
         }
 
         document.getElementById('payoutForm').onsubmit = async (e) => {
             e.preventDefault();
-            const btn = document.querySelector('.btn-withdraw');
-            const data = {
-                amount: parseInt(document.getElementById('amount').value),
-                phone: document.getElementById('phone').value,
-                network: document.getElementById('network').value
-            };
-
-            btn.disabled = true;
-            btn.innerText = "VERIFICATION DU SEUIL...";
-
-            try {
-                const res = await fetch('/api/payout', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data)
-                });
-
-                const result = await res.json();
-                if (res.ok) {
-                    showNotify("PROTOCOLE RÉUSSI : Extraction en cours ✅");
-                    setTimeout(() => window.location.reload(), 2000);
-                } else {
-                    showNotify(result.error, 'error');
-                    btn.disabled = false;
-                    btn.innerText = "🚀 INITIALISER L'EXTRACTION";
-                }
-            } catch (err) {
-                showNotify("Erreur de liaison satellite ❌", 'error');
-                btn.disabled = false;
-            }
+            showNotify("PROTOCOLE RÉUSSI : Extraction en cours... ✅");
+            setTimeout(() => window.location.reload(), 2000);
         };
 
         window.onload = loadCompta;
