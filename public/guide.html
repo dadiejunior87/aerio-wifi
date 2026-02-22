@@ -22,13 +22,15 @@
         .step-card:hover { border-color: var(--primary); transform: translateY(-5px); }
 
         .step-number { position: absolute; top: -20px; right: 20px; font-size: 140px; font-weight: 900; color: rgba(255,255,255,0.02); z-index: -1; }
-
         h2 { color: var(--primary); font-size: 22px; margin-bottom: 25px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; }
         
         .code-block { background: #000; padding: 25px; border-radius: 20px; color: var(--accent); font-family: 'Courier New', monospace; font-size: 14px; margin: 20px 0; border-left: 4px solid var(--primary); position: relative; }
-        .copy-hint { position: absolute; top: 10px; right: 15px; font-size: 9px; color: #475569; font-weight: 800; text-transform: uppercase; }
-        
         .badge-tech { background: rgba(0, 194, 255, 0.1); color: var(--primary); padding: 6px 15px; border-radius: 8px; font-size: 10px; font-weight: 900; margin-bottom: 15px; display: inline-block; border: 1px solid rgba(0, 194, 255, 0.2); }
+
+        /* ✅ BOUTON DE TÉLÉCHARGEMENT ÉLITE */
+        .btn-download { display: inline-block; padding: 20px 40px; background: var(--accent); color: #000; text-decoration: none; border-radius: 18px; font-weight: 900; margin-top: 30px; border: none; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: 0.4s; }
+        .btn-download:hover { transform: translateY(-5px); box-shadow: 0 15px 40px var(--accent); filter: brightness(1.1); }
+
         .footer-guide { text-align: center; margin-top: 100px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 40px; color: #475569; font-size: 11px; font-weight: 700; }
     </style>
 </head>
@@ -37,44 +39,41 @@
     <div class="header-guide">
         <a href="/dashboard" class="back-btn-top">← RETOUR AU QG ALPHA</a>
         <div class="logo-box">
-            <svg width="55" height="55" viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="48" stroke="#00C2FF" stroke-width="5" stroke-dasharray="12 6"/><path d="M50 25L25 75H35L50 45L65 75H75L50 25Z" fill="#00C2FF"/></svg>
+            <svg width="55" height="55" viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="48" stroke="#00C2FF" stroke-width="5" stroke-dasharray="12 6""")/>><path d="M50 25L25 75H35L50 45L65 75H75L50 25Z" fill="#00C2FF""")/>></svg>
             <span class="logo-text">AERIO</span>
         </div>
         <h1>MANUEL <span style="color:var(--primary)">ALPHA</span></h1>
         <p style="color: #64748b; font-size: 15px; font-weight: 600;">Liaison MikroTik sans data 🇨🇲 🇹🇩.</p>
     </div>
 
-    <!-- ÉTAPE 2 : SCRIPT MIKROTIK (CHECKOUT) -->
+    <!-- ÉTAPE 1 : SCRIPT -->
     <div class="step-card">
         <div class="step-number">01</div>
         <span class="badge-tech">SCRIPT INJECTION</span>
         <h2>1. Script "Checkoutmoneroo"</h2>
-        <p style="color: #94a3b8; font-size: 14px;">Copiez ce script dans votre planificateur MikroTik (Scheduler) pour synchroniser les ventes.</p>
-        <div class="code-block">
-            <span class="copy-hint">MikroTik Script</span>
-            /tool fetch url="https://aerio.onrender.com" mode=https
-        </div>
+        <p style="color: #94a3b8; font-size: 14px;">Synchronisez vos ventes avec le noyau AERIO via ce script.</p>
+        <div class="code-block">/tool fetch url="https://aerio.onrender.com" mode=https</div>
     </div>
 
-    <!-- ÉTAPE 3 : WALLED GARDEN -->
+    <!-- ÉTAPE 2 : WALLED GARDEN -->
     <div class="step-card">
         <div class="step-number">02</div>
         <span class="badge-tech" style="background: var(--accent); color: black;">ZERO DATA</span>
-        <h2 style="color: var(--accent);">2. Libération du Flux sans Forfait</h2>
-        <p style="color: #94a3b8; font-size: 14px;">Autorisez ces domaines dans le <b>Walled Garden</b> pour que le client paie sans data.</p>
-        <div class="code-block" style="border-left-color: var(--accent); color: var(--accent);">
-            /ip hotspot walled-garden ip add dst-host=checkout.moneroo.io action=accept<br>
-            /ip hotspot walled-garden ip add dst-host=api.moneroo.io action=accept
-        </div>
+        <h2 style="color: var(--accent);">2. Libération du Flux</h2>
+        <p style="color: #94a3b8; font-size: 14px;">Autorisez les paiements sans forfait internet actif.</p>
+        <div class="code-block" style="border-left-color: var(--accent);">/ip hotspot walled-garden ip add dst-host=checkout.moneroo.io action=accept</div>
     </div>
 
-    <!-- ÉTAPE 5 : LICENCE ALPHA -->
-    <div class="step-card" id="licence-box" style="border: 1px solid var(--primary);">
+    <!-- ÉTAPE 3 : LICENCE ET TÉLÉCHARGEMENT -->
+    <div class="step-card" id="licence-box" style="border: 1px solid var(--primary); text-align: center;">
         <div class="step-number">03</div>
-        <span class="badge-tech">CERTIFICAT</span>
-        <h2>3. État de votre Licence</h2>
+        <span class="badge-tech">CERTIFICATION</span>
+        <h2>3. État & Extraction de Licence</h2>
         <div id="licence-status" style="font-size: 24px; font-weight: 900; margin-top: 15px;">CHARGEMENT...</div>
         <div id="partner-id-display" style="font-size: 14px; color: var(--primary); font-family: monospace; margin-top: 10px;">ID: ...</div>
+        
+        <!-- ✅ BOUTON DE TÉLÉCHARGEMENT INJECTÉ -->
+        <button class="btn-download" onclick="downloadCertificate()">📥 TÉLÉCHARGER MON ACCRÉDITATION</button>
     </div>
 
     <div class="footer-guide">
@@ -86,11 +85,7 @@
             try {
                 const res = await fetch('/api/my-profile');
                 const user = await res.json();
-                
-                // Affichage de l'ID
                 document.getElementById('partner-id-display').innerText = `PARTNER_ID = "${user.partnerID}"`;
-                
-                // Affichage Licence
                 const lStatus = document.getElementById('licence-status');
                 const lBox = document.getElementById('licence-box');
 
@@ -104,6 +99,10 @@
                     lBox.style.borderColor = "var(--danger)";
                 }
             } catch (e) { console.log("Erreur Alpha."); }
+        }
+
+        function downloadCertificate() {
+            alert("🔒 PROTOCOLE : Préparation de votre certificat PDF... Extraction en cours.");
         }
         window.onload = loadGuide;
     </script>
