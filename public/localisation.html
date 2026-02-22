@@ -1,1 +1,83 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AERIO | Radar de Localisation Alpha</title>
+    <!-- ✅ POLICE POPPINS ÉLITE -->
+    <link href="https://fonts.googleapis.com" rel="stylesheet">
+    <style>
+        :root { --primary: #00C2FF; --bg: #020617; --glass: rgba(15, 23, 42, 0.7); --accent: #00F5A0; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: var(--bg); color: white; min-height: 100vh; padding: 40px 8%; background-image: radial-gradient(circle at top right, rgba(0, 194, 255, 0.05), transparent); overflow-x: hidden; }
+
+        /* ✅ HEADER RADAR [1.5] */
+        .radar-header { text-align: center; margin-bottom: 50px; }
+        .radar-header h1 { font-size: 32px; font-weight: 900; letter-spacing: -1.5px; text-transform: uppercase; }
+        .radar-status { display: inline-block; padding: 6px 15px; background: rgba(0, 245, 160, 0.1); color: var(--accent); border-radius: 50px; font-size: 10px; font-weight: 900; margin-top: 10px; border: 1px solid var(--accent); animation: pulseStatus 2s infinite; }
+        @keyframes pulseStatus { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
+
+        /* ✅ RECHERCHE TACTIQUE */
+        .search-box { background: var(--glass); backdrop-filter: blur(40px); padding: 30px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.05); display: flex; gap: 15px; margin-bottom: 30px; }
+        input { flex: 1; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); padding: 15px 25px; border-radius: 15px; color: white; font-size: 14px; outline: none; }
+        input:focus { border-color: var(--primary); box-shadow: 0 0 15px rgba(0, 194, 255, 0.2); }
+        .btn-gps { background: var(--primary); color: #020617; padding: 0 25px; border-radius: 15px; font-weight: 900; border: none; cursor: pointer; text-transform: uppercase; font-size: 10px; transition: 0.3s; }
+        .btn-gps:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0, 194, 255, 0.3); }
+
+        /* ✅ CARTE SATELLITE (SIMULATION ÉLITE) */
+        .map-container { background: var(--glass); height: 500px; border-radius: 40px; border: 1px solid var(--primary); position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; background-image: url('https://www.google.com'); background-size: cover; background-position: center; }
+        .map-overlay { position: absolute; inset: 0; background: rgba(2, 6, 23, 0.4); backdrop-filter: saturate(0.5) brightness(0.7); }
+        
+        .pulse-node { position: absolute; width: 25px; height: 25px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; cursor: pointer; z-index: 10; }
+        .pulse-node::after { content: ''; position: absolute; width: 100%; height: 100%; background: var(--primary); border-radius: 50%; animation: pulse-ring 2s infinite; }
+        @keyframes pulse-ring { 0% { transform: scale(0.5); opacity: 1; } 100% { transform: scale(3); opacity: 0; } }
+
+        .back-link { display: block; text-align: center; margin-top: 40px; color: #475569; text-decoration: none; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; transition: 0.3s; }
+        .back-link:hover { color: white; letter-spacing: 4px; }
+    </style>
+</head>
+<body>
+
+    <div class="radar-header">
+        <h1 data-lang="nav_loc">Scanner de Nœuds <span style="color:var(--primary)">AERIO</span></h1>
+        <div class="radar-status">🛰️ SCAN SATELLITE EN COURS...</div>
+    </div>
+
+    <div class="search-box">
+        <input type="text" id="addressInput" placeholder="Entrez une ville ou une adresse..." data-lang="contact_p">
+        <button class="btn-gps" onclick="activateGPS()">ACTIVER GPS</button>
+    </div>
+
+    <div class="map-container">
+        <div class="map-overlay"></div>
+        <!-- Simulation de Nœuds Live -->
+        <div class="pulse-node" style="top: 30%; left: 40%;" onclick="alert('Nœud Alpha-1 : Signal Excellent')">📶</div>
+        <div class="pulse-node" style="top: 60%; left: 75%;" onclick="alert('Nœud Alpha-2 : Signal Stable')">📶</div>
+        <div class="pulse-node" style="top: 15%; left: 15%;" onclick="alert('Nœud Alpha-3 : Zone Dense')">📶</div>
+    </div>
+
+    <a href="/" class="back-link">← <span data-lang="nav_home">Retour au QG Alpha</span></a>
+
+    <script src="/translations.js"></script>
+    <script>
+        // ✅ MOTEUR DE LOCALISATION LIVE ALPHA [1.4]
+        function activateGPS() {
+            if (navigator.geolocation) {
+                alert("🛰️ PROTOCOLE ALPHA : Recherche de votre position GPS...");
+                navigator.geolocation.getCurrentPosition(position => {
+                    const lat = position.coords.latitude;
+                    const lng = position.coords.longitude;
+                    alert(`✅ POSITION VERROUILLÉE : Latitude ${lat}, Longitude ${lng}. Centrage du satellite...`);
+                }, () => {
+                    alert("⚠️ ERREUR : Signal satellite bloqué. Veuillez autoriser la localisation.");
+                });
+            } else {
+                alert("⚠️ PROTOCOLE ÉCHOUÉ : Votre navigateur ne supporte pas le scan GPS.");
+            }
+        }
+
+        window.onload = applyTranslations;
+    </script>
+</body>
+</html>
 
