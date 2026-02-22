@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AERIO | Console Alpha</title>
+    <!-- ✅ POLICE POPPINS ÉLITE -->
     <link href="https://fonts.googleapis.com" rel="stylesheet">
     <style>
         :root { --primary: #00C2FF; --bg: #020617; --glass: rgba(15, 23, 42, 0.8); --danger: #FF4B4B; --accent: #00F5A0; }
@@ -23,18 +24,16 @@
         .sub-item { display: block; padding: 8px 0; color: #475569; text-decoration: none; font-size: 12px; font-weight: 700; transition: 0.3s; }
         .sub-item:hover { color: var(--primary); padding-left: 10px; }
 
-        /* ✅ SÉLECTEUR DE LANGUE DASHBOARD */
+        /* ✅ SÉLECTEUR DE LANGUE DASHBOARD GLOBAL */
         .header-top { display: flex; justify-content: flex-end; padding-bottom: 20px; }
         .lang-switcher { display: flex; gap: 5px; background: rgba(255,255,255,0.05); padding: 4px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); }
-        .lang-btn { background: none; border: none; color: #475569; font-size: 9px; font-weight: 900; cursor: pointer; padding: 4px 8px; border-radius: 8px; }
+        .lang-btn { background: none; border: none; color: #475569; font-size: 8px; font-weight: 900; cursor: pointer; padding: 4px 8px; border-radius: 8px; }
         .lang-btn.active { background: var(--primary); color: #020617; box-shadow: 0 0 10px var(--primary); }
 
         .main-content { margin-left: 280px; flex: 1; padding: 50px; overflow-y: auto; }
         .quick-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 40px; }
         .quick-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); padding: 25px; border-radius: 30px; display: flex; align-items: center; gap: 15px; text-decoration: none; transition: 0.4s; backdrop-filter: blur(10px); color: white; cursor: pointer; }
         .quick-card:hover { border-color: var(--primary); transform: translateY(-5px); background: rgba(0, 194, 255, 0.05); }
-        .q-icon { width: 50px; height: 50px; background: rgba(255,255,255,0.05); border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
-        .q-text b { display: block; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; }
         
         .stat-card { background: rgba(255,255,255,0.03); padding: 35px; border-radius: 35px; border: 1px solid rgba(255,255,255,0.05); }
     </style>
@@ -56,12 +55,21 @@
 
         <a href="/dashboard" class="nav-item active"><span data-lang="dash_nav_home">📊 Tableau de bord</span></a>
 
+        <!-- ✅ GESTION DES TICKETS -->
         <div onclick="toggleMenu('tickets-sub')" class="nav-item"><span data-lang="dash_nav_tickets">🎫 Mes Tickets</span><span>▼</span></div>
         <div id="tickets-sub" class="submenu">
             <a href="/tickets/ajouter" class="sub-item" data-lang="dash_sub_add">• Ajouter un ticket</a>
             <a href="/tickets" class="sub-item" data-lang="dash_sub_list">• Liste des tickets</a>
         </div>
 
+        <!-- ✅ MODULE WIFI ZONE RÉTABLI -->
+        <div onclick="toggleMenu('wifi-sub')" class="nav-item"><span data-lang="dash_nav_wifi">📡 Mes Wifi Zone</span><span>▼</span></div>
+        <div id="wifi-sub" class="submenu">
+            <a href="/wifi-zone" class="sub-item" data-lang="dash_sub_wifi_add">• Ajouter un Nœud</a>
+            <a href="/liste-wifi" class="sub-item" data-lang="dash_sub_wifi_list">• Liste des Nœuds</a>
+        </div>
+
+        <!-- ✅ COMPTABILITÉ -->
         <div onclick="toggleMenu('compta-sub')" class="nav-item"><span data-lang="dash_nav_compta">💰 Ma Comptabilité</span><span>▼</span></div>
         <div id="compta-sub" class="submenu">
             <a href="/compta" class="sub-item" data-lang="dash_sub_payout">• Effectuer un retrait</a>
@@ -74,21 +82,23 @@
             <div class="lang-switcher">
                 <button onclick="setLang('fr')" class="lang-btn active">FR</button>
                 <button onclick="setLang('en')" class="lang-btn">EN</button>
+                <button onclick="setLang('pt')" class="lang-btn">PT</button>
+                <button onclick="setLang('es')" class="lang-btn">ES</button>
             </div>
         </div>
 
         <div class="quick-grid">
             <a href="/profil" class="quick-card">
-                <div class="q-icon">👤</div>
-                <div class="q-text"><b data-lang="dash_q_profile">Mon Profil</b><span data-lang="dash_q_profile_s">Identité Alpha</span></div>
+                <div style="font-size:20px;">👤</div>
+                <div style="margin-left:15px;"><b data-lang="dash_q_profile" style="display:block; font-size:14px;">Mon Profil</b><span data-lang="dash_q_profile_s" style="font-size:12px; color:#64748b;">Identité Alpha</span></div>
             </a>
             <a href="https://wa.me" target="_blank" class="quick-card">
-                <div class="q-icon">💬</div>
-                <div class="q-text"><b data-lang="dash_q_support">Support Chat</b><span style="color:var(--primary)">WHATSAPP LIVE</span></div>
+                <div style="font-size:20px;">💬</div>
+                <div style="margin-left:15px;"><b data-lang="dash_q_support" style="display:block; font-size:14px;">Support Chat</b><span style="color:var(--primary); font-size:12px;">WHATSAPP LIVE</span></div>
             </a>
             <a href="/guide" class="quick-card">
-                <div class="q-icon">📩</div>
-                <div class="q-text"><b data-lang="dash_q_docs">Contacts & Docs</b><span data-lang="dash_q_docs_s">Base Documentaire</span></div>
+                <div style="font-size:20px;">📩</div>
+                <div style="margin-left:15px;"><b data-lang="dash_q_docs" style="display:block; font-size:14px;">Contacts & Docs</b><span data-lang="dash_q_docs_s" style="font-size:12px; color:#64748b;">Base Documentaire</span></div>
             </a>
         </div>
 
@@ -119,13 +129,11 @@
                 const data = await res.json();
                 document.getElementById('solde').innerText = data.summary.gain.toLocaleString() + " F";
                 document.getElementById('stock').innerText = data.summary.count;
-            } catch(e) { console.log("Synchronisation..."); }
+                applyTranslations(); // ✅ Applique les langues au chargement
+            } catch(e) { console.log("Liaison satellite..."); }
         }
 
-        window.onload = () => {
-            loadAlpha();
-            applyTranslations(); 
-        };
+        window.onload = loadAlpha;
     </script>
 </body>
 </html>
