@@ -1,1 +1,67 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AERIO | Arsenal Matériel Alpha</title>
+    <link href="https://fonts.googleapis.com" rel="stylesheet">
+    <style>
+        :root { --primary: #00C2FF; --bg: #020617; --glass: rgba(15, 23, 42, 0.7); --accent: #00F5A0; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: var(--bg); color: white; min-height: 100vh; padding: 50px 8%; background-image: radial-gradient(circle at top right, rgba(0, 194, 255, 0.05), transparent); }
+
+        .shop-header { text-align: center; margin-bottom: 60px; }
+        .shop-header h1 { font-size: 36px; font-weight: 900; letter-spacing: -2px; text-transform: uppercase; }
+
+        /* ✅ GRILLE DE PRODUITS ÉLITE [1.5] */
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        .product-card { background: var(--glass); backdrop-filter: blur(30px); border-radius: 40px; padding: 40px; border: 1px solid rgba(255,255,255,0.05); text-align: center; transition: 0.4s; position: relative; overflow: hidden; }
+        .product-card:hover { border-color: var(--primary); transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0, 194, 255, 0.2); }
+
+        .product-img { width: 100%; max-width: 200px; margin-bottom: 25px; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5)); }
+        .price-tag { font-size: 24px; font-weight: 900; color: var(--accent); margin: 15px 0; }
+        
+        .badge-stock { position: absolute; top: 25px; right: 25px; background: rgba(0, 245, 160, 0.1); color: var(--accent); padding: 5px 15px; border-radius: 50px; font-size: 10px; font-weight: 900; border: 1px solid var(--accent); }
+
+        .btn-buy { width: 100%; padding: 18px; background: var(--primary); color: #020617; border-radius: 18px; font-weight: 900; border: none; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; }
+        .btn-buy:hover { background: white; }
+
+        .back-link { display: block; text-align: center; margin-top: 50px; color: #475569; text-decoration: none; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; }
+    </style>
+</head>
+<body>
+
+    <div class="shop-header">
+        <h1 data-lang="nav_shop">Arsenal <span style="color:var(--primary)">Alpha Hardware</span></h1>
+        <p style="color: #475569; font-weight: 600; margin-top: 10px;">Équipements certifiés pour le Noyau AERIO.</p>
+    </div>
+
+    <div class="product-grid">
+        <!-- PRODUIT 1 : MIKROTIK HAP AX2 -->
+        <div class="product-card">
+            <div class="badge-stock">DISPONIBLE SATELLITE</div>
+            <img src="https://m.media-amazon.com" class="product-img" alt="MikroTik hAP ax2">
+            <h3 style="font-weight: 900;">MikroTik hAP ax²</h3>
+            <p style="font-size: 12px; color: #64748b; margin-top: 10px;">Le destructeur de zones mortes. WiFi 6 de pointe.</p>
+            <div class="price-tag">85 000 F</div>
+            <button class="btn-buy" onclick="alert('Liaison commerciale établie...')">Commander l'unité</button>
+        </div>
+
+        <!-- PRODUIT 2 : ANTENNE EXTÉRIEURE -->
+        <div class="product-card">
+            <div class="badge-stock" style="color:var(--primary); border-color:var(--primary); background:rgba(0,194,255,0.1)">SUR COMMANDE</div>
+            <img src="https://m.media-amazon.com" class="product-img" alt="Antenne">
+            <h3 style="font-weight: 900;">Nœud d'Émission Extérieur</h3>
+            <p style="font-size: 12px; color: #64748b; margin-top: 10px;">Portée giga-étalée pour couverture de quartier complète.</p>
+            <div class="price-tag">120 000 F</div>
+            <button class="btn-buy" onclick="alert('Liaison commerciale établie...')">Réserver le Nœud</button>
+        </div>
+    </div>
+
+    <a href="/" class="back-link">← <span data-lang="nav_home">Retour au Cockpit de Pilotage</span></a>
+
+    <script src="/translations.js"></script>
+    <script>window.onload = applyTranslations;</script>
+</body>
+</html>
 
