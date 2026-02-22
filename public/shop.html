@@ -4,137 +4,105 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AERIO | Arsenal Hardware Alpha</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800;900&display=swap" rel="stylesheet">
+    <!-- ✅ POLICE POPPINS ÉLITE -->
+    <link href="https://fonts.googleapis.com" rel="stylesheet">
     <style>
         :root { --primary: #00C2FF; --bg: #020617; --glass: rgba(15, 23, 42, 0.6); --accent: #00F5A0; --neon: #7000FF; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        body { 
-            background: var(--bg); color: white; min-height: 100vh; padding: 80px 5%; 
-            background-image: radial-gradient(circle at top right, rgba(0, 194, 255, 0.05), transparent); 
-        }
-        .shop-header { text-align: center; margin-bottom: 80px; }
-        .shop-header h1 { font-size: clamp(30px, 5vw, 45px); font-weight: 900; letter-spacing: -2px; text-transform: uppercase; }
-        .product-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; max-width: 1400px; margin: 0 auto; }
+        body { background: var(--bg); color: white; min-height: 100vh; background-image: radial-gradient(circle at top right, rgba(0, 194, 255, 0.05), transparent); overflow-x: hidden; }
+
+        /* ✅ HEADER DE PROPULSION */
+        .shop-header { text-align: center; margin-bottom: 60px; padding: 80px 5% 0; }
+        .shop-header h1 { font-size: 38px; font-weight: 900; letter-spacing: -2px; text-transform: uppercase; }
+        .shop-header p { color: var(--primary); font-weight: 900; font-size: 10px; letter-spacing: 4px; margin-top: 10px; }
+
+        /* ✅ RAIL DE DÉFILEMENT HORIZONTAL INFINI [1.5] */
+        .shop-container { width: 100%; overflow: hidden; position: relative; padding: 40px 0; }
+        .shop-track { display: flex; gap: 40px; width: max-content; animation: scroll-shop 60s linear infinite; }
+        .shop-track:hover { animation-play-state: paused; } /* Pause pour inspection */
+
+        @keyframes scroll-shop { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+        /* ✅ CARTES PRODUITS EN LÉVITATION [1.5] */
         .product-card { 
-            background: var(--glass); backdrop-filter: blur(40px); border-radius: 50px; padding: 40px; 
-            border: 1px solid rgba(255,255,255,0.05); text-align: center; transition: 0.6s cubic-bezier(0.23, 1, 0.32, 1); 
-            position: relative; display: flex; flex-direction: column;
+            width: 350px; background: var(--glass); backdrop-filter: blur(40px); border-radius: 50px; padding: 50px; 
+            border: 1px solid rgba(255,255,255,0.05); text-align: center; transition: 0.5s; position: relative; 
         }
-        .product-card:hover { border-color: var(--primary); transform: translateY(-15px); box-shadow: 0 30px 60px rgba(0, 194, 255, 0.15); }
-        .img-container { position: relative; margin-bottom: 25px; height: 200px; display: flex; align-items: center; justify-content: center; }
-        .product-img { width: 100%; max-width: 180px; filter: drop-shadow(0 20px 30px rgba(0,0,0,0.5)); animation: float 4s ease-in-out infinite; }
-        .light-aura { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 120px; height: 120px; background: var(--primary); filter: blur(70px); opacity: 0.2; z-index: -1; }
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
-        .price-tag { font-size: 32px; font-weight: 900; color: var(--primary); margin: 15px 0; }
-        .specs { list-style: none; font-size: 13px; color: #94a3b8; margin-bottom: 25px; text-align: left; padding-left: 10px; }
-        .specs li { margin-bottom: 8px; }
-        .specs li::before { content: "✓"; color: var(--accent); margin-right: 10px; font-weight: 900; }
-        .btn-buy { 
-            width: 100%; padding: 18px; background: white; color: #020617; 
-            border-radius: 20px; font-weight: 900; border: none; cursor: pointer; 
-            text-transform: uppercase; letter-spacing: 1px; transition: 0.4s; text-decoration: none; display: inline-block;
-        }
-        .btn-buy:hover { background: var(--primary); transform: scale(1.02); color: white; }
-        .badge-alpha { 
-            position: absolute; top: -15px; left: 50%; transform: translateX(-50%);
-            background: linear-gradient(45deg, var(--primary), var(--neon));
-            padding: 8px 20px; border-radius: 50px; font-size: 10px; font-weight: 900;
-            box-shadow: 0 10px 20px rgba(112, 0, 255, 0.3); z-index: 10; white-space: nowrap;
-        }
+        .product-card:hover { border-color: var(--primary); transform: translateY(-15px); box-shadow: 0 40px 80px rgba(0, 194, 255, 0.15); }
+
+        .img-box { position: relative; margin-bottom: 35px; }
+        .product-img { width: 100%; max-width: 220px; filter: drop-shadow(0 20px 40px rgba(0,0,0,0.8)); animation: float 4s ease-in-out infinite; }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+
+        .price { font-size: 32px; font-weight: 900; color: var(--accent); margin: 20px 0; }
+        .btn-buy { width: 100%; padding: 20px; background: white; color: #020617; border-radius: 20px; font-weight: 900; border: none; cursor: pointer; text-transform: uppercase; transition: 0.3s; }
+        .btn-buy:hover { background: var(--primary); transform: scale(1.05); }
+
+        /* ✅ FOOTER TACTIQUE FINAL [1.5] */
+        footer { margin-top: 100px; padding: 60px 8%; background: rgba(0,0,0,0.4); border-top: 1px solid var(--primary); backdrop-filter: blur(20px); }
+        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 40px; max-width: 1000px; margin: 0 auto; }
+        .info-box-footer { border-left: 4px solid var(--primary); padding-left: 20px; }
     </style>
 </head>
 <body>
 
     <div class="shop-header">
-        <h1>Arsenal <span style="color:var(--primary)">Hardware Alpha</span></h1>
-        <p style="color: #64748b; font-weight: 600; text-transform: uppercase; font-size: 11px; letter-spacing: 2px;">Technologies de Monétisation WiFi Haute Fidélité</p>
+        <p>📡 ARSENAL DE GRADE MILITAIRE</p>
+        <h1 data-lang="nav_shop">Hardware <span style="color:var(--primary)">Alpha Arsenal</span></h1>
     </div>
 
-    <div class="product-grid">
-        
-        <div class="product-card">
-            <div class="badge-alpha">FULL CLOUD</div>
-            <div class="img-container">
-                <div class="light-aura" style="background: var(--neon);"></div>
-                <span style="font-size: 80px;">💻</span>
+    <div class="shop-container">
+        <div class="shop-track">
+            <!-- KIT 1 : MIKROTIK hAP ax2 -->
+            <div class="product-card">
+                <div class="img-box"><img src="https://routermikrotik.com" class="product-img"></div>
+                <h3 style="font-weight: 900;">MikroTik hAP ax²</h3>
+                <div class="price">85 000 F</div>
+                <button class="btn-buy" onclick="alert('Liaison satellite...')">Acquérir</button>
             </div>
-            <h3 style="font-weight: 900;">Accompagnement</h3>
-            <div class="price-tag">85 000 <small style="font-size:12px;">F</small></div>
-            <ul class="specs">
-                <li>Configuration distante experte</li>
-                <li>Optimisation de vos équipements</li>
-                <li>Liaison Plateforme AERIO</li>
-            </ul>
-            <a href="https://wa.me/237692487922?text=Bonjour%20AERIO,%20je%20souhaite%20l'accompagnement%20à%20distance%20(85k)" class="btn-buy">Acquérir le service</a>
-        </div>
-
-        <div class="product-card">
-            <div class="badge-alpha">PRÊT À L'EMPLOI</div>
-            <div class="img-container">
-                <div class="light-aura"></div>
-                <img src="https://images.stratosphere.co.za/mikrotik/RB951Ui-2HnD.png" class="product-img" alt="RB 951">
+            <!-- KIT 2 : KIT AVANCÉ -->
+            <div class="product-card">
+                <div class="img-box"><img src="https://m.media-amazon.com" class="product-img"></div>
+                <h3 style="font-weight: 900;">Kit Avancé 🚀</h3>
+                <div class="price">385 000 F</div>
+                <button class="btn-buy" onclick="alert('Liaison satellite...')">Acquérir</button>
             </div>
-            <h3 style="font-weight: 900;">Kit de Base</h3>
-            <div class="price-tag">185 000 <small style="font-size:12px;">F</small></div>
-            <ul class="specs">
-                <li>Routeur MikroTik RB 951</li>
-                <li>Antenne WiFi Omni (200m)</li>
-                <li>Câble réseau blindé 10m</li>
-            </ul>
-            <a href="https://wa.me/237692487922?text=Bonjour%20AERIO,%20je%20souhaite%20commander%20le%20Kit%20de%20Base%20(185k)" class="btn-buy">Commander le Kit</a>
-        </div>
-
-        <div class="product-card" style="border-color: var(--accent);">
-            <div class="badge-alpha" style="background: var(--accent); color: #020617;">LE MEILLEUR RENDEMENT</div>
-            <div class="img-container">
-                <div class="light-aura" style="background: var(--accent);"></div>
-                <img src="https://m.media-amazon.com/images/I/41Dq1t091hL._AC_SL1000_.jpg" class="product-img" alt="Kit Moyen">
+            <!-- KIT 3 : KIT PREMIUM ALPHA -->
+            <div class="product-card" style="border-color: var(--neon);">
+                <div class="img-box"><img src="https://m.media-amazon.com" class="product-img"></div>
+                <h3 style="font-weight: 900;">Kit Premium 💎</h3>
+                <div class="price" style="color:var(--primary);">425 000 F</div>
+                <button class="btn-buy" style="background:var(--neon); color:white;">Acquérir</button>
             </div>
-            <h3 style="font-weight: 900; color: var(--accent);">Kit Moyen</h3>
-            <div class="price-tag">275 000 <small style="font-size:12px;">F</small></div>
-            <ul class="specs">
-                <li>Routeur Performance Plus</li>
-                <li>Antenne WiFi 300m+</li>
-                <li>Configuration Alpha incluse</li>
-            </ul>
-            <a href="https://wa.me/237692487922?text=Bonjour%20AERIO,%20je%20suis%20intéressé%20par%20votre%20offre%20Populaire%20:%20Kit%20Moyen%20(275k)" class="btn-buy" style="background: var(--accent);">Prendre la Formule</a>
-        </div>
-
-        <div class="product-card">
-            <div class="badge-alpha">WIFI 6 GENERATION</div>
-            <div class="img-container">
-                <div class="light-aura"></div>
-                <img src="https://m.media-amazon.com/images/I/41K0p29T+JL._AC_SL1000_.jpg" class="product-img" alt="hAP ax2">
+            <!-- Duplicate pour boucle infinie -->
+            <div class="product-card">
+                <div class="img-box"><img src="https://routermikrotik.com" class="product-img"></div>
+                <h3 style="font-weight: 900;">MikroTik hAP ax²</h3>
+                <div class="price">85 000 F</div>
+                <button class="btn-buy">Acquérir</button>
             </div>
-            <h3 style="font-weight: 900;">Kit Avancé</h3>
-            <div class="price-tag">385 000 <small style="font-size:12px;">F</small></div>
-            <ul class="specs">
-                <li>MikroTik hAP ax² WiFi 6</li>
-                <li>Antenne Pro GrandStream</li>
-                <li>Gestion 50+ utilisateurs</li>
-            </ul>
-            <a href="https://wa.me/237692487922?text=Bonjour%20AERIO,%20je%20souhaite%20commander%20le%20Kit%20Avancé%20WiFi%206%20(385k)" class="btn-buy">Acquérir l'unité</a>
         </div>
-
-        <div class="product-card" style="border: 2px solid var(--neon);">
-            <div class="badge-alpha" style="background: var(--neon);">ULTIME PERFORMANCE</div>
-            <div class="img-container">
-                <div class="light-aura" style="background: var(--neon);"></div>
-                <img src="https://m.media-amazon.com/images/I/41j2l0v0HML._AC_SL1000_.jpg" class="product-img" alt="hAP ax3">
-            </div>
-            <h3 style="font-weight: 900; color: #a855f7;">Kit Premium</h3>
-            <div class="price-tag">425 000 <small style="font-size:12px;">F</small></div>
-            <ul class="specs">
-                <li>MikroTik hAP ax³ (Puissance Max)</li>
-                <li>Antenne GrandStream (400m+)</li>
-                <li>Stabilité Réseau Militaire</li>
-            </ul>
-            <a href="https://wa.me/237692487922?text=Bonjour%20AERIO,%20je%20souhaite%20l'offre%20Ultime%20:%20le%20Kit%20Premium%20(425k)" class="btn-buy" style="background: var(--neon); color: white;">Réserver l'Elite</a>
-        </div>
-
     </div>
 
-    <a href="index.html" style="display:block; text-align:center; margin-top:80px; color:#475569; text-decoration:none; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:3px;">← Retour au Cockpit Principal</a>
+    <footer>
+        <div class="footer-grid">
+            <div class="info-box-footer">
+                <div style="font-size: 20px; margin-bottom: 10px;">🚚</div>
+                <b style="color:var(--primary); font-size:12px; text-transform:uppercase;">Logistique Alpha</b>
+                <p style="font-size: 13px; color: #64748b; margin-top: 10px;">Frais de livraison à la charge du partenaire pour un déploiement sécurisé.</p>
+            </div>
+            <div class="info-box-footer" style="border-color: var(--accent);">
+                <div style="font-size: 20px; margin-bottom: 10px;">🛡️</div>
+                <b style="color:var(--accent); font-size:12px; text-transform:uppercase;">Solution Clé en Main</b>
+                <p style="font-size: 13px; color: #64748b; margin-top: 10px;">Infrastructure robuste pour rentabiliser votre réseau WiFi immédiatement.</p>
+            </div>
+        </div>
+        <div style="text-align:center; padding-top:40px; margin-top:40px; border-top:1px solid rgba(255,255,255,0.05);">
+            <a href="index.html" style="color:#475569; text-decoration:none; font-size:11px; font-weight:800; letter-spacing:3px;">← RETOUR AU COCKPIT ALPHA</a>
+        </div>
+    </footer>
 
+    <script src="/translations.js"></script>
+    <script>window.onload = applyTranslations;</script>
 </body>
 </html>
