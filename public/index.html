@@ -15,17 +15,13 @@
         .nav-links { display: flex; gap: 15px; align-items: center; }
         .nav-links a { color: #64748b; text-decoration: none; font-size: 10px; font-weight: 700; text-transform: uppercase; transition: 0.3s; }
         .nav-links a:hover { color: white; }
-        @media (max-width: 1150px) { .nav-hide { display: none; } }
-
-        .lang-switcher { display: flex; gap: 4px; background: rgba(255,255,255,0.05); padding: 4px; border-radius: 12px; }
-        .lang-btn { background: none; border: none; color: #475569; font-size: 8px; font-weight: 900; cursor: pointer; padding: 4px 6px; border-radius: 8px; }
-        .lang-btn.active { background: var(--primary); color: #020617; box-shadow: 0 0 10px var(--primary); }
-        .btn-pro { background: linear-gradient(45deg, var(--primary), var(--neon)); color: white; padding: 10px 15px; border-radius: 10px; font-weight: 900; text-decoration: none; font-size: 9px; text-transform: uppercase; }
 
         .carousel-track { display: flex; gap: 20px; width: max-content; animation: scroll 40s linear infinite; }
         @keyframes scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
         .info-card { width: 300px; background: var(--glass); padding: 30px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.03); backdrop-filter: blur(20px); }
         .flag-card { min-width: 180px; background: var(--glass); padding: 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column; align-items: center; }
+        
+        .btn-pro { background: linear-gradient(45deg, var(--primary), var(--neon)); color: white; padding: 10px 15px; border-radius: 10px; font-weight: 900; text-decoration: none; font-size: 9px; text-transform: uppercase; }
     </style>
 </head>
 <body>
@@ -33,59 +29,48 @@
     <nav>
         <div class="logo">🛰️ AERIO</div>
         <div class="nav-links">
-            <!-- ✅ LIENS CORRIGÉS : SANS LE "/" AU DÉBUT -->
-            <a href="index.html" data-lang="nav_home">Accueil</a>
-            <a href="recuperer.html" class="nav-hide" data-lang="nav_recover">Récupérer Ticket</a>
-            <a href="localisation.html" class="nav-hide" data-lang="nav_loc">Localisation WiFis</a>
-            <a href="shop.html" class="nav-hide" data-lang="nav_shop">Shop</a>
-            <a href="vpn.html" class="nav-hide" style="color:#FF4B4B;">VPN</a>
-            
-            <div class="lang-switcher">
-                <button onclick="setLang('fr')" class="lang-btn active">FR</button>
-                <button onclick="setLang('en')" class="lang-btn">EN</button>
-                <button onclick="setLang('pt')" class="lang-btn">PT</button>
-                <button onclick="setLang('es')" class="lang-btn">ES</button>
-            </div>
-            <a href="connexion.html" class="btn-pro" data-lang="nav_pro">Espace Pro</a>
+            <a href="index.html">Accueil</a>
+            <a href="shop.html">Shop</a>
+            <a href="vpn.html">VPN</a>
+            <a href="connexion.html" class="btn-pro">Espace Pro</a>
         </div>
     </nav>
 
+    <!-- HERO SECTION -->
     <section style="padding: 180px 8% 100px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap;">
         <div class="hero-text" style="max-width: 600px;">
-            <p style="color:var(--primary); font-weight:900; font-size:10px; letter-spacing:3px;" data-lang="hero_tag">🛰️ PROTOCOLE ALPHA ACTIVÉ</p>
-            <h1 data-lang="hero_title" style="font-size: 82px; font-weight: 900; line-height: 1.1; margin-bottom: 25px; letter-spacing: -4px;">Le Futur du <br><span style="color:var(--primary)">WiFi Zone.</span></h1>
-            <p data-lang="hero_p" style="color: #64748b; font-size: 15px; margin-bottom: 35px; line-height: 1.6;">Monétisez votre connexion MikroTik avec la puissance du Mobile Money à l'échelle internationale.</p>
-            <a href="inscription.html" style="background:white; color:black; padding:18px 35px; border-radius:18px; text-decoration:none; font-weight:900; display:inline-block; font-size:15px;" data-lang="btn_partner">Devenir Partenaire</a>
+            <p style="color:var(--primary); font-weight:900; font-size:10px; letter-spacing:3px;">🛰️ PROTOCOLE ALPHA ACTIVÉ</p>
+            <h1 style="font-size: 82px; font-weight: 900; line-height: 1.1; margin-bottom: 25px; letter-spacing: -4px;">Le Futur du <br><span style="color:var(--primary)">WiFi Zone.</span></h1>
+            <p style="color: #64748b; font-size: 15px; margin-bottom: 35px; line-height: 1.6;">Monétisez votre connexion MikroTik avec la puissance du Mobile Money.</p>
+            <a href="inscription.html" style="background:white; color:black; padding:18px 35px; border-radius:18px; text-decoration:none; font-weight:900; display:inline-block; font-size:15px;">Devenir Partenaire</a>
         </div>
         <div class="live-card" style="background:var(--glass); padding:35px; border-radius:40px; width:100%; max-width:420px; text-align:center; border: 1px solid rgba(255,255,255,0.05);">
-            <h3 style="font-size:9px; color:#475569; letter-spacing:2px; margin-bottom:15px;" data-lang="live_title">VOTRE BUSINESS EN LIVE</h3>
+            <h3 style="font-size:9px; color:#475569; letter-spacing:2px; margin-bottom:15px;">VOTRE BUSINESS EN LIVE</h3>
             <div id="global-flow" style="font-size:42px; font-weight:900; color:var(--primary);">128 500 F</div>
             <div style="width:100%; height:6px; background:rgba(255,255,255,0.05); border-radius:10px; margin:20px 0;"><div style="width:75%; height:100%; background:var(--primary); box-shadow:0 0 20px var(--primary);"></div></div>
-            <div style="display:flex; justify-content:space-between; font-size:8px; font-weight:900; color:#475569; text-transform:uppercase;">
-                <div data-lang="live_status">Réseau: <span style="color:var(--accent)">Actif</span></div>
-                <div data-lang="live_hub">Hub: International</div>
+            <div style="display:flex; justify-content:space-between; font-size:8px; font-weight:900; color:#475569;">
+                <div>Réseau: <span style="color:var(--accent)">Actif</span></div>
+                <div>Hub: International</div>
             </div>
         </div>
     </section>
 
-    <!-- ARSENAL TACTIQUE (8 CARTES INTACTES) -->
+    <!-- ARSENAL TACTIQUE -->
     <section style="padding: 80px 0; background: rgba(0,0,0,0.2);">
-        <h2 style="text-align:center; margin-bottom:40px; font-weight:900; font-size:28px;" data-lang="arsenal_title">L'ARSENAL <span style="color:var(--primary)">TACTIQUE</span></h2>
+        <h2 style="text-align:center; margin-bottom:40px; font-weight:900; font-size:28px;">L'ARSENAL <span style="color:var(--primary)">TACTIQUE</span></h2>
         <div style="width:100%; overflow:hidden;">
             <div class="carousel-track">
-                <div class="info-card"><h3 data-lang="card_1_t">🛰️ DÉPLOIEMENT</h3><p data-lang="card_1_p">Importation CSV MikroTik industrielle en 1 seconde.</p></div>
-                <div class="info-card"><h3 data-lang="card_2_t">💸 VENTE AUTO</h3><p data-lang="card_2_p">Paiements Mobile Money sécurisés et sans data.</p></div>
-                <div class="info-card"><h3 data-lang="card_3_t">📈 RADAR PERF</h3><p data-lang="card_3_p">Suivi des recettes brutes en temps réel 24h/7j.</p></div>
-                <div class="info-card"><h3 data-lang="card_4_t">🔓 ZERO DATA</h3><p data-lang="card_4_p">Le Walled Garden permet de payer sans forfait internet.</p></div>
-                <div class="info-card"><h3 data-lang="card_1_t">🛰️ DÉPLOIEMENT</h3><p data-lang="card_1_p">Importation CSV MikroTik industrielle en 1 seconde.</p></div>
-                <div class="info-card"><h3 data-lang="card_2_t">💸 VENTE AUTO</h3><p data-lang="card_2_p">Paiements Mobile Money sécurisés et sans data.</p></div>
+                <div class="info-card"><h3>🛰️ DÉPLOIEMENT</h3><p>Importation CSV MikroTik industrielle en 1 seconde.</p></div>
+                <div class="info-card"><h3>💸 VENTE AUTO</h3><p>Paiements Mobile Money sécurisés et sans data.</p></div>
+                <div class="info-card"><h3>📈 RADAR PERF</h3><p>Suivi des recettes brutes en temps réel 24h/7j.</p></div>
+                <div class="info-card"><h3>🔓 ZERO DATA</h3><p>Le Walled Garden permet de payer sans forfait internet.</p></div>
             </div>
         </div>
     </section>
 
-    <!-- HUB INTERNATIONAL (9 DRAPEAUX INTACTS) -->
+    <!-- HUB INTERNATIONAL (LES 9 DRAPEAUX RESTAURÉS) -->
     <section style="padding: 80px 0; text-align:center;">
-        <h2 style="font-weight:900; font-size:28px;" data-lang="hub_title">HUB <span style="color:var(--primary)">INTERNATIONAL</span></h2>
+        <h2 style="font-weight:900; font-size:28px;">HUB <span style="color:var(--primary)">INTERNATIONAL</span></h2>
         <div style="width:100%; overflow:hidden; margin-top:40px;">
             <div class="carousel-track" style="animation-duration: 35s;">
                 <div class="flag-card">🇨🇲 <b>CAMEROUN</b><span>Hub Central</span></div>
@@ -100,6 +85,41 @@
             </div>
         </div>
     </section>
+
+    <!-- ✅ SECTION COMPARATIVE (RESTAURÉE DE TON IMAGE) -->
+    <section style="padding: 100px 8%; background: rgba(0,0,0,0.3);">
+        <h2 style="text-align:center; font-size:38px; font-weight:900; margin-bottom:60px;">AERIO <span style="color:#64748b;">vs</span> <span style="color:var(--primary)">LES AUTRES</span></h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 40px; max-width: 1100px; margin: 0 auto;">
+            <div style="background: rgba(255,255,255,0.02); padding: 40px; border-radius: 40px; border: 1px solid rgba(255,255,255,0.05); opacity: 0.6;">
+                <h3 style="color:#64748b; margin-bottom:20px;">Systèmes Classiques</h3>
+                <ul style="list-style:none; line-height:2.5; font-size:14px;">
+                    <li>❌ Vente de tickets manuelle</li>
+                    <li>❌ Risque de piratage constant</li>
+                    <li>❌ Pas de suivi comptable</li>
+                    <li>❌ Zéro automatisation</li>
+                </ul>
+            </div>
+            <div style="background: rgba(0, 194, 255, 0.05); padding: 40px; border-radius: 40px; border: 2px solid var(--primary); box-shadow: 0 0 30px rgba(0, 194, 255, 0.1);">
+                <h3 style="color:var(--primary); margin-bottom:20px;">AERIO ALPHA</h3>
+                <ul style="list-style:none; line-height:2.5; font-size:14px; font-weight:600;">
+                    <li>✅ Paiement Mobile Money 100% Auto</li>
+                    <li>✅ Codes tickets envoyés par SMS</li>
+                    <li>✅ Tableau de bord pro 24h/7j</li>
+                    <li>✅ Bouclier Anti-Piratage MikroTik</li>
+                </ul>
+            </div>
+        </div>
+        <div style="display:flex; justify-content:center; gap:40px; margin-top:60px; font-size:9px; font-weight:900; color:#475569; text-transform:uppercase;">
+            <div>RÉSEAU : <span style="color:var(--accent)">ACTIF</span></div>
+            <div>PARTENAIRES : 120+</div>
+            <div>STABILITÉ : 99.9%</div>
+        </div>
+    </section>
+
+    <!-- FOOTER FINAL RESTAURÉ -->
+    <footer style="padding: 60px 8%; text-align: center; border-top: 1px solid rgba(255,255,255,0.03);">
+        <p style="color:#475569; font-size:10px; letter-spacing:5px; font-weight:900;">AERIO ALPHA © 2026 | L'EMPIRE DU WIFI ZONE</p>
+    </footer>
 
     <script src="translations.js"></script>
     <script>
