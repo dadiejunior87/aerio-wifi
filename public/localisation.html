@@ -4,11 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AERIO | Radar de Localisation Alpha</title>
+    <!-- ✅ POLICE POPPINS ÉLITE RÉPARÉE -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;900&display=swap" rel="stylesheet">
     <style>
         :root { --primary: #00C2FF; --bg: #020617; --glass: rgba(15, 23, 42, 0.7); --accent: #00F5A0; --radar-line: rgba(0, 194, 255, 0.3); }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         body { background: var(--bg); color: white; min-height: 100vh; padding: 40px 5%; background-image: radial-gradient(circle at top right, rgba(0, 194, 255, 0.08), transparent); overflow-x: hidden; }
+
+        /* ✅ SÉLECTEUR DE LANGUE DISCRET */
+        .top-nav-radar { display: flex; justify-content: flex-end; margin-bottom: 20px; }
+        .lang-switcher { display: flex; gap: 5px; background: rgba(255,255,255,0.05); padding: 4px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); }
+        .lang-btn { background: none; border: none; color: #475569; font-size: 8px; font-weight: 900; cursor: pointer; padding: 4px 8px; border-radius: 8px; transition: 0.3s; }
+        .lang-btn.active { background: var(--primary); color: #020617; }
 
         /* ✅ HEADER STYLE "COMMAND CENTER" */
         .radar-header { text-align: center; margin-bottom: 40px; }
@@ -20,38 +27,37 @@
         input { flex: 1; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); padding: 15px 25px; border-radius: 15px; color: white; outline: none; transition: 0.3s; }
         input:focus { border-color: var(--primary); box-shadow: 0 0 20px rgba(0, 194, 255, 0.2); }
         .btn-gps { background: var(--primary); color: #020617; padding: 0 30px; border-radius: 15px; font-weight: 900; border: none; cursor: pointer; text-transform: uppercase; font-size: 11px; transition: 0.3s; white-space: nowrap; }
-        .btn-gps:hover { transform: scale(1.05); box-shadow: 0 0 30px var(--primary); }
 
         /* ✅ INTERFACE MAP RADAR LIVE */
         .map-viewport { position: relative; width: 100%; height: 600px; border-radius: 40px; border: 2px solid var(--primary); overflow: hidden; background: #010409; box-shadow: 0 0 50px rgba(0, 194, 255, 0.1); }
-        
-        /* Effet Grille & Scan Line */
         .map-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(0,194,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0,194,255,0.05) 1px, transparent 1px); background-size: 50px 50px; }
         .scan-line { position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: var(--primary); box-shadow: 0 0 20px var(--primary); opacity: 0.5; animation: scanMove 4s linear infinite; z-index: 5; }
-        
         @keyframes scanMove { 0% { top: -5%; } 100% { top: 105%; } }
 
-        /* Nœuds Pulsatiles (Points WiFi) */
+        /* Nœuds Pulsatiles */
         .node { position: absolute; width: 20px; height: 20px; background: var(--primary); border-radius: 50%; cursor: pointer; z-index: 10; transform: translate(-50%, -50%); }
         .node::before { content: ""; position: absolute; inset: -10px; border-radius: 50%; background: var(--primary); opacity: 0.2; animation: pulseNode 2s infinite; }
-        .node::after { content: ""; position: absolute; inset: -20px; border-radius: 50%; border: 1px solid var(--primary); opacity: 0; animation: pulseRing 2s infinite; }
-
         @keyframes pulseNode { 0%, 100% { transform: scale(1); opacity: 0.2; } 50% { transform: scale(1.5); opacity: 0.4; } }
-        @keyframes pulseRing { 0% { transform: scale(0.5); opacity: 0.8; } 100% { transform: scale(3); opacity: 0; } }
 
-        /* Panneau de données Live latéral */
         .live-data-panel { position: absolute; top: 20px; right: 20px; width: 220px; background: rgba(0,0,0,0.7); border: 1px solid var(--primary); padding: 15px; border-radius: 20px; backdrop-filter: blur(10px); z-index: 100; font-size: 10px; }
         .data-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-family: 'Courier New', monospace; }
-        .status-on { color: var(--accent); font-weight: bold; }
 
-        .back-link { display: block; text-align: center; margin-top: 40px; color: #475569; text-decoration: none; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 3px; transition: 0.3s; }
-        .back-link:hover { color: var(--primary); }
+        .back-link { display: block; text-align: center; margin-top: 40px; color: #475569; text-decoration: none; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 3px; }
     </style>
 </head>
 <body>
 
+    <div class="top-nav-radar">
+        <div class="lang-switcher">
+            <button onclick="setLang('fr')" class="lang-btn active">FR</button>
+            <button onclick="setLang('en')" class="lang-btn">EN</button>
+            <button onclick="setLang('pt')" class="lang-btn">PT</button>
+            <button onclick="setLang('es')" class="lang-btn">ES</button>
+        </div>
+    </div>
+
     <div class="radar-header">
-        <h1>RADAR SATELLITE <span style="color:var(--primary)">AERIO</span></h1>
+        <h1 data-lang="nav_loc">Scanner Satellite <span style="color:var(--primary)">AERIO</span></h1>
         <div class="radar-status">🛰️ PROTOCOLE DE SCAN ALPHA ACTIF</div>
     </div>
 
@@ -66,9 +72,8 @@
         
         <div class="live-data-panel">
             <p style="color:var(--primary); font-weight:900; margin-bottom:10px;">FLUX RÉSEAU LIVE</p>
-            <div class="data-row"><span>NODES CONNECTÉS:</span> <span class="status-on">142</span></div>
+            <div class="data-row"><span>NODES CONNECTÉS:</span> <span style="color:var(--accent);">142</span></div>
             <div class="data-row"><span>SIGNAL MOYEN:</span> <span style="color:var(--primary)">98%</span></div>
-            <div class="data-row"><span>LATENCE:</span> <span class="status-on">12ms</span></div>
             <hr style="border:0; border-top:1px solid rgba(0,194,255,0.2); margin:10px 0;">
             <div class="data-row"><span>ENCOURS:</span> <span id="revenue-live">183 475 F</span></div>
         </div>
@@ -76,36 +81,26 @@
         <div class="node" style="top: 30%; left: 40%;" onclick="showNode('Alpha-1')"></div>
         <div class="node" style="top: 55%; left: 65%;" onclick="showNode('Alpha-2')"></div>
         <div class="node" style="top: 20%; left: 20%;" onclick="showNode('Alpha-3')"></div>
-        <div class="node" style="top: 75%; left: 35%;" onclick="showNode('Alpha-4')"></div>
-        <div class="node" style="top: 45%; left: 80%;" onclick="showNode('Alpha-5')"></div>
     </div>
 
-    <a href="index.html" class="back-link">← RETOUR AU COCKPIT ALPHA</a>
+    <a href="index.html" class="back-link">← <span data-lang="nav_home">RETOUR AU COCKPIT ALPHA</span></a>
 
+    <!-- ✅ LIAISON AU CERVEAU MULTILINGUE [1.4] -->
+    <script src="/translations.js"></script>
     <script>
         function simulateGPS() {
-            const btn = document.querySelector('.btn-gps');
-            btn.innerHTML = "SCAN EN COURS...";
-            btn.style.background = "#00F5A0";
-            
-            setTimeout(() => {
-                alert("🛰️ GPS VERROUILLÉ. Recherche de nœuds AERIO à proximité de votre position...");
-                btn.innerHTML = "LANCER LE SCAN GPS";
-                btn.style.background = "#00C2FF";
-            }, 2000);
+            alert("🛰️ GPS VERROUILLÉ. Recherche de nœuds AERIO à proximité...");
         }
-
         function showNode(name) {
-            alert("📶 RÉSEAU " + name + " : ACTIF\nQualité du signal : Optimale\nMode de paiement : Mobile Money OK");
+            alert("📶 RÉSEAU " + name + " : ACTIF\nQualité du signal : Optimale");
         }
-
-        // Animation de revenus live (pour l'effet "Live")
         setInterval(() => {
             const rev = document.getElementById('revenue-live');
             let current = parseInt(rev.innerText.replace(/\s/g, ''));
             current += Math.floor(Math.random() * 50);
             rev.innerText = current.toLocaleString() + " F";
         }, 3000);
+        window.onload = applyTranslations;
     </script>
 </body>
 </html>
