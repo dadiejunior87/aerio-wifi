@@ -11,13 +11,13 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         body { background: var(--bg); color: white; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; background-image: radial-gradient(circle at top right, rgba(0, 194, 255, 0.05), transparent); overflow-x: hidden; }
 
-        /* ✅ DESIGN GLASSMORPHISM FUTURISTE [1.5] */
+        /* ✅ DESIGN GLASSMORPHISM [1.5] */
         .recover-card { background: var(--glass); backdrop-filter: blur(40px); padding: 50px; border-radius: 40px; border: 1px solid rgba(255,255,255,0.05); width: 100%; max-width: 500px; text-align: center; box-shadow: 0 25px 50px rgba(0,0,0,0.5); position: relative; }
         
         h1 { font-size: 28px; font-weight: 900; margin-bottom: 10px; letter-spacing: -1px; text-transform: uppercase; }
         p { color: #64748b; font-size: 13px; margin-bottom: 30px; line-height: 1.6; }
 
-        /* ✅ SÉLECTEUR DE LANGUE DISCRET */
+        /* ✅ SÉLECTEUR DE LANGUE */
         .lang-mini { position: absolute; top: 20px; right: 20px; display: flex; gap: 5px; }
         .lang-btn { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #475569; font-size: 8px; font-weight: 900; cursor: pointer; padding: 4px 8px; border-radius: 8px; transition: 0.3s; }
         .lang-btn.active { background: var(--primary); color: #020617; }
@@ -28,8 +28,7 @@
         .btn-recover { width: 100%; padding: 20px; background: var(--primary); color: #020617; border-radius: 20px; font-weight: 900; border: none; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: 0.4s; }
         .btn-recover:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0, 194, 255, 0.3); }
 
-        .back-link { display: block; margin-top: 30px; color: #475569; text-decoration: none; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; transition: 0.3s; }
-        .back-link:hover { color: white; letter-spacing: 3px; }
+        .back-link { display: block; margin-top: 30px; color: #475569; text-decoration: none; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; }
     </style>
 </head>
 <body>
@@ -42,7 +41,7 @@
             <button onclick="setLang('es')" class="lang-btn">ES</button>
         </div>
 
-        <div style="font-size: 40px; margin-bottom: 20px; filter: drop-shadow(0 0 10px var(--primary));">🎫</div>
+        <div style="font-size: 40px; margin-bottom: 20px;">🎫</div>
         <h1 data-lang="nav_recover">Récupérer Ticket</h1>
         <p data-lang="contact_p">Entrez le numéro utilisé lors de l'achat pour renvoyer votre code de connexion via le protocole satellite AERIO.</p>
 
@@ -54,12 +53,12 @@
         <a href="/" class="back-link">← <span data-lang="nav_home">Retour à l'Accueil</span></a>
     </div>
 
-    <!-- ✅ LIAISON AU CERVEAU MULTILINGUE [1.4] -->
+    <!-- ✅ LIAISON SATELLITE AU CERVEAU [1.4] -->
     <script src="/translations.js"></script>
     <script>
         document.getElementById('recoverForm').onsubmit = (e) => {
             e.preventDefault();
-            alert("🛰️ PROTOCOLE ALPHA : Recherche de votre ticket en cours dans la base de données internationale...");
+            alert("🛰️ PROTOCOLE ALPHA : Recherche de votre ticket en cours...");
         };
         window.onload = applyTranslations;
     </script>
