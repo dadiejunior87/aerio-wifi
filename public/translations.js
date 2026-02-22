@@ -1,4 +1,4 @@
-// ✅ LE CERVEAU MULTILINGUE GLOBAL AERIO (ZÉRO PERTE - VERSION LIAISON STRATÉGIQUE)
+// ✅ LE CERVEAU MULTILINGUE GLOBAL AERIO (ZÉRO PERTE - VERSION WIFI ZONE RESTAURÉE)
 const translations = {
     fr: {
         // --- ACCUEIL ---
@@ -19,13 +19,21 @@ const translations = {
         hub_title: "HUB <span style='color:#00C2FF'>INTERNATIONAL</span>",
         flag_1: "CAMEROUN", flag_1_s: "Hub Central", flag_2: "CÔTE D'IVOIRE", flag_2_s: "Nœud Actif",
 
-        // ✅ NOUVEAU TITRE & CONTACTS ORIGINAUX
+        // Contacts & Titre Stratégique
         contact_sub: "🛰️ LIAISON STRATÉGIQUE",
         contact_title: "Propulsez votre <span style='color:#00C2FF'>Infrastructure WiFi.</span>",
         contact_p: "Nos experts déploient votre matériel et configurent votre noyau AERIO.",
 
         // --- DASHBOARD & MANUEL ---
         dash_title: "Console", dash_status: "STATUT : ACCRÉDITÉ", dash_nav_home: "📊 Tableau de bord",
+        dash_nav_tickets: "🎫 Mes Tickets", dash_sub_add: "• Ajouter un ticket", dash_sub_list: "• Liste des tickets",
+        
+        // ✅ RETOUR DU MODULE WIFI ZONE (FR)
+        dash_nav_wifi: "📡 Mes Wifi Zone",
+        dash_sub_wifi_add: "• Ajouter un Nœud",
+        dash_sub_wifi_list: "• Liste des Nœuds",
+
+        dash_nav_compta: "💰 Ma Comptabilité", dash_sub_payout: "• Effectuer un retrait", dash_sub_revenue: "• Mes Recettes",
         dash_stat_gain: "GAIN RÉEL DISPONIBLE", dash_stat_stock: "SESSIONS EN STOCK",
         guide_title: "MANUEL DE CONFIGURATION <span style='color:#00C2FF'>ALPHA</span>",
         btn_copy: "COPIER LE SCRIPT ALPHA"
@@ -46,13 +54,21 @@ const translations = {
         hub_title: "INTERNATIONAL <span style='color:#00C2FF'>HUB</span>",
         flag_1: "CAMEROON", flag_1_s: "Central Hub",
 
-        // ✅ NEW STRATEGIC CONTACTS
+        // Contacts & Strategic Title
         contact_sub: "🛰️ STRATEGIC LIAISON",
         contact_title: "Boost your <span style='color:#00C2FF'>WiFi Infrastructure.</span>",
         contact_p: "Our experts deploy your hardware and configure your AERIO core.",
 
         // --- DASHBOARD & MANUAL ---
         dash_title: "Console", dash_status: "STATUS: ACCREDITED", dash_nav_home: "📊 Dashboard",
+        dash_nav_tickets: "🎫 My Tickets", dash_sub_add: "• Add a ticket", dash_sub_list: "• Ticket List",
+
+        // ✅ RETOUR DU MODULE WIFI ZONE (EN)
+        dash_nav_wifi: "📡 My Wifi Zones",
+        dash_sub_wifi_add: "• Add a Node",
+        dash_sub_wifi_list: "• Node List",
+
+        dash_nav_compta: "💰 My Accounting", dash_sub_payout: "• Make a withdrawal", dash_sub_revenue: "• My Revenue",
         dash_stat_gain: "REAL AVAILABLE GAIN", dash_stat_stock: "SESSIONS IN STOCK",
         guide_title: "ALPHA <span style='color:#00C2FF'>CONFIGURATION MANUAL</span>",
         btn_copy: "COPY ALPHA SCRIPT"
@@ -62,6 +78,7 @@ const translations = {
         contact_sub: "🛰️ LIGAÇÃO ESTRATÉGICA",
         contact_title: "Impulsione sua <span style='color:#00C2FF'>Infraestrutura WiFi.</span>",
         hero_title: "O Futuro da <br><span style='color:#00C2FF'>WiFi Zone.</span>",
+        dash_nav_wifi: "📡 Minhas Zonas Wifi", // ✅ PT
         dash_stat_gain: "LUCRO REAL DISPONÍVEL"
     },
     es: {
@@ -69,6 +86,7 @@ const translations = {
         contact_sub: "🛰️ ENLACE ESTRATÉGICO",
         contact_title: "Impulse su <span style='color:#00C2FF'>Infraestructura WiFi.</span>",
         hero_title: "El Futuro de la <br><span style='color:#00C2FF'>WiFi Zone.</span>",
+        dash_nav_wifi: "📡 Mis Zonas Wifi", // ✅ ES
         dash_stat_gain: "GANANCIA REAL DISPONIBLE"
     }
 };
