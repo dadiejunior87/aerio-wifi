@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AERIO | Effectuer un Retrait Alpha</title>
+    <!-- ✅ POLICE POPPINS ÉLITE RÉPARÉE -->
+    <link href="https://fonts.googleapis.com" rel="stylesheet">
+    <style>
+        :root { --primary: #00F5A0; --bg: #020617; --glass: rgba(15, 23, 42, 0.7); --neon: #00C2FF; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: var(--bg); color: white; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; background-image: radial-gradient(circle at top right, rgba(0, 245, 160, 0.05), transparent); }
+        
+        .card { background: var(--glass); backdrop-filter: blur(40px); padding: 50px; border-radius: 40px; border: 1px solid rgba(255,255,255,0.05); width: 100%; max-width: 500px; border-bottom: 4px solid var(--primary); box-shadow: 0 25px 50px rgba(0,0,0,0.5); }
+        
+        h2 { font-size: 24px; font-weight: 900; margin-bottom: 30px; letter-spacing: -1px; text-transform: uppercase; }
+        label { font-size: 10px; font-weight: 900; color: var(--primary); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; display: block; margin-left: 5px; }
+        
+        input { width: 100%; padding: 18px 25px; margin-bottom: 25px; border-radius: 15px; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); color: white; font-size: 14px; outline: none; transition: 0.3s; }
+        input:focus { border-color: var(--primary); box-shadow: 0 0 20px rgba(0, 245, 160, 0.2); }
+
+        .btn { width: 100%; padding: 20px; background: var(--primary); color: #020617; border: none; border-radius: 20px; font-weight: 900; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; transition: 0.4s; }
+        .btn:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0, 245, 160, 0.3); }
+
+        .back-link { display: block; text-align: center; margin-top: 30px; color: #475569; text-decoration: none; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; transition: 0.3s; }
+        .back-link:hover { color: white; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div style="font-size: 40px; margin-bottom: 20px;">💸</div>
+        <h2 data-lang="dash_sub_payout">Retrait <span style="color:var(--primary)">Alpha Money</span></h2>
+        
+        <form onsubmit="handleRetrait(event)">
+            <label>Montant (F CFA)</label>
+            <input type="number" placeholder="Min: 5 000 F" required id="amount">
+            
+            <label>Numéro Mobile Money</label>
+            <input type="text" placeholder="+237 6xx xxx xxx" required id="phone">
+            
+            <button type="submit" class="btn">Lancer le Retrait</button>
+        </form>
+        
+        <a href="dashboard.html" class="back-link">← Retour Console</a>
+    </div>
+
+    <!-- ✅ LIAISON AU CERVEAU MULTILINGUE [1.4] -->
+    <script src="translations.js"></script>
+    <script>
+        function handleRetrait(e) {
+            e.preventDefault();
+            const amt = document.getElementById('amount').value;
+            alert(`💸 ORDRE DE TRANSFERT : La demande de ${amt} F est en cours de validation par le Hub International...`);
+            window.location.href = "dashboard.html";
+        }
+        window.onload = applyTranslations;
+    </script>
+</body>
+</html>
