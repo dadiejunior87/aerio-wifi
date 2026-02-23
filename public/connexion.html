@@ -4,64 +4,137 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AERIO | Connexion Espace Pro</title>
-    <!-- ✅ POLICE POPPINS ÉLITE RÉPARÉE -->
-    <link href="https://fonts.googleapis.com" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700;900&display=swap" rel="stylesheet">
     <style>
         :root { --primary: #00C2FF; --bg: #020617; --glass: rgba(15, 23, 42, 0.7); --accent: #7000FF; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        body { background: var(--bg); color: white; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; background-image: radial-gradient(circle at bottom left, rgba(112, 0, 255, 0.1), transparent); overflow-x: hidden; }
+        body { 
+            background: var(--bg); 
+            color: white; 
+            min-height: 100vh; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            padding: 20px; 
+            background-image: radial-gradient(circle at bottom left, rgba(112, 0, 255, 0.1), transparent); 
+            overflow: hidden; 
+        }
 
-        /* ✅ DESIGN GLASSMORPHISM "SECURE" [1.5] */
-        .login-card { background: var(--glass); backdrop-filter: blur(40px); padding: 50px; border-radius: 40px; border: 1px solid rgba(255,255,255,0.05); width: 100%; max-width: 450px; text-align: center; box-shadow: 0 25px 50px rgba(0,0,0,0.5); position: relative; }
+        /* ✅ SCANNER OVERLAY */
+        #scanner-line {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 5px;
+            background: var(--primary);
+            box-shadow: 0 0 20px var(--primary);
+            z-index: 10000;
+            animation: scanLoop 1.5s ease-in-out infinite;
+        }
+        @keyframes scanLoop { 0% { top: 0%; } 100% { top: 100%; } }
+
+        /* ✅ DESIGN GLASSMORPHISM */
+        .login-card { 
+            background: var(--glass); 
+            backdrop-filter: blur(40px); 
+            padding: 50px; 
+            border-radius: 40px; 
+            border: 1px solid rgba(255,255,255,0.05); 
+            width: 100%; 
+            max-width: 450px; 
+            text-align: center; 
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5); 
+            position: relative; 
+            z-index: 10;
+        }
         
         h1 { font-size: 28px; font-weight: 900; margin-bottom: 10px; letter-spacing: -1px; text-transform: uppercase; }
         p { color: #64748b; font-size: 13px; margin-bottom: 30px; }
 
         .input-group { text-align: left; margin-bottom: 20px; }
         label { font-size: 10px; font-weight: 900; color: var(--primary); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; display: block; }
-        input { width: 100%; padding: 18px 25px; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; color: white; font-size: 14px; outline: none; transition: 0.3s; }
-        input:focus { border-color: var(--accent); box-shadow: 0 0 20px rgba(112, 0, 255, 0.2); }
+        input { 
+            width: 100%; padding: 18px 25px; 
+            background: rgba(0, 0, 0, 0.4); 
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+            border-radius: 20px; 
+            color: white; font-size: 14px; 
+            outline: none; transition: 0.3s; 
+        }
+        input:focus { border-color: var(--primary); box-shadow: 0 0 20px rgba(0, 194, 255, 0.2); }
 
-        .btn-login { width: 100%; padding: 20px; background: linear-gradient(45deg, var(--primary), var(--accent)); color: white; border-radius: 20px; font-weight: 900; border: none; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; margin-top: 10px; transition: 0.4s; }
+        .btn-login { 
+            width: 100%; padding: 20px; 
+            background: linear-gradient(45deg, var(--primary), var(--accent)); 
+            color: white; border-radius: 20px; 
+            font-weight: 900; border: none; 
+            cursor: pointer; text-transform: uppercase; 
+            letter-spacing: 2px; margin-top: 10px; 
+            transition: 0.4s; 
+        }
         .btn-login:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(112, 0, 255, 0.3); }
 
         .back-link { display: block; margin-top: 30px; color: #475569; text-decoration: none; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; transition: 0.3s; }
         .back-link:hover { color: white; }
+
+        /* ✅ LOGO ANIMÉ */
+        .logo-box {
+            width: 70px; height: 70px;
+            background: rgba(0, 194, 255, 0.1);
+            border-radius: 20px;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 20px;
+            border: 1px solid var(--primary);
+            font-size: 30px;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(0, 194, 255, 0.4); } 70% { box-shadow: 0 0 0 20px rgba(0, 194, 255, 0); } 100% { box-shadow: 0 0 0 0 rgba(0, 194, 255, 0); } }
     </style>
 </head>
 <body>
 
+    <div id="scanner-line"></div>
+
     <div class="login-card">
-        <div style="font-size: 40px; margin-bottom: 20px; filter: drop-shadow(0 0 10px var(--accent));">🔐</div>
+        <div class="logo-box">🔐</div>
         <h1 data-lang="nav_pro">Espace Pro</h1>
         <p>Liaison sécurisée au cockpit de gestion AERIO.</p>
 
-        <!-- ✅ LOGIQUE DE CONNEXION DÉBLOQUÉE -->
-        <form onsubmit="initierLiaisonAlpha(event)">
+        <form id="loginForm" onsubmit="initierLiaisonAlpha(event)">
             <div class="input-group">
                 <label>Identifiant Agent Alpha</label>
-                <input type="text" placeholder="Email ou ID" required>
+                <input type="text" id="agentID" placeholder="Email ou ID" required>
             </div>
             <div class="input-group">
                 <label>Code de Cryptage</label>
-                <input type="password" placeholder="••••••••" required>
+                <input type="password" id="agentKey" placeholder="••••••••" required>
             </div>
             
-            <button type="submit" class="btn-login">Initialiser la Session</button>
+            <button type="submit" class="btn-login" id="btnText">Initialiser la Session</button>
         </form>
 
         <a href="index.html" class="back-link">← Retour au Cockpit</a>
     </div>
 
-    <!-- ✅ LIAISON AU CERVEAU MULTILINGUE [1.4] -->
-    <script src="translations.js"></script>
     <script>
         function initierLiaisonAlpha(e) {
             e.preventDefault();
-            // ✅ PLUS D'ALERTE BLOQUANTE ICI
-            // REDIRECTION INSTANTANÉE VERS LE DASHBOARD
-            window.location.href = "dashboard.html"; 
+            const btn = document.getElementById('btnText');
+            const scanner = document.getElementById('scanner-line');
+            
+            // 1. Déclenchement du scan visuel
+            scanner.style.display = 'block';
+            btn.innerText = "CRYPTAGE EN COURS...";
+            btn.style.opacity = "0.7";
+            btn.style.pointerEvents = "none";
+
+            // 2. Simulation de vérification (1.5s) pour l'effet "Wow"
+            setTimeout(() => {
+                // 3. Redirection vers le dashboard
+                window.location.href = "dashboard.html"; 
+            }, 2000);
         }
+
+        // Gestion de la langue (Sécurité)
         window.onload = function() {
             if(typeof applyTranslations === 'function') applyTranslations();
         };
