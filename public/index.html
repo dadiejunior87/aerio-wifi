@@ -27,7 +27,40 @@
     </style>
 </head>
 <body>
+<div id="preloader" style="position: fixed; inset: 0; background: #020617; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: 0.8s ease-in-out;">
+    <div style="width: 250px; text-align: center;">
+        <div style="font-weight: 900; color: #00C2FF; letter-spacing: 5px; margin-bottom: 20px; font-size: 14px; font-family: 'Poppins', sans-serif;">AERIO SYSTEM INITIALIZATION</div>
+        <div style="width: 100%; height: 2px; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; position: relative;">
+            <div id="loader-bar" style="position: absolute; height: 100%; width: 0%; background: #00C2FF; box-shadow: 0 0 15px #00C2FF; transition: 0.4s;"></div>
+        </div>
+        <div id="loader-percent" style="margin-top: 10px; font-family: monospace; font-size: 10px; color: #64748b;">0% - SECURE LINK</div>
+    </div>
+</div>
 
+<script>
+    window.addEventListener('load', () => {
+        let progress = 0;
+        const bar = document.getElementById('loader-bar');
+        const percent = document.getElementById('loader-percent');
+        const preloader = document.getElementById('preloader');
+
+        const interval = setInterval(() => {
+            progress += Math.floor(Math.random() * 20) + 5;
+            if (progress > 100) progress = 100;
+            
+            bar.style.width = progress + '%';
+            percent.innerText = progress + '% - PROTOCOLE ALPHA ACTIVÉ';
+
+            if (progress === 100) {
+                clearInterval(interval);
+                setTimeout(() => {
+                    preloader.style.opacity = '0';
+                    setTimeout(() => { preloader.style.display = 'none'; }, 800);
+                }, 500);
+            }
+        }, 100);
+    });
+</script>
     <nav>
         <div class="logo">🛰️ AERIO</div>
         <div class="nav-links">
@@ -168,3 +201,4 @@
     <script>window.onload = function() { if(typeof applyTranslations === 'function') applyTranslations(); };</script>
 </body>
 </html>
+
