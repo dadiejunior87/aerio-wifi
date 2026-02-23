@@ -4,14 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AERIO | Connexion Espace Pro</title>
-    <!-- ✅ POLICE POPPINS ÉLITE -->
     <link href="https://fonts.googleapis.com" rel="stylesheet">
     <style>
         :root { --primary: #00C2FF; --bg: #020617; --glass: rgba(15, 23, 42, 0.7); --accent: #7000FF; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         body { background: var(--bg); color: white; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; background-image: radial-gradient(circle at bottom left, rgba(112, 0, 255, 0.1), transparent); overflow-x: hidden; }
 
-        /* ✅ DESIGN GLASSMORPHISM "SECURE" [1.5] */
         .login-card { background: var(--glass); backdrop-filter: blur(40px); padding: 50px; border-radius: 40px; border: 1px solid rgba(255,255,255,0.05); width: 100%; max-width: 450px; text-align: center; box-shadow: 0 25px 50px rgba(0,0,0,0.5); position: relative; }
         
         h1 { font-size: 28px; font-weight: 900; margin-bottom: 10px; letter-spacing: -1px; text-transform: uppercase; }
@@ -26,17 +24,17 @@
         .btn-login:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(112, 0, 255, 0.3); }
 
         .back-link { display: block; margin-top: 30px; color: #475569; text-decoration: none; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; transition: 0.3s; }
-        .back-link:hover { color: white; }
     </style>
 </head>
 <body>
 
     <div class="login-card">
         <div style="font-size: 40px; margin-bottom: 20px; filter: drop-shadow(0 0 10px var(--accent));">🔐</div>
-        <h1 data-lang="nav_pro">Espace Pro</h1>
+        <h1>Espace Pro</h1>
         <p>Liaison sécurisée au cockpit de gestion AERIO.</p>
 
-        <form onsubmit="event.preventDefault(); alert('🛰️ VÉRIFICATION ALPHA : Liaison satellite avec votre routeur MikroTik...');">
+        <!-- ✅ LOGIQUE DE CONNEXION DÉBLOQUÉE -->
+        <form onsubmit="initierLiaisonAlpha(event)">
             <div class="input-group">
                 <label>Identifiant Agent Alpha</label>
                 <input type="text" placeholder="Email ou ID" required>
@@ -52,8 +50,13 @@
         <a href="index.html" class="back-link">← Retour au Cockpit</a>
     </div>
 
-    <!-- ✅ LIAISON AU CERVEAU MULTILINGUE [1.4] -->
-    <script src="translations.js"></script>
-    <script>window.onload = applyTranslations;</script>
+    <script>
+        function initierLiaisonAlpha(e) {
+            e.preventDefault();
+            // ✅ PLUS D'ALERTE BLOQUANTE ICI
+            // REDIRECTION INSTANTANÉE VERS LE DASHBOARD
+            window.location.href = "dashboard.html"; 
+        }
+    </script>
 </body>
 </html>
