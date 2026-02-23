@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AERIO | Radar de Localisation Alpha</title>
-    <!-- ✅ POLICE POPPINS ÉLITE RÉPARÉE -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;900&display=swap" rel="stylesheet">
     <style>
         :root { --primary: #00C2FF; --bg: #020617; --glass: rgba(15, 23, 42, 0.7); --accent: #00F5A0; --radar-line: rgba(0, 194, 255, 0.3); }
@@ -35,15 +34,17 @@
         @keyframes scanMove { 0% { top: -5%; } 100% { top: 105%; } }
 
         /* Nœuds Pulsatiles */
-        .node { position: absolute; width: 20px; height: 20px; background: var(--primary); border-radius: 50%; cursor: pointer; z-index: 10; transform: translate(-50%, -50%); }
+        .node { position: absolute; width: 15px; height: 15px; background: var(--primary); border-radius: 50%; cursor: pointer; z-index: 10; transform: translate(-50%, -50%); transition: 0.3s; }
+        .node:hover { background: var(--accent); scale: 1.5; }
         .node::before { content: ""; position: absolute; inset: -10px; border-radius: 50%; background: var(--primary); opacity: 0.2; animation: pulseNode 2s infinite; }
-        @keyframes pulseNode { 0%, 100% { transform: scale(1); opacity: 0.2; } 50% { transform: scale(1.5); opacity: 0.4; } }
+        @keyframes pulseNode { 0%, 100% { transform: scale(1); opacity: 0.2; } 50% { transform: scale(1.8); opacity: 0.4; } }
 
         .live-data-panel { position: absolute; top: 20px; right: 20px; width: 220px; background: rgba(0,0,0,0.7); border: 1px solid var(--primary); padding: 15px; border-radius: 20px; backdrop-filter: blur(10px); z-index: 100; font-size: 10px; }
         .data-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-family: 'Courier New', monospace; }
 
         /* ✅ LIEN DE RETOUR CORRIGÉ */
         .back-link { display: block; text-align: center; margin-top: 40px; color: #475569; text-decoration: none; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 3px; }
+        .back-link:hover { color: var(--primary); }
     </style>
 </head>
 <body>
@@ -63,47 +64,73 @@
     </div>
 
     <div class="search-container">
-        <input type="text" placeholder="RECHERCHE DE RÉSEAU DANS VOTRE ZONE...">
+        <input type="text" id="searchInput" placeholder="RECHERCHE DE RÉSEAU DANS VOTRE ZONE...">
         <button class="btn-gps" onclick="simulateGPS()">LANCER LE SCAN GPS</button>
     </div>
 
-    <div class="map-viewport">
+    <div class="map-viewport" id="map">
         <div class="map-grid"></div>
         <div class="scan-line"></div>
         
         <div class="live-data-panel">
             <p style="color:var(--primary); font-weight:900; margin-bottom:10px;">FLUX RÉSEAU LIVE</p>
-            <div class="data-row"><span>NODES CONNECTÉS:</span> <span style="color:var(--accent);">142</span></div>
-            <div class="data-row"><span>SIGNAL MOYEN:</span> <span style="color:var(--primary)">98%</span></div>
+            <div class="data-row"><span>NODES CONNECTÉS:</span> <span id="nodes-count" style="color:var(--accent);">142</span></div>
+            <div class="data-row"><span>SIGNAL MOYEN:</span> <span style="color:var(--primary)">98.4%</span></div>
             <hr style="border:0; border-top:1px solid rgba(0,194,255,0.2); margin:10px 0;">
             <div class="data-row"><span>ENCOURS:</span> <span id="revenue-live">183 475 F</span></div>
         </div>
 
-        <div class="node" style="top: 30%; left: 40%;" onclick="showNode('Alpha-1')"></div>
-        <div class="node" style="top: 55%; left: 65%;" onclick="showNode('Alpha-2')"></div>
-        <div class="node" style="top: 20%; left: 20%;" onclick="showNode('Alpha-3')"></div>
-    </div>
+        </div>
 
-    <!-- ✅ LIEN VERS index.html (ÉVITE LE Cannot GET /) -->
     <a href="index.html" class="back-link">← <span data-lang="nav_home">RETOUR AU COCKPIT ALPHA</span></a>
 
-    <script src="/translations.js"></script>
     <script>
+        // ✅ GÉNÉRATION DE NŒUDS ALÉATOIRES POUR LE RÉSEAU
+        const map = document.getElementById('map');
+        const nodesCountDisplay = document.getElementById('nodes-count');
+        
+        function createNodes() {
+            for (let i = 0; i < 8; i++) {
+                const node = document.createElement('div');
+                node.className = 'node';
+                node.style.top = Math.random() * 80 + 10 + '%';
+                node.style.left = Math.random() * 80 + 10 + '%';
+                node.onclick = () => showNode(`Alpha-${Math.floor(Math.random() * 999)}`);
+                map.appendChild(node);
+            }
+        }
+
         function simulateGPS() {
-            alert("🛰️ GPS VERROUILLÉ. Recherche de nœuds AERIO à proximité...");
+            const input = document.getElementById('searchInput').value;
+            alert(`🛰️ GPS VERROUILLÉ SUR : ${input || 'VOTRE POSITION'}\nRecherche de nœuds AERIO à proximité...`);
+            // Simule une mise à jour
+            nodesCountDisplay.innerText = Math.floor(Math.random() * 50) + 150;
         }
+
         function showNode(name) {
-            alert("📶 RÉSEAU " + name + " : ACTIF\nQualité du signal : Optimale");
+            alert(`📶 RÉSEAU ${name} : ACTIF\nQualité : Excellente\nPropriétaire : Partenaire AERIO Certifié`);
         }
+
+        // ✅ COMPTEUR DE REVENUS LIVE
         setInterval(() => {
             const rev = document.getElementById('revenue-live');
             if(rev) {
-                let current = parseInt(rev.innerText.replace(/\s/g, ''));
-                current += Math.floor(Math.random() * 50);
+                let current = parseInt(rev.innerText.replace(/\s/g, '').replace('F', ''));
+                current += Math.floor(Math.random() * 85);
                 rev.innerText = current.toLocaleString() + " F";
             }
-        }, 3000);
-        window.onload = applyTranslations;
+        }, 2500);
+
+        // Init
+        createNodes();
+
+        // Gestion Langues (Sécurité si translations.js est absent)
+        function setLang(lang) {
+            const btns = document.querySelectorAll('.lang-btn');
+            btns.forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+            console.log("Langue changée vers : " + lang);
+        }
     </script>
 </body>
 </html>
