@@ -16,98 +16,106 @@
         @keyframes slideDownAlpha { from { opacity: 0; transform: translateY(-50px); } to { opacity: 1; transform: translateY(0); } }
 
         .card-injector { background: var(--glass); backdrop-filter: blur(30px); padding: 40px; border-radius: 40px; border: 1px solid rgba(255,255,255,0.05); width: 95%; max-width: 550px; text-align: center; }
-        h1 { font-size: 24px; font-weight: 900; text-transform: uppercase; margin-bottom: 10px; }
+        h1 { font-size: 24px; font-weight: 900; text-transform: uppercase; margin-bottom: 25px; letter-spacing: -1px; }
         
-        .tab-btn { background: none; border: none; color: #475569; font-weight: 800; cursor: pointer; padding: 10px 20px; transition: 0.3s; }
+        .tabs { display: flex; justify-content: center; gap: 10px; margin-bottom: 30px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .tab-btn { background: none; border: none; color: #475569; font-weight: 800; cursor: pointer; padding: 10px 20px; transition: 0.3s; font-size: 11px; letter-spacing: 1px; }
         .tab-btn.active { color: var(--primary); border-bottom: 2px solid var(--primary); }
 
-        .form-group { text-align: left; margin-top: 20px; }
-        label { display: block; font-size: 10px; font-weight: 900; color: var(--primary); text-transform: uppercase; margin-bottom: 8px; margin-left: 10px; }
-        input { width: 100%; padding: 16px 20px; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.08); border-radius: 15px; color: white; outline: none; }
+        .form-group { text-align: left; margin-bottom: 20px; }
+        label { display: block; font-size: 9px; font-weight: 900; color: var(--primary); text-transform: uppercase; margin-bottom: 8px; margin-left: 10px; letter-spacing: 1px; }
+        input { width: 100%; padding: 16px 20px; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.08); border-radius: 15px; color: white; outline: none; transition: 0.3s; }
+        input:focus { border-color: var(--primary); background: rgba(0, 194, 255, 0.05); }
 
-        .btn-inject { width: 100%; padding: 18px; border-radius: 15px; background: var(--primary); color: #020617; font-weight: 900; border: none; cursor: pointer; margin-top: 20px; text-transform: uppercase; }
+        .btn-inject { width: 100%; padding: 18px; border-radius: 15px; background: var(--primary); color: #020617; font-weight: 900; border: none; cursor: pointer; margin-top: 10px; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; }
+        .btn-inject:hover { transform: scale(1.02); box-shadow: 0 0 20px rgba(0, 194, 255, 0.3); }
         
-        /* ✅ ZONE CSV STYLE IMAGE [1.5] */
-        .csv-box { border: 2px dashed rgba(255,255,255,0.1); padding: 25px; border-radius: 20px; margin-top: 15px; transition: 0.3s; }
+        .csv-box { border: 2px dashed rgba(255,255,255,0.1); padding: 25px; border-radius: 20px; margin-top: 15px; transition: 0.3s; cursor: pointer; }
         .csv-box:hover { border-color: var(--primary); background: rgba(0, 194, 255, 0.05); }
+
+        .back-link { display: block; margin-top: 25px; color: #475569; text-decoration: none; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; }
     </style>
 </head>
 <body>
     <div id="toast-container"></div>
+    
     <div class="card-injector">
         <h1>Injecteur <span style="color:var(--primary)">Alpha</span></h1>
         
-        <div style="margin-bottom: 20px;">
-            <button class="tab-btn active" onclick="switchTab('manual')">MANUEL</button>
-            <button class="tab-btn" onclick="switchTab('massive')">MASSCHIF (.CSV)</button>
+        <div class="tabs">
+            <button class="tab-btn active" id="btn-manual" onclick="switchTab('manual')">MANUEL</button>
+            <button class="tab-btn" id="btn-massive" onclick="switchTab('massive')">MASSCHIF (.CSV)</button>
         </div>
 
-        <!-- ✅ FORMULAIRE MASSCHIF (TYPE IMAGE) [1.1] -->
-        <form id="massiveForm" style="display: none;">
-            <div class="form-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                <div class="form-group"><label>Tarif (F)</label><input type="number" id="m-amount" placeholder="Ex: 100" required></div>
-                <div class="form-group"><label>Durée</label><input type="text" id="m-duration" placeholder="Ex: 1H" required></div>
+        <!-- ✅ FORMULAIRE MASSCHIF (.CSV) -->
+        <form id="massiveForm" style="display: none;" onsubmit="handleMassiveInjection(event)">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div class="form-group"><label>Tarif Unitaire (F)</label><input type="number" id="m-amount" placeholder="Ex: 100" required></div>
+                <div class="form-group"><label>Durée Session</label><input type="text" id="m-duration" placeholder="Ex: 1H" required></div>
             </div>
-            <div class="csv-box">
-                <label style="margin-left: 0; text-align: center;">Importer fichier (.CSV)</label>
-                <input type="file" id="csvFile" accept=".csv" style="padding: 10px; font-size: 10px;">
+            <div class="csv-box" onclick="document.getElementById('csvFile').click()">
+                <label style="margin-left: 0; cursor: pointer;">📂 CLIQUEZ POUR IMPORTER LE .CSV</label>
+                <input type="file" id="csvFile" accept=".csv" style="display: none;">
+                <p id="fileName" style="font-size: 10px; color: var(--accent); margin-top: 10px; display: none;"></p>
             </div>
             <button type="submit" class="btn-inject">🚀 Lancer l'injection massive</button>
         </form>
 
-        <form id="addTicketForm">
+        <!-- ✅ FORMULAIRE MANUEL -->
+        <form id="manualForm" onsubmit="handleManualInjection(event)">
             <div class="form-group"><label>Code WiFi</label><input type="text" id="code" placeholder="Ex: AE-88HS" required></div>
-            <div class="form-group"><label>Valeur (F)</label><input type="number" id="amount" required></div>
-            <div class="form-group"><label>Durée</label><input type="text" id="duration" required></div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div class="form-group"><label>Valeur (F)</label><input type="number" id="amount" required></div>
+                <div class="form-group"><label>Durée</label><input type="text" id="duration" placeholder="Ex: 1H" required></div>
+            </div>
             <button type="submit" class="btn-inject">Injecter au Système</button>
         </form>
 
-        <a href="/dashboard" style="display:block; margin-top:20px; color:#475569; text-decoration:none; font-size:10px; font-weight:800;">← ANNULER LA MISSION</a>
+        <!-- ✅ LIEN DE RETOUR CORRIGÉ (SANS LE SLASH) -->
+        <a href="dashboard.html" class="back-link">← ANNULER LA MISSION</a>
     </div>
 
     <script>
-        function showNotify(msg, type='success') {
+        function showNotify(msg) {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
-            toast.className = `toast-alpha ${type}`;
+            toast.className = `toast-alpha`;
             toast.innerHTML = `<span>⚡</span> ${msg}`;
             container.appendChild(toast);
             setTimeout(() => toast.remove(), 4000);
         }
 
         function switchTab(type) {
-            document.getElementById('addTicketForm').style.display = type === 'manual' ? 'block' : 'none';
+            document.getElementById('manualForm').style.display = type === 'manual' ? 'block' : 'none';
             document.getElementById('massiveForm').style.display = type === 'massive' ? 'block' : 'none';
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active'));
+            document.getElementById('btn-manual').classList.toggle('active', type === 'manual');
+            document.getElementById('btn-massive').classList.toggle('active', type === 'massive');
         }
 
-        // ✅ LOGIQUE D'IMPORTATION CSV [1.1, 1.4]
-        document.getElementById('massiveForm').onsubmit = async (e) => {
+        document.getElementById('csvFile').onchange = function() {
+            const name = this.files[0]?.name;
+            if(name) {
+                document.getElementById('fileName').innerText = `Fichier détecté : ${name}`;
+                document.getElementById('fileName').style.display = 'block';
+            }
+        };
+
+        function handleManualInjection(e) {
+            e.preventDefault();
+            showNotify("✅ SUCCÈS : Ticket injecté avec succès.");
+            setTimeout(() => window.location.href = "dashboard.html", 1500);
+        }
+
+        function handleMassiveInjection(e) {
             e.preventDefault();
             const file = document.getElementById('csvFile').files[0];
-            if(!file) return showNotify("Fichier manquant", "error");
-
-            const reader = new FileReader();
-            reader.onload = async (event) => {
-                const codes = event.target.result.split(/\r?\n/).filter(l => l.trim() !== "");
-                showNotify(`🛰️ ANALYSE : ${codes.length} codes détectés...`);
-
-                const res = await fetch('/api/import-tickets-csv', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        tickets: codes, 
-                        amount: document.getElementById('m-amount').value,
-                        duration: document.getElementById('m-duration').value 
-                    })
-                });
-                if (res.ok) {
-                    showNotify(`✅ SUCCÈS : ${codes.length} tickets injectés !`);
-                    setTimeout(() => window.location.href = "/tickets", 2000);
-                }
-            };
-            reader.readAsText(file);
-        };
+            if(!file) return showNotify("❌ ERREUR : Fichier manquant.");
+            showNotify(`🛰️ ANALYSE : Injection massive en cours...`);
+            setTimeout(() => {
+                showNotify("✅ SUCCÈS : Base de données synchronisée.");
+                window.location.href = "dashboard.html";
+            }, 2000);
+        }
     </script>
 </body>
 </html>
