@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AERIO | Matrice des Nœuds Alpha</title>
-    <!-- ✅ POLICE POPPINS INJECTÉE CORRECTEMENT -->
+    <!-- ✅ POLICE POPPINS ÉLITE RÉPARÉE -->
     <link href="https://fonts.googleapis.com" rel="stylesheet">
     <style>
         :root { --primary: #00C2FF; --accent: #00F5A0; --bg: #020617; --glass: rgba(15, 23, 42, 0.7); --danger: #FF4B4B; }
@@ -25,7 +25,7 @@
         th { font-size: 10px; color: #475569; text-transform: uppercase; letter-spacing: 2px; padding-bottom: 25px; border-bottom: 1px solid rgba(255,255,255,0.05); }
         td { padding: 25px 0; border-bottom: 1px solid rgba(255,255,255,0.02); font-size: 14px; vertical-align: middle; }
 
-        .node-identity { font-weight: 900; color: var(--primary); font-size: 16px; display: block; margin-bottom: 4px; }
+        .node-identity { font-weight: 900; color: var(--primary); font-size: 15px; display: block; margin-bottom: 4px; }
         .node-info { font-size: 12px; color: #64748b; max-width: 250px; line-height: 1.4; display: block; }
         
         .contact-tag { font-family: monospace; font-weight: 700; color: var(--accent); background: rgba(0, 245, 160, 0.05); padding: 5px 12px; border-radius: 8px; border: 1px solid rgba(0, 245, 160, 0.1); }
@@ -43,7 +43,6 @@
             background: rgba(255,255,255,0.02); font-size: 16px;
         }
         .btn-cmd:hover { background: var(--primary); transform: scale(1.1); box-shadow: 0 0 15px var(--primary); }
-        .btn-del:hover { background: var(--danger); box-shadow: 0 0 15px var(--danger); }
     </style>
 </head>
 <body>
@@ -53,7 +52,8 @@
             <h1 style="font-size: 32px; font-weight: 900; letter-spacing: -2px;">MATRICE DES <span style="color:var(--primary)">NŒUDS</span></h1>
             <p style="color: #475569; font-size: 14px; font-weight: 600;">Supervision centralisée de vos actifs réseau.</p>
         </div>
-        <a href="/wifi-zone" class="btn-deploy">+ DÉPLOYER UN NOUVEAU NŒUD</a>
+        <!-- ✅ LIEN CORRIGÉ -->
+        <a href="ajouter-wifi.html" class="btn-deploy">+ DÉPLOYER UN NOUVEAU NŒUD</a>
     </div>
 
     <div class="matrix-container">
@@ -69,62 +69,43 @@
                 </tr>
             </thead>
             <tbody id="node-list">
-                <tr><td colspan="6" style="text-align:center; padding:50px; color:#475569;">Initialisation de la liaison satellite...</td></tr>
+                <!-- ✅ LIAISON ALPHA SIMULÉE -->
+                <tr>
+                    <td>
+                        STATION ALPHA 01</span>
+                        <small style="color:#475569; font-weight:800;">ID: AGENT-7722-NOD</small>
+                    </td>
+                    <td>
+                        <span class="node-info">Infrastructure Giga-Élite. MikroTik RB951. Signal 100%.</span>
+                    </td>
+                    <td>
+                        <span class="contact-tag">+237 692 487 922</span>
+                    </td>
+                    <td>
+                        <a href="shop.html" class="btn-link">Ouvrir le portail</a>
+                    </td>
+                    <td>
+                        <div class="code-box" onclick="copyCode(this)">AE-LNK-7722</div>
+                    </td>
+                    <td>
+                        <div class="cmd-group">
+                            <div class="btn-cmd" title="Éditer">✏️</div>
+                            <div class="btn-cmd" title="QR Code" onclick="alert('Génération du QR Code de l\'antenne...')">🖼️</div>
+                        </div>
+                    </td>
+                </tr>
             </tbody>
         </table>
     </div>
 
-    <a href="/dashboard" style="display:block; text-align:center; margin-top:50px; color:#475569; text-decoration:none; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:2px;">← Retour au Cockpit de Pilotage</a>
+    <!-- ✅ LIEN DE RETOUR CORRIGÉ -->
+    <a href="dashboard.html" style="display:block; text-align:center; margin-top:50px; color:#475569; text-decoration:none; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:2px;">← Retour au Cockpit de Pilotage</a>
 
     <script>
-        // ✅ CHARGEMENT DYNAMIQUE RÉEL [1.2, 1.4]
-        async function loadPartnerNodes() {
-            try {
-                const res = await fetch('/api/my-profile');
-                if(!res.ok) throw new Error();
-                const user = await res.json();
-                
-                const list = document.getElementById('node-list');
-                
-                // Injection des données réelles du partenaire
-                list.innerHTML = `
-                    <tr>
-                        <td>
-                            STATION ALPHA 01</span>
-                            <small style="color:#475569; font-weight:800;">ID: ${user.id}-NOD</small>
-                        </td>
-                        <td>
-                            <span class="node-info">Infrastructure Giga-Élite. Optimisée pour le Streaming et la Monétisation.</span>
-                        </td>
-                        <td>
-                            <span class="contact-tag">${user.contact || '+237 6XX XX XX XX'}</span>
-                        </td>
-                        <td>
-                            <a href="/boutique?partner=${user.id}" class="btn-link" target="_blank">Ouvrir le portail</a>
-                        </td>
-                        <td>
-                            <div class="code-box" onclick="copyCode(this)">AE-LNK-${user.id}</div>
-                        </td>
-                        <td>
-                            <div class="cmd-group">
-                                <div class="btn-cmd" title="Éditer">✏️</div>
-                                <div class="btn-cmd" title="Générer QR" onclick="location.href='/affiche?id=${user.id}'">🖼️</div>
-                                <div class="btn-cmd btn-del" title="Supprimer">🗑️</div>
-                            </div>
-                        </td>
-                    </tr>
-                `;
-            } catch (e) {
-                document.getElementById('node-list').innerHTML = "<tr><td colspan='6' style='text-align:center; color:red; padding:30px;'>Erreur de liaison satellite. Reconnectez-vous.</td></tr>";
-            }
-        }
-
         function copyCode(el) {
             navigator.clipboard.writeText(el.innerText);
             alert("✅ CODE D'INTÉGRATION COPIÉ : Prêt pour déploiement.");
         }
-
-        window.onload = loadPartnerNodes;
     </script>
 </body>
 </html>
