@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AERIO | Extraction de Licence</title>
+    <link href="https://fonts.googleapis.com" rel="stylesheet">
+    <style>
+        :root { --primary: #00C2FF; --bg: #020617; --glass: rgba(15, 23, 42, 0.8); --accent: #00F5A0; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: var(--bg); color: white; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        
+        /* ✅ DESIGN GLASSMORPHISM "SECURE" [1.5] */
+        .licence-card { background: var(--glass); backdrop-filter: blur(40px); padding: 60px; border-radius: 40px; border: 1px solid rgba(255,255,255,0.05); width: 100%; max-width: 800px; text-align: center; position: relative; box-shadow: 0 25px 50px rgba(0,0,0,0.5); }
+        
+        .step-badge { background: rgba(0, 194, 255, 0.1); color: var(--primary); padding: 5px 15px; border-radius: 50px; font-size: 10px; font-weight: 900; letter-spacing: 2px; border: 1px solid var(--primary); }
+        h1 { font-size: 26px; font-weight: 900; margin: 30px 0; color: var(--primary); text-transform: uppercase; }
+        
+        #status-text { font-size: 32px; font-weight: 900; margin-bottom: 15px; letter-spacing: -1px; }
+        #id-text { color: #475569; font-weight: 800; font-size: 12px; letter-spacing: 3px; }
+
+        .btn-download { display: inline-flex; align-items: center; gap: 15px; background: var(--accent); color: #020617; padding: 20px 40px; border-radius: 20px; font-weight: 900; text-decoration: none; font-size: 14px; text-transform: uppercase; margin-top: 40px; opacity: 0.3; pointer-events: none; transition: 0.5s; }
+        .btn-download.ready { opacity: 1; pointer-events: auto; box-shadow: 0 0 30px var(--accent); }
+    </style>
+</head>
+<body>
+
+    <div class="licence-card">
+        <span class="step-badge">STEP 03</span>
+        <h1>3. État & Extraction de Licence</h1>
+        
+        <div id="status-text">CHARGEMENT...</div>
+        <div id="id-text">ID: <span id="id-val">...</span></div>
+
+        <!-- ✅ BOUTON DÉBLOQUÉ PAR LE SCRIPT -->
+        <a href="#" id="downloadLink" class="btn-download" onclick="alert('Lancement de la génération du PDF sécurisé...')">
+            📄 Télécharger mon accréditation
+        </a>
+
+        <div style="margin-top: 40px;"><a href="dashboard.html" style="color:#475569; text-decoration:none; font-size:10px; font-weight:800; letter-spacing:2px;">← RETOUR AU QG</a></div>
+    </div>
+
+    <script>
+        // ✅ LOGIQUE DE DÉBLOCAGE ALPHA [1.4]
+        window.onload = () => {
+            const status = document.getElementById('status-text');
+            const idVal = document.getElementById('id-val');
+            const btn = document.getElementById('downloadLink');
+
+            // Simulation d'une liaison satellite sécurisée
+            setTimeout(() => {
+                status.innerText = "PRÊT À L'EXTRACTION";
+                status.style.color = "var(--accent)";
+                idVal.innerText = "AE-ALPHA-7722-X"; // Ton ID d'Empire
+                btn.classList.add('ready');
+            }, 3000); // 3 secondes de chargement réaliste
+        };
+    </script>
+</body>
+</html>
