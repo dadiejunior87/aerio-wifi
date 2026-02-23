@@ -4,38 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AERIO | Console Alpha</title>
-    <!-- ✅ POLICE POPPINS ÉLITE RÉPARÉE -->
     <link href="https://fonts.googleapis.com" rel="stylesheet">
     <style>
         :root { --primary: #00C2FF; --bg: #020617; --glass: rgba(15, 23, 42, 0.8); --danger: #FF4B4B; --accent: #00F5A0; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        body { background: var(--bg); color: white; display: flex; min-height: 100vh; overflow-x: hidden; }
+        body { background: var(--bg); color: white; display: flex; min-height: 100vh; overflow-x: hidden; background-image: radial-gradient(circle at bottom right, rgba(0, 194, 255, 0.05), transparent); }
 
-        /* ✅ SIDEBAR TACTIQUE */
-        .sidebar { width: 280px; background: var(--glass); border-right: 1px solid rgba(255,255,255,0.05); padding: 30px 20px; backdrop-filter: blur(30px); position: fixed; height: 100vh; z-index: 100; transition: 0.3s; }
+        /* ✅ SIDEBAR TACTIQUE SCELLÉE */
+        .sidebar { width: 280px; background: var(--glass); border-right: 1px solid rgba(255,255,255,0.05); padding: 30px 20px; backdrop-filter: blur(30px); position: fixed; height: 100vh; z-index: 100; }
         .profile-badge { display: flex; align-items: center; gap: 12px; padding: 15px; background: rgba(0, 194, 255, 0.05); border: 1px solid rgba(0, 194, 255, 0.1); border-radius: 20px; margin-bottom: 30px; text-decoration: none; }
         .avatar { width: 35px; height: 35px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; color: #020617; font-size: 10px; }
 
         .nav-item { display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; color: #64748b; text-decoration: none; border-radius: 15px; margin-bottom: 5px; cursor: pointer; transition: 0.3s; font-size: 13px; font-weight: 600; }
         .nav-item:hover, .nav-item.active { color: var(--primary); background: rgba(0, 194, 255, 0.08); }
 
-        /* ✅ SOUS-MENUS ANIMÉS */
-        .submenu { max-height: 0; overflow: hidden; transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); padding-left: 15px; background: rgba(0,0,0,0.2); border-radius: 15px; margin: 0 5px; }
-        .submenu.open { max-height: 250px; padding: 10px 0 10px 20px; margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.02); }
+        .submenu { max-height: 0; overflow: hidden; transition: 0.5s ease; padding-left: 15px; }
+        .submenu.open { max-height: 250px; margin-bottom: 10px; }
         .sub-item { display: block; padding: 8px 0; color: #475569; text-decoration: none; font-size: 12px; font-weight: 700; transition: 0.3s; }
         .sub-item:hover { color: var(--primary); padding-left: 10px; }
 
-        .main-content { margin-left: 280px; flex: 1; padding: 50px; overflow-y: auto; }
-        .header-top { display: flex; justify-content: flex-end; padding-bottom: 30px; }
-        .lang-switcher { display: flex; gap: 5px; background: rgba(255,255,255,0.05); padding: 4px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); }
-        .lang-btn { background: none; border: none; color: #475569; font-size: 8px; font-weight: 900; cursor: pointer; padding: 4px 8px; border-radius: 8px; }
-        .lang-btn.active { background: var(--primary); color: #020617; box-shadow: 0 0 10px var(--primary); }
-
-        .quick-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 40px; }
-        .quick-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); padding: 25px; border-radius: 30px; display: flex; align-items: center; gap: 15px; text-decoration: none; transition: 0.4s; backdrop-filter: blur(10px); color: white; }
-        .quick-card:hover { border-color: var(--primary); transform: translateY(-5px); background: rgba(0, 194, 255, 0.05); }
+        .main-content { margin-left: 280px; flex: 1; padding: 50px; }
+        .quick-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 40px; }
+        .quick-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); padding: 20px; border-radius: 25px; text-decoration: none; color: white; display: flex; align-items: center; gap: 15px; transition: 0.3s; }
+        .quick-card:hover { border-color: var(--primary); transform: translateY(-5px); }
         
-        .stat-card { background: rgba(255,255,255,0.03); padding: 35px; border-radius: 35px; border: 1px solid rgba(255,255,255,0.05); flex: 1; }
+        .stat-card { background: rgba(255,255,255,0.03); padding: 35px; border-radius: 35px; border: 1px solid rgba(255,255,255,0.05); flex: 1; min-width: 300px; }
     </style>
 </head>
 <body>
@@ -46,7 +39,7 @@
             <div class="avatar">AE</div>
             <div>
                 <div style="font-size: 10px; font-weight: 900; color: white;">AGENT ALPHA</div>
-                <div style="font-size: 8px; color: var(--primary); font-weight: 800;">STATUT : ACCRÉDITÉ</div>
+                <div style="font-size: 8px; color: var(--primary); font-weight: 800;">STATUS: ACCRÉDITÉ</div>
             </div>
         </a>
 
@@ -74,58 +67,33 @@
     </div>
 
     <div class="main-content">
-        <div class="header-top">
-            <div class="lang-switcher">
-                <button onclick="setLang('fr')" class="lang-btn active">FR</button>
-                <button onclick="setLang('en')" class="lang-btn">EN</button>
-            </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:40px;">
+            <h1 style="font-size:32px; font-weight:900;">Console <span style="color:var(--primary)">Alpha v.1</span></h1>
+            <div style="background:rgba(255,255,255,0.05); padding:8px 15px; border-radius:12px; font-size:10px; font-weight:900; color:var(--accent); border:1px solid var(--accent);">📡 LIAISON SÉCURISÉE</div>
         </div>
 
         <div class="quick-grid">
-            <a href="profil.html" class="quick-card"><div style="font-size:20px;">👤</div><div style="margin-left:10px;"><b style="display:block; font-size:12px;">Mon Profil</b><span style="font-size:10px; color:#64748b;">Identité Alpha</span></div></a>
-            <a href="https://wa.me" class="quick-card"><div style="font-size:20px;">💬</div><div style="margin-left:10px;"><b style="display:block; font-size:12px;">Support Live</b><span style="color:var(--primary); font-size:10px;">WHATSAPP ALPHA</span></div></a>
-            <a href="guide.html" class="quick-card"><div style="font-size:20px;">📩</div><div style="margin-left:10px;"><b style="display:block; font-size:12px;">Documentation</b><span style="font-size:10px; color:#64748b;">Base de Commandement</span></div></a>
+            <a href="profil.html" class="quick-card"><div>👤</div><div><b style="display:block; font-size:11px;">Mon Profil</b></div></a>
+            <a href="https://wa.me" class="quick-card"><div>💬</div><div><b style="display:block; font-size:11px;">Support Alpha</b></div></a>
+            <a href="liste-wifi.html" class="quick-card"><div>📡</div><div><b style="display:block; font-size:11px;">État Réseau</b></div></a>
         </div>
-
-        <h1 style="font-size:32px; font-weight:900; margin-bottom:40px;">Console <span style="color:var(--primary)">Alpha v.1</span></h1>
         
         <div style="display: flex; gap: 25px; flex-wrap: wrap;">
             <div class="stat-card" style="border-left: 5px solid var(--primary);">
                 <p style="font-size:9px; color:#475569; font-weight:900; letter-spacing:1px;">GAIN RÉEL DISPONIBLE</p>
-                <div id="solde" style="font-size:38px; font-weight:900; color:var(--primary); margin-top:10px;">0 F</div>
+                <div id="solde" style="font-size:42px; font-weight:900; color:var(--primary); margin-top:10px;">0 F</div>
             </div>
             <div class="stat-card" style="border-left: 5px solid var(--accent);">
                 <p style="font-size:9px; color:#475569; font-weight:900; letter-spacing:1px;">SESSIONS EN STOCK</p>
-                <div id="stock" style="font-size:38px; font-weight:900; margin-top:10px;">0</div>
+                <div id="stock" style="font-size:42px; font-weight:900; margin-top:10px;">0</div>
             </div>
         </div>
     </div>
 
     <script src="translations.js"></script>
     <script>
-        function toggleMenu(id) {
-            const sub = document.getElementById(id);
-            sub.classList.toggle('open');
-        }
-
-        function animateStats() {
-            const solde = document.getElementById('solde');
-            const stock = document.getElementById('stock');
-            if(!solde || !stock) return;
-            let valSolde = 0; let valStock = 0;
-            const interval = setInterval(() => {
-                if(valSolde < 184500) valSolde += 3075;
-                if(valStock < 142) valStock += 2;
-                solde.innerText = valSolde.toLocaleString() + " F";
-                stock.innerText = valStock;
-                if(valSolde >= 184500 && valStock >= 142) clearInterval(interval);
-            }, 30);
-        }
-
-        window.onload = () => {
-            if(typeof applyTranslations === 'function') applyTranslations();
-            animateStats();
-        };
+        function toggleMenu(id) { document.getElementById(id).classList.toggle('open'); }
+        window.onload = () => { if(typeof applyTranslations === 'function') applyTranslations(); };
     </script>
 </body>
 </html>
