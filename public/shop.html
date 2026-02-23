@@ -10,18 +10,23 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         body { background: var(--bg); color: white; min-height: 100vh; background-image: radial-gradient(circle at top right, rgba(0, 194, 255, 0.05), transparent); overflow-x: hidden; }
 
-        /* ✅ VITRINE DE PRESTIGE RESTAURÉE */
+        /* ✅ HEADER SATELLITE */
+        nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 5%; position: fixed; width: 100%; top: 0; z-index: 1000; backdrop-filter: blur(15px); border-bottom: 1px solid rgba(255,255,255,0.03); }
+        .logo { font-weight: 900; font-size: 20px; color: var(--primary); letter-spacing: -1.5px; text-decoration: none; }
+        .nav-links { display: flex; gap: 15px; align-items: center; }
+        .nav-links a { color: #64748b; text-decoration: none; font-size: 10px; font-weight: 700; text-transform: uppercase; transition: 0.3s; }
+        .nav-links a:hover { color: white; }
+
+        /* ✅ VITRINE DE PRESTIGE */
         .showcase { padding: 160px 8% 80px; text-align: left; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 50px; }
         .showcase h1 { font-size: clamp(35px, 6vw, 60px); font-weight: 900; line-height: 1.1; letter-spacing: -3px; margin-bottom: 30px; }
-        
-        .btn-blue { background: var(--primary); color: #020617; padding: 18px 35px; border-radius: 50px; font-weight: 900; border: none; cursor: pointer; transition: 0.3s; text-transform: uppercase; font-size: 13px; }
+        .btn-blue { background: var(--primary); color: #020617; padding: 18px 35px; border-radius: 50px; font-weight: 900; border: none; cursor: pointer; transition: 0.3s; text-transform: uppercase; font-size: 12px; }
         .btn-blue:hover { transform: scale(1.05); box-shadow: 0 0 20px var(--primary); }
 
-        /* ✅ DESIGN GIGA-ÉLITE DES CARTES (ZÉRO TRICHE) */
+        /* ✅ CARTES PRODUITS GIGA-ÉLITE */
         .product-card { background: var(--glass); backdrop-filter: blur(40px); border-radius: 40px; padding: 45px; border: 1px solid rgba(255,255,255,0.05); transition: 0.5s; position: relative; }
         .product-card:hover { border-color: var(--primary); transform: translateY(-10px); }
         .price { font-size: 32px; font-weight: 900; color: var(--accent); margin: 20px 0; }
-        
         .spec-item { display: flex; align-items: center; gap: 12px; font-size: 13px; color: #94a3b8; margin-bottom: 12px; }
         .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--primary); box-shadow: 0 0 10px var(--primary); }
 
@@ -33,14 +38,19 @@
 </head>
 <body>
 
-    <!-- ✅ AFFICHE DE PRESTIGE -->
+    <nav>
+        <a href="index.html" class="logo">🛰️ AERIO</a>
+        <div class="nav-links">
+            <a href="index.html">Accueil</a>
+            <a href="shop.html" style="color:white;">Shop</a>
+            <a href="connexion.html">Espace Pro</a>
+        </div>
+    </nav>
+
     <section class="showcase">
-        <div class="showcase-text" style="max-width: 700px;">
+        <div style="max-width: 700px;">
             <p style="color:var(--primary); font-weight:900; font-size:10px; letter-spacing:4px; margin-bottom:15px;">🛰️ ARSENAL HARDWARE ALPHA</p>
             <h1>Dominez votre <br><span style="color:var(--primary)">Empire WiFi.</span></h1>
-            <p style="color: #64748b; font-size: 16px; margin-bottom: 40px; line-height: 1.6; max-width: 500px;">
-                Transformez votre MikroTik en une banque automatisée. Une solution élite pour gérer et rentabiliser votre réseau sans effort.
-            </p>
             <button class="btn-blue" onclick="document.getElementById('catalog').scrollIntoView({behavior: 'smooth'})">Explorer l'Arsenal</button>
         </div>
         <div style="background: var(--glass); padding: 30px; border-radius: 30px; border: 1px solid var(--primary); text-align: center; backdrop-filter: blur(20px);">
@@ -50,7 +60,7 @@
         </div>
     </section>
 
-    <!-- ✅ CATALOGUE DES 5 UNITÉS D'ÉLITE -->
+    <!-- ✅ CATALOGUE INTÉGRAL (LES 5 UNITÉS SCELLÉES) -->
     <section style="padding: 0 8% 120px;" id="catalog">
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 30px;">
             
@@ -121,7 +131,7 @@
             </div>
         </div>
         <div style="text-align:center; margin-top:60px; padding-top:40px; border-top:1px solid rgba(255,255,255,0.03);">
-            <p style="color:#475569; font-size:10px; letter-spacing:5px; font-weight:900;">AERIO ALPHA © 2024</p>
+            <p style="color:#475569; font-size:10px; letter-spacing:5px; font-weight:900;">AERIO ALPHA © 2026 | L'EMPIRE GLOBAL DU WIFI ZONE</p>
             <a href="index.html" style="display:inline-block; margin-top:20px; color:#64748b; text-decoration:none; font-size:9px; font-weight:900;">← RETOUR AU COCKPIT</a>
         </div>
     </footer>
