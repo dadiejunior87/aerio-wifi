@@ -10,33 +10,23 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; scroll-behavior: smooth; }
         body { background: var(--bg); color: white; min-height: 100vh; background-image: radial-gradient(circle at top right, rgba(0, 194, 255, 0.1), transparent); overflow-x: hidden; }
 
-        /* ✅ NAVIGATION SATELLITE COMPLÈTE */
+        /* ✅ NAVIGATION SATELLITE COMPLÈTE (RESTAURÉE) */
         nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 5%; position: fixed; width: 100%; top: 0; z-index: 1000; backdrop-filter: blur(15px); border-bottom: 1px solid rgba(255,255,255,0.03); }
         .logo { font-weight: 900; font-size: 20px; color: var(--primary); letter-spacing: -1.5px; text-decoration: none; }
         .nav-links { display: flex; gap: 15px; align-items: center; }
         .nav-links a { color: #64748b; text-decoration: none; font-size: 10px; font-weight: 700; text-transform: uppercase; transition: 0.3s; }
-        .nav-links a:hover { color: white; }
-
-        /* ✅ SÉLECTEUR DE LANGUE ALPHA */
         .lang-switcher { display: flex; gap: 4px; background: rgba(255,255,255,0.05); padding: 4px; border-radius: 12px; }
         .lang-btn { background: none; border: none; color: #475569; font-size: 8px; font-weight: 900; cursor: pointer; padding: 4px 6px; border-radius: 8px; }
         .lang-btn.active { background: var(--primary); color: #020617; box-shadow: 0 0 10px var(--primary); }
-
         .btn-pro { background: linear-gradient(45deg, var(--primary), var(--neon)); color: white; padding: 10px 15px; border-radius: 10px; font-weight: 900; text-decoration: none; font-size: 9px; text-transform: uppercase; }
 
         .section-glass { background: var(--glass); backdrop-filter: blur(40px); border-radius: 50px; border: 1px solid rgba(255,255,255,0.05); padding: 60px; margin-bottom: 40px; }
         .carousel-track { display: flex; gap: 20px; width: max-content; animation: scroll 40s linear infinite; }
         @keyframes scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
         .flag-card { min-width: 180px; background: var(--glass); padding: 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column; align-items: center; }
-
-        /* ✅ FOOTER SOUVERAIN (IMAGE 4 ADAPTÉE) */
+        
         footer { background: rgba(1, 4, 15, 0.95); padding: 80px 8% 40px; border-top: 2px solid var(--primary); margin-top: 100px; }
         .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 50px; }
-        .footer-col h4 { font-size: 14px; font-weight: 900; margin-bottom: 25px; color: white; position: relative; padding-bottom: 10px; }
-        .footer-col h4::after { content: ''; position: absolute; left: 0; bottom: 0; width: 30px; height: 2px; background: var(--danger); }
-        .footer-col ul { list-style: none; }
-        .footer-col ul li { margin-bottom: 12px; }
-        .footer-col ul li a { color: #64748b; text-decoration: none; font-size: 12px; transition: 0.3s; }
     </style>
 </head>
 <body>
@@ -44,33 +34,43 @@
     <nav>
         <a href="index.html" class="logo">🛰️ AERIO</a>
         <div class="nav-links">
-            <a href="index.html" data-lang="nav_home">Accueil</a>
-            <a href="shop.html" data-lang="nav_shop">Shop</a>
-            <a href="localisation.html" data-lang="nav_loc">Localisation</a>
+            <a href="index.html">Accueil</a>
+            <a href="localisation.html">Localisation</a>
             <a href="vpn.html" style="color:var(--danger);">VPN</a>
             <div class="lang-switcher">
                 <button onclick="setLang('fr')" class="lang-btn active">FR</button>
                 <button onclick="setLang('en')" class="lang-btn">EN</button>
             </div>
-            <a href="connexion.html" class="btn-pro" data-lang="nav_pro">Espace Pro</a>
+            <a href="connexion.html" class="btn-pro">Espace Pro</a>
         </div>
     </nav>
 
-    <!-- HERO & PROFIL (IMAGE 2) -->
+    <!-- 1. SECTION IMAGE REF 2 : À PROPOS / AGENT SOURIANT -->
     <section style="padding: 180px 8% 100px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 50px;">
         <div style="max-width: 650px;">
-            <p style="color:var(--primary); font-weight:900; font-size:10px; letter-spacing:4px; margin-bottom:15px;" data-lang="hero_tag">🛰️ PROTOCOLE ALPHA ACTIVÉ</p>
-            <h1 style="font-size: clamp(40px, 7vw, 75px); font-weight: 900; line-height: 1.1; margin-bottom: 25px; letter-spacing: -3px;" data-lang="hero_title">Développez votre Business <br><span style="color:var(--primary)">De WiFi Zone.</span></h1>
-            <p style="color: #64748b; font-size: 15px; margin-bottom: 40px; line-height: 1.8;" data-lang="hero_p">AERIO automatise vos ventes via Mobile Money au Cameroun et à l'international.</p>
-            <a href="connexion.html" style="background:white; color:black; padding:20px 45px; border-radius:20px; text-decoration:none; font-weight:900; display:inline-block;" data-lang="btn_partner">Démarrer Maintenant</a>
+            <p style="color:var(--primary); font-weight:900; font-size:10px; letter-spacing:4px; margin-bottom:15px;">🛰️ PROTOCOLE ALPHA ACTIVÉ</p>
+            <h1 style="font-size: clamp(40px, 7vw, 75px); font-weight: 900; line-height: 1.1; margin-bottom: 25px;">Développez votre Business <br><span style="color:var(--primary)">De WiFi Zone.</span></h1>
+            <p style="color: #64748b; font-size: 15px; margin-bottom: 40px; line-height: 1.8;">AERIO automatise vos ventes via Mobile Money. Gérez votre empire MikroTik sans effort au Cameroun.</p>
+            <a href="connexion.html" style="background:white; color:black; padding:20px 45px; border-radius:20px; text-decoration:none; font-weight:900; display:inline-block;">Démarrer Maintenant</a>
         </div>
         <div style="position: relative; max-width: 400px; width: 100%;">
-            <div style="width:100%; padding-top:100%; background: url('https://images.unsplash.com') center/cover; border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; border: 4px solid var(--primary); box-shadow: 0 0 50px rgba(0, 194, 255, 0.2);"></div>
-            <div style="position: absolute; top: 10%; left: -20px; background: var(--glass); padding: 15px; border-radius: 15px; border: 1px solid var(--accent); font-size: 10px; font-weight: 900; color: var(--accent); backdrop-filter: blur(10px);">🚀 100% AUTOMATISÉ</div>
+            <div style="width:100%; padding-top:100%; background: url('https://images.unsplash.com') center/cover; border-radius: 40px; border: 4px solid var(--primary); box-shadow: 0 0 50px rgba(0, 194, 255, 0.2);"></div>
+            <div style="position: absolute; bottom: -20px; right: -20px; background: var(--bg); padding: 15px; border-radius: 15px; border: 1px solid var(--accent); font-size: 10px; font-weight: 900; color: var(--accent);">✅ AGENT VÉRIFIÉ</div>
         </div>
     </section>
 
-    <!-- HUB INTERNATIONAL (LES 9 DRAPEAUX) -->
+    <!-- 2. SECTION IMAGE REF 1 : PROCESSUS 4 ÉTAPES -->
+    <section style="padding: 100px 8%; text-align: center;">
+        <h2 style="font-size: 32px; font-weight: 900; margin-bottom: 60px;">Processus <span style="color:var(--primary)">Alpha en 4 Étapes</span></h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 25px;">
+            <div class="section-glass" style="padding: 40px;">🛡️<h4 style="margin-top:15px;">INSCRIPTION</h4><p style="font-size:12px; color:#64748b; margin-top:10px;">Accédez au cockpit de gestion.</p></div>
+            <div class="section-glass" style="padding: 40px; border-color: var(--accent);">🛰️<h4 style="margin-top:15px;">IMPORT CSV</h4><p style="font-size:12px; color:#64748b; margin-top:10px;">Injectez vos tickets MikroTik.</p></div>
+            <div class="section-glass" style="padding: 40px;">💸<h4 style="margin-top:15px;">VENTE AUTO</h4><p style="font-size:12px; color:#64748b; margin-top:10px;">Encaissez via Mobile Money.</p></div>
+            <div class="section-glass" style="padding: 40px; border-color: var(--neon);">👑<h4 style="margin-top:15px;">RETRAIT CASH</h4><p style="font-size:12px; color:#64748b; margin-top:10px;">Récupérez vos revenus cash.</p></div>
+        </div>
+    </section>
+
+    <!-- 3. HUB INTERNATIONAL (LES 9 DRAPEAUX) -->
     <section style="padding: 80px 0; text-align:center;">
         <h2 style="font-weight:900; font-size:28px;">HUB <span style="color:var(--primary)">INTERNATIONAL</span></h2>
         <div style="width:100%; overflow:hidden; margin-top:40px;">
@@ -88,40 +88,35 @@
         </div>
     </section>
 
-    <!-- FOOTER SOUVERAIN (IMAGE 4 & ANTIC CAMEROUN) -->
+    <!-- 4. SECTION IMAGE REF 3 : SUPPORT WHATSAPP -->
+    <section style="padding: 100px 8%;">
+        <div class="section-glass" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 50px; border-color: #25D366;">
+            <div>
+                <h2 style="font-size: 32px; font-weight: 900; margin-bottom: 25px;">Envoyez-nous <span style="color:#25D366">Un Message Alpha.</span></h2>
+                <a href="https://wa.me" style="background:#25D366; color:white; padding:20px 40px; border-radius:20px; text-decoration:none; font-weight:900; display:inline-block;">💬 WHATSAPP DIRECT</a>
+            </div>
+            <div style="font-size: 80px;">🛰️</div>
+        </div>
+    </section>
+
+    <!-- 5. FOOTER IMAGE REF 4 : SOUVERAINETÉ ANTIC CAMEROUN -->
     <footer>
         <div class="footer-grid">
             <div class="footer-col">
                 <h4>À Propos</h4>
-                <p style="color: #64748b; font-size: 12px; line-height: 1.8;">AERIO est la plateforme N°1 de monétisation WiFi Zone. Simplifiez vos transactions et développez votre business souverain.</p>
-                <div style="margin-top: 20px; color: var(--primary); font-size: 11px; font-weight: 900; letter-spacing: 1px;">📍 Maroua, Cameroun 🇨🇲</div>
-            </div>
-            <div class="footer-col">
-                <h4>Liens Utiles</h4>
-                <ul>
-                    <li><a href="#">> Conditions Générales</a></li>
-                    <li><a href="#">> Confidentialité</a></li>
-                    <li><a href="shop.html">> Arsenal Hardware</a></li>
-                </ul>
-            </div>
-            <div class="footer-col">
-                <h4>Services</h4>
-                <ul>
-                    <li><a href="localisation.html">> Localisation WiFi</a></li>
-                    <li><a href="vpn.html">> VPN Chiffré</a></li>
-                    <li><a href="connexion.html">> Espace Pro</a></li>
-                </ul>
+                <p style="color: #64748b; font-size: 12px;">AERIO est l'unité de monétisation souveraine au Cameroun.</p>
+                <p style="margin-top:20px; font-size:11px; font-weight:900; color:var(--primary);">📍 Maroua, Cameroun 🇨🇲</p>
             </div>
             <div class="footer-col">
                 <h4>Sécurité & Conformité</h4>
-                <div style="background: rgba(255,255,255,0.02); padding: 25px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); text-align: center;">
-                    <div style="width: 60px; height: 60px; background: white; border-radius: 15px; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; font-weight: 900; color: #020617; font-size: 10px;">ANTIC</div>
-                    <p style="font-size: 10px; color: var(--accent); font-weight: 900; text-transform: uppercase;">🛡️ Plateforme déclarée</p>
-                    <p style="font-size: 9px; color: #64748b; margin-top: 5px;">Conformité aux normes de cybersécurité (ANTIC - Cameroun)</p>
+                <div style="background:rgba(255,255,255,0.02); padding:20px; border-radius:20px; border:1px solid rgba(255,255,255,0.05); text-align:center;">
+                    <div style="width:50px; height:50px; background:white; border-radius:10px; margin:0 auto 10px; color:#020617; font-weight:900; display:flex; align-items:center; justify-content:center; font-size:9px;">ANTIC</div>
+                    <p style="font-size:9px; font-weight:900; color:var(--accent);">🛡️ PLATEFORME DÉCLARÉE</p>
+                    <p style="font-size:8px; color:#64748b; margin-top:5px;">Conformité Cybersécurité (ANTIC - Cameroun)</p>
                 </div>
             </div>
         </div>
-        <div style="text-align: center; margin-top: 60px; padding-top: 40px; border-top: 1px solid rgba(255,255,255,0.03); color: #475569; font-size: 10px; letter-spacing: 4px; font-weight: 900;">AERIO ALPHA © 2026 | L'EMPIRE SOUVERAIN</div>
+        <div style="text-align:center; margin-top:60px; color:#475569; font-size:10px; letter-spacing:4px; font-weight:900;">AERIO ALPHA © 2026</div>
     </footer>
 
     <script src="translations.js"></script>
