@@ -4,8 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AERIO | L'Empire Global du WiFi Zone</title>
-    <!-- ✅ POLICE POPPINS ÉLITE RÉPARÉE -->
-    <link href="https://fonts.googleapis.com" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700;900&display=swap" rel="stylesheet">
     <style>
         :root { --primary: #00C2FF; --bg: #020617; --glass: rgba(15, 23, 42, 0.7); --accent: #00F5A0; --neon: #7000FF; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
@@ -24,6 +23,9 @@
         @keyframes scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
         .info-card { width: 300px; background: var(--glass); padding: 30px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.03); backdrop-filter: blur(20px); }
         .flag-card { min-width: 180px; background: var(--glass); padding: 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column; align-items: center; }
+
+        footer { padding: 80px 8% 40px; background: rgba(0,0,0,0.4); border-top: 1px solid rgba(255,255,255,0.05); }
+        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; }
     </style>
 </head>
 <body>
@@ -61,6 +63,7 @@
         }, 100);
     });
 </script>
+
     <nav>
         <div class="logo">🛰️ AERIO</div>
         <div class="nav-links">
@@ -72,17 +75,16 @@
         </div>
     </nav>
 
-    <!-- 1. HERO SECTION -->
     <section style="padding: 180px 8% 100px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap;">
         <div class="hero-text" style="max-width: 600px;">
             <p style="color:var(--primary); font-weight:900; font-size:10px; letter-spacing:3px;">🛰️ PROTOCOLE ALPHA ACTIVÉ</p>
             <h1 style="font-size: 82px; font-weight: 900; line-height: 1.1; margin-bottom: 25px; letter-spacing: -4px;">Le Futur du <br><span style="color:var(--primary)">WiFi Zone.</span></h1>
             <p style="color: #64748b; font-size: 15px; margin-bottom: 35px; line-height: 1.6;">Monétisez votre connexion MikroTik avec la puissance du Mobile Money à l'échelle internationale.</p>
-            <a href="inscription.html" style="background:white; color:black; padding:18px 35px; border-radius:18px; text-decoration:none; font-weight:900; display:inline-block; font-size:15px;">Devenir Partenaire</a>
+            <a href="shop.html" style="background:white; color:black; padding:18px 35px; border-radius:18px; text-decoration:none; font-weight:900; display:inline-block; font-size:15px;">Devenir Partenaire</a>
         </div>
         <div class="live-card" style="background:var(--glass); padding:35px; border-radius:40px; width:100%; max-width:420px; text-align:center; border: 1px solid rgba(255,255,255,0.05);">
             <h3 style="font-size:9px; color:#475569; letter-spacing:2px; margin-bottom:15px;">VOTRE BUSINESS EN LIVE</h3>
-            <div id="global-flow" style="font-size:42px; font-weight:900; color:var(--primary);">0 F</div>
+            <div id="global-flow" style="font-size:42px; font-weight:900; color:var(--primary);">145 000 F</div>
             <div style="width:100%; height:6px; background:rgba(255,255,255,0.05); border-radius:10px; margin:20px 0;"><div style="width:75%; height:100%; background:var(--primary); box-shadow:0 0 20px var(--primary);"></div></div>
             <div style="display:flex; justify-content:space-between; font-size:8px; font-weight:900; color:#475569; text-transform:uppercase;">
                 <div>Réseau: <span style="color:var(--accent)">Actif</span></div>
@@ -91,7 +93,6 @@
         </div>
     </section>
 
-    <!-- 2. ARSENAL TACTIQUE (8 CARTES) -->
     <section style="padding: 80px 0; background: rgba(0,0,0,0.2);">
         <h2 style="text-align:center; margin-bottom:40px; font-weight:900; font-size:28px;">L'ARSENAL <span style="color:var(--primary)">TACTIQUE</span></h2>
         <div style="width:100%; overflow:hidden;">
@@ -108,7 +109,6 @@
         </div>
     </section>
 
-    <!-- 3. HUB INTERNATIONAL (LES 9 DRAPEAUX) -->
     <section style="padding: 80px 0; text-align:center;">
         <h2 style="font-weight:900; font-size:28px;">HUB <span style="color:var(--primary)">INTERNATIONAL</span></h2>
         <div style="width:100%; overflow:hidden; margin-top:40px;">
@@ -127,7 +127,6 @@
         </div>
     </section>
 
-    <!-- 4. LOCALISATION DES NŒUDS -->
     <section style="padding: 100px 8%; text-align: center;">
         <h2 style="font-weight:900; font-size:32px; margin-bottom:40px;">LOCALISATION <span style="color:var(--primary)">DES NŒUDS</span></h2>
         <div style="background: var(--glass); padding: 50px; border-radius: 50px; border: 1px solid var(--primary); display: flex; align-items: center; justify-content: center; gap: 30px; flex-wrap: wrap;">
@@ -139,7 +138,6 @@
         </div>
     </section>
 
-    <!-- 5. SECTION COMPARATIVE (AERIO vs LES AUTRES) -->
     <section style="padding: 100px 8%; background: rgba(0,0,0,0.3);">
         <h2 style="text-align:center; font-size:42px; font-weight:900; margin-bottom:60px; letter-spacing:-2px;">
             AERIO <span style="color:#64748b;">vs</span> <span style="color:var(--primary)">LES AUTRES</span>
@@ -166,28 +164,26 @@
         </div>
     </section>
 
-    <!-- 4. SECTION IMAGE REF 3 : SUPPORT WHATSAPP -->
     <section style="padding: 100px 8%;">
-        <div class="section-glass" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 50px; border-color: #25D366;">
+        <div style="background:var(--glass); padding:60px; border-radius:40px; border:1px solid #25D366; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 50px;">
             <div>
                 <h2 style="font-size: 32px; font-weight: 900; margin-bottom: 25px;">Envoyez-nous <span style="color:#25D366">Un Message Alpha.</span></h2>
-                <a href="https://wa.me" style="background:#25D366; color:white; padding:20px 40px; border-radius:20px; text-decoration:none; font-weight:900; display:inline-block;">💬 WHATSAPP DIRECT</a>
+                <a href="https://wa.me/237692487922?text=Bonjour%20AERIO,%20je%20souhaite%20obtenir%20des%20informations%20sur%20le%20système%20Alpha." style="background:#25D366; color:white; padding:20px 40px; border-radius:20px; text-decoration:none; font-weight:900; display:inline-block;">💬 WHATSAPP DIRECT</a>
             </div>
             <div style="font-size: 80px;">🛰️</div>
         </div>
     </section>
 
-    <!-- 5. FOOTER IMAGE REF 4 : SOUVERAINETÉ ANTIC CAMEROUN -->
     <footer>
         <div class="footer-grid">
             <div class="footer-col">
                 <h4>À Propos</h4>
-                <p style="color: #64748b; font-size: 12px;">AERIO est l'unité de monétisation souveraine au Cameroun.</p>
+                <p style="color: #64748b; font-size: 12px; margin-top:15px;">AERIO est l'unité de monétisation souveraine au Cameroun.</p>
                 <p style="margin-top:20px; font-size:11px; font-weight:900; color:var(--primary);">📍 Maroua, Cameroun 🇨🇲</p>
             </div>
             <div class="footer-col">
                 <h4>Sécurité & Conformité</h4>
-                <div style="background:rgba(255,255,255,0.02); padding:20px; border-radius:20px; border:1px solid rgba(255,255,255,0.05); text-align:center;">
+                <div style="background:rgba(255,255,255,0.02); padding:20px; border-radius:20px; border:1px solid rgba(255,255,255,0.05); text-align:center; margin-top:15px;">
                     <div style="width:50px; height:50px; background:white; border-radius:10px; margin:0 auto 10px; color:#020617; font-weight:900; display:flex; align-items:center; justify-content:center; font-size:9px;">ANTIC</div>
                     <p style="font-size:9px; font-weight:900; color:var(--accent);">🛡️ PLATEFORME DÉCLARÉE</p>
                     <p style="font-size:8px; color:#64748b; margin-top:5px;">Conformité Cybersécurité (ANTIC - Cameroun)</p>
@@ -197,8 +193,19 @@
         <div style="text-align:center; margin-top:60px; color:#475569; font-size:10px; letter-spacing:4px; font-weight:900;">AERIO ALPHA © 2026</div>
     </footer>
 
-    <script src="translations.js"></script>
-    <script>window.onload = function() { if(typeof applyTranslations === 'function') applyTranslations(); };</script>
+    <script>
+        // ✅ COMPTEUR DE REVENUS LIVE
+        let flow = 145000;
+        const flowDisplay = document.getElementById('global-flow');
+        
+        setInterval(() => {
+            flow += Math.floor(Math.random() * 75);
+            flowDisplay.innerText = flow.toLocaleString() + " F";
+        }, 2500);
+
+        window.onload = function() { 
+            if(typeof applyTranslations === 'function') applyTranslations(); 
+        };
+    </script>
 </body>
 </html>
-
