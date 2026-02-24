@@ -2,13 +2,13 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>AERIO | Command Center</title>
+    <title>AERIO | Centre de Commande</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;900&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #00C2FF;
-            --bg-deep: #0f1216; /* Le noir profond de ton image */
-            --card-bg: #1a1f26; /* Le gris anthracite des boutons */
+            --bg-deep: #0f1216;
+            --card-bg: #1a1f26;
             --accent-green: #00F5A0;
             --border: rgba(255, 255, 255, 0.03);
         }
@@ -20,97 +20,74 @@
             display: flex; 
             min-height: 100vh;
             color: white;
+            overflow-x: hidden; /* Empêche le défilement horizontal */
         }
 
-        /* --- LA SIDEBAR STYLE "IMAGE 6" --- */
+        /* --- SIDEBAR AVEC SCROLL INTERNE --- */
         .sidebar {
-            width: 320px;
+            width: 300px;
             background: #111418;
-            padding: 30px 20px;
+            padding: 30px 15px;
             height: 100vh;
             position: fixed;
             border-right: 1px solid var(--border);
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            overflow-y: auto; /* Permet de défiler dans le menu si trop long */
         }
+
+        /* Scrollbar stylisée pour la sidebar */
+        .sidebar::-webkit-scrollbar { width: 4px; }
+        .sidebar::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
 
         .logo-title {
             color: var(--primary);
-            font-weight: 900;
-            font-size: 24px;
-            margin-bottom: 30px;
-            padding-left: 15px;
+            font-weight: 900; font-size: 24px;
+            margin-bottom: 30px; padding-left: 10px;
             text-shadow: 0 0 15px rgba(0, 194, 255, 0.4);
         }
 
         .nav-button {
             background: var(--card-bg);
             border: 1px solid var(--border);
-            padding: 16px 20px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            text-decoration: none;
-            color: #d1d5db;
-            font-weight: 600;
-            font-size: 14px;
-            transition: 0.3s;
+            padding: 14px 18px; border-radius: 12px;
+            display: flex; align-items: center; justify-content: space-between;
+            text-decoration: none; color: #d1d5db;
+            font-weight: 600; font-size: 13px;
+            transition: 0.3s; margin-bottom: 8px;
         }
 
-        .nav-button:hover {
-            background: #232932;
-            transform: translateX(5px);
+        .nav-button:hover { background: #232932; transform: translateX(5px); }
+        .nav-button.active { border-left: 4px solid var(--primary); background: rgba(0, 194, 255, 0.1); }
+
+        .group-label {
+            font-size: 10px; color: #475569; font-weight: 900;
+            text-transform: uppercase; margin: 15px 0 10px 10px;
         }
 
-        .nav-button.active {
-            border-left: 4px solid var(--primary);
-            background: linear-gradient(90deg, rgba(0, 194, 255, 0.1), transparent);
-        }
-
-        /* Les Badges comme sur l'image */
-        .badge-stat {
-            background: rgba(0, 245, 160, 0.1);
-            color: var(--accent-green);
-            font-size: 10px;
-            padding: 4px 10px;
-            border-radius: 8px;
-            font-weight: 900;
-        }
-
-        .badge-active {
-            background: rgba(0, 194, 255, 0.2);
-            color: var(--primary);
-            font-size: 10px;
-            padding: 4px 10px;
-            border-radius: 8px;
-        }
+        /* Badges */
+        .badge-stat { background: rgba(0, 245, 160, 0.1); color: var(--accent-green); font-size: 9px; padding: 3px 8px; border-radius: 6px; }
+        .badge-active { background: var(--primary); color: var(--bg-deep); font-size: 9px; padding: 3px 8px; border-radius: 6px; font-weight: 900; }
 
         /* --- ZONE DE CONTENU --- */
         .content {
-            margin-left: 320px;
+            margin-left: 300px; /* Doit correspondre à la largeur sidebar */
             flex: 1;
             padding: 40px;
+            min-height: 100vh;
         }
 
         .stat-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-top: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px; margin-top: 25px;
         }
 
         .stat-card {
             background: var(--card-bg);
-            padding: 30px;
-            border-radius: 20px;
+            padding: 30px; border-radius: 24px;
             border: 1px solid var(--border);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
-
-        h1 { font-weight: 900; font-size: 32px; margin-bottom: 10px; }
-        .subtitle { color: var(--primary); font-size: 12px; font-weight: 900; letter-spacing: 2px; }
 
     </style>
 </head>
@@ -119,67 +96,48 @@
     <div class="sidebar">
         <div class="logo-title">AERIO</div>
 
-        <a href="#" class="nav-button">
-            <span>🏠 Tableau de Bord</span>
+        <div class="group-label">Menu Principal</div>
+        <a href="dashboard.html" class="nav-button active"><span>🏠 Tableau de Bord</span></a>
+        <a href="ajouter-wifi.html" class="nav-button"><span>✔️ Ajouter-wifi</span></a>
+        <a href="liste-wifi.html" class="nav-button"><span>📡 Mes Réseaux</span></a>
+
+        <div class="group-label">Performance</div>
+        <a href="statistiques-wifi.html" class="nav-button">
+            <span>📊 Statistiques</span>
+            <span class="badge-stat">LIVE ●</span>
         </a>
 
-        <a href="#" class="nav-button">
-            <span>✔️ Ajouter-wifi.hom</span>
-        </a>
+        <div class="group-label">Monétisation</div>
+        <a href="mes-tarifs.html" class="nav-button"><span>💎 Mes Tarifs</span></a>
+        <a href="mes-tickets.html" class="nav-button"><span>🎫 Mes Tickets</span></a>
+        <a href="comptabilite.html" class="nav-button"><span>👤 Comptabilité</span></a>
 
-        <a href="#" class="nav-button">
-            <span>✔️ Mon Réseaux</span>
-        </a>
-
-        <a href="#" class="nav-button">
-            <span>✔️ Tarifs & Billets</span>
-        </a>
-
-        <a href="#" class="nav-button">
-            <span>👥 Liste Zones</span>
-            <span class="badge-stat">Statistiques ●</span>
-        </a>
-
-        <a href="#" class="nav-button active">
-            <span>📠 Statistiques-wifi</span>
-            <span class="badge-active">active</span>
-        </a>
-
-        <a href="#" class="nav-button">
-            <span>✔️ Cres-tarif</span>
-            <span style="font-size: 10px; opacity: 0.6;">Mes Tickets</span>
-        </a>
-
-        <a href="#" class="nav-button">
-            <span>📁 Liste-des-tarifs</span>
-        </a>
-
-        <a href="#" class="nav-button">
-            <span>✖️ Liste-des-tickets</span>
-        </a>
-
-        <a href="#" class="nav-button">
-            <span>👤 Comptabilitaite</span>
+        <div class="group-label">Assistance & Compte</div>
+        <a href="profil.html" class="nav-button"><span>👤 Mon Profil</span></a>
+        <a href="support.html" class="nav-button"><span>🎧 Support Client</span></a>
+        <a href="contact.html" class="nav-button"><span>📞 Contact</span></a>
+        <a href="documentation.html" class="nav-button" style="border: 1px dashed var(--primary);">
+            <span style="color: var(--primary);">📄 Documentation</span>
         </a>
     </div>
 
     <div class="content">
-        <p class="subtitle">SYSTÈME ANALYTIQUE</p>
-        <h1>Statistiques <span style="color:var(--primary)">Globales</span></h1>
+        <p style="color: var(--primary); font-size: 10px; font-weight: 900; letter-spacing: 3px;">SYSTÈME OPÉRATIONNEL</p>
+        <h1 style="font-size: 36px; font-weight: 900;">Tableau de <span style="color:var(--primary)">Bord</span></h1>
 
         <div class="stat-grid">
             <div class="stat-card">
-                <p style="color:#64748b; font-size:10px; font-weight:900;">CHIFFRE D'AFFAIRES</p>
-                <h2 style="font-size:32px; margin-top:10px;">0 XAF</h2>
+                <p style="color:#64748b; font-size:10px; font-weight:900; letter-spacing:1px;">CHIFFRE D'AFFAIRES (MTN/ORANGE)</p>
+                <h2 style="font-size:36px; margin-top:10px; font-weight:900;">0 <small style="font-size:14px; color:var(--primary)">XAF</small></h2>
             </div>
             <div class="stat-card">
-                <p style="color:#64748b; font-size:10px; font-weight:900;">TICKETS VENDUS</p>
-                <h2 style="font-size:32px; margin-top:10px;">0</h2>
+                <p style="color:#64748b; font-size:10px; font-weight:900; letter-spacing:1px;">TICKETS GÉNÉRÉS</p>
+                <h2 style="font-size:36px; margin-top:10px; font-weight:900;">0</h2>
             </div>
         </div>
-        
-        <div style="margin-top:40px; height:300px; background:var(--card-bg); border-radius:30px; display:flex; align-items:center; justify-content:center; border:1px dashed #333;">
-            <p style="color:#444; font-weight:900;">[ GRAPHES EN ATTENTE DE DONNÉES ]</p>
+
+        <div style="margin-top: 30px; height: 600px; background: rgba(255,255,255,0.02); border-radius: 30px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center;">
+            <p style="color: #334155;">[ Zone de défilement active : Vos graphiques s'afficheront ici ]</p>
         </div>
     </div>
 
