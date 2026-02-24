@@ -2,8 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AERIO | Registre des Accès Alpha</title>
+    <title>AERIO | Registre des Accès</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -11,50 +10,26 @@
             --bg-deep: #020617; --card-bg: rgba(15, 23, 42, 0.7);
             --border: rgba(255, 255, 255, 0.05); --sidebar-w: 280px;
         }
-
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         body { background: var(--bg-deep); color: white; display: flex; min-height: 100vh; }
 
-        /* --- SIDEBAR SYNC --- */
         .sidebar { width: var(--sidebar-w); background: #0b0f1a; padding: 30px 15px; height: 100vh; position: fixed; border-right: 1px solid var(--border); }
-        .logo-title { color: var(--primary); font-weight: 900; font-size: 26px; margin-bottom: 35px; padding-left: 10px; }
-        .nav-button { background: rgba(255,255,255,0.02); padding: 12px 15px; border-radius: 12px; display: flex; text-decoration: none; font-size: 12px; margin-bottom: 5px; color: #94a3b8; border: 1px solid var(--border); }
-        .nav-button.active { border-left: 4px solid var(--primary); background: rgba(0, 194, 255, 0.1); color: var(--primary); }
-
         .content { margin-left: var(--sidebar-w); flex: 1; padding: 40px; }
 
-        /* --- FILTRES DE SOURCE --- */
-        .filter-bar { display: flex; gap: 15px; margin-bottom: 30px; }
-        .filter-pill { padding: 8px 18px; border-radius: 20px; font-size: 10px; font-weight: 800; cursor: pointer; border: 1px solid var(--border); background: var(--card-bg); transition: 0.3s; }
-        .filter-pill:hover { border-color: var(--primary); }
-        .filter-pill.active { background: var(--primary); color: #020617; border-color: var(--primary); }
-
-        /* --- TABLEAU ALPHA --- */
-        .table-container { background: var(--card-bg); border-radius: 25px; border: 1px solid var(--border); padding: 25px; backdrop-filter: blur(10px); }
+        /* --- TABLE STYLE --- */
+        .table-container { background: var(--card-bg); border-radius: 25px; border: 1px solid var(--border); padding: 25px; min-height: 400px; display: flex; flex-direction: column; }
         table { width: 100%; border-collapse: collapse; }
-        th { text-align: left; padding: 15px; font-size: 10px; color: #64748b; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid var(--border); }
-        td { padding: 18px 15px; font-size: 13px; border-bottom: 1px solid var(--border); }
-        
-        /* --- BADGES EXCLUSIFS --- */
-        .source-badge { font-size: 9px; padding: 4px 8px; border-radius: 6px; font-weight: 800; text-transform: uppercase; }
-        .src-manual { background: rgba(0, 194, 255, 0.1); color: var(--primary); }
-        .src-csv { background: rgba(0, 245, 160, 0.1); color: var(--accent); }
-        .src-sync { background: rgba(188, 0, 255, 0.1); color: var(--purple); }
+        th { text-align: left; padding: 15px; font-size: 10px; color: #64748b; text-transform: uppercase; border-bottom: 1px solid var(--border); }
 
-        .status-active { color: var(--accent); display: flex; align-items: center; gap: 5px; }
-        .status-active::before { content: ""; width: 6px; height: 6px; background: var(--accent); border-radius: 50%; box-shadow: 0 0 8px var(--accent); }
+        /* --- EMPTY STATE (L'état quand c'est vide) --- */
+        .empty-state { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #475569; text-align: center; }
+        .empty-icon { font-size: 50px; margin-bottom: 15px; opacity: 0.3; }
     </style>
 </head>
 <body>
 
     <div class="sidebar">
-        <div class="logo-title">AERIO</div>
-        <div style="font-size: 9px; color: #475569; font-weight: 900; text-transform: uppercase; margin: 25px 0 10px 10px;">Offres & Accès</div>
-        <a href="ajouter-tarif.html" class="nav-button"><i>💎</i> Créer un Tarif</a>
-        <a href="liste-tarif.html" class="nav-button"><i>📜</i> Ma Grille Tarifaire</a>
-        <a href="ajouter-ticket.html" class="nav-button"><i>🎫</i> Générer un Pass</a>
-        <a href="liste-tickets.html" class="nav-button active"><i>🔑</i> Registre des Accès</a>
-    </div>
+        </div>
 
     <div class="content">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
@@ -62,14 +37,7 @@
                 <h1 style="font-size: 28px; font-weight: 900;">Registre des <span style="color:var(--primary)">Accès</span></h1>
                 <p style="color: #64748b; font-size: 12px;">Monitoring en temps réel des flux de connexion.</p>
             </div>
-            <button style="background: var(--primary); color: #020617; border: none; padding: 10px 20px; border-radius: 12px; font-weight: 900; font-size: 11px; cursor: pointer;">EXPORTER (.XLSX)</button>
-        </div>
-
-        <div class="filter-bar">
-            <div class="filter-pill active">TOUS LES PASS</div>
-            <div class="filter-pill">GÉNÉRATION MANUELLE</div>
-            <div class="filter-pill">IMPORTS CSV</div>
-            <div class="filter-pill">AUTO-SYNC CLOUD</div>
+            <button style="background: rgba(255,255,255,0.05); color: #475569; border: 1px solid var(--border); padding: 10px 20px; border-radius: 12px; font-weight: 900; font-size: 11px; cursor: not-allowed;">EXPORTER (.XLSX)</button>
         </div>
 
         <div class="table-container">
@@ -83,30 +51,14 @@
                         <th>Statut</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td style="font-family: monospace; font-weight: 900; color: white;">AX-9821-QR</td>
-                        <td>1 Heure (100 XAF)</td>
-                        <td><span class="source-badge src-manual">Manuel</span></td>
-                        <td>24/02/2026 - 14:20</td>
-                        <td><span class="status-active">En ligne</span></td>
-                    </tr>
-                    <tr>
-                        <td style="font-family: monospace; font-weight: 900; color: white;">BT-4410-ZZ</td>
-                        <td>24 Heures (500 XAF)</td>
-                        <td><span class="source-badge src-csv">CSV Import</span></td>
-                        <td>24/02/2026 - 13:05</td>
-                        <td>Terminé</td>
-                    </tr>
-                    <tr>
-                        <td style="font-family: monospace; font-weight: 900; color: white;">CL-0029-AA</td>
-                        <td>1 Semaine (2000 XAF)</td>
-                        <td><span class="source-badge src-sync">Auto-Sync</span></td>
-                        <td>---</td>
-                        <td style="color: #64748b;">En attente</td>
-                    </tr>
-                </tbody>
             </table>
+
+            <div class="empty-state">
+                <div class="empty-icon">📂</div>
+                <p style="font-weight: 600;">Aucun pass généré pour le moment</p>
+                <p style="font-size: 12px; margin-top: 5px;">Les accès créés ou importés apparaîtront ici automatiquement.</p>
+                <a href="ajouter-ticket.html" style="margin-top: 20px; color: var(--primary); text-decoration: none; font-size: 12px; font-weight: 900;">+ GÉNÉRER MON PREMIER PASS</a>
+            </div>
         </div>
     </div>
 
