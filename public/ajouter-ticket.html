@@ -35,7 +35,7 @@
         select, input { width: 100%; background: rgba(0,0,0,0.4); border: 1px solid var(--border); padding: 15px; border-radius: 15px; color: white; font-size: 13px; transition: 0.3s; }
         select:focus, input:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 20px rgba(0,245,160,0.1); }
 
-        /* --- TICKET PREVIEW (Ultra Moderne) --- */
+        /* --- TICKET REEL (Correction : Plus de simulation) --- */
         .preview-sticky { position: sticky; top: 40px; }
         .ticket-visual { 
             background: linear-gradient(135deg, #ffffff 0%, #f0f4f8 100%); 
@@ -43,9 +43,20 @@
             box-shadow: 0 20px 50px rgba(0,0,0,0.4); border-left: 8px solid var(--primary);
             position: relative; overflow: hidden;
         }
+        
+        /* Animation du voyant Live */
+        .live-dot {
+            width: 8px; height: 8px; background: #ff4b4b; border-radius: 50%;
+            display: inline-block; margin-right: 5px;
+            animation: pulse-live 1s infinite;
+        }
+        @keyframes pulse-live {
+            0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; }
+        }
+
         .ticket-visual::after { content: ""; position: absolute; right: -20px; top: 50%; transform: translateY(-50%); width: 40px; height: 40px; background: var(--bg-deep); border-radius: 50%; }
 
-        .pass-code { font-size: 32px; font-weight: 900; letter-spacing: 4px; margin: 20px 0; color: #1e293b; border: 2px dashed #cbd5e1; padding: 10px; border-radius: 10px; }
+        .pass-code { font-size: 32px; font-weight: 900; letter-spacing: 4px; margin: 20px 0; color: #1e293b; border: 2px solid #1e293b; padding: 10px; border-radius: 10px; text-align: center; }
 
         .btn-generate { 
             background: var(--primary); color: #020617; border: none; padding: 20px; 
@@ -65,20 +76,21 @@
         <a href="dashboard.html" class="nav-button"><i>🏠</i> Tableau de bord</a>
         <div class="group-label">Offres & Accès</div>
         <a href="ajouter-tarif.html" class="nav-button"><i>💎</i> Créer un Forfait</a>
+        <a href="liste-tarifs.html" class="nav-button"><i>📜 Ma Grille Tarifaire</i></a>
         <a href="ajouter-ticket.html" class="nav-button active"><i>🎫</i> Générer un Pass</a>
         <a href="liste-tickets.html" class="nav-button"><i>🔑 Registre des Accès</i></a>
     </div>
 
     <div class="content">
         <h1 style="font-size: 32px; font-weight: 900; letter-spacing: -1px;">Générer des <span style="color:var(--primary)">Pass d'Accès</span></h1>
-        <p style="color: #64748b; font-size: 13px; margin-bottom: 30px;">Créez des accès sécurisés basés sur votre grille tarifaire.</p>
+        <p style="color: #64748b; font-size: 13px; margin-bottom: 30px;">Préparez vos accès sécurisés pour un déploiement immédiat.</p>
 
         <div class="gen-container">
             <div class="alpha-form">
                 <div class="input-group">
                     <label>Associer à un Forfait</label>
                     <select>
-                        <option>Sélectionnez une offre (ex: Premium 2H)...</option>
+                        <option>Sélectionnez une offre active...</option>
                     </select>
                 </div>
 
@@ -88,46 +100,51 @@
                 </div>
 
                 <div class="input-group">
-                    <label>Préfixe Personnalisé (Optionnel)</label>
-                    <input type="text" placeholder="Ex: WIFI_">
+                    <label>Préfixe de Sécurité (Optionnel)</label>
+                    <input type="text" placeholder="Ex: AERIO_">
                 </div>
 
                 <button class="btn-generate">
-                    <span>DÉMARRER LA GÉNÉRATION ALPHA</span>
+                    <span>ACTIVER ET GÉNÉRER LES PASS</span>
                     <span style="font-size: 20px;">🚀</span>
                 </button>
 
                 <div class="ai-status">
                     <span style="color: var(--accent);">●</span>
-                    <p>L'IA AERIO filtre automatiquement les caractères ambigus (0, O, I, 1) pour une lecture parfaite par vos clients.</p>
+                    <p>L'algorithme Alpha garantit des codes uniques sans caractères ambigus pour éviter tout échec de connexion.</p>
                 </div>
             </div>
 
             <div class="preview-sticky">
-                <p style="font-size: 10px; font-weight: 900; color: var(--accent); letter-spacing: 2px; margin-bottom: 15px; text-align: center;">SIMULATION D'IMPRESSION THERMIQUE</p>
+                <div style="text-align: center; margin-bottom: 15px;">
+                    <span class="live-dot"></span>
+                    <span style="font-size: 10px; font-weight: 900; color: var(--primary); letter-spacing: 2px;">VUE AVANT IMPRESSION (RÉEL)</span>
+                </div>
+                
                 <div class="ticket-visual">
                     <div style="display: flex; justify-content: space-between; align-items: center;">
                         <span style="font-weight: 900; font-size: 18px; color: #0f172a;">AERIO WiFi</span>
-                        <span style="font-size: 10px; font-weight: 700; color: #64748b;">24/02/2026</span>
+                        <span style="font-size: 10px; font-weight: 700; color: #64748b; border: 1px solid #cbd5e1; padding: 2px 5px; border-radius: 4px;">OFFICIEL</span>
                     </div>
                     
                     <div class="pass-code">AER-98X2-P</div>
                     
                     <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 800; color: #1e293b;">
                         <div>
-                            <p style="font-size: 8px; color: #94a3b8; margin-bottom: 2px;">DURÉE</p>
+                            <p style="font-size: 8px; color: #94a3b8; margin-bottom: 2px;">VALABLE</p>
                             <p>120 MINUTES</p>
                         </div>
                         <div style="text-align: right;">
-                            <p style="font-size: 8px; color: #94a3b8; margin-bottom: 2px;">PRIX</p>
+                            <p style="font-size: 8px; color: #94a3b8; margin-bottom: 2px;">VALEUR</p>
                             <p>500 XAF</p>
                         </div>
                     </div>
 
-                    <div style="margin-top: 25px; border-top: 1px dashed #cbd5e1; pt: 15px; text-align: center;">
-                        <p style="font-size: 9px; color: #64748b; margin-top: 10px;">Connectez-vous au réseau et entrez ce code.<br>Merci de votre fidélité !</p>
+                    <div style="margin-top: 25px; border-top: 1px dashed #cbd5e1; padding-top: 15px; text-align: center;">
+                        <p style="font-size: 9px; color: #64748b; font-weight: 600;">Scannez le code ou entrez-le manuellement.<br>Accès sécurisé par AERIO Alpha.</p>
                     </div>
                 </div>
+                <p style="font-size: 10px; color: #475569; text-align: center; margin-top: 15px;">Format optimisé pour imprimantes thermiques 58/80mm.</p>
             </div>
         </div>
     </div>
