@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <style>
+        :root {
+            --primary: #00C2FF;
+            --bg-sidebar: #0f172a;
+            --hover-bg: rgba(255, 255, 255, 0.05);
+            --text-dim: #94a3b8;
+            --accent-green: #00F5A0;
+        }
+
+        .sidebar {
+            width: 280px;
+            background: var(--bg-sidebar);
+            height: 100vh;
+            padding: 25px;
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo-area {
+            font-size: 24px;
+            font-weight: 900;
+            color: var(--primary);
+            letter-spacing: -1px;
+            margin-bottom: 40px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-group { margin-bottom: 30px; }
+
+        .group-title {
+            font-size: 10px;
+            font-weight: 900;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+            padding-left: 10px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 15px;
+            border-radius: 12px;
+            text-decoration: none;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            transition: 0.3s;
+            margin-bottom: 5px;
+        }
+
+        .nav-item:hover {
+            background: var(--hover-bg);
+            color: var(--primary);
+        }
+
+        .nav-item.active {
+            background: rgba(0, 194, 255, 0.1);
+            color: var(--primary);
+            border-left: 3px solid var(--primary);
+        }
+
+        /* Badge Statistique "Live" */
+        .stat-badge {
+            background: rgba(0, 245, 160, 0.1);
+            color: var(--accent-green);
+            font-size: 9px;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .dot {
+            width: 6px;
+            height: 6px;
+            background: var(--accent-green);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--accent-green);
+        }
+
+        .icon { width: 20px; opacity: 0.7; }
+    </style>
+</head>
+<body>
+
+<div class="sidebar">
+    <div class="logo-area">
+        <div style="width: 30px; height: 30px; background: var(--primary); border-radius: 8px;"></div>
+        AERIO <span>.</span>
+    </div>
+
+    <div class="nav-group">
+        <a href="dashboard.html" class="nav-item">
+            <span>🏠 Tableau de Bord</span>
+        </a>
+    </div>
+
+    <div class="nav-group">
+        <div class="group-title">Réseau & Zones</div>
+        <a href="ajouter-wifi.html" class="nav-item">
+            <span>➕ Ajouter une Zone</span>
+        </a>
+        <a href="liste-wifi.html" class="nav-item">
+            <span>📡 Liste des Zones</span>
+        </a>
+        <a href="statistiques-wifi.html" class="nav-item active">
+            <span>📊 Statistiques</span>
+            <div class="stat-badge">
+                <div class="dot"></div> LIVE
+            </div>
+        </a>
+    </div>
+
+    <div class="nav-group">
+        <div class="group-title">Monétisation</div>
+        <a href="mes-tarifs.html" class="nav-item">
+            <span>💎 Mes Tarifs</span>
+        </a>
+        <a href="liste-des-tickets.html" class="nav-item">
+            <span>🎫 Mes Tickets</span>
+        </a>
+    </div>
+
+    <div class="nav-group">
+        <div class="group-title">Finance</div>
+        <a href="comptabilite.html" class="nav-item">
+            <span>🏛️ Ma Comptabilité</span>
+        </a>
+        <a href="parrainages.html" class="nav-item">
+            <span>👥 Parrainages</span>
+        </a>
+    </div>
+</div>
+
+</body>
+</html>
