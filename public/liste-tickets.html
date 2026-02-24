@@ -2,65 +2,123 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>AERIO | Registre des Accès</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AERIO | Registre des Accès Alpha</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #00C2FF; --accent: #00F5A0; --purple: #BC00FF;
-            --bg-deep: #020617; --card-bg: rgba(15, 23, 42, 0.7);
-            --border: rgba(255, 255, 255, 0.05); --sidebar-w: 280px;
+            --primary: #00C2FF; --accent: #00F5A0; --purple: #BC00FF; --danger: #FF3B3B;
+            --bg-deep: #020617; --card-bg: rgba(15, 23, 42, 0.8);
+            --border: rgba(255, 255, 255, 0.08); --sidebar-w: 260px;
         }
+
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        body { background: var(--bg-deep); color: white; display: flex; min-height: 100vh; }
+        body { background: var(--bg-deep); color: white; display: flex; min-height: 100vh; overflow-x: hidden; }
 
+        /* --- SIDEBAR --- */
         .sidebar { width: var(--sidebar-w); background: #0b0f1a; padding: 30px 15px; height: 100vh; position: fixed; border-right: 1px solid var(--border); }
-        .content { margin-left: var(--sidebar-w); flex: 1; padding: 40px; }
+        .logo-title { color: var(--primary); font-weight: 900; font-size: 24px; margin-bottom: 40px; }
+        .nav-link { padding: 12px; color: #64748b; text-decoration: none; display: block; font-size: 13px; border-radius: 10px; transition: 0.3s; margin-bottom: 5px; }
+        .nav-link.active { background: rgba(0, 194, 255, 0.1); color: var(--primary); font-weight: 600; }
 
-        /* --- TABLE STYLE --- */
-        .table-container { background: var(--card-bg); border-radius: 25px; border: 1px solid var(--border); padding: 25px; min-height: 400px; display: flex; flex-direction: column; }
-        table { width: 100%; border-collapse: collapse; }
-        th { text-align: left; padding: 15px; font-size: 10px; color: #64748b; text-transform: uppercase; border-bottom: 1px solid var(--border); }
+        /* --- MAIN CONTENT --- */
+        .main-content { margin-left: var(--sidebar-w); flex: 1; padding: 30px; }
+        .header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 1px solid var(--border); padding-bottom: 15px; }
 
-        /* --- EMPTY STATE (L'état quand c'est vide) --- */
-        .empty-state { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #475569; text-align: center; }
-        .empty-icon { font-size: 50px; margin-bottom: 15px; opacity: 0.3; }
+        /* --- STATS MINI-CARDS --- */
+        .mini-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 30px; }
+        .stat-box { background: var(--card-bg); border: 1px solid var(--border); padding: 15px; border-radius: 15px; text-align: center; }
+        .stat-box h4 { font-size: 10px; color: #64748b; text-transform: uppercase; margin-bottom: 5px; }
+        .stat-box p { font-size: 18px; font-weight: 900; color: var(--primary); }
+
+        /* --- TABLE ALPHA --- */
+        .table-container { background: var(--card-bg); border-radius: 25px; border: 1px solid var(--border); padding: 20px; backdrop-filter: blur(10px); }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th { text-align: left; padding: 15px; font-size: 10px; color: #64748b; text-transform: uppercase; letter-spacing: 1px; }
+        td { padding: 15px; font-size: 12px; border-top: 1px solid var(--border); }
+
+        /* --- BADGES & STATUS --- */
+        .badge { padding: 4px 10px; border-radius: 20px; font-size: 9px; font-weight: 900; text-transform: uppercase; }
+        .src-manuel { background: rgba(0, 194, 255, 0.1); color: var(--primary); }
+        .src-csv { background: rgba(0, 245, 160, 0.1); color: var(--accent); }
+        .src-cloud { background: rgba(188, 0, 255, 0.1); color: var(--purple); }
+
+        .status-online { display: flex; align-items: center; gap: 6px; color: var(--accent); }
+        .pulse-dot { width: 6px; height: 6px; background: var(--accent); border-radius: 50%; box-shadow: 0 0 10px var(--accent); animation: pulse 1.5s infinite; }
+
+        /* --- ACTIONS --- */
+        .btn-revoke { background: rgba(255, 59, 59, 0.1); color: var(--danger); border: 1px solid rgba(255, 59, 59, 0.2); padding: 6px 12px; border-radius: 8px; font-size: 10px; font-weight: 800; cursor: pointer; transition: 0.3s; }
+        .btn-revoke:hover { background: var(--danger); color: white; }
+
+        @keyframes pulse { 0% { opacity: 0.4; } 50% { opacity: 1; } 100% { opacity: 0.4; } }
+        
+        .empty-state { text-align: center; padding: 60px; color: #475569; }
     </style>
 </head>
 <body>
 
     <div class="sidebar">
+        <div class="logo-title">AERIO</div>
+        <a href="#" class="nav-link">🏠 Dashboard</a>
+        <a href="ajouter-tarif.html" class="nav-link">💎 Ajouter un Tarif</a>
+        <a href="ajouter-ticket.html" class="nav-link">🎫 Générer un Pass</a>
+        <a href="liste-tickets.html" class="nav-link active">🔑 Registre des Accès</a>
+    </div>
+
+    <div class="main-content">
+        <div class="header-flex">
+            <div>
+                <h1 style="font-size: 24px; font-weight: 900;">Registre des <span style="color:var(--primary)">Accès</span></h1>
+                <p style="color: #64748b; font-size: 11px;">Surveillance des flux et révocation en temps réel.</p>
+            </div>
+            <button style="background: var(--primary); color: #020617; border: none; padding: 10px 20px; border-radius: 10px; font-weight: 900; font-size: 11px; cursor: pointer;">EXPORTER DATA</button>
         </div>
 
-    <div class="content">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
-            <div>
-                <h1 style="font-size: 28px; font-weight: 900;">Registre des <span style="color:var(--primary)">Accès</span></h1>
-                <p style="color: #64748b; font-size: 12px;">Monitoring en temps réel des flux de connexion.</p>
-            </div>
-            <button style="background: rgba(255,255,255,0.05); color: #475569; border: 1px solid var(--border); padding: 10px 20px; border-radius: 12px; font-weight: 900; font-size: 11px; cursor: not-allowed;">EXPORTER (.XLSX)</button>
+        <div class="mini-stats">
+            <div class="stat-box"><h4>Total Pass</h4><p>0</p></div>
+            <div class="stat-box"><h4>En Ligne</h4><p style="color:var(--accent)">0</p></div>
+            <div class="stat-box"><h4>Expirés</h4><p style="color:#64748b">0</p></div>
+            <div class="stat-box"><h4>Révoqués</h4><p style="color:var(--danger)">0</p></div>
         </div>
 
         <div class="table-container">
             <table>
                 <thead>
                     <tr>
-                        <th>Code d'Accès</th>
-                        <th>Forfait</th>
+                        <th>Code d'accès</th>
                         <th>Source</th>
-                        <th>Date d'Activation</th>
+                        <th>Utilisateur / Zone</th>
                         <th>Statut</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
+                <tbody id="ticket-body">
+                    <tr>
+                        <td colspan="5">
+                            <div class="empty-state">
+                                <span style="font-size: 40px; display: block; margin-bottom: 10px; opacity: 0.2;">📂</span>
+                                <p style="font-weight: 700; font-size: 14px;">Aucune injection détectée</p>
+                                <p style="font-size: 11px; margin-top: 5px;">Utilisez l'Architecte de Pass pour déployer des accès sur le réseau.</p>
+                                <a href="ajouter-ticket.html" style="color: var(--primary); text-decoration: none; font-size: 11px; font-weight: 900; display: inline-block; margin-top: 15px;">+ GÉNÉRER UN PASS MAINTENANT</a>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
             </table>
-
-            <div class="empty-state">
-                <div class="empty-icon">📂</div>
-                <p style="font-weight: 600;">Aucun pass généré pour le moment</p>
-                <p style="font-size: 12px; margin-top: 5px;">Les accès créés ou importés apparaîtront ici automatiquement.</p>
-                <a href="ajouter-ticket.html" style="margin-top: 20px; color: var(--primary); text-decoration: none; font-size: 12px; font-weight: 900;">+ GÉNÉRER MON PREMIER PASS</a>
-            </div>
         </div>
     </div>
 
+    <script>
+        // Fonction pour simuler la révocation d'un accès
+        function revokeAccess(btn) {
+            if(confirm("❗ VOULEZ-VOUS RÉVOQUER CET ACCÈS ? \nCela coupera la connexion de l'utilisateur immédiatement.")) {
+                const row = btn.closest('tr');
+                row.style.opacity = '0.3';
+                btn.innerHTML = "RÉVOQUÉ";
+                btn.disabled = true;
+                btn.style.cursor = "not-allowed";
+            }
+        }
+    </script>
 </body>
 </html>
