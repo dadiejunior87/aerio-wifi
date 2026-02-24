@@ -3,94 +3,132 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AERIO | Accréditation Globale Alpha</title>
-    <!-- ✅ POLICE POPPINS ÉLITE -->
-    <link href="https://fonts.googleapis.com" rel="stylesheet">
+    <title>AERIO | Inscription Partenaire Alpha</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;900&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #00C2FF; --bg: #020617; --glass: rgba(15, 23, 42, 0.7); --accent: #00F5A0; }
+        :root {
+            --primary: #00F5A0; --accent: #00C2FF; --bg: #020617;
+            --card: rgba(15, 23, 42, 0.8); --border: rgba(255, 255, 255, 0.1);
+        }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        body { background: var(--bg); color: white; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 40px 5%; background-image: radial-gradient(circle at top right, rgba(0, 194, 255, 0.05), transparent); overflow-x: hidden; }
-
-        /* ✅ DESIGN GLASSMORPHISM "GLOBAL" [1.5] */
-        .join-card { background: var(--glass); backdrop-filter: blur(40px); padding: 50px; border-radius: 40px; border: 1px solid rgba(255,255,255,0.05); width: 100%; max-width: 750px; text-align: center; box-shadow: 0 25px 50px rgba(0,0,0,0.5); border-bottom: 4px solid var(--primary); }
         
-        h1 { font-size: 32px; font-weight: 900; margin-bottom: 10px; letter-spacing: -1px; text-transform: uppercase; }
-        .global-badge { display: inline-block; padding: 5px 15px; background: rgba(0, 194, 255, 0.1); color: var(--primary); border-radius: 50px; font-size: 10px; font-weight: 900; letter-spacing: 2px; margin-bottom: 30px; border: 1px solid var(--primary); }
+        body { 
+            background: var(--bg); color: white; height: 100vh; 
+            display: flex; align-items: center; justify-content: center;
+            overflow: hidden; position: relative;
+        }
 
-        /* ✅ FORMULAIRE MULTI-PAYS TACTIQUE */
-        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; text-align: left; }
-        @media (max-width: 768px) { .form-grid { grid-template-columns: 1fr; } }
+        /* Effet de fond "Glow" */
+        body::before {
+            content: ""; position: absolute; width: 500px; height: 500px;
+            background: radial-gradient(circle, rgba(0, 245, 160, 0.05) 0%, transparent 70%);
+            top: -10%; left: -10%;
+        }
 
-        .input-group { display: flex; flex-direction: column; gap: 8px; }
-        label { font-size: 9px; font-weight: 900; color: var(--primary); letter-spacing: 1px; text-transform: uppercase; }
-        input { width: 100%; padding: 16px 22px; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 18px; color: white; font-size: 13px; outline: none; transition: 0.3s; }
-        input:focus { border-color: var(--primary); box-shadow: 0 0 20px rgba(0, 194, 255, 0.1); }
+        .auth-container {
+            width: 100%; max-width: 450px; z-index: 10; padding: 20px;
+            animation: fadeIn 1s ease-out;
+        }
 
-        .btn-join { grid-column: span 2; padding: 22px; background: var(--primary); color: #020617; border-radius: 22px; font-weight: 900; border: none; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; margin-top: 20px; transition: 0.4s; font-size: 14px; }
-        @media (max-width: 768px) { .btn-join { grid-column: span 1; } }
-        .btn-join:hover { transform: translateY(-5px); box-shadow: 0 15px 40px rgba(0, 194, 255, 0.3); background: white; }
+        .auth-card {
+            background: var(--card); backdrop-filter: blur(20px);
+            padding: 40px; border-radius: 35px; border: 1px solid var(--border);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+        }
 
-        .back-link { display: block; margin-top: 40px; color: #475569; text-decoration: none; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 3px; }
+        .logo-area { text-align: center; margin-bottom: 30px; }
+        .logo-area h1 { font-size: 35px; font-weight: 900; letter-spacing: -2px; color: var(--accent); }
+        .logo-area p { font-size: 10px; color: #64748b; text-transform: uppercase; letter-spacing: 2px; font-weight: 700; }
+
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-size: 10px; font-weight: 800; color: var(--primary); margin-bottom: 8px; text-transform: uppercase; }
+        
+        input {
+            width: 100%; background: rgba(0,0,0,0.3); border: 1px solid var(--border);
+            padding: 15px; border-radius: 12px; color: white; font-size: 14px;
+            transition: 0.3s;
+        }
+        input:focus { border-color: var(--primary); outline: none; background: rgba(0,0,0,0.5); box-shadow: 0 0 15px rgba(0, 245, 160, 0.1); }
+
+        .btn-join {
+            width: 100%; background: linear-gradient(90deg, var(--primary), var(--accent));
+            color: #020617; border: none; padding: 18px; border-radius: 12px;
+            font-weight: 900; font-size: 14px; cursor: pointer; margin-top: 10px;
+            transition: 0.3s; text-transform: uppercase;
+        }
+        .btn-join:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0, 245, 160, 0.3); }
+
+        .footer-link { text-align: center; margin-top: 25px; font-size: 12px; color: #64748b; }
+        .footer-link a { color: var(--accent); text-decoration: none; font-weight: 700; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
-    <div class="join-card">
-        <div class="global-badge">🌍 PROTOCOLE MULTI-PAYS ACTIVÉ</div>
-        <h1>Accréditation <span style="color:var(--primary)">Partenaire.</span></h1>
-        <p style="color: #64748b; font-size: 13px; margin-bottom: 40px;">Rejoignez l'infrastructure AERIO. Votre pays est notre terrain de jeu. Remplissez votre manifeste de déploiement mondial.</p>
-
-        <!-- ✅ LIAISON DIRECTE VERS TON WHATSAPP (+237) -->
-        <form class="form-grid" id="alphaForm" onsubmit="sendAlphaRequest(event)">
-            <div class="input-group">
-                <label>Nom complet de l'Agent *</label>
-                <input type="text" id="name" placeholder="Ex: Jean Alpha" required>
-            </div>
-            <div class="input-group">
-                <label>Indicatif & WhatsApp *</label>
-                <input type="text" id="whatsapp" placeholder="Ex: +33 / +237 / +221" required>
-            </div>
-            <div class="input-group">
-                <label>Adresse Email Stratégique *</label>
-                <input type="email" id="email" placeholder="agent@aerio.com" required>
-            </div>
-            <div class="input-group">
-                <label>Pays de l'Opération (Multi-Pays) *</label>
-                <input type="text" id="country" placeholder="Cameroun, France, Mali..." required>
-            </div>
-            <div class="input-group">
-                <label>Mot de passe Alpha *</label>
-                <input type="password" placeholder="••••••••" required>
-            </div>
-            <div class="input-group">
-                <label>Confirmation *</label>
-                <input type="password" placeholder="••••••••" required>
-            </div>
-            
-            <div style="grid-column: span 2; display: flex; align-items: center; gap: 10px; margin-top: 10px;">
-                <input type="checkbox" style="width:18px; height:18px;" required>
-                <label style="color:#64748b; text-transform:none; font-size:11px;">J'accepte les termes et conditions du protocole AERIO.</label>
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="logo-area">
+                <h1>AERIO <span style="color:white;">Alpha</span></h1>
+                <p>Déployez votre empire WiFi</p>
             </div>
 
-            <button type="submit" class="btn-join">Lancer ma demande d'accréditation mondiale</button>
-        </form>
+            <form id="regForm"> 
+                <div class="form-group">
+                    <label>Nom complet du Partenaire</label>
+                    <input type="text" placeholder="Ex: Jean Dupont" required>
+                </div>
 
-        <a href="index.html" class="back-link">← <span data-lang="nav_home">RETOUR AU QG ALPHA</span></a>
+                <div class="form-group">
+                    <label>Nom de votre Réseau (SSID)</label>
+                    <input type="text" placeholder="Ex: AERIO_FREE_WIFI" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Numéro WhatsApp</label>
+                    <input type="tel" placeholder="Ex: 6XXXXXXXX" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Mot de passe Alpha</label>
+                    <input type="password" placeholder="••••••••" required>
+                </div>
+
+                <button type="submit" class="btn-join" id="submitBtn">
+                    <span id="btnText">Activer mon accès Partenaire 🚀</span>
+                </button>
+            </form>
+
+            <div class="footer-link">
+                Déjà partenaire ? <a href="connexion.html">Connectez-vous ici</a>
+            </div>
+        </div>
+        <p style="text-align: center; font-size: 10px; color: #475569; margin-top: 20px;">
+            En vous inscrivant, vous acceptez les conditions d'exploitation AERIO Alpha.
+        </p>
     </div>
 
-    <script src="/translations.js"></script>
     <script>
-        function sendAlphaRequest(e) {
-            e.preventDefault();
-            const name = document.getElementById('name').value;
-            const country = document.getElementById('country').value;
-            const whatsapp = document.getElementById('whatsapp').value;
+        document.getElementById('regForm').addEventListener('submit', function(e) {
+            e.preventDefault(); // Empêche l'envoi immédiat pour l'effet de transition
             
-            // ✅ REDIRECTION INTELLIGENTE VERS TON WHATSAPP (+237 692 487 922)
-            const message = `SOLLICITATION%20ALPHA%0AAgent%20:%20${name}%0APays%20:%20${country}%0AContact%20:%20${whatsapp}`;
-            window.location.href = `https://wa.me{message}`;
-        }
-        window.onload = applyTranslations;
+            const btn = document.getElementById('submitBtn');
+            const text = document.getElementById('btnText');
+            
+            // Simulation d'initialisation technologique Alpha
+            btn.style.opacity = "0.7";
+            btn.style.cursor = "wait";
+            text.innerText = "INITIALISATION DU SYSTÈME...";
+            
+            setTimeout(() => {
+                text.innerText = "DÉPLOIEMENT DU DASHBOARD...";
+                setTimeout(() => {
+                    // Redirection finale vers le dashboard
+                    window.location.href = "dashboard.html";
+                }, 1000);
+            }, 1200);
+        });
     </script>
+
 </body>
 </html>
