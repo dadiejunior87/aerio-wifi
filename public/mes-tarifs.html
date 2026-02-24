@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AERIO | Configuration des Forfaits</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;900&display=swap" rel="stylesheet">
+    <style>
+        :root { 
+            --primary: #00C2FF; 
+            --bg: #020617; 
+            --glass: rgba(15, 23, 42, 0.8); 
+            --accent: #00F5A0; 
+            --border: rgba(255, 255, 255, 0.08);
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        
+        body { 
+            background: var(--bg); 
+            color: white; 
+            padding: 40px;
+            background-image: radial-gradient(circle at 50% 0%, rgba(0, 194, 255, 0.08), transparent);
+            min-height: 100vh;
+        }
+
+        .container { max-width: 1100px; margin: 0 auto; }
+
+        /* HEADER */
+        .page-header { margin-bottom: 40px; }
+        .page-header h1 { font-weight: 900; font-size: 32px; letter-spacing: -1px; }
+        .page-header p { color: var(--primary); font-size: 10px; font-weight: 900; letter-spacing: 3px; text-transform: uppercase; }
+
+        /* LAYOUT DOUBLE COLONNE */
+        .config-grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 40px; }
+
+        .forge-card {
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: 35px;
+            padding: 40px;
+            backdrop-filter: blur(20px);
+        }
+
+        /* INPUT STYLES */
+        .field-group { margin-bottom: 25px; }
+        .field-group label { 
+            display: block; font-size: 10px; font-weight: 900; color: #64748b; 
+            text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px; 
+        }
+
+        select, input, textarea {
+            width: 100%;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border);
+            padding: 16px;
+            border-radius: 15px;
+            color: white;
+            font-size: 14px;
+            transition: 0.3s;
+            outline: none;
+        }
+        select:focus, input:focus, textarea:focus { border-color: var(--primary); background: rgba(0, 194, 255, 0.05); }
+
+        .row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+        /* PREVIEW TICKET (L'élément qui écrase le concurrent) */
+        .preview-box {
+            background: linear-gradient(135deg, #00C2FF 0%, #0047FF 100%);
+            border-radius: 25px;
+            padding: 30px;
+            color: white;
+            position: relative;
+            box-shadow: 0 20px 40px rgba(0, 71, 255, 0.3);
+            overflow: hidden;
+        }
+        .preview-box::before {
+            content: 'AERIO NET';
+            position: absolute;
+            top: -10px; right: -10px;
+            font-size: 60px; font-weight: 900; opacity: 0.1;
+        }
+        .preview-label { font-size: 10px; font-weight: 900; opacity: 0.8; text-transform: uppercase; }
+        .preview-val { font-size: 24px; font-weight: 900; display: block; margin-bottom: 15px; }
+
+        /* BUTTON ALPHA */
+        .btn-forge {
+            width: 100%;
+            background: var(--primary);
+            color: var(--bg);
+            border: none;
+            padding: 20px;
+            border-radius: 20px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: 0.4s;
+            margin-top: 10px;
+        }
+        .btn-forge:hover { transform: scale(1.02); box-shadow: 0 0 30px rgba(0, 194, 255, 0.4); }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header class="page-header">
+            <p>Monétisation Réseau</p>
+            <h1>Gestion des <span style="color:var(--primary)">Tarifs</span></h1>
+        </header>
+
+        <div class="config-grid">
+            <div class="forge-card">
+                <div class="field-group">
+                    <label>📍 Zone de déploiement</label>
+                    <select>
+                        <option>Sélectionnez une zone WiFi...</option>
+                    </select>
+                </div>
+
+                <div class="row">
+                    <div class="field-group">
+                        <label>🏷️ Nom du forfait</label>
+                        <input type="text" placeholder="Ex: MEGA BOOST 1H">
+                    </div>
+                    <div class="field-group">
+                        <label>⏳ Durée de validité</label>
+                        <input type="text" placeholder="Ex: 1H ou 24H">
+                    </div>
+                </div>
+
+                <div class="field-group">
+                    <label>💰 Prix de vente (XAF)</label>
+                    <input type="number" placeholder="Valeur minimale 100 FCFA">
+                </div>
+
+                <div class="field-group">
+                    <label>📝 Description des avantages</label>
+                    <textarea rows="3" placeholder="Ex: Streaming illimité, Fibre optique..."></textarea>
+                </div>
+
+                <button class="btn-forge">ENREGISTRER LE FORFAIT</button>
+            </div>
+
+            <div>
+                <p style="font-size: 11px; font-weight: 900; color: #475569; margin-bottom: 15px; text-transform: uppercase;">Aperçu du ticket client</p>
+                <div class="preview-box">
+                    <span class="preview-label">Forfait</span>
+                    <span class="preview-val">---</span>
+                    
+                    <span class="preview-label">Validité</span>
+                    <span class="preview-val">---</span>
+                    
+                    <div style="border-top: 1px dashed rgba(255,255,255,0.3); margin: 15px 0; padding-top: 15px;">
+                        <span class="preview-label">Prix Final</span>
+                        <span style="font-size: 32px; font-weight: 900;">0 <small style="font-size: 14px;">XAF</small></span>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 30px; background: rgba(0, 245, 160, 0.05); border: 1px solid rgba(0, 245, 160, 0.2); padding: 20px; border-radius: 20px;">
+                    <p style="font-size: 11px; color: var(--accent); line-height: 1.6;">
+                        <strong>CONSEIL ALPHA :</strong> Créez des forfaits courts (1H) pour le flux rapide et des forfaits longs (7J) pour fidéliser vos clients réguliers.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
