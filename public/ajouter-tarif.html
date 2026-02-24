@@ -3,74 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AERIO | Configuration de Forfait Alpha</title>
+    <title>AERIO | Créer un Forfait Alpha</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #00C2FF;
-            --accent: #00F5A0;
-            --bg-deep: #020617;
-            --card-bg: rgba(15, 23, 42, 0.7);
-            --border: rgba(255, 255, 255, 0.05);
+            --primary: #00C2FF; --accent: #00F5A0; --bg: #020617;
+            --card: rgba(15, 23, 42, 0.8); --border: rgba(255, 255, 255, 0.1);
             --sidebar-w: 280px;
         }
-
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        body { background: var(--bg-deep); color: white; display: flex; min-height: 100vh; }
+        body { background: var(--bg); color: white; display: flex; min-height: 100vh; }
 
-        /* --- SIDEBAR REPLIQUÉE --- */
-        .sidebar {
-            width: var(--sidebar-w); background: #0b0f1a; padding: 30px 15px; height: 100vh;
-            position: fixed; border-right: 1px solid var(--border); display: flex; flex-direction: column;
-        }
-        .logo-title { color: var(--primary); font-weight: 900; font-size: 26px; margin-bottom: 35px; padding-left: 10px; }
-        .group-label { font-size: 9px; color: #475569; font-weight: 900; text-transform: uppercase; margin: 25px 0 10px 10px; letter-spacing: 1.5px; }
-        .nav-button {
-            background: rgba(255,255,255,0.02); padding: 12px 15px; border-radius: 12px;
-            display: flex; align-items: center; text-decoration: none; font-size: 12px; margin-bottom: 5px; border: 1px solid var(--border);
-            color: #94a3b8; transition: 0.3s;
-        }
+        /* --- SIDEBAR --- */
+        .sidebar { width: var(--sidebar-w); background: #0b0f1a; padding: 30px 15px; height: 100vh; position: fixed; border-right: 1px solid var(--border); }
+        .logo-title { color: var(--primary); font-weight: 900; font-size: 26px; margin-bottom: 35px; }
+        .group-label { font-size: 10px; color: #475569; font-weight: 800; letter-spacing: 1px; margin: 20px 0 10px 10px; text-transform: uppercase; }
+        .nav-button { background: rgba(255,255,255,0.02); padding: 12px 15px; border-radius: 12px; display: flex; text-decoration: none; font-size: 12px; margin-bottom: 5px; color: #94a3b8; border: 1px solid var(--border); }
         .nav-button.active { border-left: 4px solid var(--primary); background: rgba(0, 194, 255, 0.1); color: var(--primary); }
 
-        /* --- ZONE FORMULAIRE --- */
-        .content { margin-left: var(--sidebar-w); flex: 1; padding: 40px; }
-        .form-container { display: grid; grid-template-columns: 1.5fr 1fr; gap: 30px; margin-top: 30px; }
+        /* --- CONTENU --- */
+        .content { margin-left: var(--sidebar-w); flex: 1; padding: 40px; display: flex; justify-content: center; }
+        .form-container { width: 100%; max-width: 600px; }
 
-        .alpha-card {
-            background: var(--card-bg); padding: 35px; border-radius: 30px;
-            border: 1px solid var(--border); backdrop-filter: blur(10px);
+        .form-card {
+            background: var(--card); backdrop-filter: blur(20px);
+            padding: 40px; border-radius: 30px; border: 1px solid var(--border);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
         }
 
-        .input-group { margin-bottom: 25px; }
-        .input-group label { display: block; font-size: 11px; font-weight: 900; color: var(--primary); letter-spacing: 1px; margin-bottom: 10px; text-transform: uppercase; }
+        .header-zone { margin-bottom: 30px; }
+        .header-zone h1 { font-size: 24px; font-weight: 900; color: white; }
+        .header-zone p { font-size: 12px; color: #64748b; }
+
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .form-group { margin-bottom: 20px; }
+        .full-width { grid-column: span 2; }
+
+        label { display: block; font-size: 10px; font-weight: 800; color: var(--primary); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
         
-        input, select, textarea {
+        input, select {
             width: 100%; background: rgba(0,0,0,0.3); border: 1px solid var(--border);
-            padding: 15px; border-radius: 12px; color: white; font-size: 13px; transition: 0.3s;
+            padding: 15px; border-radius: 12px; color: white; font-size: 14px;
+            transition: 0.3s; outline: none;
         }
-        input:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 15px rgba(0,194,255,0.1); }
-
-        /* --- PREVIEW TICKET --- */
-        .preview-box {
-            background: linear-gradient(135deg, #0f172a 0%, #020617 100%);
-            border: 2px dashed var(--primary); border-radius: 25px; padding: 30px;
-            text-align: center; position: sticky; top: 40px;
-        }
-        .ticket-mockup {
-            background: white; color: #020617; border-radius: 15px; padding: 20px;
-            margin-top: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
+        input:focus, select:focus { border-color: var(--primary); background: rgba(0,0,0,0.5); }
 
         .btn-save {
-            background: var(--primary); color: #020617; border: none; padding: 18px;
-            border-radius: 15px; font-weight: 900; font-size: 14px; cursor: pointer;
-            width: 100%; margin-top: 20px; transition: 0.3s;
+            width: 100%; background: linear-gradient(90deg, var(--primary), var(--accent));
+            color: #020617; border: none; padding: 18px; border-radius: 15px;
+            font-weight: 900; font-size: 14px; cursor: pointer; margin-top: 20px;
+            transition: 0.3s; text-transform: uppercase; letter-spacing: 1px;
         }
-        .btn-save:hover { transform: scale(1.02); box-shadow: 0 0 25px rgba(0,194,255,0.4); }
+        .btn-save:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0, 245, 160, 0.3); }
 
-        .ai-hint {
-            background: rgba(0, 245, 160, 0.05); border: 1px solid rgba(0, 245, 160, 0.2);
-            padding: 15px; border-radius: 12px; margin-bottom: 30px; display: flex; align-items: center; gap: 15px;
+        .tip-box {
+            background: rgba(0, 194, 255, 0.05); border: 1px solid rgba(0, 194, 255, 0.1);
+            padding: 15px; border-radius: 15px; margin-top: 20px; font-size: 11px; color: #94a3b8;
         }
     </style>
 </head>
@@ -82,64 +70,53 @@
         <a href="dashboard.html" class="nav-button"><i>🏠</i> Tableau de bord</a>
         <div class="group-label">Offres & Accès</div>
         <a href="ajouter-tarif.html" class="nav-button active"><i>💎</i> Créer un Forfait</a>
-        <a href="liste-tarifs.html" class="nav-button"><i>📜 Ma Grille Tarifaire</i></a>
-        </div>
+        <a href="liste-tarif.html" class="nav-button"><i>📜</i> Ma Grille Tarifaire</a>
+    </div>
 
     <div class="content">
-        <div class="ai-hint">
-            <span style="font-size: 20px;">💡</span>
-            <p style="font-size: 12px; color: var(--accent); font-weight: 600;">
-                CONSEIL ALPHA : Les forfaits de "24 Heures" avec un prix de "500 XAF" sont les plus populaires dans votre zone.
-            </p>
-        </div>
-
-        <h1 style="font-size: 32px; font-weight: 900; letter-spacing: -1px;">Nouvelle <span style="color:var(--primary)">Offre WiFi</span></h1>
-        <p style="color: #64748b; font-size: 13px;">Configurez les paramètres techniques et financiers de votre prochain produit.</p>
-
         <div class="form-container">
-            <div class="alpha-card">
-                <div class="input-group">
-                    <label>Zone d'Application</label>
-                    <select>
-                        <option>Sélectionnez une infrastructure WiFi...</option>
-                    </select>
-                </div>
-
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                    <div class="input-group">
-                        <label>Identifiant de l'Offre</label>
-                        <input type="text" placeholder="Ex: PASS_PREMIUM_2H">
-                    </div>
-                    <div class="input-group">
-                        <label>Index de Durée</label>
-                        <input type="text" placeholder="Ex: 2H, 12H, 7J">
-                    </div>
-                </div>
-
-                <div class="input-group">
-                    <label>Valeur de l'Accès (XAF)</label>
-                    <input type="number" placeholder="Valeur minimale conseillée : 100">
-                </div>
-
-                <div class="input-group">
-                    <label>Avantages Client (Description)</label>
-                    <textarea rows="4" placeholder="Décrivez les bénéfices (Vitesse, Stabilité, Services inclus...)"></textarea>
-                </div>
-
-                <button class="btn-save">DÉPLOYER LE FORFAIT 🚀</button>
+            <div class="header-zone">
+                <h1>Configuration <span style="color:var(--primary)">Forfait Alpha</span></h1>
+                <p>Définissez les règles de votre ticket de connexion.</p>
             </div>
 
-            <div class="preview-box">
-                <p style="font-size: 10px; font-weight: 900; color: var(--primary); letter-spacing: 2px;">APERÇU ALPHA DU TICKET</p>
-                <div class="ticket-mockup">
-                    <h3 style="font-size: 12px; opacity: 0.5;">AERIO NETWORK</h3>
-                    <div style="margin: 15px 0; font-size: 22px; font-weight: 900;">CODE : XXXXXX</div>
-                    <div style="display: flex; justify-content: space-between; font-size: 11px; font-weight: 600;">
-                        <span>PRIX : --- XAF</span>
-                        <span>DURÉE : ---</span>
+            <div class="form-card">
+                <form action="liste-tarif.html">
+                    <div class="form-grid">
+                        <div class="form-group full-width">
+                            <label>Nom de l'offre commerciale</label>
+                            <input type="text" placeholder="Ex: PASS FLASH 1H" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Prix de vente (XAF)</label>
+                            <input type="number" placeholder="Ex: 100" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Durée du Ticket</label>
+                            <select required>
+                                <option value="1h">1 Heure</option>
+                                <option value="2h">2 Heures</option>
+                                <option value="10h">10 Heures</option>
+                                <option value="1d">1 Jour (24h)</option>
+                                <option value="7d">1 Semaine</option>
+                                <option value="30d">1 Mois</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label>Nom du Profil Mikhmon (Vitesse)</label>
+                            <input type="text" placeholder="Ex: 2M_Profile" required>
+                        </div>
                     </div>
+
+                    <button type="submit" class="btn-save">ENREGISTRER LE FORFAIT 🚀</button>
+                </form>
+
+                <div class="tip-box">
+                    <strong>💡 Info Maître Alpha :</strong> Assurez-vous que le "Nom du Profil" correspond exactement à celui créé dans votre interface Mikhmon pour éviter les erreurs d'activation.
                 </div>
-                <p style="margin-top: 20px; font-size: 11px; color: #475569;">Ce visuel correspond à ce que vos clients recevront après achat.</p>
             </div>
         </div>
     </div>
