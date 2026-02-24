@@ -2,136 +2,186 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AERIO | Console Alpha</title>
+    <title>AERIO | Command Center</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;900&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #00C2FF; --bg: #020617; --glass: rgba(15, 23, 42, 0.8); --danger: #FF4B4B; --accent: #00F5A0; --surface: rgba(255,255,255,0.03); }
+        :root {
+            --primary: #00C2FF;
+            --bg-deep: #0f1216; /* Le noir profond de ton image */
+            --card-bg: #1a1f26; /* Le gris anthracite des boutons */
+            --accent-green: #00F5A0;
+            --border: rgba(255, 255, 255, 0.03);
+        }
+
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        body { background: var(--bg); color: white; display: flex; min-height: 100vh; background-image: radial-gradient(circle at bottom right, rgba(0, 194, 255, 0.05), transparent); }
+        
+        body { 
+            background-color: var(--bg-deep); 
+            display: flex; 
+            min-height: 100vh;
+            color: white;
+        }
 
-        /* ✅ SIDEBAR TACTIQUE */
-        .sidebar { width: 280px; background: var(--glass); border-right: 1px solid rgba(255,255,255,0.05); padding: 30px 20px; backdrop-filter: blur(30px); position: fixed; height: 100vh; z-index: 100; }
-        .logo-area { font-weight:900; color:var(--primary); font-size:26px; margin-bottom:30px; letter-spacing:-1.5px; }
-        .nav-item { display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; color: #64748b; text-decoration: none; border-radius: 15px; margin-bottom: 5px; cursor: pointer; transition: 0.3s; font-size: 13px; font-weight: 600; }
-        .nav-item:hover, .nav-item.active { color: var(--primary); background: rgba(0, 194, 255, 0.08); }
-        .submenu { max-height: 0; overflow: hidden; transition: 0.5s ease; padding-left: 15px; }
-        .submenu.open { max-height: 250px; margin-bottom: 10px; }
-        .sub-item { display: block; padding: 8px 0; color: #475569; text-decoration: none; font-size: 12px; font-weight: 700; transition: 0.3s; }
-        .sub-item:hover { color: var(--primary); padding-left: 10px; }
+        /* --- LA SIDEBAR STYLE "IMAGE 6" --- */
+        .sidebar {
+            width: 320px;
+            background: #111418;
+            padding: 30px 20px;
+            height: 100vh;
+            position: fixed;
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
 
-        /* ✅ MAIN CONTENT */
-        .main-content { margin-left: 280px; flex: 1; padding: 40px; }
+        .logo-title {
+            color: var(--primary);
+            font-weight: 900;
+            font-size: 24px;
+            margin-bottom: 30px;
+            padding-left: 15px;
+            text-shadow: 0 0 15px rgba(0, 194, 255, 0.4);
+        }
 
-        /* ✅ QUICK ACCESS BAR (Profil, Support, Contact) */
-        .quick-access-bar { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 40px; }
-        .access-card { background: var(--surface); border: 1px solid rgba(255,255,255,0.05); padding: 15px 20px; border-radius: 20px; text-decoration: none; display: flex; align-items: center; gap: 15px; transition: 0.4s; }
-        .access-card:hover { border-color: var(--primary); transform: translateY(-5px); background: rgba(0, 194, 255, 0.05); }
-        .icon-circle { width: 45px; height: 45px; background: rgba(255, 255, 255, 0.05); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; border: 1px solid rgba(255, 255, 255, 0.1); filter: drop-shadow(0 0 5px var(--color, var(--primary))); }
-        .access-info { display: flex; flex-direction: column; }
-        .access-label { font-size: 11px; font-weight: 900; color: white; letter-spacing: 1px; }
-        .access-desc { font-size: 9px; color: #475569; font-weight: 600; }
+        .nav-button {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            padding: 16px 20px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            text-decoration: none;
+            color: #d1d5db;
+            font-weight: 600;
+            font-size: 14px;
+            transition: 0.3s;
+        }
 
-        /* ✅ STATS GRID */
-        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 30px; }
-        .stat-card { background: var(--surface); padding: 25px; border-radius: 25px; border: 1px solid rgba(255,255,255,0.05); border-bottom: 3px solid var(--border-color, var(--primary)); }
-        .stat-card small { font-size: 10px; color: #475569; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; }
-        .stat-card div { font-size: 24px; font-weight: 900; margin-top: 10px; }
+        .nav-button:hover {
+            background: #232932;
+            transform: translateX(5px);
+        }
 
-        /* ✅ TABLES & CONTENT */
-        .content-box { background: var(--surface); border-radius: 30px; padding: 30px; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 30px; }
-        .box-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        table { width: 100%; border-collapse: collapse; }
-        th { text-align: left; font-size: 11px; color: #475569; padding-bottom: 15px; text-transform: uppercase; }
-        td { padding: 15px 0; border-top: 1px solid rgba(255,255,255,0.02); font-size: 12px; }
+        .nav-button.active {
+            border-left: 4px solid var(--primary);
+            background: linear-gradient(90deg, rgba(0, 194, 255, 0.1), transparent);
+        }
 
-        .vpn-gen-box { display: none; margin-top: 20px; padding: 20px; background: #000; border-radius: 15px; border: 1px dashed var(--primary); }
-        code { color: var(--accent); font-size: 11px; display: block; margin-top: 10px; }
+        /* Les Badges comme sur l'image */
+        .badge-stat {
+            background: rgba(0, 245, 160, 0.1);
+            color: var(--accent-green);
+            font-size: 10px;
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-weight: 900;
+        }
+
+        .badge-active {
+            background: rgba(0, 194, 255, 0.2);
+            color: var(--primary);
+            font-size: 10px;
+            padding: 4px 10px;
+            border-radius: 8px;
+        }
+
+        /* --- ZONE DE CONTENU --- */
+        .content {
+            margin-left: 320px;
+            flex: 1;
+            padding: 40px;
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        h1 { font-weight: 900; font-size: 32px; margin-bottom: 10px; }
+        .subtitle { color: var(--primary); font-size: 12px; font-weight: 900; letter-spacing: 2px; }
+
     </style>
 </head>
 <body>
 
     <div class="sidebar">
-        <div class="logo-area">AERIO</div>
-        
-        <a href="dashboard.html" class="nav-item active"><span>📊 Tableau de bord</span></a>
+        <div class="logo-title">AERIO</div>
 
-        <div onclick="toggleMenu('tickets-sub')" class="nav-item"><span>🎫 Mes Tickets</span><span>▼</span></div>
-        <div id="tickets-sub" class="submenu">
-            <a href="ajouter-ticket.html" class="sub-item">• Ajouter un ticket</a>
-            <a href="liste-tickets.html" class="sub-item">• Liste des tickets</a>
-        </div>
+        <a href="#" class="nav-button">
+            <span>🏠 Tableau de Bord</span>
+        </a>
 
-        <div onclick="toggleMenu('wifi-sub')" class="nav-item"><span>📡 Mes Wifi Zone</span><span>▼</span></div>
-        <div id="wifi-sub" class="submenu">
-            <a href="ajouter-wifi.html" class="sub-item">• Ajouter un Nœud</a>
-            <a href="liste-wifi.html" class="sub-item">• Liste des Nœuds</a>
-        </div>
+        <a href="#" class="nav-button">
+            <span>✔️ Ajouter-wifi.hom</span>
+        </a>
 
-        <div onclick="toggleMenu('vpn-sub')" class="nav-item"><span>🛡️ Bastion VPN</span><span>▼</span></div>
-        <div id="vpn-sub" class="submenu">
-            <a href="#" onclick="toggleVpnBox()">• Générer Liaison</a>
-            <a href="vpn.html" class="sub-item">• Info Bastion</a>
-        </div>
+        <a href="#" class="nav-button">
+            <span>✔️ Mon Réseaux</span>
+        </a>
 
-        <div onclick="toggleMenu('compta-sub')" class="nav-item"><span>💰 Ma Comptabilité</span><span>▼</span></div>
-        <div id="compta-sub" class="submenu">
-            <a href="retrait.html" class="sub-item">• Effectuer un retrait</a>
-            <a href="recettes.html" class="sub-item">• Mes Recettes</a>
-        </div>
+        <a href="#" class="nav-button">
+            <span>✔️ Tarifs & Billets</span>
+        </a>
 
-        <a href="index.html" class="nav-item" style="margin-top:50px; color:var(--danger); opacity:0.6;">🚪 Déconnexion</a>
+        <a href="#" class="nav-button">
+            <span>👥 Liste Zones</span>
+            <span class="badge-stat">Statistiques ●</span>
+        </a>
+
+        <a href="#" class="nav-button active">
+            <span>📠 Statistiques-wifi</span>
+            <span class="badge-active">active</span>
+        </a>
+
+        <a href="#" class="nav-button">
+            <span>✔️ Cres-tarif</span>
+            <span style="font-size: 10px; opacity: 0.6;">Mes Tickets</span>
+        </a>
+
+        <a href="#" class="nav-button">
+            <span>📁 Liste-des-tarifs</span>
+        </a>
+
+        <a href="#" class="nav-button">
+            <span>✖️ Liste-des-tickets</span>
+        </a>
+
+        <a href="#" class="nav-button">
+            <span>👤 Comptabilitaite</span>
+        </a>
     </div>
 
-    <div class="main-content">
+    <div class="content">
+        <p class="subtitle">SYSTÈME ANALYTIQUE</p>
+        <h1>Statistiques <span style="color:var(--primary)">Globales</span></h1>
+
+        <div class="stat-grid">
+            <div class="stat-card">
+                <p style="color:#64748b; font-size:10px; font-weight:900;">CHIFFRE D'AFFAIRES</p>
+                <h2 style="font-size:32px; margin-top:10px;">0 XAF</h2>
+            </div>
+            <div class="stat-card">
+                <p style="color:#64748b; font-size:10px; font-weight:900;">TICKETS VENDUS</p>
+                <h2 style="font-size:32px; margin-top:10px;">0</h2>
+            </div>
+        </div>
         
-        <div class="quick-access-bar">
-            <a href="profil.html" class="access-card">
-                <div class="icon-circle">👤</div>
-                <div class="access-info"><span class="access-label">MON PROFIL</span><span class="access-desc">Gérer mon compte</span></div>
-            </a>
-            <a href="https://wa.me/237692487922" class="access-card">
-                <div class="icon-circle" style="--color: #25D366;">💬</div>
-                <div class="access-info"><span class="access-label">SUPPORT LIVE</span><span class="access-desc">WhatsApp Direct</span></div>
-            </a>
-            <a href="documentation.html" class="access-card">
-                <div class="icon-circle" style="--color: var(--accent);">📚</div>
-                <div class="access-info"><span class="access-label">CONTACT & DOC</span><span class="access-desc">Vidéo & Licence</span></div>
-            </a>
-        </div>
-
-        <h1 style="font-weight:900; margin-bottom:30px;">Console <span style="color:var(--primary)">Alpha v.1</span></h1>
-
-        <div class="stats-grid">
-            <div class="stat-card" style="--border-color: var(--primary);"><small>Solde Réel</small><div id="solde">0 F</div></div>
-            <div class="stat-card" style="--border-color: var(--accent);"><small>Users Actifs</small><div>0</div></div>
-            <div class="stat-card" style="--border-color: white;"><small>Nœuds WiFi</small><div>0</div></div>
-            <div class="stat-card" style="--border-color: var(--danger);"><small>Stock Tickets</small><div>0</div></div>
-        </div>
-
-        <div id="vpnBox" class="vpn-gen-box">
-            <b style="font-size: 12px; color: var(--primary);">GÉNÉRATEUR DE LIAISON ALPHA</b>
-            <code>/interface sstp-client add connect-to=AERIO-SERVER name=LIAISON_ALPHA</code>
-            <p style="font-size: 9px; margin-top: 10px; color: #475569;">Copiez ce code dans le terminal MikroTik de votre partenaire.</p>
-        </div>
-
-        <div class="content-box" style="margin-top: 30px;">
-            <div class="box-header"><b>📡 ÉTAT DES NŒUDS RÉSEAU</b></div>
-            <table>
-                <thead><tr><th>Identifiant</th><th>Emplacement</th><th>Status</th><th>Charge</th></tr></thead>
-                <tbody>
-                    <tr><td colspan="4" style="text-align:center; padding:40px; color:#475569;">Aucun partenaire actif pour le moment.</td></tr>
-                </tbody>
-            </table>
+        <div style="margin-top:40px; height:300px; background:var(--card-bg); border-radius:30px; display:flex; align-items:center; justify-content:center; border:1px dashed #333;">
+            <p style="color:#444; font-weight:900;">[ GRAPHES EN ATTENTE DE DONNÉES ]</p>
         </div>
     </div>
 
-    <script>
-        function toggleMenu(id) { document.getElementById(id).classList.toggle('open'); }
-        function toggleVpnBox() { 
-            const box = document.getElementById('vpnBox');
-            box.style.display = box.style.display === 'block' ? 'none' : 'block';
-        }
-    </script>
 </body>
 </html>
