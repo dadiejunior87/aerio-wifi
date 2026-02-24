@@ -23,14 +23,12 @@
 
         /* --- MAIN CONTENT --- */
         .main-content { margin-left: var(--sidebar-w); flex: 1; padding: 40px; }
-        
         .config-wrapper { max-width: 900px; margin: 0 auto; }
         .section-header { margin-bottom: 35px; }
         .section-header h1 { font-size: 30px; font-weight: 900; }
 
         /* --- CONFIG CARD --- */
         .config-card { background: var(--card-bg); border-radius: 35px; border: 1px solid var(--border); padding: 40px; backdrop-filter: blur(20px); position: relative; }
-        
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
         .input-box { margin-bottom: 25px; }
         label { font-size: 10px; font-weight: 900; color: #64748b; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 12px; display: block; }
@@ -41,7 +39,6 @@
         }
         input:focus { border-color: var(--primary); box-shadow: 0 0 15px rgba(0, 194, 255, 0.1); }
 
-        /* --- LIVE PREVIEW --- */
         .live-preview {
             background: linear-gradient(135deg, rgba(188, 0, 255, 0.05) 0%, rgba(0, 194, 255, 0.05) 100%);
             border: 1px solid var(--border); border-radius: 20px; padding: 25px; margin-top: 30px;
@@ -60,8 +57,8 @@
 
     <div class="sidebar">
         <div class="logo-title">AERIO</div>
-        <a href="#" class="nav-link">🏠 Dashboard</a>
-        <a href="ajouter-tarif.html" class="nav-link active">💎 Ajouter un Tarif</a>
+        <a href="dashboard.html" class="nav-link">🏠 Dashboard</a>
+        <a href="ajouter-tarif.html" class="nav-link active">💎 Créer un Tarif</a>
         <a href="liste-tarif.html" class="nav-link">📜 Ma Grille Tarifaire</a>
         <a href="ajouter-ticket.html" class="nav-link">🎫 Générer un Pass</a>
         <a href="liste-tickets.html" class="nav-link">🔑 Registre des Accès</a>
@@ -77,29 +74,25 @@
             <div class="config-card">
                 <div class="form-grid">
                     <div class="input-box">
-                        <label>Nom de l'offre</label>
-                        <input type="text" placeholder="Ex: Pass Gaming 2H">
+                        <label>Nom de l'offre commerciale</label>
+                        <input type="text" id="nomOffre" placeholder="Saisir le nom (ex: Pack Silver)">
                     </div>
                     <div class="input-box">
-                        <label>Prix (XAF)</label>
-                        <input type="number" placeholder="Ex: 500">
+                        <label>Prix de vente (XAF)</label>
+                        <input type="number" id="prixOffre" placeholder="0">
                     </div>
+                    
                     <div class="input-box">
-                        <label>Durée de Connexion</label>
-                        <select>
-                            <option>-- Sélectionner --</option>
-                            <option>30 Minutes</option>
-                            <option>01 Heure</option>
-                            <option>24 Heures</option>
-                            <option>01 Semaine</option>
-                        </select>
+                        <label>Durée du Ticket</label>
+                        <select id="dureeOffre">
+                            <option value="" disabled selected>-- Définir la durée --</option>
+                            </select>
                     </div>
+
                     <div class="input-box">
-                        <label>Limite de Vitesse (Burst)</label>
-                        <select>
-                            <option>Standard (2 Mbps)</option>
-                            <option>High Speed (5 Mbps)</option>
-                            <option>Unlimited (Max)</option>
+                        <label>Nom du Profil Mikhmon (Vitesse)</label>
+                        <select id="profilOffre">
+                            <option value="" disabled selected>-- Aucun profil détecté --</option>
                         </select>
                     </div>
                 </div>
@@ -107,10 +100,10 @@
                 <div class="live-preview">
                     <div>
                         <p style="font-size: 10px; color: #64748b; font-weight: 900;">PRÉVISUALISATION DU TICKET</p>
-                        <h3 id="preview-text" style="color: var(--accent); margin-top: 5px;">Configurez vos options...</h3>
+                        <h3 id="preview-text" style="color: var(--accent); margin-top: 5px;">En attente de configuration...</h3>
                     </div>
                     <div style="text-align: right;">
-                        <span style="font-size: 24px; font-weight: 900; color: white;">0 XAF</span>
+                        <span id="preview-price" style="font-size: 24px; font-weight: 900; color: white;">0 XAF</span>
                     </div>
                 </div>
 
@@ -121,8 +114,13 @@
 
     <script>
         function saveTarif() {
-            alert("🚀 OFFRE ALPHA CRÉÉE : Votre nouveau tarif est maintenant disponible pour la génération de tickets.");
-            window.location.href = 'liste-tarif.html';
+            const nom = document.getElementById('nomOffre').value;
+            if(!nom) {
+                alert("⚠️ Veuillez configurer au moins le nom de l'offre avant le déploiement.");
+            } else {
+                alert("🚀 DÉPLOIEMENT RÉUSSI : L'offre " + nom + " a été ajoutée à votre registre.");
+                window.location.href = 'liste-tarif.html';
+            }
         }
     </script>
 </body>
