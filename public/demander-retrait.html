@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AERIO | Demande de Retrait Alpha</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #00C2FF; --accent: #00F5A0; --bg-deep: #020617;
+            --card-bg: rgba(15, 23, 42, 0.7); --border: rgba(255, 255, 255, 0.05);
+            --sidebar-w: 280px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: var(--bg-deep); color: white; display: flex; min-height: 100vh; overflow-x: hidden; }
+
+        /* --- SIDEBAR --- */
+        .sidebar { width: var(--sidebar-w); background: #0b0f1a; padding: 30px 15px; height: 100vh; position: fixed; border-right: 1px solid var(--border); z-index: 100; }
+        .logo-title { color: var(--primary); font-weight: 900; font-size: 26px; margin-bottom: 35px; }
+        .nav-button { background: rgba(255,255,255,0.02); padding: 12px 15px; border-radius: 12px; display: flex; text-decoration: none; font-size: 12px; margin-bottom: 5px; color: #94a3b8; border: 1px solid var(--border); transition: 0.3s; }
+        .nav-button.active { border-left: 4px solid var(--primary); background: rgba(0, 194, 255, 0.1); color: var(--primary); }
+
+        /* --- CONTENT --- */
+        .main-wrapper { margin-left: var(--sidebar-w); flex: 1; padding: 40px; display: flex; justify-content: center; align-items: center; }
+        
+        .withdraw-card {
+            width: 100%; max-width: 550px; background: var(--card-bg); 
+            backdrop-filter: blur(20px); border-radius: 35px; padding: 40px;
+            border: 1px solid var(--border); box-shadow: 0 25px 50px rgba(0,0,0,0.4);
+        }
+
+        .balance-preview {
+            background: rgba(0, 194, 255, 0.1); border: 1px solid rgba(0, 194, 255, 0.2);
+            padding: 20px; border-radius: 20px; text-align: center; margin-bottom: 30px;
+        }
+        .balance-preview span { font-size: 10px; color: var(--primary); font-weight: 800; text-transform: uppercase; }
+        .balance-preview h2 { font-size: 28px; font-weight: 900; color: white; }
+
+        .form-group { margin-bottom: 20px; }
+        label { display: block; font-size: 10px; font-weight: 800; color: #475569; text-transform: uppercase; margin-bottom: 12px; margin-left: 5px; }
+        
+        input {
+            width: 100%; background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+            padding: 15px; border-radius: 15px; color: white; font-size: 14px; outline: none; transition: 0.3s;
+        }
+        input:focus { border-color: var(--primary); background: rgba(0, 194, 255, 0.05); }
+
+        /* --- METHOD GRID (STYLE CONCURRENCE KILLER) --- */
+        .method-grid { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr 1fr; 
+            gap: 12px; 
+            margin-bottom: 25px; 
+        }
+
+        .method-opt {
+            border: 1px solid var(--border);
+            padding: 15px 10px;
+            border-radius: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background: rgba(255,255,255,0.02);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .method-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 16px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        /* Couleurs Fournisseurs */
+        .mtn { border-bottom: 3px solid #FFCC00; }
+        .mtn .method-icon { background: #FFCC00; color: #000; }
+
+        .orange { border-bottom: 3px solid #FF6600; }
+        .orange .method-icon { background: #FF6600; color: #fff; }
+
+        .bank { border-bottom: 3px solid var(--primary); }
+        .bank .method-icon { background: var(--primary); color: #fff; }
+
+        /* État sélectionné */
+        .method-opt.selected {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--primary);
+            transform: translateY(-8px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+        }
+        
+        .method-name { font-size: 9px; font-weight: 800; text-transform: uppercase; color: #475569; }
+        .selected .method-name { color: white; }
+
+        .btn-submit {
+            width: 100%; background: var(--accent); color: #020617; border: none;
+            padding: 22px; border-radius: 20px; font-weight: 900; font-size: 14px;
+            cursor: pointer; transition: 0.3s; text-transform: uppercase;
+            box-shadow: 0 10px 20px rgba(0, 245, 160, 0.2);
+        }
+        .btn-submit:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(0, 245, 160, 0.4); }
+
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="logo-title">AERIO</div>
+        <a href="dashboard.html" class="nav-button"><i>🏠</i> Dashboard</a>
+        <a href="mes-retraits.html" class="nav-button active"><i>📊</i> Mes Retraits</a>
+    </div>
+
+    <div class="main-wrapper">
+        <div class="withdraw-card">
+            <div style="text-align: center; margin-bottom: 30px;">
+                <h1 style="font-size: 26px; font-weight: 900;">Demande de <span style="color:var(--primary)">Retrait</span></h1>
+                <p style="color: #64748b; font-size: 12px;">Extraction sécurisée de vos commissions.</p>
+            </div>
+
+            <div class="balance-preview">
+                <span>Solde Retirable Actuel</span>
+                <h2>0 XAF</h2>
+            </div>
+
+            <div class="form-group">
+                <label>Montant à extraire (XAF)</label>
+                <input type="number" placeholder="Ex: 5000" id="amount">
+            </div>
+
+            <label>Choisir le canal de réception</label>
+            <div class="method-grid" id="methodGrid">
+                <div class="method-opt mtn selected" onclick="selectMethod(this)">
+                    <div class="method-icon">M</div>
+                    <span class="method-name">MTN MoMo</span>
+                </div>
+                
+                <div class="method-opt orange" onclick="selectMethod(this)">
+                    <div class="method-icon">O</div>
+                    <span class="method-name">Orange</span>
+                </div>
+
+                <div class="method-opt bank" onclick="selectMethod(this)">
+                    <div class="method-icon">🏦</div>
+                    <span class="method-name">Virement</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label id="label-detail">Numéro de téléphone bénéficiaire</label>
+                <input type="text" placeholder="6xx xxx xxx" id="receiver-detail">
+            </div>
+
+            <button class="btn-submit" onclick="requestWithdraw()">Confirmer l'extraction 🚀</button>
+            
+            <p style="font-size: 9px; color: #475569; text-align: center; margin-top: 25px; line-height: 1.5;">
+                * Les fonds sont transférés après vérification de sécurité Alpha.<br>
+                Délai moyen constaté : 24h ouvrables.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        function selectMethod(element) {
+            // Animation de sélection
+            document.querySelectorAll('.method-opt').forEach(opt => opt.classList.remove('selected'));
+            element.classList.add('selected');
+
+            // Changement dynamique du label selon le choix
+            const name = element.querySelector('.method-name').innerText;
+            const label = document.getElementById('label-detail');
+            const input = document.getElementById('receiver-detail');
+
+            if(name === "VIREMENT") {
+                label.innerText = "Coordonnées Bancaires (RIB/IBAN)";
+                input.placeholder = "Numéro de compte...";
+            } else {
+                label.innerText = "Numéro de téléphone bénéficiaire";
+                input.placeholder = "6xx xxx xxx";
+            }
+        }
+
+        function requestWithdraw() {
+            const amount = document.getElementById('amount').value;
+            const detail = document.getElementById('receiver-detail').value;
+
+            if(!amount || amount <= 0) {
+                alert("Système : Veuillez saisir un montant valide.");
+                return;
+            }
+            if(!detail) {
+                alert("Système : Coordonnées de réception manquantes.");
+                return;
+            }
+
+            alert("🚀 TRANSMISSION ALPHA : Votre demande de retrait de " + amount + " XAF a été envoyée avec succès.");
+            window.location.href = 'mes-retraits.html';
+        }
+    </script>
+</body>
+</html>
