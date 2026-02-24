@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AERIO | Journal d'Extractions</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #00C2FF; --accent: #00F5A0; --bg-deep: #020617;
+            --card-bg: rgba(15, 23, 42, 0.7); --border: rgba(255, 255, 255, 0.05);
+            --sidebar-w: 280px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: var(--bg-deep); color: white; display: flex; min-height: 100vh; overflow-x: hidden; }
+
+        /* --- SIDEBAR --- */
+        .sidebar { width: var(--sidebar-w); background: #0b0f1a; padding: 30px 15px; height: 100vh; position: fixed; border-right: 1px solid var(--border); z-index: 100; }
+        .logo-title { color: var(--primary); font-weight: 900; font-size: 26px; margin-bottom: 35px; }
+        .group-label { font-size: 10px; color: #475569; font-weight: 800; letter-spacing: 1px; margin: 20px 0 10px 10px; text-transform: uppercase; }
+        .nav-button { background: rgba(255,255,255,0.02); padding: 12px 15px; border-radius: 12px; display: flex; text-decoration: none; font-size: 12px; margin-bottom: 5px; color: #94a3b8; border: 1px solid var(--border); transition: 0.3s; }
+        .nav-button.active { border-left: 4px solid var(--primary); background: rgba(0, 194, 255, 0.1); color: var(--primary); }
+
+        /* --- MAIN CONTENT --- */
+        .main-wrapper { margin-left: var(--sidebar-w); flex: 1; display: flex; flex-direction: column; }
+        
+        /* --- TOP BAR --- */
+        .top-bar { display: flex; justify-content: flex-end; padding: 20px 40px; }
+        .notif-trigger { background: var(--card-bg); border: 1px solid var(--border); width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center; justify-content: center; cursor: pointer; position: relative; }
+        .notif-badge { position: absolute; top: -5px; right: -5px; background: #ff4b4b; color: white; font-size: 9px; font-weight: 900; padding: 2px 6px; border-radius: 50%; border: 2px solid var(--bg-deep); }
+
+        .content { padding: 0 40px 40px 40px; }
+        
+        /* --- ÉTAT VIDE & TABLEAU --- */
+        .history-card { background: var(--card-bg); border-radius: 25px; border: 1px solid var(--border); padding: 30px; margin-top: 20px; position: relative; overflow: hidden; }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th { text-align: left; font-size: 10px; color: #475569; text-transform: uppercase; letter-spacing: 1px; padding: 15px; border-bottom: 1px solid var(--border); }
+        td { padding: 20px 15px; font-size: 13px; border-bottom: 1px solid rgba(255,255,255,0.02); color: #94a3b8; }
+        
+        .empty-state {
+            text-align: center; padding: 60px 20px;
+        }
+        .empty-icon { font-size: 40px; margin-bottom: 20px; opacity: 0.3; display: block; }
+        .empty-text { color: #475569; font-size: 14px; max-width: 400px; margin: 0 auto; line-height: 1.6; }
+
+        .btn-withdraw-now {
+            margin-top: 25px; background: var(--primary); color: #020617; border: none; padding: 12px 25px; border-radius: 12px; font-weight: 900; font-size: 11px; cursor: pointer; transition: 0.3s;
+        }
+        .btn-withdraw-now:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(0, 194, 255, 0.4); }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="logo-title">AERIO</div>
+        <div class="group-label">Pilotage Réseaux</div>
+        <a href="dashboard.html" class="nav-button"><i>🏠</i> Tableau de bord</a>
+        <div class="group-label">Comptabilité</div>
+        <a href="mes-retraits.html" class="nav-button active"><i>📊</i> Journal d'extractions</a>
+    </div>
+
+    <div class="main-wrapper">
+        <div class="top-bar">
+            <div class="notif-trigger">
+                🔔 <span class="notif-badge">0</span>
+            </div>
+        </div>
+
+        <div class="content">
+            <h1 style="font-size: 30px; font-weight: 900;">Journal des <span style="color:var(--primary)">Extractions</span></h1>
+            <p style="color: #64748b; font-size: 14px;">Suivez vos mouvements de fonds en temps réel.</p>
+
+            <div class="history-card">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date & Heure</th>
+                            <th>ID Transaction</th>
+                            <th>Méthode</th>
+                            <th>Montant</th>
+                            <th>Statut</th>
+                        </tr>
+                    </thead>
+                    <tbody id="retraits-body">
+                        </tbody>
+                </table>
+                
+                <div class="empty-state">
+                    <span class="empty-icon">💸</span>
+                    <p class="empty-text">
+                        <b>Aucune extraction pour le moment.</b><br>
+                        Dès que vous effectuerez votre premier retrait de revenus, l'historique détaillé s'affichera ici avec le suivi de validation.
+                    </p>
+                    <button class="btn-withdraw-now" onclick="alert('Alpha : Solde actuel insuffisant pour un retrait.')">INITIER UN RETRAIT</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
