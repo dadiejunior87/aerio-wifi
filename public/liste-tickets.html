@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AERIO | Commandement des Tickets</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;900&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root { 
+            --primary: #00C2FF; 
+            --bg: #020617; 
+            --glass: rgba(15, 23, 42, 0.7); 
+            --accent: #00F5A0; 
+            --danger: #FF4B4B; 
+            --card-border: rgba(0, 194, 255, 0.1);
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        
+        body { 
+            background: var(--bg); 
+            color: white; 
+            min-height: 100vh; 
+            padding: 40px;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(0, 194, 255, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(0, 245, 160, 0.05) 0%, transparent 40%);
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; }
+
+        /* ✅ HEADER STYLE HUD */
+        .header-tactique {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            border-left: 4px solid var(--primary);
+            padding-left: 20px;
+        }
+
+        .title-group h1 { font-weight: 900; font-size: 28px; letter-spacing: -1px; }
+        .title-group p { font-size: 11px; color: #64748b; text-transform: uppercase; font-weight: 700; letter-spacing: 2px; }
+
+        /* ✅ ACTIONS & RECHERCHE */
+        .top-controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .search-wrapper { flex: 1; position: relative; }
+        .search-bar {
+            width: 100%;
+            background: var(--glass);
+            border: 1px solid var(--card-border);
+            padding: 15px 25px;
+            border-radius: 15px;
+            color: white;
+            font-size: 13px;
+            backdrop-filter: blur(10px);
+            transition: 0.3s;
+        }
+        .search-bar:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 20px rgba(0, 194, 255, 0.1); }
+
+        .btn-alpha {
+            background: var(--primary);
+            color: #020617;
+            border: none;
+            padding: 0 25px;
+            border-radius: 15px;
+            font-weight: 900;
+            font-size: 12px;
+            cursor: pointer;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: 0.3s;
+        }
+        .btn-alpha:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0, 194, 255, 0.3); }
+
+        /* ✅ TABLEAU ULTRA-GEN */
+        .table-viewport {
+            background: var(--glass);
+            border-radius: 25px;
+            border: 1px solid var(--card-border);
+            overflow: hidden;
+            backdrop-filter: blur(15px);
+        }
+
+        table { width: 100%; border-collapse: collapse; }
+        
+        thead { background: rgba(0, 0, 0, 0.2); }
+        th { 
+            padding: 20px; 
+            text-align: left; 
+            font-size: 10px; 
+            text-transform: uppercase; 
+            letter-spacing: 1px; 
+            color: #475569; 
+            font-weight: 900;
+        }
+
+        tbody tr { 
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03); 
+            transition: 0.2s; 
+        }
+        tbody tr:hover { background: rgba(0, 194, 255, 0.02); }
+
+        td { padding: 20px; font-size: 14px; vertical-align: middle; }
+
+        /* ✅ STYLISATION DES DONNÉES */
+        .code-tech { 
+            font-family: 'JetBrains Mono', monospace; 
+            color: var(--primary); 
+            font-weight: 700; 
+            background: rgba(0, 194, 255, 0.1); 
+            padding: 4px 8px; 
+            border-radius: 6px;
+        }
+
+        .price-tag { font-weight: 900; font-size: 16px; }
+        .price-tag span { font-size: 10px; color: #475569; margin-left: 4px; }
+
+        .status-glow {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 12px;
+            border-radius: 50px;
+            font-size: 10px;
+            font-weight: 900;
+            text-transform: uppercase;
+        }
+        .status-online { background: rgba(0, 245, 160, 0.1); color: var(--accent); box-shadow: 0 0 10px rgba(0, 245, 160, 0.1); }
+        .status-sold { background: rgba(255, 75, 75, 0.1); color: var(--danger); }
+
+        .action-btns { display: flex; gap: 8px; }
+        .icon-btn {
+            width: 35px; height: 35px;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.05);
+            background: rgba(255,255,255,0.02);
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.3s;
+        }
+        .icon-btn:hover { background: var(--primary); color: #020617; border-color: var(--primary); }
+        .icon-btn.delete:hover { background: var(--danger); color: white; border-color: var(--danger); }
+
+        /* ✅ ETAT VIDE */
+        .empty-state { text-align: center; padding: 100px 20px; color: #475569; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header class="header-tactique">
+            <div class="title-group">
+                <p>Système AERIO v1.0</p>
+                <h1>INVENTAIRE DES TICKETS</h1>
+            </div>
+            <a href="dashboard.html" style="color: var(--primary); text-decoration: none; font-size: 11px; font-weight: 900; letter-spacing: 1px;">← QUITTER LA CONSOLE</a>
+        </header>
+
+        <div class="top-controls">
+            <div class="search-wrapper">
+                <input type="text" class="search-bar" placeholder="Scanner un identifiant ou un code de session...">
+            </div>
+            <button class="btn-alpha" onclick="location.href='ajouter-ticket.html'">
+                <span>+</span> GÉNÉRER TICKETS
+            </button>
+        </div>
+
+        <div class="table-viewport">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Point d'accès</th>
+                        <th>Tarif</th>
+                        <th>Identifiant</th>
+                        <th>Mot de passe</th>
+                        <th>Durée</th>
+                        <th>Statut</th>
+                        <th style="text-align: right;">Commandes</th>
+                    </tr>
+                </thead>
+                <tbody id="ticket-list">
+                    <tr>
+                        <td colspan="7">
+                            <div class="empty-state">
+                                <div style="font-size: 40px; margin-bottom: 15px; opacity: 0.3;">📡</div>
+                                <h3 style="color: white; font-size: 16px;">AUCUN FLUX DÉTECTÉ</h3>
+                                <p style="font-size: 12px; margin-top: 5px;">La base de données est vierge. Générez des tickets pour peupler la console.</p>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Fonction de test pour simuler l'ajout (Ultra-Gen Style)
+        function injectTicket(ap, prix, id, pass, duree, status) {
+            const list = document.getElementById('ticket-list');
+            const row = `
+                <tr>
+                    <td><b style="color:white; font-size:12px;">${ap}</b></td>
+                    <td><div class="price-tag">${prix}<span>XAF</span></div></td>
+                    <td><span class="code-tech">${id}</span></td>
+                    <td><span class="code-tech" style="color:var(--accent);">${pass}</span></td>
+                    <td><span style="font-weight:600;">${duree}</span></td>
+                    <td>
+                        <div class="status-glow ${status === 'ACTIF' ? 'status-online' : 'status-sold'}">
+                            <span style="width:6px; height:6px; background:currentColor; border-radius:50%;"></span>
+                            ${status === 'ACTIF' ? 'Non vendu' : 'Vendu'}
+                        </div>
+                    </td>
+                    <td>
+                        <div class="action-btns" style="justify-content: flex-end;">
+                            <button class="icon-btn" title="Imprimer">🖨️</button>
+                            <button class="icon-btn delete" title="Supprimer">🗑️</button>
+                        </div>
+                    </td>
+                </tr>
+            `;
+            // Si c'est le premier ticket, on vide l'état "Empty"
+            if(list.innerHTML.includes('empty-state')) list.innerHTML = '';
+            list.innerHTML += row;
+        }
+
+        // Pour tester le design, tu peux décommenter la ligne ci-dessous :
+        // injectTicket('CONNEXIA 1', '500', 'zzst', '5223', '24H', 'ACTIF');
+    </script>
+</body>
+</html>
