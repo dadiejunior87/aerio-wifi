@@ -10,59 +10,39 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         body { background: var(--bg); color: white; min-height: 100vh; background-image: radial-gradient(circle at top right, rgba(0, 194, 255, 0.1), transparent); overflow-x: hidden; }
 
+        @keyframes scan { 0% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.1); opacity: 0.4; } 100% { transform: scale(1); opacity: 0.8; } }
+        @keyframes neonPulse { 0% { box-shadow: 0 0 5px var(--primary); } 50% { box-shadow: 0 0 20px var(--primary); } 100% { box-shadow: 0 0 5px var(--primary); } }
+
         nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 5%; position: fixed; width: 100%; top: 0; z-index: 1000; backdrop-filter: blur(15px); border-bottom: 1px solid rgba(255,255,255,0.03); }
         .logo { font-weight: 900; font-size: 20px; color: var(--primary); letter-spacing: -1.5px; }
         .nav-links { display: flex; gap: 15px; align-items: center; }
         .nav-links a { color: #64748b; text-decoration: none; font-size: 10px; font-weight: 700; text-transform: uppercase; transition: 0.3s; }
         .nav-links a:hover { color: white; }
-
         .btn-pro { background: linear-gradient(45deg, var(--primary), var(--neon)); color: white; padding: 10px 15px; border-radius: 10px; font-weight: 900; text-decoration: none; font-size: 9px; text-transform: uppercase; }
 
-        /* CARROUSELS INFINIS */
         .carousel-track { display: flex; gap: 20px; width: max-content; animation: scroll 40s linear infinite; }
         @keyframes scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
         .info-card { width: 300px; background: var(--glass); padding: 30px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.03); backdrop-filter: blur(20px); }
         .flag-card { min-width: 180px; background: var(--glass); padding: 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column; align-items: center; }
+
+        .ai-graph { display: flex; align-items: flex-end; gap: 4px; height: 60px; justify-content: center; margin-bottom: 15px; }
+        .ai-bar { width: 8px; background: var(--primary); border-radius: 2px; transition: height 0.5s ease; }
 
         footer { padding: 80px 8% 40px; background: rgba(0,0,0,0.4); border-top: 1px solid rgba(255,255,255,0.05); }
         .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; }
     </style>
 </head>
 <body>
+
 <div id="preloader" style="position: fixed; inset: 0; background: #020617; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: 0.8s ease-in-out;">
     <div style="width: 250px; text-align: center;">
-        <div style="font-weight: 900; color: #00C2FF; letter-spacing: 5px; margin-bottom: 20px; font-size: 14px; font-family: 'Poppins', sans-serif;">AERIO SYSTEM INITIALIZATION</div>
+        <div style="font-weight: 900; color: #00C2FF; letter-spacing: 5px; margin-bottom: 20px; font-size: 14px;">AERIO SYSTEM INITIALIZATION</div>
         <div style="width: 100%; height: 2px; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; position: relative;">
             <div id="loader-bar" style="position: absolute; height: 100%; width: 0%; background: #00C2FF; box-shadow: 0 0 15px #00C2FF; transition: 0.4s;"></div>
         </div>
-        <div id="loader-percent" style="margin-top: 10px; font-family: monospace; font-size: 10px; color: #64748b;">0% - SECURE LINK</div>
+        <div id="loader-percent" style="margin-top: 10px; font-family: monospace; font-size: 10px; color: #64748b;">0% - PROTOCOLE ALPHA ACTIVÉ</div>
     </div>
 </div>
-
-<script>
-    window.addEventListener('load', () => {
-        let progress = 0;
-        const bar = document.getElementById('loader-bar');
-        const percent = document.getElementById('loader-percent');
-        const preloader = document.getElementById('preloader');
-
-        const interval = setInterval(() => {
-            progress += Math.floor(Math.random() * 20) + 5;
-            if (progress > 100) progress = 100;
-            
-            bar.style.width = progress + '%';
-            percent.innerText = progress + '% - PROTOCOLE ALPHA ACTIVÉ';
-
-            if (progress === 100) {
-                clearInterval(interval);
-                setTimeout(() => {
-                    preloader.style.opacity = '0';
-                    setTimeout(() => { preloader.style.display = 'none'; }, 800);
-                }, 500);
-            }
-        }, 100);
-    });
-</script>
 
     <nav>
         <div class="logo">🛰️ AERIO</div>
@@ -82,10 +62,16 @@
             <p style="color: #64748b; font-size: 15px; margin-bottom: 35px; line-height: 1.6;">Monétisez votre connexion MikroTik avec la puissance du Mobile Money à l'échelle internationale.</p>
             <a href="shop.html" style="background:white; color:black; padding:18px 35px; border-radius:18px; text-decoration:none; font-weight:900; display:inline-block; font-size:15px;">Devenir Partenaire</a>
         </div>
-        <div class="live-card" style="background:var(--glass); padding:35px; border-radius:40px; width:100%; max-width:420px; text-align:center; border: 1px solid rgba(255,255,255,0.05);">
-            <h3 style="font-size:9px; color:#475569; letter-spacing:2px; margin-bottom:15px;">VOTRE BUSINESS EN LIVE</h3>
-            <div id="global-flow" style="font-size:42px; font-weight:900; color:var(--primary);">145 000 F</div>
-            <div style="width:100%; height:6px; background:rgba(255,255,255,0.05); border-radius:10px; margin:20px 0;"><div style="width:75%; height:100%; background:var(--primary); box-shadow:0 0 20px var(--primary);"></div></div>
+
+        <div class="live-card" style="background:var(--glass); padding:35px; border-radius:40px; width:100%; max-width:420px; text-align:center; border: 1px solid var(--primary); animation: neonPulse 5s infinite;">
+            <h3 style="font-size:9px; color:#475569; letter-spacing:2px; margin-bottom:15px;">VOTRE BUSINESS EN LIVE (IA)</h3>
+            <div class="ai-graph" id="ai-bars">
+                <div class="ai-bar" style="height: 40%"></div><div class="ai-bar" style="height: 80%"></div><div class="ai-bar" style="height: 60%"></div><div class="ai-bar" style="height: 90%"></div><div class="ai-bar" style="height: 50%"></div><div class="ai-bar" style="height: 70%"></div>
+            </div>
+            <div style="font-size:10px; color:var(--accent); font-weight:900; margin-bottom:10px;">FLUX SÉCURISÉ ANALYSÉ</div>
+            <div style="width:100%; height:6px; background:rgba(255,255,255,0.05); border-radius:10px; margin:20px 0; overflow:hidden;">
+                <div style="width:100%; height:100%; background:var(--primary); box-shadow:0 0 20px var(--primary);"></div>
+            </div>
             <div style="display:flex; justify-content:space-between; font-size:8px; font-weight:900; color:#475569; text-transform:uppercase;">
                 <div>Réseau: <span style="color:var(--accent)">Actif</span></div>
                 <div>Hub: International</div>
@@ -103,8 +89,6 @@
                 <div class="info-card"><h3>🔓 ZERO DATA</h3><p>Le Walled Garden permet de payer sans forfait internet.</p></div>
                 <div class="info-card"><h3>🛰️ DÉPLOIEMENT</h3><p>Importation CSV MikroTik industrielle en 1 seconde.</p></div>
                 <div class="info-card"><h3>💸 VENTE AUTO</h3><p>Paiements Mobile Money sécurisés et sans data.</p></div>
-                <div class="info-card"><h3>📈 RADAR PERF</h3><p>Suivi des recettes brutes en temps réel 24h/7j.</p></div>
-                <div class="info-card"><h3>🔓 ZERO DATA</h3><p>Le Walled Garden permet de payer sans forfait internet.</p></div>
             </div>
         </div>
     </section>
@@ -127,50 +111,13 @@
         </div>
     </section>
 
-    <section style="padding: 100px 8%; text-align: center;">
-        <h2 style="font-weight:900; font-size:32px; margin-bottom:40px;">LOCALISATION <span style="color:var(--primary)">DES NŒUDS</span></h2>
-        <div style="background: var(--glass); padding: 50px; border-radius: 50px; border: 1px solid var(--primary); display: flex; align-items: center; justify-content: center; gap: 30px; flex-wrap: wrap;">
-            <div style="text-align: left;">
-                <h3 style="font-size: 24px; font-weight: 900; color: var(--primary);">250+ NŒUDS ACTIFS</h3>
-                <p style="color: #64748b; font-size: 14px; margin-top: 10px;">Déploiement en cours sur tout le continent africain.</p>
-            </div>
-            <a href="localisation.html" style="background:var(--primary); color:#020617; padding:18px 40px; border-radius:20px; text-decoration:none; font-weight:900; font-size:14px; box-shadow:0 0 30px var(--primary);">VOIR LA CARTE ALPHA</a>
-        </div>
-    </section>
-
-    <section style="padding: 100px 8%; background: rgba(0,0,0,0.3);">
-        <h2 style="text-align:center; font-size:42px; font-weight:900; margin-bottom:60px; letter-spacing:-2px;">
-            AERIO <span style="color:#64748b;">vs</span> <span style="color:var(--primary)">LES AUTRES</span>
-        </h2>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 40px; max-width: 1200px; margin: 0 auto;">
-            <div style="background: rgba(255,255,255,0.02); padding: 50px; border-radius: 40px; border: 1px solid rgba(255,255,255,0.05); opacity: 0.6;">
-                <h3 style="color:#64748b; font-size:18px; margin-bottom:30px; text-transform:uppercase; letter-spacing:2px;">Systèmes Classiques</h3>
-                <ul style="list-style:none; line-height:2.5; font-size:14px; color:#475569;">
-                    <li>❌ Vente de tickets manuelle</li>
-                    <li>❌ Risque de piratage constant</li>
-                    <li>❌ Pas de suivi comptable</li>
-                    <li>❌ Zéro automatisation</li>
-                </ul>
-            </div>
-            <div style="background: rgba(0, 194, 255, 0.05); padding: 50px; border-radius: 40px; border: 2px solid var(--primary); box-shadow: 0 0 50px rgba(0, 194, 255, 0.1);">
-                <h3 style="color:var(--primary); font-size:18px; margin-bottom:30px; text-transform:uppercase; letter-spacing:2px;">AERIO ALPHA</h3>
-                <ul style="list-style:none; line-height:2.5; font-size:14px; font-weight:600;">
-                    <li>✅ Paiement Mobile Money 100% Auto</li>
-                    <li>✅ Codes tickets envoyés par SMS</li>
-                    <li>✅ Tableau de bord pro 24h/7j</li>
-                    <li>✅ Bouclier Anti-Piratage MikroTik</li>
-                </ul>
-            </div>
-        </div>
-    </section>
-
     <section style="padding: 100px 8%;">
         <div style="background:var(--glass); padding:60px; border-radius:40px; border:1px solid #25D366; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 50px;">
             <div>
                 <h2 style="font-size: 32px; font-weight: 900; margin-bottom: 25px;">Envoyez-nous <span style="color:#25D366">Un Message Alpha.</span></h2>
-                <a href="https://wa.me/237692487922?text=Bonjour%20AERIO,%20je%20souhaite%20obtenir%20des%20informations%20sur%20le%20système%20Alpha." style="background:#25D366; color:white; padding:20px 40px; border-radius:20px; text-decoration:none; font-weight:900; display:inline-block;">💬 WHATSAPP DIRECT</a>
+                <a href="https://wa.me/237692487922?text=Bonjour%20AERIO,%20je%20souhaite%20obtenir%20des%20informations%20sur%20le%20système%20Alpha." style="background:#25D366; color:white; padding:20px 40px; border-radius:20px; text-decoration:none; font-weight:900; display:inline-block; box-shadow: 0 0 20px rgba(37, 211, 102, 0.3);">💬 WHATSAPP DIRECT</a>
             </div>
-            <div style="font-size: 80px;">🛰️</div>
+            <div style="font-size: 80px; animation: scan 3s infinite;">🛰️</div>
         </div>
     </section>
 
@@ -194,18 +141,31 @@
     </footer>
 
     <script>
-        // ✅ COMPTEUR DE REVENUS LIVE
-        let flow = 145000;
-        const flowDisplay = document.getElementById('global-flow');
-        
+        // IA BARS ANIMATION
+        const bars = document.querySelectorAll('.ai-bar');
         setInterval(() => {
-            flow += Math.floor(Math.random() * 75);
-            flowDisplay.innerText = flow.toLocaleString() + " F";
-        }, 2500);
+            bars.forEach(bar => {
+                bar.style.height = (Math.floor(Math.random() * 80) + 20) + '%';
+            });
+        }, 600);
 
-        window.onload = function() { 
-            if(typeof applyTranslations === 'function') applyTranslations(); 
-        };
+        // PRELOADER SCRIPT
+        window.addEventListener('load', () => {
+            let progress = 0;
+            const bar = document.getElementById('loader-bar');
+            const percent = document.getElementById('loader-percent');
+            const preloader = document.getElementById('preloader');
+            const interval = setInterval(() => {
+                progress += Math.floor(Math.random() * 15) + 5;
+                if (progress > 100) progress = 100;
+                bar.style.width = progress + '%';
+                percent.innerText = progress + '% - PROTOCOLE ALPHA ACTIVÉ';
+                if (progress === 100) {
+                    clearInterval(interval);
+                    setTimeout(() => { preloader.style.opacity = '0'; setTimeout(() => { preloader.style.display = 'none'; }, 800); }, 500);
+                }
+            }, 100);
+        });
     </script>
 </body>
 </html>
