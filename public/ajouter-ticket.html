@@ -35,7 +35,7 @@
         select, input { width: 100%; background: rgba(0,0,0,0.4); border: 1px solid var(--border); padding: 15px; border-radius: 15px; color: white; font-size: 13px; transition: 0.3s; }
         select:focus, input:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 20px rgba(0,245,160,0.1); }
 
-        /* --- TICKET REEL (Correction : Plus de simulation) --- */
+        /* --- TICKET REEL --- */
         .preview-sticky { position: sticky; top: 40px; }
         .ticket-visual { 
             background: linear-gradient(135deg, #ffffff 0%, #f0f4f8 100%); 
@@ -44,7 +44,6 @@
             position: relative; overflow: hidden;
         }
         
-        /* Animation du voyant Live */
         .live-dot {
             width: 8px; height: 8px; background: #ff4b4b; border-radius: 50%;
             display: inline-block; margin-right: 5px;
@@ -66,6 +65,17 @@
         .btn-generate:hover { transform: scale(1.02); box-shadow: 0 0 30px rgba(0,245,160,0.4); }
 
         .ai-status { background: rgba(0, 194, 255, 0.05); padding: 15px; border-radius: 15px; border: 1px solid rgba(0, 194, 255, 0.2); margin-top: 20px; font-size: 11px; display: flex; align-items: center; gap: 10px; }
+        
+        .smart-mention {
+            font-size: 9px;
+            color: #94a3b8;
+            text-align: center;
+            margin-top: 10px;
+            font-style: italic;
+            background: rgba(255,255,255,0.05);
+            padding: 5px;
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body>
@@ -79,6 +89,8 @@
         <a href="liste-tarifs.html" class="nav-button"><i>📜 Ma Grille Tarifaire</i></a>
         <a href="ajouter-ticket.html" class="nav-button active"><i>🎫</i> Générer un Pass</a>
         <a href="liste-tickets.html" class="nav-button"><i>🔑 Registre des Accès</i></a>
+        <div class="group-label">Expansion</div>
+        <a href="reseau-partenaires.html" class="nav-button"><i>🤝</i> Réseau Partenaires</a>
     </div>
 
     <div class="content">
@@ -129,25 +141,4 @@
                     
                     <div class="pass-code">AER-98X2-P</div>
                     
-                    <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 800; color: #1e293b;">
-                        <div>
-                            <p style="font-size: 8px; color: #94a3b8; margin-bottom: 2px;">VALABLE</p>
-                            <p>120 MINUTES</p>
-                        </div>
-                        <div style="text-align: right;">
-                            <p style="font-size: 8px; color: #94a3b8; margin-bottom: 2px;">VALEUR</p>
-                            <p>500 XAF</p>
-                        </div>
-                    </div>
-
-                    <div style="margin-top: 25px; border-top: 1px dashed #cbd5e1; padding-top: 15px; text-align: center;">
-                        <p style="font-size: 9px; color: #64748b; font-weight: 600;">Scannez le code ou entrez-le manuellement.<br>Accès sécurisé par AERIO Alpha.</p>
-                    </div>
-                </div>
-                <p style="font-size: 10px; color: #475569; text-align: center; margin-top: 15px;">Format optimisé pour imprimantes thermiques 58/80mm.</p>
-            </div>
-        </div>
-    </div>
-
-</body>
-</html>
+                    <div style="display: flex; justify-content: space-between; font-size: 12px
