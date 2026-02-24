@@ -57,10 +57,12 @@
         }
         .notif-trigger:hover { border-color: var(--primary); background: rgba(0, 194, 255, 0.1); }
         
+        /* CORRECTION : Badge masqué par défaut (display: none) */
         .notif-badge {
             position: absolute; top: -5px; right: -5px;
             background: #ff4b4b; color: white; font-size: 9px; font-weight: 900;
             padding: 2px 6px; border-radius: 50%; border: 2px solid var(--bg-deep);
+            display: none; 
         }
 
         .notif-dropdown {
@@ -74,11 +76,7 @@
         @keyframes slideDown { from { opacity:0; transform: translateY(-10px); } to { opacity:1; transform: translateY(0); } }
 
         .notif-header { font-size: 11px; font-weight: 900; color: #64748b; margin-bottom: 15px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
-        .notif-item { display: flex; gap: 12px; padding: 10px; border-radius: 10px; margin-bottom: 5px; transition: 0.2s; cursor: pointer; }
-        .notif-item:hover { background: rgba(255,255,255,0.03); }
-        .notif-icon { width: 35px; height: 35px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
-        .notif-info b { font-size: 11px; display: block; color: white; }
-        .notif-info span { font-size: 10px; color: #64748b; }
+        .notif-empty-state { padding: 20px; text-align: center; color: #475569; font-size: 11px; }
 
         /* --- CONTENU --- */
         .content { margin-left: var(--sidebar-w); flex: 1; padding: 10px 40px 40px 40px; }
@@ -144,34 +142,13 @@
         <div class="top-bar">
             <div class="notif-wrapper">
                 <div class="notif-trigger" onclick="toggleNotifs()">
-                    🔔 <span class="notif-badge">3</span>
+                    🔔 <span class="notif-badge">0</span>
                 </div>
                 
                 <div class="notif-dropdown" id="notifDropdown">
                     <div class="notif-header">NOTIFICATIONS RÉCENTES</div>
-                    
-                    <div class="notif-item">
-                        <div class="notif-icon" style="background: rgba(0, 245, 160, 0.1); color: var(--accent);">💰</div>
-                        <div class="notif-info">
-                            <b>Nouveau Paiement !</b>
-                            <span>+500 XAF via Orange Money</span>
-                        </div>
-                    </div>
-
-                    <div class="notif-item">
-                        <div class="notif-icon" style="background: rgba(0, 194, 255, 0.1); color: var(--primary);">📡</div>
-                        <div class="notif-info">
-                            <b>Système Starlink</b>
-                            <span>Connexion stable à 180 Mbps</span>
-                        </div>
-                    </div>
-
-                    <div class="notif-item">
-                        <div class="notif-icon" style="background: rgba(188, 0, 255, 0.1); color: var(--purple);">🔑</div>
-                        <div class="notif-info">
-                            <b>Ticket Activé</b>
-                            <span>Client AX-982 connecté</span>
-                        </div>
+                    <div class="notif-empty-state">
+                        ✨ Bienvenue ! Aucune notification pour le moment.
                     </div>
                 </div>
             </div>
