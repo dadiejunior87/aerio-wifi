@@ -3,144 +3,134 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AERIO | Configuration de Vente</title>
+    <title>AERIO | Génération de Pass Alpha</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;900&display=swap" rel="stylesheet">
     <style>
-        :root { 
-            --primary: #00C2FF; 
-            --bg: #020617; 
-            --glass: rgba(15, 23, 42, 0.7); 
-            --accent: #00F5A0; 
+        :root {
+            --primary: #00F5A0; /* Vert Néon pour les Pass */
+            --accent: #00C2FF;
+            --bg-deep: #020617;
+            --card-bg: rgba(15, 23, 42, 0.7);
+            --border: rgba(255, 255, 255, 0.05);
+            --sidebar-w: 280px;
         }
+
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        body { 
-            background: var(--bg); 
-            color: white; 
-            padding: 40px;
-            background-image: radial-gradient(circle at bottom left, rgba(0, 194, 255, 0.05), transparent);
-        }
-        .container { max-width: 800px; margin: 0 auto; }
-        .back-link { display: inline-block; margin-bottom: 20px; color: var(--primary); text-decoration: none; font-weight: 900; font-size: 11px; letter-spacing: 1px; }
+        body { background: var(--bg-deep); color: white; display: flex; min-height: 100vh; }
 
-        .form-card {
-            background: var(--glass);
-            border: 1px solid rgba(255,255,255,0.05);
-            border-radius: 30px;
-            padding: 40px;
-            backdrop-filter: blur(20px);
-        }
+        /* --- SIDEBAR --- */
+        .sidebar { width: var(--sidebar-w); background: #0b0f1a; padding: 30px 15px; height: 100vh; position: fixed; border-right: 1px solid var(--border); }
+        .logo-title { color: var(--accent); font-weight: 900; font-size: 26px; margin-bottom: 35px; }
+        .nav-button { background: rgba(255,255,255,0.02); padding: 12px 15px; border-radius: 12px; display: flex; text-decoration: none; font-size: 12px; margin-bottom: 5px; color: #94a3b8; border: 1px solid var(--border); }
+        .nav-button.active { border-left: 4px solid var(--primary); background: rgba(0, 245, 160, 0.1); color: var(--primary); }
 
-        h1 { font-weight: 900; font-size: 28px; margin-bottom: 10px; }
-        .subtitle { color: #64748b; font-size: 12px; margin-bottom: 30px; }
+        /* --- ZONE DE GÉNÉRATION --- */
+        .content { margin-left: var(--sidebar-w); flex: 1; padding: 40px; }
+        .gen-container { display: grid; grid-template-columns: 1.2fr 1fr; gap: 40px; margin-top: 30px; }
+
+        .alpha-form { background: var(--card-bg); padding: 35px; border-radius: 30px; border: 1px solid var(--border); backdrop-filter: blur(10px); }
+        .input-group { margin-bottom: 25px; }
+        .input-group label { display: block; font-size: 10px; font-weight: 900; color: var(--primary); letter-spacing: 1.5px; margin-bottom: 10px; text-transform: uppercase; }
         
-        .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px; }
-        .input-group { margin-bottom: 20px; }
-        .input-group label { display: block; font-size: 10px; font-weight: 900; color: #64748b; letter-spacing: 1.5px; margin-bottom: 10px; text-transform: uppercase; }
-        
-        input {
-            width: 100%;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            padding: 15px;
-            border-radius: 15px;
-            color: white;
-            font-size: 14px;
-            outline: none;
-            transition: 0.3s;
-        }
-        input:focus { border-color: var(--primary); background: rgba(0, 194, 255, 0.05); }
+        select, input { width: 100%; background: rgba(0,0,0,0.4); border: 1px solid var(--border); padding: 15px; border-radius: 15px; color: white; font-size: 13px; transition: 0.3s; }
+        select:focus, input:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 20px rgba(0,245,160,0.1); }
 
-        .profit-preview {
-            background: rgba(0, 245, 160, 0.05);
-            border: 1px dashed var(--accent);
-            padding: 20px;
-            border-radius: 20px;
-            margin: 30px 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        /* --- TICKET PREVIEW (Ultra Moderne) --- */
+        .preview-sticky { position: sticky; top: 40px; }
+        .ticket-visual { 
+            background: linear-gradient(135deg, #ffffff 0%, #f0f4f8 100%); 
+            color: #020617; border-radius: 20px; padding: 30px; 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.4); border-left: 8px solid var(--primary);
+            position: relative; overflow: hidden;
         }
-        .profit-value { font-weight: 900; color: var(--accent); font-size: 22px; }
+        .ticket-visual::after { content: ""; position: absolute; right: -20px; top: 50%; transform: translateY(-50%); width: 40px; height: 40px; background: var(--bg-deep); border-radius: 50%; }
 
-        .btn-generate {
-            width: 100%;
-            background: var(--primary);
-            color: var(--bg);
-            border: none;
-            padding: 20px;
-            border-radius: 18px;
-            font-weight: 900;
-            font-size: 16px;
-            cursor: pointer;
-            transition: 0.3s;
-            text-transform: uppercase;
+        .pass-code { font-size: 32px; font-weight: 900; letter-spacing: 4px; margin: 20px 0; color: #1e293b; border: 2px dashed #cbd5e1; padding: 10px; border-radius: 10px; }
+
+        .btn-generate { 
+            background: var(--primary); color: #020617; border: none; padding: 20px; 
+            border-radius: 15px; font-weight: 900; font-size: 14px; cursor: pointer; 
+            width: 100%; transition: 0.4s; display: flex; align-items: center; justify-content: center; gap: 10px;
         }
-        .btn-generate:hover { transform: scale(1.02); box-shadow: 0 0 30px rgba(0, 194, 255, 0.3); }
+        .btn-generate:hover { transform: scale(1.02); box-shadow: 0 0 30px rgba(0,245,160,0.4); }
+
+        .ai-status { background: rgba(0, 194, 255, 0.05); padding: 15px; border-radius: 15px; border: 1px solid rgba(0, 194, 255, 0.2); margin-top: 20px; font-size: 11px; display: flex; align-items: center; gap: 10px; }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <a href="dashboard.html" class="back-link">← ANNULER L'OPÉRATION</a>
-        
-        <div class="form-card">
-            <p style="color: var(--primary); font-size: 10px; font-weight: 900; letter-spacing: 2px;">CONFIGURATEUR DE FLUX</p>
-            <h1>Créer vos <span style="color:var(--primary)">Tarifs</span></h1>
-            <p class="subtitle">Définissez vos propres prix et durées de connexion pour vos clients.</p>
+    <div class="sidebar">
+        <div class="logo-title">AERIO</div>
+        <div class="group-label">Pilotage Réseaux</div>
+        <a href="dashboard.html" class="nav-button"><i>🏠</i> Tableau de bord</a>
+        <div class="group-label">Offres & Accès</div>
+        <a href="ajouter-tarif.html" class="nav-button"><i>💎</i> Créer un Forfait</a>
+        <a href="ajouter-ticket.html" class="nav-button active"><i>🎫</i> Générer un Pass</a>
+        <a href="liste-tickets.html" class="nav-button"><i>🔑 Registre des Accès</i></a>
+    </div>
 
-            <div class="input-grid">
+    <div class="content">
+        <h1 style="font-size: 32px; font-weight: 900; letter-spacing: -1px;">Générer des <span style="color:var(--primary)">Pass d'Accès</span></h1>
+        <p style="color: #64748b; font-size: 13px; margin-bottom: 30px;">Créez des accès sécurisés basés sur votre grille tarifaire.</p>
+
+        <div class="gen-container">
+            <div class="alpha-form">
                 <div class="input-group">
-                    <label>Nom du Forfait (ex: Pass 2H)</label>
-                    <input type="text" id="ticket-name" placeholder="Ex: Super Rapide">
+                    <label>Associer à un Forfait</label>
+                    <select>
+                        <option>Sélectionnez une offre (ex: Premium 2H)...</option>
+                    </select>
                 </div>
+
                 <div class="input-group">
-                    <label>Durée (ex: 02:00:00)</label>
-                    <input type="text" id="ticket-duration" placeholder="HH:MM:SS">
+                    <label>Quantité de Pass à Produire</label>
+                    <input type="number" placeholder="Ex: 50">
+                </div>
+
+                <div class="input-group">
+                    <label>Préfixe Personnalisé (Optionnel)</label>
+                    <input type="text" placeholder="Ex: WIFI_">
+                </div>
+
+                <button class="btn-generate">
+                    <span>DÉMARRER LA GÉNÉRATION ALPHA</span>
+                    <span style="font-size: 20px;">🚀</span>
+                </button>
+
+                <div class="ai-status">
+                    <span style="color: var(--accent);">●</span>
+                    <p>L'IA AERIO filtre automatiquement les caractères ambigus (0, O, I, 1) pour une lecture parfaite par vos clients.</p>
                 </div>
             </div>
 
-            <div class="input-grid">
-                <div class="input-group">
-                    <label>Prix Unitaire (FCFA)</label>
-                    <input type="number" id="ticket-price" placeholder="0" oninput="calculateProfit()">
-                </div>
-                <div class="input-group">
-                    <label>Nombre de Tickets</label>
-                    <input type="number" id="ticket-qty" placeholder="0" oninput="calculateProfit()">
+            <div class="preview-sticky">
+                <p style="font-size: 10px; font-weight: 900; color: var(--accent); letter-spacing: 2px; margin-bottom: 15px; text-align: center;">SIMULATION D'IMPRESSION THERMIQUE</p>
+                <div class="ticket-visual">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-weight: 900; font-size: 18px; color: #0f172a;">AERIO WiFi</span>
+                        <span style="font-size: 10px; font-weight: 700; color: #64748b;">24/02/2026</span>
+                    </div>
+                    
+                    <div class="pass-code">AER-98X2-P</div>
+                    
+                    <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 800; color: #1e293b;">
+                        <div>
+                            <p style="font-size: 8px; color: #94a3b8; margin-bottom: 2px;">DURÉE</p>
+                            <p>120 MINUTES</p>
+                        </div>
+                        <div style="text-align: right;">
+                            <p style="font-size: 8px; color: #94a3b8; margin-bottom: 2px;">PRIX</p>
+                            <p>500 XAF</p>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 25px; border-top: 1px dashed #cbd5e1; pt: 15px; text-align: center;">
+                        <p style="font-size: 9px; color: #64748b; margin-top: 10px;">Connectez-vous au réseau et entrez ce code.<br>Merci de votre fidélité !</p>
+                    </div>
                 </div>
             </div>
-
-            <div class="profit-preview">
-                <div>
-                    <span style="font-size: 12px; font-weight: 600; display: block;">Chiffre d'affaires prévu :</span>
-                    <small style="color: #64748b; font-size: 10px;">Basé sur vos tarifs personnels</small>
-                </div>
-                <span class="profit-value" id="total-profit">0 FCFA</span>
-            </div>
-
-            <button class="btn-generate" onclick="generateAction()">Générer le lot de tickets</button>
         </div>
     </div>
 
-    <script>
-        function calculateProfit() {
-            const price = document.getElementById('ticket-price').value || 0;
-            const qty = document.getElementById('ticket-qty').value || 0;
-            const total = price * qty;
-            document.getElementById('total-profit').innerText = total.toLocaleString() + " FCFA";
-        }
-
-        function generateAction() {
-            const name = document.getElementById('ticket-name').value;
-            const price = document.getElementById('ticket-price').value;
-            
-            if(!name || !price) {
-                alert("⚠️ Veuillez configurer un nom et un prix pour vos tickets.");
-                return;
-            }
-
-            alert("🚀 Protocole de génération lancé...\nForfait : " + name + "\nPrix : " + price + " FCFA\nStatut : EN ATTENTE DE SYNCHRO MIKROTIK");
-        }
-    </script>
 </body>
 </html>
