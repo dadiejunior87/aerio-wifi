@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AERIO | Inventaire des Forfaits</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;900&display=swap" rel="stylesheet">
+    <style>
+        :root { 
+            --primary: #00C2FF; 
+            --bg: #020617; 
+            --glass: rgba(15, 23, 42, 0.7); 
+            --accent: #00F5A0; 
+            --border: rgba(255, 255, 255, 0.08);
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        
+        body { 
+            background: var(--bg); 
+            color: white; 
+            padding: 40px;
+            background-image: radial-gradient(circle at top right, rgba(0, 194, 255, 0.05), transparent);
+            min-height: 100vh;
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; }
+
+        /* HEADER */
+        .header-flex {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 50px;
+        }
+        .header-flex h1 { font-weight: 900; font-size: 32px; letter-spacing: -1px; }
+        .header-flex p { color: var(--primary); font-size: 10px; font-weight: 900; letter-spacing: 3px; text-transform: uppercase; }
+
+        /* BOUTON CRÉATION */
+        .btn-create {
+            background: var(--primary);
+            color: var(--bg);
+            border: none;
+            padding: 15px 30px;
+            border-radius: 18px;
+            font-weight: 900;
+            font-size: 12px;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 10px 20px rgba(0, 194, 255, 0.2);
+        }
+        .btn-create:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(0, 194, 255, 0.4); }
+
+        /* BARRE DE RECHERCHE */
+        .search-container {
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 15px 25px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+        }
+        .search-input {
+            background: none;
+            border: none;
+            color: white;
+            width: 100%;
+            margin-left: 15px;
+            outline: none;
+            font-size: 14px;
+        }
+
+        /* EMPTY STATE (Pour plateforme sans données) */
+        .empty-state {
+            text-align: center;
+            padding: 100px 40px;
+            background: var(--glass);
+            border: 2px dashed var(--border);
+            border-radius: 40px;
+            margin-top: 20px;
+        }
+        .empty-icon { font-size: 60px; margin-bottom: 20px; display: block; filter: drop-shadow(0 0 15px var(--primary)); }
+        .empty-state h2 { font-weight: 900; margin-bottom: 10px; font-size: 22px; }
+        .empty-state p { color: #64748b; font-size: 14px; max-width: 500px; margin: 0 auto 30px; line-height: 1.6; }
+
+        /* GRID DES TARIFS (PRÊTE POUR LES DONNÉES) */
+        .tarif-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header class="header-flex">
+            <div>
+                <p>Gestion Commerciale</p>
+                <h1>Vos Forfaits <span style="color:var(--primary)">WiFi</span></h1>
+            </div>
+            <button class="btn-create" onclick="location.href='mes-tarifs.html'">+ NOUVEAU FORFAIT</button>
+        </header>
+
+        <div class="search-container">
+            <span style="color: var(--primary);">🔍</span>
+            <input type="text" class="search-input" placeholder="Rechercher par nom, zone ou durée...">
+        </div>
+
+        <div class="tarif-grid">
+            
+            <div class="empty-state">
+                <span class="empty-icon">💎</span>
+                <h2>Aucun forfait configuré</h2>
+                <p>Votre inventaire tarifaire est actuellement vide. Commencez par créer des forfaits attractifs (Heure, Jour, Mois) pour permettre à vos clients de se connecter à vos zones WiFi.</p>
+                <button class="btn-create" onclick="location.href='mes-tarifs.html'">CRÉER MON PREMIER FORFAIT</button>
+            </div>
+
+            </div>
+    </div>
+
+</body>
+</html>
