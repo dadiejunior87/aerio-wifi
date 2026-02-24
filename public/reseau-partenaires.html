@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AERIO | Réseau Partenaires Alpha</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #A855F7; /* Violet Royal pour le Réseau */
+            --accent: #00F5A0;
+            --bg-deep: #020617;
+            --card-bg: rgba(15, 23, 42, 0.7);
+            --border: rgba(255, 255, 255, 0.05);
+            --sidebar-w: 280px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: var(--bg-deep); color: white; display: flex; min-height: 100vh; }
+
+        /* --- SIDEBAR --- */
+        .sidebar { width: var(--sidebar-w); background: #0b0f1a; padding: 30px 15px; height: 100vh; position: fixed; border-right: 1px solid var(--border); }
+        .logo-title { color: #00C2FF; font-weight: 900; font-size: 26px; margin-bottom: 35px; }
+        .nav-button { background: rgba(255,255,255,0.02); padding: 12px 15px; border-radius: 12px; display: flex; text-decoration: none; font-size: 12px; margin-bottom: 5px; color: #94a3b8; border: 1px solid var(--border); }
+        .nav-button.active { border-left: 4px solid var(--primary); background: rgba(168, 85, 247, 0.1); color: var(--primary); }
+
+        /* --- CONTENU --- */
+        .content { margin-left: var(--sidebar-w); flex: 1; padding: 40px; }
+        
+        /* --- AFFILIATION CARD --- */
+        .affiliate-banner {
+            background: linear-gradient(135deg, #2e1065 0%, #020617 100%);
+            padding: 40px; border-radius: 35px; border: 1px solid rgba(168, 85, 247, 0.2);
+            margin-bottom: 40px; display: flex; justify-content: space-between; align-items: center;
+        }
+
+        .code-box {
+            background: rgba(0,0,0,0.3); border: 2px dashed var(--primary);
+            padding: 15px 30px; border-radius: 15px; font-weight: 900; font-size: 24px;
+            color: white; letter-spacing: 5px; display: flex; align-items: center; gap: 20px;
+        }
+
+        .btn-copy { background: var(--primary); border: none; padding: 10px 20px; border-radius: 10px; color: white; font-weight: 700; font-size: 12px; cursor: pointer; transition: 0.3s; }
+        .btn-copy:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(168, 85, 247, 0.4); }
+
+        /* --- NETWORK GRID --- */
+        .network-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; margin-bottom: 40px; }
+        .stat-card { background: var(--card-bg); padding: 25px; border-radius: 20px; border: 1px solid var(--border); }
+        .stat-card .label { font-size: 10px; color: #64748b; text-transform: uppercase; font-weight: 900; }
+        .stat-card .val { font-size: 28px; font-weight: 900; margin-top: 10px; }
+
+        /* --- TABLE --- */
+        .partner-list { background: var(--card-bg); border-radius: 30px; border: 1px solid var(--border); padding: 30px; }
+        table { width: 100%; border-collapse: collapse; }
+        th { text-align: left; padding: 15px; font-size: 10px; color: #64748b; text-transform: uppercase; }
+        td { padding: 20px 15px; font-size: 13px; border-bottom: 1px solid var(--border); }
+
+        .rank-badge { background: rgba(0, 245, 160, 0.1); color: var(--accent); padding: 4px 10px; border-radius: 6px; font-weight: 900; font-size: 10px; }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="logo-title">AERIO</div>
+        <div class="group-label">Expansion</div>
+        <a href="dashboard.html" class="nav-button"><i>🏠</i> Tableau de bord</a>
+        <a href="reseau-partenaires.html" class="nav-button active"><i>🤝</i> Réseau Partenaires</a>
+        <a href="commissions.html" class="nav-button"><i>💰 Mes Commissions</i></a>
+    </div>
+
+    <div class="content">
+        <h1 style="font-size: 32px; font-weight: 900;">Expansion du <span style="color:var(--primary)">Réseau</span></h1>
+        <p style="color: #64748b; font-size: 13px; margin-bottom: 40px;">Bâtissez votre communauté et générez des revenus passifs.</p>
+
+        <div class="affiliate-banner">
+            <div>
+                <h2 style="font-size: 22px; margin-bottom: 10px;">Votre Code d'Affiliation Alpha</h2>
+                <p style="color: #a78bfa; font-size: 13px; margin-bottom: 25px;">Partagez ce code unique pour parrainer de nouveaux partenaires.</p>
+                <div class="code-box">
+                    <span>ALPHA-777</span>
+                    <button class="btn-copy">COPIER LE CODE</button>
+                </div>
+            </div>
+            <div style="text-align: right;">
+                <p style="font-size: 11px; color: #a78bfa;">VOTRE RANG ACTUEL</p>
+                <div style="font-size: 24px; font-weight: 900; color: var(--accent);">PIONNIER ALPHA</div>
+            </div>
+        </div>
+
+        <div class="network-stats">
+            <div class="stat-card">
+                <div class="label">Partenaires Recrutés</div>
+                <div class="val">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">Revenus de Parrainage</div>
+                <div class="val" style="color: var(--primary);">0 XAF</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">Bonus de Réseau</div>
+                <div class="val">+0%</div>
+            </div>
+        </div>
+
+        <div class="partner-list">
+            <h3 style="margin-bottom: 20px;">Membres de votre Réseau</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Partenaire</th>
+                        <th>Date d'Adhésion</th>
+                        <th>Rang</th>
+                        <th>Contribution</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="5" style="text-align: center; padding: 60px; color: #475569; font-style: italic;">
+                            Votre réseau est prêt à grandir. Commencez par partager votre code !
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</body>
+</html>
