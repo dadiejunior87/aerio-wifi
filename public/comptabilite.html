@@ -17,46 +17,34 @@
         
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         body { 
-            background: var(--bg); 
-            color: white; 
-            padding: 40px; 
-            min-height: 100vh; 
+            background: var(--bg); color: white; padding: 40px; min-height: 100vh; 
             background-image: radial-gradient(circle at top right, rgba(0, 194, 255, 0.1), transparent);
-            overflow-x: hidden;
         }
 
-        /* NAVIGATION & LANGUE */
+        /* NAVIGATION */
         .top-nav-compta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
         .lang-switcher { display: flex; gap: 5px; background: rgba(255,255,255,0.05); padding: 4px; border-radius: 12px; border: 1px solid var(--border); }
         .lang-btn { background: none; border: none; color: #475569; font-size: 9px; font-weight: 900; cursor: pointer; padding: 6px 10px; border-radius: 8px; transition: 0.3s; }
         .lang-btn.active { background: var(--primary); color: #020617; box-shadow: 0 0 10px var(--primary); }
 
-        /* BANNIÈRE IA ALPHA (L'EXCLUSIVITÉ) */
+        /* IA ADVISOR */
         .ai-predictor-box {
             background: linear-gradient(90deg, rgba(0, 194, 255, 0.1), rgba(188, 0, 255, 0.05));
             border: 1px solid rgba(0, 194, 255, 0.2);
-            border-radius: 25px;
-            padding: 25px;
-            margin-bottom: 35px;
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            position: relative;
+            border-radius: 25px; padding: 25px; margin-bottom: 35px;
+            display: flex; align-items: center; gap: 20px; position: relative;
         }
-        .ai-chip { background: var(--primary); color: #020617; padding: 4px 10px; border-radius: 6px; font-size: 9px; font-weight: 900; position: absolute; top: -10px; left: 25px; }
 
-        /* GRILLE DE STATUS */
+        /* STATUS CARDS */
         .status-grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 25px; margin-bottom: 40px; }
         .card-status { background: var(--card-bg); padding: 35px; border-radius: 35px; border: 1px solid var(--border); text-align: center; backdrop-filter: blur(10px); }
 
-        /* SECTION RETRAIT & LOGOS */
+        /* WITHDRAW SECTION */
         .withdraw-section { background: var(--card-bg); padding: 45px; border-radius: 40px; border: 1px solid var(--border); max-width: 1000px; margin: 0 auto; backdrop-filter: blur(10px); }
         
         .operator-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-            gap: 15px;
-            margin: 20px 0 30px 0;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+            gap: 15px; margin: 20px 0 30px 0;
         }
 
         .op-card { cursor: pointer; position: relative; }
@@ -65,26 +53,24 @@
             background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: 20px;
             padding: 15px; display: flex; flex-direction: column; align-items: center; gap: 10px; transition: 0.3s;
         }
-        .op-content img { width: 35px; height: 35px; object-fit: contain; border-radius: 6px; }
-        .op-content span { font-size: 10px; font-weight: 900; color: #475569; }
+        .op-content img { width: 45px; height: 45px; object-fit: contain; border-radius: 8px; }
+        .op-content span { font-size: 11px; font-weight: 900; color: #475569; }
 
         .op-card input:checked + .op-content {
             border-color: var(--primary); background: rgba(0, 194, 255, 0.1); transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 194, 255, 0.1);
         }
         .op-card input:checked + .op-content span { color: var(--primary); }
 
-        /* FORMULAIRE */
+        /* FORM */
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
         label { display: block; font-size: 10px; font-weight: 900; color: #475569; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; }
-        input { width: 100%; padding: 18px 25px; background: rgba(0, 0, 0, 0.6); border: 1px solid var(--border); border-radius: 20px; color: white; outline: none; transition: 0.3s; }
-        input:focus { border-color: var(--primary); box-shadow: 0 0 15px rgba(0, 194, 255, 0.1); }
-
-        .btn-withdraw { grid-column: span 2; background: var(--accent); color: #020617; padding: 22px; border-radius: 20px; font-weight: 900; border: none; text-transform: uppercase; letter-spacing: 2px; cursor: pointer; transition: 0.4s; margin-top: 15px; }
+        input { width: 100%; padding: 18px 25px; background: rgba(0, 0, 0, 0.6); border: 1px solid var(--border); border-radius: 20px; color: white; outline: none; }
+        .btn-withdraw { grid-column: span 2; background: var(--accent); color: #020617; padding: 22px; border-radius: 20px; font-weight: 900; border: none; cursor: pointer; transition: 0.4s; margin-top: 15px; }
         .btn-withdraw:hover { transform: translateY(-5px); box-shadow: 0 15px 40px rgba(0, 245, 160, 0.3); }
 
-        /* TOASTS */
         #toast-container { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 10000; }
-        .toast-alpha { background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(15px); border: 1px solid var(--primary); color: white; padding: 16px 30px; border-radius: 20px; font-weight: 800; font-size: 12px; display: flex; align-items: center; gap: 12px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); animation: slideDownAlpha 0.5s forwards; }
+        .toast-alpha { background: rgba(15, 23, 42, 0.95); border: 1px solid var(--primary); color: white; padding: 16px 30px; border-radius: 20px; font-weight: 800; animation: slideDownAlpha 0.5s forwards; }
         @keyframes slideDownAlpha { from { opacity: 0; transform: translateY(-50px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
@@ -95,75 +81,71 @@
     <div class="top-nav-compta">
         <div class="header-compta">
             <h1 data-lang="dash_nav_compta">Trésorerie <span style="color:var(--primary)">Alpha</span></h1>
-            <p style="color: #475569; font-size: 13px; font-weight: 600;">Intelligence financière AERIO intégrée.</p>
+            <p style="color: #475569; font-size: 13px;">Extraction sécurisée multisig.</p>
         </div>
         <div class="lang-switcher">
             <button onclick="setLang('fr')" class="lang-btn active">FR</button>
             <button onclick="setLang('en')" class="lang-btn">EN</button>
-            <button onclick="setLang('pt')" class="lang-btn">PT</button>
         </div>
     </div>
 
     <div class="ai-predictor-box">
-        <div class="ai-chip">AERIO AI ADVISOR</div>
         <div style="font-size: 30px;">🧠</div>
         <div>
             <p style="font-size: 12px; line-height: 1.6;">
-                Analyse des flux terminée. <span style="color: var(--accent);">Prédiction :</span> Vos revenus devraient augmenter de <span style="color:var(--primary)">12%</span> cette semaine. 
-                Conseil : Maintenez un solde de 5 000 F pour éviter les frais de latence.
+                <span style="color: var(--primary); font-weight: 900;">AERIO AI :</span> Analyse des flux terminée. Vos gains sont prêts pour l'extraction.
             </p>
         </div>
     </div>
 
     <div class="status-grid">
         <div class="card-status">
-            <div data-lang="dash_stat_gain" style="font-size:10px; color:#475569; font-weight:900; letter-spacing: 2px;">SOLDE RÉEL DISPONIBLE</div>
-            <div class="amount-main" id="balance-net" style="font-size:54px; font-weight:900; color: white;">0 F</div>
+            <div style="font-size:10px; color:#475569; font-weight:900; letter-spacing: 2px;">SOLDE RÉEL</div>
+            <div id="balance-net" style="font-size:54px; font-weight:900;">0 F</div>
         </div>
         <div class="card-status" style="display: flex; flex-direction: column; justify-content: center;">
-            <div id="acc-status" data-lang="dash_status" style="color:var(--accent); font-weight:900; font-size: 14px;">COMPTE VÉRIFIÉ ✅</div>
-            <p style="font-size: 10px; color: #475569; margin-top: 8px; letter-spacing: 1px;">ACCÈS PRIORITAIRE AUX FONDS</p>
+            <div style="color:var(--accent); font-weight:900;">COMPTE VÉRIFIÉ ✅</div>
+            <p style="font-size: 10px; color: #475569; margin-top: 8px;">EXTRACTION PRIORITAIRE</p>
         </div>
     </div>
 
     <div class="withdraw-section">
-        <h2 style="font-size: 18px; font-weight: 900; margin-bottom: 20px;">🚀 Lancer l'extraction des fonds</h2>
+        <h2 style="font-size: 18px; font-weight: 900; margin-bottom: 25px;">🚀 Choisir la Passerelle de Réception</h2>
         
         <form id="payoutForm">
-            <label>Sélectionner la passerelle de réception</label>
             <div class="operator-grid">
                 <label class="op-card">
                     <input type="radio" name="network" value="ORANGE" required>
                     <div class="op-content">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Orange_logo.svg/120px-Orange_logo.svg.png">
+                        <img src="orange-logo.png">
                         <span>Orange</span>
                     </div>
                 </label>
                 <label class="op-card">
                     <input type="radio" name="network" value="MTN">
                     <div class="op-content">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/New-mtn-logo.jpg/800px-New-mtn-logo.jpg">
+                        <img src="mtn-logo.png">
                         <span>MTN</span>
                     </div>
                 </label>
                 <label class="op-card">
                     <input type="radio" name="network" value="AIRTEL">
                     <div class="op-content">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Airtel_logo.svg/1200px-Airtel_logo.svg.png">
+                        <img src="airtel-logo.png">
                         <span>Airtel</span>
                     </div>
                 </label>
                 <label class="op-card">
                     <input type="radio" name="network" value="MOOV">
                     <div class="op-content">
-                        <img src="https://upload.wikimedia.org/wikipedia/fr/thumb/3/30/Moov_Africa_Logo.png/640px-Moov_Africa_Logo.png">
+                        <img src="moov-logo.png">
                         <span>Moov</span>
                     </div>
                 </label>
                 <label class="op-card">
                     <input type="radio" name="network" value="WAVE">
                     <div class="op-content">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Wave_Mobile_Money_logo.png/1200px-Wave_Mobile_Money_logo.png">
+                        <img src="wave-logo.png">
                         <span>Wave</span>
                     </div>
                 </label>
@@ -178,9 +160,8 @@
                     <label>Montant (XAF)</label>
                     <input type="number" id="amount" placeholder="Min: 5 000" min="5000" required>
                 </div>
-                <button type="submit" class="btn-withdraw">🚀 Extraire vers le réseau sélectionné</button>
+                <button type="submit" class="btn-withdraw">🚀 Initialiser l'extraction Alpha</button>
             </div>
-            <span style="font-size:9px; color:var(--danger); font-weight:800; margin-top:15px; display:block; text-align: center;">🛡️ PROTOCOLE DE SÉCURITÉ : 5 000 F MINIMUM</span>
         </form>
     </div>
 
@@ -199,18 +180,16 @@
             try {
                 const res = await fetch('/api/my-stats');
                 const data = await res.json();
-                const lang = localStorage.getItem('aerio_lang') || 'fr';
-                const dev = { fr: "F", en: "$", pt: "R$" }[lang] || "F";
-                document.getElementById('balance-net').innerText = Math.floor(data.summary.gain).toLocaleString() + " " + dev;
-                if(typeof applyTranslations === 'function') applyTranslations(); 
-            } catch(e) { console.log("Synchronisation Alpha..."); }
+                document.getElementById('balance-net').innerText = Math.floor(data.summary.gain).toLocaleString() + " F";
+                if(typeof applyTranslations === 'function') applyTranslations();
+            } catch(e) { console.log("Synchro..."); }
         }
 
         document.getElementById('payoutForm').onsubmit = async (e) => {
             e.preventDefault();
             const op = document.querySelector('input[name="network"]:checked').value;
-            showNotify(`PROTOCOLE ${op} INITIALISÉ : Extraction en cours... ✅`);
-            setTimeout(() => window.location.reload(), 2500);
+            showNotify(`PROTOCOLE ${op} : Extraction en cours... ✅`);
+            setTimeout(() => window.location.reload(), 2000);
         };
 
         window.onload = loadCompta;
