@@ -12,7 +12,7 @@
 
         .container { max-width: 1000px; margin: 0 auto; }
         
-        /* ✅ ZONE VIDÉO */
+        /* ✅ ZONE VIDÉO EXISTANTE PRÉSERVÉE */
         .video-section { 
             background: var(--glass); border-radius: 30px; padding: 30px; 
             border: 1px solid rgba(255,255,255,0.05); margin-bottom: 30px;
@@ -26,7 +26,39 @@
         }
         .video-placeholder:hover { box-shadow: 0 0 30px rgba(0, 194, 255, 0.2); }
 
-        /* ✅ ZONE LICENCE (TON IDÉE ALPHA) */
+        /* ✅ AJOUT : GRILLE DES ÉTAPES TEXTUELLES (SANS VIDÉO) */
+        .steps-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+            gap: 20px; 
+            margin: 30px 0; 
+            text-align: left;
+        }
+        .step-card { 
+            background: rgba(255,255,255,0.02); 
+            border-radius: 20px; 
+            padding: 20px; 
+            border: 1px solid rgba(255,255,255,0.05); 
+        }
+        .step-card h4 { color: var(--primary); font-size: 13px; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
+        .step-card p { font-size: 11px; color: #cbd5e1; line-height: 1.6; }
+
+        /* ✅ AJOUT : CONFIGURATION ACHAT SANS DATA (WALLED GARDEN) */
+        .no-data-box {
+            background: linear-gradient(to right, rgba(0, 245, 160, 0.05), transparent);
+            border-left: 4px solid var(--accent); 
+            padding: 25px; 
+            border-radius: 15px; 
+            margin-bottom: 30px;
+            text-align: left;
+        }
+        .tech-cmd { 
+            background: #000; padding: 12px; border-radius: 8px; 
+            color: var(--accent); font-family: monospace; font-size: 12px; 
+            margin-top: 10px; display: block; border: 1px solid rgba(0, 245, 160, 0.2);
+        }
+
+        /* ✅ ZONE LICENCE EXISTANTE PRÉSERVÉE */
         .licence-box {
             background: linear-gradient(135deg, rgba(0, 194, 255, 0.1), rgba(0, 245, 160, 0.1));
             border: 2px dashed var(--accent); padding: 40px; border-radius: 30px;
@@ -45,7 +77,7 @@
         }
         .btn-download:hover { transform: scale(1.05); background: var(--accent); }
 
-        /* ✅ GRILLE CONTACT */
+        /* ✅ GRILLE CONTACT EXISTANTE PRÉSERVÉE */
         .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         .contact-card {
             background: var(--glass); padding: 25px; border-radius: 25px;
@@ -70,6 +102,31 @@
                 <div style="font-size: 50px;">▶️</div>
                 <p style="position: absolute; bottom: 20px; font-size: 12px; font-weight: 900; letter-spacing: 2px;">VOIR LE TUTORIEL SUR YOUTUBE</p>
             </div>
+        </div>
+
+        <div class="video-section">
+            <h3 style="font-size: 14px; text-align: left; color: var(--primary);">⚙️ ÉTAPES DE CONFIGURATION RAPIDE</h3>
+            <div class="steps-grid">
+                <div class="step-card">
+                    <h4>1. Liaison Nœud</h4>
+                    <p>Copiez le script généré dans "Ajouter Wifi" et collez-le dans le Terminal de votre MikroTik via Winbox.</p>
+                </div>
+                <div class="step-card">
+                    <h4>2. Synchro Profils</h4>
+                    <p>Le système injecte automatiquement les débits (1h, 24h, etc.) dans votre Hotspot User Profiles.</p>
+                </div>
+                <div class="step-card">
+                    <h4>3. Prêt à Vendre</h4>
+                    <p>Une fois le voyant au vert, vos tickets générés sont immédiatement fonctionnels sur votre réseau.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="no-data-box">
+            <h4 style="color: var(--accent); font-size: 14px; margin-bottom: 10px;">⚡ OPTIMISATION : ACHAT SANS DATA</h4>
+            <p style="font-size: 11px; color: #cbd5e1;">Permettez à vos clients de payer même sans forfait. Dans MikroTik, allez dans <b>IP > Hotspot > Walled Garden</b> et ajoutez :</p>
+            <code class="tech-cmd">Dst. Host: *aerio-pay.com* | Action: allow</code>
+            <p style="font-size: 10px; color: #64748b; margin-top: 10px;">Note : Ajoutez aussi les domaines Orange/MTN Money pour valider les transactions.</p>
         </div>
 
         <div class="licence-box">
@@ -104,11 +161,7 @@
         function activerLicence() {
             const status = document.getElementById('licence-status');
             status.style.display = 'block';
-            status.style.animation = 'pulse 1s infinite';
-            
             alert("🚀 Analyse du compte effectuée...\nStatut : MEMBRE ALPHA CONFIRMÉ\nLicence : ACTIVÉ");
-            
-            // Ici, on pourrait ajouter un script pour générer un PDF ou une image.
         }
     </script>
 </body>
