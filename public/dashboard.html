@@ -40,7 +40,7 @@
         .nav-button.active { border-left: 4px solid var(--primary); background: rgba(0, 194, 255, 0.1); color: var(--primary); font-weight: 600; }
         .nav-button i { margin-right: 10px; font-style: normal; font-size: 16px; }
 
-        /* --- TOP BAR & NOTIFICATIONS (NOUVEAU) --- */
+        /* --- TOP BAR & NOTIFICATIONS --- */
         .top-bar {
             display: flex; justify-content: flex-end; align-items: center;
             padding: 20px 40px; position: sticky; top: 0; z-index: 90;
@@ -121,6 +121,7 @@
 
     <div class="sidebar">
         <div class="logo-title">AERIO</div>
+        
         <div class="group-label">Pilotage Réseaux</div>
         <a href="dashboard.html" class="nav-button active"><i>🏠</i> Tableau de bord</a>
         <a href="ajouter-wifi.html" class="nav-button"><i>➕</i> Configurer un WiFi</a>
@@ -129,7 +130,7 @@
 
         <div class="group-label">Offres & Accès</div>
         <a href="ajouter-tarif.html" class="nav-button"><i>💎</i> Créer un Tarif</a>
-        <a href="liste-tarifs.html" class="nav-button"><i>📜</i> Ma Grille Tarifaire</a>
+        <a href="liste-tarif.html" class="nav-button"><i>📜</i> Ma Grille Tarifaire</a>
         <a href="ajouter-ticket.html" class="nav-button"><i>🎫</i> Générer un Pass</a>
         <a href="liste-tickets.html" class="nav-button"><i>🔑</i> Registre des Accès</a>
 
@@ -241,7 +242,6 @@
             dropdown.classList.toggle('active');
         }
 
-        // Fermer le menu si on clique ailleurs
         window.onclick = function(event) {
             if (!event.target.closest('.notif-wrapper')) {
                 const dropdown = document.getElementById('notifDropdown');
