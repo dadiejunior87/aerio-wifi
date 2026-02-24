@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AERIO ZONE | Elite WiFi AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #00C2FF; --secondary: #7000FF; --accent: #00F5A0;
+            --bg: #030712; --card-bg: rgba(10, 20, 45, 0.95);
+        }
+        * { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins',sans-serif; }
+        body { background:var(--bg); color:white; overflow-x:hidden; display:flex; flex-direction:column; min-height:100vh; }
+
+        .orb {
+            position: fixed; width: 500px; height: 500px; border-radius:50%;
+            background: radial-gradient(circle, rgba(0,194,255,0.1) 0%, transparent 70%);
+            z-index:-1; filter:blur(60px); animation: moveOrb 15s infinite alternate;
+        }
+        @keyframes moveOrb { from { transform:translate(-10%,-10%);} to { transform:translate(30%,20%);} }
+
+        header { padding:40px 20px 15px; text-align:center; }
+        h1 { font-size:2.2rem; font-weight:900; letter-spacing:-1px;
+            background: linear-gradient(to right, #fff, var(--primary), var(--accent));
+            -webkit-background-clip:text; -webkit-text-fill-color:transparent; 
+        }
+
+        .container { max-width:400px; margin:0 auto; padding:0 20px; width:100%; z-index:10; }
+        .box { background:var(--card-bg); padding:30px; border-radius:25px; backdrop-filter:blur(20px);
+            border:1px solid rgba(255,255,255,0.05); text-align:center; margin-bottom:20px;
+            box-shadow:0 20px 50px rgba(0,0,0,0.5); 
+        }
+
+        .input-group { text-align: left; margin-bottom: 15px; }
+        .input-label { font-size: 10px; font-weight: 800; color: var(--primary); margin-left: 5px; margin-bottom: 5px; display: block; text-transform: uppercase; letter-spacing: 1px; }
+
+        .input-field { width:100%; padding:15px; 
+            background: rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1);
+            border-radius:15px; color:white; outline:none; text-align:center; font-size:16px; transition: 0.3s;
+        }
+        .input-field:focus { border-color: var(--primary); background: rgba(0, 194, 255, 0.05); }
+
+        .btn-main { width:100%; padding:18px; border:none; border-radius:15px;
+            background:linear-gradient(45deg,var(--primary),var(--secondary));
+            color:white; font-weight:800; cursor:pointer; transition:0.4s; text-transform:uppercase; letter-spacing:1px; margin-top: 10px;
+        }
+        .btn-outline { display:block; width:100%; padding:16px; background:transparent;
+            color:var(--accent); border:2px solid var(--accent); border-radius:15px;
+            text-decoration:none; font-weight:700; text-align:center; transition:0.3s; font-size:14px;
+        }
+
+        #bot-trigger { position:fixed; bottom:25px; right:25px; width:60px; height:60px;
+            background:linear-gradient(135deg,var(--primary),var(--secondary)); border-radius:20px;
+            display:flex; align-items:center; justify-content:center; font-size:25px; cursor:pointer; z-index:1000;
+            animation:pulseBot 2s infinite; border:2px solid rgba(255,255,255,0.2);
+        }
+        @keyframes pulseBot { 0% { transform:translateY(0);} 50% { transform:translateY(-8px);} 100%{ transform:translateY(0);} }
+
+        #bot-window { position:fixed; bottom:100px; right:25px; width:280px; background:#0D1117;
+            border:1px solid var(--primary); border-radius:20px; padding:20px; display:none; z-index:1001;
+        }
+
+        footer { margin-top:auto; padding:20px; text-align:center; font-size:9px; color:#444; letter-spacing: 1px; }
+    </style>
+</head>
+<body>
+<div class="orb"></div>
+
+<header>
+    <h1>AERIO ZONE</h1>
+    <p style="color: var(--primary); font-size:9px; font-weight:700; letter-spacing:3px;">RÉSEAU ÉLITE • MIKHMON READY</p>
+</header>
+
+<div class="container">
+    <div class="box">
+        <form name="login" action="$(link-login-only)" method="post">
+            <input type="hidden" name="dst" value="$(link-orig)">
+            <input type="hidden" name="popup" value="true">
+            
+            <div class="input-group">
+                <span class="input-label">Identifiant (User)</span>
+                <input type="text" name="username" class="input-field" placeholder="Ex: AX-123" required>
+            </div>
+
+            <div class="input-group">
+                <span class="input-label">Mot de passe (Pass)</span>
+                <input type="password" name="password" class="input-field" placeholder="••••" required>
+            </div>
+
+            <button type="submit" class="btn-main">ACTIVER L'ACCÈS 🚀</button>
+        </form>
+    </div>
+
+    <div style="text-align:center;">
+        <a href="https://aerio-wifi.onrender.com" class="btn-outline">🛒 ACHETER UN TICKET (OM/MOMO)</a>
+    </div>
+</div>
+
+<div id="bot-trigger" onclick="toggleBot()">🤖</div>
+<div id="bot-window">
+    <p style="font-size:12px; color:#ccc; line-height:1.4;">
+        <b>Besoin d'aide ?</b><br><br>
+        1. Achetez votre ticket via le bouton vert.<br>
+        2. Entrez l'<b>User</b> et le <b>Pass</b> inscrits sur votre ticket.<br><br>
+        <a href="https://wa.me/TON_NUMERO" style="color:var(--accent); text-decoration:none;">→ Support WhatsApp</a>
+    </p>
+</div>
+
+<footer>POWERED BY AERIO SYSTEM & STARLINK TECH</footer>
+
+<script>
+function toggleBot() {
+    var win = document.getElementById('bot-window');
+    win.style.display = (win.style.display === 'block') ? 'none' : 'block';
+}
+</script>
+</body>
+</html>
