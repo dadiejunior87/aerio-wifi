@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AERIO | Grille Tarifaire Alpha</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #00C2FF; --accent: #00F5A0; --bg-deep: #020617;
+            --card-bg: rgba(15, 23, 42, 0.7); --border: rgba(255, 255, 255, 0.05);
+            --sidebar-w: 280px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: var(--bg-deep); color: white; display: flex; min-height: 100vh; }
+
+        /* --- SIDEBAR --- */
+        .sidebar { width: var(--sidebar-w); background: #0b0f1a; padding: 30px 15px; height: 100vh; position: fixed; border-right: 1px solid var(--border); }
+        .logo-title { color: var(--primary); font-weight: 900; font-size: 26px; margin-bottom: 35px; }
+        .group-label { font-size: 10px; color: #475569; font-weight: 800; letter-spacing: 1px; margin: 20px 0 10px 10px; text-transform: uppercase; }
+        .nav-button { background: rgba(255,255,255,0.02); padding: 12px 15px; border-radius: 12px; display: flex; text-decoration: none; font-size: 12px; margin-bottom: 5px; color: #94a3b8; border: 1px solid var(--border); transition: 0.3s; }
+        .nav-button.active { border-left: 4px solid var(--primary); background: rgba(0, 194, 255, 0.1); color: var(--primary); }
+
+        /* --- CONTENU --- */
+        .content { margin-left: var(--sidebar-w); flex: 1; padding: 40px; }
+        
+        /* --- ÉTAT VIDE (ALPHA CLEAN) --- */
+        .empty-state {
+            text-align: center; padding: 100px 40px; 
+            border: 2px dashed var(--border); border-radius: 35px;
+            background: rgba(255,255,255,0.01);
+            margin-top: 20px;
+        }
+        .empty-icon { font-size: 60px; margin-bottom: 25px; display: block; filter: drop-shadow(0 0 10px var(--primary)); }
+        
+        .btn-create {
+            display: inline-block; background: var(--primary); color: #020617; 
+            padding: 18px 35px; border-radius: 15px; text-decoration: none; 
+            font-weight: 900; font-size: 13px; transition: 0.3s; text-transform: uppercase;
+        }
+        .btn-create:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0, 194, 255, 0.3); }
+
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="logo-title">AERIO</div>
+        
+        <div class="group-label">Pilotage Réseaux</div>
+        <a href="dashboard.html" class="nav-button"><i>🏠</i> Tableau de bord</a>
+        
+        <div class="group-label">Offres & Accès</div>
+        <a href="ajouter-tarif.html" class="nav-button"><i>💎</i> Créer un Forfait</a>
+        <a href="liste-tarif.html" class="nav-button active"><i>📜</i> Ma Grille Tarifaire</a>
+    </div>
+
+    <div class="content">
+        <h1 style="font-size: 32px; font-weight: 900;">Gestion des <span style="color:var(--primary)">Tarifs Alpha</span></h1>
+        <p style="color: #64748b; font-size: 14px; margin-bottom: 30px;">Aucune donnée fictive détectée. Système prêt pour configuration.</p>
+
+        <div class="empty-state">
+            <span class="empty-icon">📂</span>
+            <h2 style="font-size: 22px; margin-bottom: 15px;">Catalogue de forfaits vide</h2>
+            <p style="color: #64748b; font-size: 15px; max-width: 450px; margin: 0 auto 30px auto; line-height: 1.6;">
+                Votre grille tarifaire est actuellement vierge. Pour commencer à générer des revenus avec vos antennes, vous devez définir vos offres de connexion.
+            </p>
+            <a href="ajouter-tarif.html" class="btn-create">DÉPLOYER MON PREMIER TARIF 🚀</a>
+        </div>
+    </div>
+
+</body>
+</html>
