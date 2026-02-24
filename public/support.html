@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>AERIO | Support Prioritaire</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #00C2FF;
+            --bg-deep: #0f1216;
+            --card-bg: #1a1f26;
+            --accent-purple: #BC00FF;
+            --border: rgba(255, 255, 255, 0.05);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; color: white; }
+        body { background-color: var(--bg-deep); display: flex; min-height: 100vh; }
+
+        /* SIDEBAR (Identique pour cohérence) */
+        .sidebar { width: 300px; background: #111418; padding: 30px 15px; height: 100vh; position: fixed; border-right: 1px solid var(--border); }
+        .nav-button { background: var(--card-bg); padding: 14px 18px; border-radius: 12px; display: flex; text-decoration: none; font-size: 13px; margin-bottom: 8px; border: 1px solid var(--border); }
+        .nav-button.active { border-left: 4px solid var(--primary); background: rgba(0, 194, 255, 0.1); color: var(--primary); }
+
+        /* CONTENU SUPPORT */
+        .content { margin-left: 300px; flex: 1; padding: 40px; }
+        .support-grid { display: grid; grid-template-columns: 1fr 350px; gap: 30px; }
+
+        .chat-box { background: var(--card-bg); border-radius: 30px; border: 1px solid var(--border); height: 600px; display: flex; flex-direction: column; overflow: hidden; }
+        .chat-header { padding: 20px; background: rgba(255,255,255,0.02); border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 15px; }
+        .online-indicator { width: 10px; height: 10px; background: #00F5A0; border-radius: 50%; box-shadow: 0 0 10px #00F5A0; }
+
+        .messages-area { flex: 1; padding: 25px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; }
+        .msg { max-width: 80%; padding: 15px 20px; border-radius: 20px; font-size: 14px; line-height: 1.5; }
+        .msg.admin { background: #232932; align-self: flex-start; border-bottom-left-radius: 5px; }
+        .msg.user { background: var(--primary); color: var(--bg-deep); align-self: flex-end; border-bottom-right-radius: 5px; font-weight: 600; }
+
+        .input-area { padding: 20px; background: rgba(255,255,255,0.02); display: flex; gap: 15px; }
+        input[type="text"] { flex: 1; background: #0f1216; border: 1px solid var(--border); padding: 15px; border-radius: 15px; outline: none; }
+        
+        .faq-card { background: var(--card-bg); padding: 25px; border-radius: 25px; border: 1px solid var(--border); margin-bottom: 20px; }
+        .faq-item { padding: 15px 0; border-bottom: 1px solid var(--border); font-size: 13px; cursor: pointer; color: #94a3b8; transition: 0.3s; }
+        .faq-item:hover { color: var(--primary); }
+
+        .emergency-btn { background: linear-gradient(45deg, var(--accent-purple), #7000FF); border: none; padding: 20px; width: 100%; border-radius: 20px; font-weight: 900; letter-spacing: 1px; cursor: pointer; box-shadow: 0 10px 20px rgba(188, 0, 255, 0.2); }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div style="color:var(--primary); font-weight:900; font-size:24px; margin-bottom:40px; padding-left:10px;">AERIO</div>
+        <a href="dashboard.html" class="nav-button">🏠 Tableau de Bord</a>
+        <a href="statistiques-wifi.html" class="nav-button">📊 Statistiques</a>
+        <a href="profil.html" class="nav-button">👤 Mon Profil</a>
+        <a href="support.html" class="nav-button active">🎧 Support Client</a>
+    </div>
+
+    <div class="content">
+        <p style="color: var(--primary); font-size: 10px; font-weight: 900; letter-spacing: 3px;">ASSISTANCE 24/7</p>
+        <h1 style="font-size: 36px; font-weight: 900; margin-bottom: 30px;">Centre de <span style="color:var(--primary)">Support</span></h1>
+
+        <div class="support-grid">
+            <div class="chat-box">
+                <div class="chat-header">
+                    <div class="online-indicator"></div>
+                    <div>
+                        <p style="font-weight: 900; font-size: 14px;">Agent AERIO Intelligence</p>
+                        <p style="font-size: 10px; color: #64748b;">Réponse moyenne : 5 min</p>
+                    </div>
+                </div>
+                <div class="messages-area">
+                    <div class="msg admin">Bonjour ! Comment puis-je vous aider à optimiser votre zone WiFi aujourd'hui ?</div>
+                    <div class="msg user">J'ai besoin d'aide pour configurer mon nouveau routeur Mikrotik.</div>
+                </div>
+                <div class="input-area">
+                    <input type="text" placeholder="Écrivez votre message ici...">
+                    <button style="background: var(--primary); border: none; width: 50px; border-radius: 15px; cursor: pointer;">🚀</button>
+                </div>
+            </div>
+
+            <div>
+                <button class="emergency-btn">🆘 URGENCE RÉSEAU</button>
+                
+                <div class="faq-card" style="margin-top: 30px;">
+                    <p style="font-weight: 900; font-size: 12px; color: var(--primary); margin-bottom: 15px;">FAQ RAPIDE</p>
+                    <div class="faq-item">Comment créer un ticket ?</div>
+                    <div class="faq-item">Retirer mes gains (Orange/MTN)</div>
+                    <div class="faq-item">Mon routeur est hors-ligne</div>
+                    <div class="faq-item">Changer mes tarifs</div>
+                </div>
+
+                <div class="faq-card" style="background: rgba(188, 0, 255, 0.05); border-color: rgba(188, 0, 255, 0.2);">
+                    <p style="font-weight: 900; font-size: 12px; color: var(--accent-purple);">DOCS TECHNIQUES</p>
+                    <p style="font-size: 11px; margin-top: 10px; color: #94a3b8;">Consultez nos guides complets pour devenir un expert AERIO.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
