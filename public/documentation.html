@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AERIO | Contact & Documentation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;900&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #00C2FF; --bg: #020617; --glass: rgba(15, 23, 42, 0.8); --accent: #00F5A0; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: var(--bg); color: white; padding: 40px; background-image: radial-gradient(circle at top left, rgba(0, 194, 255, 0.05), transparent); }
+
+        .container { max-width: 1000px; margin: 0 auto; }
+        
+        /* ✅ ZONE VIDÉO */
+        .video-section { 
+            background: var(--glass); border-radius: 30px; padding: 30px; 
+            border: 1px solid rgba(255,255,255,0.05); margin-bottom: 30px;
+            text-align: center;
+        }
+        .video-placeholder {
+            width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 20px;
+            display: flex; align-items: center; justify-content: center;
+            border: 1px solid var(--primary); cursor: pointer; position: relative;
+            overflow: hidden;
+        }
+        .video-placeholder:hover { box-shadow: 0 0 30px rgba(0, 194, 255, 0.2); }
+
+        /* ✅ ZONE LICENCE (TON IDÉE ALPHA) */
+        .licence-box {
+            background: linear-gradient(135deg, rgba(0, 194, 255, 0.1), rgba(0, 245, 160, 0.1));
+            border: 2px dashed var(--accent); padding: 40px; border-radius: 30px;
+            text-align: center; margin-bottom: 30px; position: relative;
+        }
+        .status-badge {
+            position: absolute; top: 20px; right: 20px;
+            background: var(--accent); color: #020617;
+            padding: 5px 15px; border-radius: 50px; font-weight: 900; font-size: 10px;
+        }
+
+        .btn-download {
+            background: white; color: #020617; padding: 15px 30px;
+            border-radius: 15px; font-weight: 900; border: none; cursor: pointer;
+            text-transform: uppercase; letter-spacing: 1px; transition: 0.3s;
+        }
+        .btn-download:hover { transform: scale(1.05); background: var(--accent); }
+
+        /* ✅ GRILLE CONTACT */
+        .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .contact-card {
+            background: var(--glass); padding: 25px; border-radius: 25px;
+            border: 1px solid rgba(255,255,255,0.05); text-decoration: none; color: white;
+            display: flex; align-items: center; gap: 20px;
+        }
+        
+        .back-link { display: block; margin-bottom: 20px; color: var(--primary); text-decoration: none; font-weight: 900; font-size: 12px; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <a href="dashboard.html" class="back-link">← RETOUR CONSOLE</a>
+
+        <h1 style="font-weight: 900; font-size: 32px; margin-bottom: 10px;">Centre de <span style="color:var(--primary)">Ressources</span></h1>
+        <p style="color: #64748b; margin-bottom: 40px;">Maîtrisez l'écosystème AERIO et gérez vos accréditations.</p>
+
+        <div class="video-section">
+            <h3 style="font-size: 14px; margin-bottom: 20px; text-align: left;">📺 GUIDE DE DÉMARRAGE RAPIDE</h3>
+            <div class="video-placeholder" onclick="window.open('https://www.youtube.com/watch?v=VOTRE_ID_VIDEO', '_blank')">
+                <div style="font-size: 50px;">▶️</div>
+                <p style="position: absolute; bottom: 20px; font-size: 12px; font-weight: 900; letter-spacing: 2px;">VOIR LE TUTORIEL SUR YOUTUBE</p>
+            </div>
+        </div>
+
+        <div class="licence-box">
+            <div id="licence-status" class="status-badge" style="display: none;">ACTIVÉ</div>
+            <div style="font-size: 40px; margin-bottom: 15px;">🎖️</div>
+            <h2 style="font-weight: 900; margin-bottom: 10px;">VOTRE LICENCE AGENT</h2>
+            <p style="font-size: 13px; color: #cbd5e1; margin-bottom: 25px; max-width: 500px; margin-left: auto; margin-right: auto;">
+                En tant que membre de la plateforme AERIO, vous bénéficiez d'une licence d'exploitation certifiée pour vos services WiFi.
+            </p>
+            <button class="btn-download" onclick="activerLicence()">Télécharger la Licence</button>
+        </div>
+
+        <div class="contact-grid">
+            <a href="https://wa.me/237692487922" class="contact-card">
+                <div style="font-size: 30px;">💬</div>
+                <div>
+                    <b style="display: block;">Support Technique</b>
+                    <small style="color: #64748b;">WhatsApp 24/7</small>
+                </div>
+            </a>
+            <a href="mailto:contact@aerio.com" class="contact-card">
+                <div style="font-size: 30px;">📧</div>
+                <div>
+                    <b style="display: block;">Email Officiel</b>
+                    <small style="color: #64748b;">Pour les partenariats</small>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        function activerLicence() {
+            const status = document.getElementById('licence-status');
+            status.style.display = 'block';
+            status.style.animation = 'pulse 1s infinite';
+            
+            alert("🚀 Analyse du compte effectuée...\nStatut : MEMBRE ALPHA CONFIRMÉ\nLicence : ACTIVÉ");
+            
+            // Ici, on pourrait ajouter un script pour générer un PDF ou une image.
+        }
+    </script>
+</body>
+</html>
