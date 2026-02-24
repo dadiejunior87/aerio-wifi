@@ -3,65 +3,148 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AERIO | Matrice des Nœuds</title>
-    <link href="https://fonts.googleapis.com" rel="stylesheet">
+    <title>AERIO | Control Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;900&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #00C2FF; --bg: #020617; --glass: rgba(15, 23, 42, 0.7); --accent: #00F5A0; --danger: #FF4B4B; }
+        :root { 
+            --primary: #00C2FF; 
+            --bg: #020617; 
+            --glass: rgba(15, 23, 42, 0.7); 
+            --accent: #00F5A0; 
+            --border: rgba(255, 255, 255, 0.08);
+        }
+        
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        body { background: var(--bg); color: white; min-height: 100vh; padding: 60px 5%; background-image: radial-gradient(circle at top right, rgba(0, 194, 255, 0.05), transparent); }
+        
+        body { 
+            background: var(--bg); 
+            color: white; 
+            padding: 40px;
+            background-image: radial-gradient(circle at top left, rgba(0, 194, 255, 0.03), transparent);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
 
-        .header-matrix { display: flex; justify-content: space-between; align-items: center; margin-bottom: 50px; }
-        .btn-new { background: var(--primary); color: #020617; padding: 15px 25px; border-radius: 15px; text-decoration: none; font-weight: 900; font-size: 11px; text-transform: uppercase; }
+        .container { max-width: 900px; width: 100%; text-align: center; }
 
-        /* ✅ TABLEAU ALPHA [1.5] */
-        .matrix-container { background: var(--glass); backdrop-filter: blur(40px); border-radius: 30px; border: 1px solid rgba(255,255,255,0.05); overflow: hidden; }
-        table { width: 100%; border-collapse: collapse; text-align: left; }
-        th { padding: 25px; font-size: 10px; color: #475569; letter-spacing: 2px; text-transform: uppercase; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        td { padding: 25px; font-size: 13px; border-bottom: 1px solid rgba(255,255,255,0.02); }
+        /* HEADER UNIQUE */
+        .brand-header { margin-bottom: 50px; }
+        .brand-header h1 { font-weight: 900; font-size: 38px; letter-spacing: -1.5px; line-height: 1; }
+        .brand-header span { color: var(--primary); }
+        .brand-header p { font-size: 10px; font-weight: 900; letter-spacing: 5px; color: #475569; text-transform: uppercase; margin-top: 10px; }
 
-        .status-dot { display: inline-block; width: 8px; height: 8px; background: var(--accent); border-radius: 50%; margin-right: 10px; box-shadow: 0 0 10px var(--accent); }
-        .btn-tactical { background: rgba(255,255,255,0.05); color: white; padding: 8px 15px; border-radius: 10px; text-decoration: none; font-size: 10px; font-weight: 800; border: 1px solid rgba(255,255,255,0.1); }
+        /* ZONE D'ACTION VIDE (EMPTY STATE DESIGNER) */
+        .empty-dashboard {
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: 40px;
+            padding: 60px 30px;
+            position: relative;
+            backdrop-filter: blur(25px);
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+        }
+
+        /* Décoration géométrique pour ne pas faire "vide" */
+        .geo-decor {
+            position: absolute;
+            top: -50px; right: -50px;
+            width: 150px; height: 150px;
+            border: 2px solid rgba(0, 194, 255, 0.1);
+            border-radius: 50%;
+        }
+
+        .visual-core {
+            width: 100px; height: 100px;
+            margin: 0 auto 30px;
+            background: rgba(0, 194, 255, 0.05);
+            border: 1px solid var(--primary);
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            box-shadow: 0 0 30px rgba(0, 194, 255, 0.2);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        h2 { font-weight: 900; font-size: 20px; margin-bottom: 15px; }
+        .description { color: #64748b; font-size: 13px; line-height: 1.6; max-width: 450px; margin: 0 auto 35px; }
+
+        /* BOUTON ULTRA DESIGN */
+        .btn-alpha {
+            background: var(--primary);
+            color: var(--bg);
+            border: none;
+            padding: 18px 45px;
+            border-radius: 18px;
+            font-weight: 900;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            cursor: pointer;
+            transition: 0.4s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .btn-alpha:hover { 
+            transform: translateY(-3px); 
+            box-shadow: 0 15px 40px rgba(0, 194, 255, 0.4);
+            letter-spacing: 2.5px;
+        }
+
+        /* BARRE DE STATUT BAS DE PAGE */
+        .system-status {
+            margin-top: 50px;
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            font-size: 9px;
+            font-weight: 900;
+            color: #334155;
+            letter-spacing: 1px;
+        }
+        .status-item { display: flex; align-items: center; gap: 8px; }
+        .dot { width: 6px; height: 6px; border-radius: 50%; background: #1e293b; }
+
     </style>
 </head>
 <body>
 
-    <div class="header-matrix">
-        <div>
-            <h1 style="font-weight: 900; font-size: 32px; letter-spacing: -1px;">MATRICE DES <span style="color:var(--primary)">NŒUDS</span></h1>
-            <p style="color: #475569; font-size: 12px;">Supervision centralisée de vos actifs réseau.</p>
+    <div class="container">
+        <header class="brand-header">
+            <h1>Réseau <span>Alpha</span></h1>
+            <p>Intelligence Unit Inventory</p>
+        </header>
+
+        <div class="empty-dashboard">
+            <div class="geo-decor"></div>
+            
+            <div class="visual-core">📡</div>
+            
+            <h2>Architecture Vierge</h2>
+            <p class="description">
+                Aucun nœud WiFi n'est actuellement déployé sur votre infrastructure. Commencez par lier votre premier routeur pour activer le monitoring.
+            </p>
+
+            <button class="btn-alpha" onclick="location.href='ajouter-wifi.html'">
+                Déployer un Nœud ⚡
+            </button>
         </div>
-        <a href="ajouter-wifi.html" class="btn-new">+ DÉPLOYER UN NOUVEAU NŒUD</a>
-    </div>
 
-    <div class="matrix-container">
-        <table>
-            <thead>
-                <tr>
-                    <th>IDENTIFIANT NŒUD</th>
-                    <th>ARGUMENTAIRE / DESCRIPTION</th>
-                    <th>CONTACT SUPPORT</th>
-                    <th>COMMANDES TACTIQUES</th>
-                </tr>
-            </thead>
-            <tbody id="matrix-body">
-                <!-- ✅ LIAISON RÉTABLIE : UN PREMIER NŒUD RÉEL -->
-                <tr>
-                    <td style="font-weight: 900; color: var(--primary);"</td>
-                    <td></td>
-                    <td></td>
-                    <td>
-                        <div style="display: flex; align-items: center; gap: 15px;">
-                            <span class="status-dot"></span> <span style="color:var(--accent); font-weight:900; font-size:10px;">ACTIF</span>
-                            <a href="#" class="btn-tactical" onclick="alert('Lancement du diagnostic satellite...')">DIAGNOSTIC</a>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-
-    <div style="text-align: center; margin-top: 50px;">
-        <a href="dashboard.html" style="color:#475569; text-decoration:none; font-size:11px; font-weight:800; letter-spacing:3px;">— RETOUR AU COCKPIT DE PILOTAGE —</a>
+        <div class="system-status">
+            <div class="status-item"><div class="dot"></div> SQL DB: READY</div>
+            <div class="status-item"><div class="dot"></div> MIKROTIK BRIDGE: IDLE</div>
+            <div class="status-item"><div class="dot"></div> ENCRYPTION: AES-256</div>
+        </div>
     </div>
 
 </body>
