@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AERIO | Journal d'Extractions Alpha</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #FFB800; /* Or pour les opérations financières */
+            --accent: #00F5A0;
+            --bg-deep: #020617;
+            --card-bg: rgba(15, 23, 42, 0.7);
+            --border: rgba(255, 255, 255, 0.05);
+            --sidebar-w: 280px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: var(--bg-deep); color: white; display: flex; min-height: 100vh; }
+
+        /* --- SIDEBAR --- */
+        .sidebar { width: var(--sidebar-w); background: #0b0f1a; padding: 30px 15px; height: 100vh; position: fixed; border-right: 1px solid var(--border); }
+        .logo-title { color: #00C2FF; font-weight: 900; font-size: 26px; margin-bottom: 35px; }
+        .nav-button { background: rgba(255,255,255,0.02); padding: 12px 15px; border-radius: 12px; display: flex; text-decoration: none; font-size: 12px; margin-bottom: 5px; color: #94a3b8; border: 1px solid var(--border); }
+        .nav-button.active { border-left: 4px solid var(--primary); background: rgba(255, 184, 0, 0.1); color: var(--primary); }
+
+        /* --- CONTENU --- */
+        .content { margin-left: var(--sidebar-w); flex: 1; padding: 40px; }
+        
+        /* --- BANNER D'EXTRACTION --- */
+        .wallet-banner {
+            background: linear-gradient(90deg, #0f172a 0%, #1e293b 100%);
+            padding: 35px; border-radius: 30px; border: 1px solid var(--border);
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px;
+            position: relative; overflow: hidden;
+        }
+        .wallet-banner::before {
+            content: ""; position: absolute; top: -50%; left: -10%; width: 300px; height: 300px;
+            background: radial-gradient(circle, rgba(255, 184, 0, 0.1) 0%, transparent 70%);
+        }
+
+        .btn-extract {
+            background: var(--primary); color: #020617; border: none; padding: 15px 30px;
+            border-radius: 15px; font-weight: 900; font-size: 12px; cursor: pointer; transition: 0.3s;
+        }
+        .btn-extract:hover { transform: scale(1.05); box-shadow: 0 10px 20px rgba(255, 184, 0, 0.3); }
+
+        /* --- JOURNAL TABLE --- */
+        .journal-card { background: var(--card-bg); border-radius: 25px; border: 1px solid var(--border); padding: 30px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th { text-align: left; padding: 15px; font-size: 10px; color: #64748b; text-transform: uppercase; letter-spacing: 1.5px; }
+        td { padding: 20px 15px; font-size: 13px; border-bottom: 1px solid var(--border); }
+
+        .status-pill { padding: 6px 12px; border-radius: 20px; font-size: 10px; font-weight: 900; text-transform: uppercase; }
+        .status-completed { background: rgba(0, 245, 160, 0.1); color: var(--accent); }
+        .status-pending { background: rgba(255, 184, 0, 0.1); color: var(--primary); }
+
+        .secure-badge {
+            display: inline-flex; align-items: center; gap: 8px; font-size: 10px;
+            color: #475569; border: 1px solid var(--border); padding: 5px 12px; border-radius: 50px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="logo-title">AERIO</div>
+        <div class="group-label">Gestion Financière</div>
+        <a href="dashboard.html" class="nav-button"><i>🏠</i> Tableau de bord</a>
+        <a href="mes-recettes.html" class="nav-button"><i>📈</i> Historique Recettes</a>
+        <a href="journal-extractions.html" class="nav-button active"><i>📤</i> Journal d'Extractions</a>
+    </div>
+
+    <div class="content">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+            <div>
+                <h1 style="font-size: 32px; font-weight: 900;">Journal des <span style="color:var(--primary)">Extractions</span></h1>
+                <p style="color: #64748b; font-size: 13px;">Gérez vos sorties de fonds et l'historique de vos paiements.</p>
+            </div>
+            <div class="secure-badge">🔒 TRANSACTION CRYPTÉE AES-256</div>
+        </div>
+
+        <div class="wallet-banner">
+            <div>
+                <p style="font-size: 11px; color: #94a3b8; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">Solde Extraire immédiatement</p>
+                <div style="font-size: 42px; font-weight: 900; color: white; margin: 5px 0;">0 <span style="font-size: 18px; color: var(--primary);">XAF</span></div>
+            </div>
+            <button class="btn-extract">NOUVELLE EXTRACTION 📤</button>
+        </div>
+
+        <div class="journal-card">
+            <h2 style="font-size: 16px; margin-bottom: 20px;">Flux de Sortie</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID Transaction</th>
+                        <th>Date de la demande</th>
+                        <th>Méthode de réception</th>
+                        <th>Montant Net</th>
+                        <th>État Alpha</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="5" style="text-align: center; padding: 60px; color: #475569; font-style: italic;">
+                            Aucune extraction n'a encore été initiée sur ce compte.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</body>
+</html>
