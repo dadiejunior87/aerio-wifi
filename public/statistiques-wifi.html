@@ -2,186 +2,278 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>AERIO | Command Center</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AERIO | Analytics Alpha System</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        :root {
-            --primary: #00C2FF;
-            --bg-deep: #0f1216; /* Le noir profond de ton image */
-            --card-bg: #1a1f26; /* Le gris anthracite des boutons */
-            --accent-green: #00F5A0;
-            --border: rgba(255, 255, 255, 0.03);
+        :root { 
+            --primary: #00C2FF; 
+            --bg: #020617; 
+            --bg-sidebar: #0f172a;
+            --glass: rgba(15, 23, 42, 0.7); 
+            --accent: #00F5A0; 
+            --neon-purple: #BC00FF;
+            --card-border: rgba(255, 255, 255, 0.05);
+            --hover-bg: rgba(255, 255, 255, 0.05);
+            --text-dim: #94a3b8;
         }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; color: white; }
         
         body { 
-            background-color: var(--bg-deep); 
-            display: flex; 
+            background: var(--bg); 
+            display: flex; /* Structure en colonnes */
             min-height: 100vh;
-            color: white;
+            background-image: radial-gradient(circle at 10% 10%, rgba(0, 194, 255, 0.05), transparent);
         }
 
-        /* --- LA SIDEBAR STYLE "IMAGE 6" --- */
+        /* --- STYLES SIDEBAR --- */
         .sidebar {
-            width: 320px;
-            background: #111418;
-            padding: 30px 20px;
+            width: 280px;
+            background: var(--bg-sidebar);
             height: 100vh;
-            position: fixed;
-            border-right: 1px solid var(--border);
+            padding: 25px;
+            border-right: 1px solid var(--card-border);
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            position: fixed; /* Reste fixe au scroll */
         }
 
-        .logo-title {
-            color: var(--primary);
-            font-weight: 900;
+        .logo-area {
             font-size: 24px;
-            margin-bottom: 30px;
-            padding-left: 15px;
-            text-shadow: 0 0 15px rgba(0, 194, 255, 0.4);
+            font-weight: 900;
+            color: var(--primary);
+            letter-spacing: -1px;
+            margin-bottom: 40px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        .nav-button {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            padding: 16px 20px;
-            border-radius: 12px;
+        .nav-group { margin-bottom: 30px; }
+
+        .group-title {
+            font-size: 10px;
+            font-weight: 900;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+            padding-left: 10px;
+        }
+
+        .nav-item {
             display: flex;
             align-items: center;
             justify-content: space-between;
+            padding: 12px 15px;
+            border-radius: 12px;
             text-decoration: none;
-            color: #d1d5db;
-            font-weight: 600;
+            color: white;
             font-size: 14px;
+            font-weight: 600;
             transition: 0.3s;
+            margin-bottom: 5px;
         }
 
-        .nav-button:hover {
-            background: #232932;
-            transform: translateX(5px);
-        }
+        .nav-item:hover { background: var(--hover-bg); color: var(--primary); }
 
-        .nav-button.active {
-            border-left: 4px solid var(--primary);
-            background: linear-gradient(90deg, rgba(0, 194, 255, 0.1), transparent);
-        }
-
-        /* Les Badges comme sur l'image */
-        .badge-stat {
-            background: rgba(0, 245, 160, 0.1);
-            color: var(--accent-green);
-            font-size: 10px;
-            padding: 4px 10px;
-            border-radius: 8px;
-            font-weight: 900;
-        }
-
-        .badge-active {
-            background: rgba(0, 194, 255, 0.2);
+        .nav-item.active {
+            background: rgba(0, 194, 255, 0.1);
             color: var(--primary);
-            font-size: 10px;
-            padding: 4px 10px;
-            border-radius: 8px;
+            border-left: 3px solid var(--primary);
         }
 
-        /* --- ZONE DE CONTENU --- */
-        .content {
-            margin-left: 320px;
+        .stat-badge {
+            background: rgba(0, 245, 160, 0.1);
+            color: var(--accent);
+            font-size: 9px;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .dot {
+            width: 6px; height: 6px; background: var(--accent);
+            border-radius: 50%; box-shadow: 0 0 10px var(--accent);
+        }
+
+        /* --- STYLES CONTENU STATISTIQUES --- */
+        .main-content {
+            margin-left: 280px; /* Laisse la place à la sidebar */
             flex: 1;
             padding: 40px;
         }
 
-        .stat-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-top: 30px;
+        .container { max-width: 1200px; margin: 0 auto; }
+
+        .dashboard-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 40px; }
+        .dashboard-header h1 { font-weight: 900; font-size: 32px; letter-spacing: -1px; }
+        .dashboard-header span { color: var(--primary); }
+        
+        .selectors { display: flex; gap: 10px; }
+        select {
+            background: var(--glass); border: 1px solid var(--card-border);
+            padding: 10px 20px; border-radius: 12px; font-size: 12px; font-weight: 600; outline: none;
         }
 
-        .stat-card {
-            background: var(--card-bg);
-            padding: 30px;
-            border-radius: 20px;
-            border: 1px solid var(--border);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 30px; }
+        .kpi-box {
+            background: var(--glass); border: 1px solid var(--card-border);
+            padding: 25px; border-radius: 25px; backdrop-filter: blur(10px);
+            position: relative; overflow: hidden;
         }
+        .kpi-box::before {
+            content: ''; position: absolute; left: 0; top: 20%; width: 3px; height: 60%; background: var(--primary);
+        }
+        .kpi-label { font-size: 9px; font-weight: 900; color: #64748b; text-transform: uppercase; letter-spacing: 2px; }
+        .kpi-value { font-size: 26px; font-weight: 900; margin: 8px 0; display: block; }
+        .kpi-trend { font-size: 10px; font-weight: 900; color: var(--accent); }
 
-        h1 { font-weight: 900; font-size: 32px; margin-bottom: 10px; }
-        .subtitle { color: var(--primary); font-size: 12px; font-weight: 900; letter-spacing: 2px; }
+        .analytics-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 30px; margin-bottom: 30px; }
+        .card-main { background: var(--glass); border: 1px solid var(--card-border); padding: 30px; border-radius: 30px; }
+
+        .performance-list { display: flex; flex-direction: column; gap: 15px; margin-top: 20px; }
+        
+        .transaction-table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 13px; }
+        .transaction-table th { text-align: left; padding: 15px; color: #64748b; font-size: 10px; text-transform: uppercase; }
+        .transaction-table td { padding: 15px; border-top: 1px solid var(--card-border); }
 
     </style>
 </head>
 <body>
 
     <div class="sidebar">
-        <div class="logo-title">AERIO</div>
-
-        <a href="#" class="nav-button">
-            <span>🏠 Tableau de Bord</span>
-        </a>
-
-        <a href="#" class="nav-button">
-            <span>✔️ Ajouter-wifi.hom</span>
-        </a>
-
-        <a href="#" class="nav-button">
-            <span>✔️ Mon Réseaux</span>
-        </a>
-
-        <a href="#" class="nav-button">
-            <span>✔️ Tarifs & Billets</span>
-        </a>
-
-        <a href="#" class="nav-button">
-            <span>👥 Liste Zones</span>
-            <span class="badge-stat">Statistiques ●</span>
-        </a>
-
-        <a href="#" class="nav-button active">
-            <span>📠 Statistiques-wifi</span>
-            <span class="badge-active">active</span>
-        </a>
-
-        <a href="#" class="nav-button">
-            <span>✔️ Cres-tarif</span>
-            <span style="font-size: 10px; opacity: 0.6;">Mes Tickets</span>
-        </a>
-
-        <a href="#" class="nav-button">
-            <span>📁 Liste-des-tarifs</span>
-        </a>
-
-        <a href="#" class="nav-button">
-            <span>✖️ Liste-des-tickets</span>
-        </a>
-
-        <a href="#" class="nav-button">
-            <span>👤 Comptabilitaite</span>
-        </a>
-    </div>
-
-    <div class="content">
-        <p class="subtitle">SYSTÈME ANALYTIQUE</p>
-        <h1>Statistiques <span style="color:var(--primary)">Globales</span></h1>
-
-        <div class="stat-grid">
-            <div class="stat-card">
-                <p style="color:#64748b; font-size:10px; font-weight:900;">CHIFFRE D'AFFAIRES</p>
-                <h2 style="font-size:32px; margin-top:10px;">0 XAF</h2>
-            </div>
-            <div class="stat-card">
-                <p style="color:#64748b; font-size:10px; font-weight:900;">TICKETS VENDUS</p>
-                <h2 style="font-size:32px; margin-top:10px;">0</h2>
-            </div>
+        <div class="logo-area">
+            <div style="width: 30px; height: 30px; background: var(--primary); border-radius: 8px;"></div>
+            AERIO <span>.</span>
         </div>
-        
-        <div style="margin-top:40px; height:300px; background:var(--card-bg); border-radius:30px; display:flex; align-items:center; justify-content:center; border:1px dashed #333;">
-            <p style="color:#444; font-weight:900;">[ GRAPHES EN ATTENTE DE DONNÉES ]</p>
+
+        <div class="nav-group">
+            <a href="dashboard.html" class="nav-item"><span>🏠 Tableau de Bord</span></a>
+        </div>
+
+        <div class="nav-group">
+            <div class="group-title">Réseau & Zones</div>
+            <a href="ajouter-wifi.html" class="nav-item"><span>➕ Ajouter une Zone</span></a>
+            <a href="liste-wifi.html" class="nav-item"><span>📡 Liste des Zones</span></a>
+            <a href="statistiques-wifi.html" class="nav-item active">
+                <span>📊 Statistiques</span>
+                <div class="stat-badge"><div class="dot"></div> LIVE</div>
+            </a>
+        </div>
+
+        <div class="nav-group">
+            <div class="group-title">Monétisation</div>
+            <a href="mes-tarifs.html" class="nav-item"><span>💎 Mes Tarifs</span></a>
+            <a href="liste-des-tickets.html" class="nav-item"><span>🎫 Mes Tickets</span></a>
+        </div>
+
+        <div class="nav-group">
+            <div class="group-title">Finance</div>
+            <a href="comptabilite.html" class="nav-item"><span>🏛️ Ma Comptabilité</span></a>
         </div>
     </div>
 
+    <div class="main-content">
+        <div class="container">
+            <header class="dashboard-header">
+                <div>
+                    <p style="font-size: 10px; font-weight: 900; color: var(--primary); letter-spacing: 3px;">CENTRE DE CONTRÔLE</p>
+                    <h1>Statistiques <span>Réseau</span></h1>
+                </div>
+                <div class="selectors">
+                    <select><option>Toutes les zones</option></select>
+                    <select><option>Février 2026</option></select>
+                </div>
+            </header>
+
+            <div class="kpi-row">
+                <div class="kpi-box">
+                    <span class="kpi-label">Chiffre d'Affaires</span>
+                    <span class="kpi-value">0 <small style="font-size:12px;">XAF</small></span>
+                    <span class="kpi-trend">↑ 0% vs mois préc.</span>
+                </div>
+                <div class="kpi-box">
+                    <span class="kpi-label">Tickets Vendus</span>
+                    <span class="kpi-value">0</span>
+                    <span class="kpi-trend">STABLE</span>
+                </div>
+                <div class="kpi-box" style="border-left-color: var(--neon-purple);">
+                    <span class="kpi-label">Flux de Croissance</span>
+                    <span class="kpi-value">+0%</span>
+                    <span class="kpi-trend" style="color:var(--primary)">ANALYSE EN COURS</span>
+                </div>
+                <div class="kpi-box">
+                    <span class="kpi-label">Efficacité Système</span>
+                    <span class="kpi-value">100%</span>
+                    <span class="kpi-trend">OPÉRATIONNEL</span>
+                </div>
+            </div>
+
+            <div class="analytics-grid">
+                <div class="card-main">
+                    <h3 style="font-size: 14px; font-weight: 900; margin-bottom: 25px;">Évolution des Ventes (CA & Unités)</h3>
+                    <canvas id="salesChart" height="120"></canvas>
+                </div>
+                <div class="card-main">
+                    <h3 style="font-size: 14px; font-weight: 900; margin-bottom: 25px;">Top Zones WiFi</h3>
+                    <div class="performance-list">
+                        <p style="text-align: center; color: #475569; font-size: 12px; margin-top: 40px;">Aucune donnée de performance</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-main">
+                <h3 style="font-size: 14px; font-weight: 900; margin-bottom: 10px;">5 Dernières Transactions</h3>
+                <table class="transaction-table">
+                    <thead>
+                        <tr>
+                            <th>Date & Heure</th>
+                            <th>Point d'accès</th>
+                            <th>Montant</th>
+                            <th>Réseau</th>
+                            <th>Statut</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="5" style="text-align: center; color: #475569; padding: 40px;">En attente de la première transaction...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const ctx = document.getElementById('salesChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['J1', 'J5', 'J10', 'J15', 'J20', 'J25', 'J30'],
+                datasets: [{
+                    label: 'CA (XAF)',
+                    data: [0, 0, 0, 0, 0, 0, 0],
+                    borderColor: '#00C2FF',
+                    backgroundColor: 'rgba(0, 194, 255, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                plugins: { legend: { display: false } },
+                scales: { 
+                    y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { display: false } },
+                    x: { grid: { display: false }, ticks: { color: '#475569' } }
+                }
+            }
+        });
+    </script>
 </body>
 </html>
