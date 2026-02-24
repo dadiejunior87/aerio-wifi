@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AERIO | Analytics Alpha</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;900&display=swap" rel="stylesheet">
+    <style>
+        :root { 
+            --primary: #00C2FF; 
+            --bg: #020617; 
+            --glass: rgba(15, 23, 42, 0.7); 
+            --accent: #00F5A0; 
+            --danger: #FF4B4B;
+            --card-bg: rgba(255, 255, 255, 0.02);
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        
+        body { 
+            background: var(--bg); 
+            color: white; 
+            padding: 40px;
+            background-image: radial-gradient(circle at top right, rgba(0, 194, 255, 0.05), transparent);
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; }
+
+        /* ✅ HEADER ANALYTIQUE PRÉSERVÉ */
+        .analytics-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 40px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            padding-bottom: 20px;
+        }
+        .analytics-header h1 { font-weight: 900; font-size: 32px; letter-spacing: -1px; }
+        .analytics-header p { color: var(--primary); font-size: 11px; font-weight: 900; letter-spacing: 2px; }
+
+        /* ✅ FILTRES INTELLIGENTS PRÉSERVÉS */
+        .filter-bar {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+            background: var(--glass);
+            padding: 15px;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .filter-group { flex: 1; display: flex; flex-direction: column; gap: 5px; }
+        .filter-group label { font-size: 9px; font-weight: 900; color: #475569; letter-spacing: 1px; }
+        select {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: white;
+            padding: 10px;
+            border-radius: 12px;
+            outline: none;
+            font-size: 12px;
+        }
+
+        /* ✅ GRILLE DE CARTES ULTRA PRÉSERVÉE */
+        .stats-main-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .stat-card-ultra {
+            background: var(--card-bg);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 30px;
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+            transition: 0.4s;
+        }
+        .stat-card-ultra:hover { transform: translateY(-10px); border-color: var(--primary); background: rgba(0, 194, 255, 0.03); }
+
+        .stat-icon { font-size: 30px; margin-bottom: 20px; filter: drop-shadow(0 0 10px var(--glow)); }
+        .stat-label { font-size: 11px; font-weight: 900; color: #64748b; letter-spacing: 1px; text-transform: uppercase; }
+        .stat-value { font-size: 36px; font-weight: 900; margin: 10px 0; }
+        .stat-footer { font-size: 10px; font-weight: 600; color: var(--accent); display: flex; align-items: center; gap: 5px; }
+
+        .stock-progress-bg { width: 100%; height: 4px; background: rgba(255,255,255,0.05); border-radius: 10px; margin-top: 15px; }
+        .stock-progress-fill { height: 100%; background: var(--primary); border-radius: 10px; box-shadow: 0 0 10px var(--primary); transition: 1s ease-out; }
+
+        .btn-refresh {
+            background: var(--primary);
+            color: #020617;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 15px;
+            font-weight: 900;
+            cursor: pointer;
+            margin-top: 40px;
+            transition: 0.3s;
+            text-transform: uppercase;
+        }
+        .btn-refresh:hover { box-shadow: 0 0 30px rgba(0, 194, 255, 0.4); transform: scale(1.05); }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header class="analytics-header">
+            <div>
+                <p>AERIO INTELLIGENCE UNIT</p>
+                <h1>Statistiques <span style="color:var(--primary)">Globales</span></h1>
+            </div>
+            <button onclick="location.href='dashboard.html'" style="background:none; border:1px solid rgba(255,255,255,0.2); color:white; padding:10px 20px; border-radius:12px; font-size:10px; font-weight:900; cursor:pointer; transition: 0.3s;">← RETOUR DASHBOARD</button>
+        </header>
+
+        <div class="filter-bar">
+            <div class="filter-group">
+                <label>SÉLECTION DU NŒUD</label>
+                <select><option>Tous les points d'accès</option></select>
+            </div>
+            <div class="filter-group">
+                <label>PÉRIODE D'ANALYSE</label>
+                <select>
+                    <option>Dernières 24 heures</option>
+                    <option>7 derniers jours</option>
+                    <option>Mois en cours</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="stats-main-grid">
+            <div class="stat-card-ultra" style="--glow: var(--accent);">
+                <div class="stat-icon">💰</div>
+                <div class="stat-label">Flux de Vente</div>
+                <div class="stat-value" id="sold-count">0</div>
+                <div class="stat-footer">▲ +0% depuis hier</div>
+            </div>
+
+            <div class="stat-card-ultra" style="--glow: var(--primary);">
+                <div class="stat-icon">🎫</div>
+                <div class="stat-label">Stock de Sécurité</div>
+                <div class="stat-value" id="remaining-count">0</div>
+                <div class="stock-progress-bg">
+                    <div class="stock-progress-fill" id="progress-bar" style="width: 0%"></div>
+                </div>
+                <div class="stat-footer" style="color:#64748b; margin-top:10px;">État du stock : <span id="stock-percent" style="color:var(--primary); margin-left:5px;">0%</span></div>
+            </div>
+
+            <div class="stat-card-ultra" style="--glow: #FACC15;">
+                <div class="stat-icon">📈</div>
+                <div class="stat-label">Valeur de l'Inventaire</div>
+                <div class="stat-value" id="total-value">0</div>
+                <div class="stat-footer" style="color:var(--primary);">FCFA (Profit potentiel)</div>
+            </div>
+        </div>
+
+        <center><button class="btn-refresh" onclick="location.reload()">ACTUALISER LES DONNÉES LIVE</button></center>
+    </div>
+
+    <script>
+        // ✅ FONCTION DE MISE À JOUR (GARDÉE ET AMÉLIORÉE)
+        function updateStats(sold, remaining, price) {
+            const soldEl = document.getElementById('sold-count');
+            const remainingEl = document.getElementById('remaining-count');
+            const totalEl = document.getElementById('total-value');
+            const progressFill = document.getElementById('progress-bar');
+            const percentText = document.getElementById('stock-percent');
+
+            // Animation des chiffres
+            soldEl.innerText = sold;
+            remainingEl.innerText = remaining;
+            totalEl.innerText = (remaining * price).toLocaleString();
+            
+            // Calculer la barre (sur une base de 1000 tickets max pour l'exemple)
+            const maxCapacity = 1000;
+            const progress = (remaining / maxCapacity) * 100;
+            
+            setTimeout(() => {
+                progressFill.style.width = progress + "%";
+                percentText.innerText = Math.round(progress) + "%";
+            }, 300);
+        }
+
+        // Simuler un chargement de données réelles (GARDÉ)
+        window.onload = () => {
+            setTimeout(() => updateStats(145, 850, 100), 500);
+        };
+    </script>
+</body>
+</html>
