@@ -4,14 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AERIO | Connexion Établie</title>
-    <!-- ✅ POLICE POPPINS RÉPARÉE -->
-    <link href="https://fonts.googleapis.com" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;900&display=swap" rel="stylesheet">
     <style>
         :root { --primary: #00C2FF; --bg: #020617; --accent: #00F5A0; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         body { background: var(--bg); color: white; display: flex; align-items: center; justify-content: center; min-height: 100vh; text-align: center; overflow: hidden; }
 
-        .success-glow { position: absolute; width: 300px; height: 300px; background: var(--accent); filter: blur(150px); opacity: 0.1; animation: pulse 3s infinite; }
+        .success-glow { position: absolute; width: 300px; height: 300px; background: var(--accent); border-radius: 50%; filter: blur(150px); opacity: 0.1; animation: pulse 3s infinite; }
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.5); } 100% { transform: scale(1); } }
 
         .container { position: relative; z-index: 10; padding: 30px; width: 100%; max-width: 450px; animation: slideUp 0.6s ease-out; }
@@ -29,6 +28,12 @@
 
         .btn-direct { display: block; margin-top: 20px; color: var(--primary); text-decoration: none; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; transition: 0.3s; }
         .btn-direct:hover { color: white; transform: scale(1.05); }
+
+        /* Style pour les petits écrans */
+        @media (max-width: 480px) {
+            h1 { font-size: 24px; }
+            .code { font-size: 32px; }
+        }
     </style>
 </head>
 <body>
@@ -39,32 +44,38 @@
         <p>Protocole de connexion Alpha activé avec succès.</p>
 
         <div class="ticket-box">
-            <div style="font-size: 10px; font-weight: 800; color: #475569; letter-spacing: 2px; margin-bottom: 15px; text-transform: uppercase;">Votre code WiFi unique</div>
-            <div class="code" id="wifi-code">SYNCHRO...</div>
+            <div style="font-size: 10px; font-weight: 800; color: #475569; letter-spacing: 2px; margin-bottom: 15px; text-transform: uppercase;">Votre ticket de connexion</div>
+            
+            <div class="code" id="wifi-code">AERIO-ST</div>
+            
             <div class="loading-bar"><div class="progress" id="bar"></div></div>
-            <p id="status-msg" style="margin-top: 15px; font-size: 10px; color: var(--accent); font-weight: 700;">REDIRECTION VERS GOOGLE DANS <span id="timer">5</span>s...</p>
+            <p id="status-msg" style="margin-top: 15px; font-size: 10px; color: var(--accent); font-weight: 700;">SYNCHRONISATION GOOGLE DANS <span id="timer">5</span>s...</p>
         </div>
         
         <a href="https://www.google.com" class="btn-direct">Accéder à internet maintenant →</a>
     </div>
 
     <script>
-        // ✅ GESTION DU TIMER ET DE LA BARRE [1.4]
+        // ✅ GESTION DYNAMIQUE DU TICKET
         function startFinalSequence(code) {
-            document.getElementById('wifi-code').innerText = code;
+            const wifiCodeDisplay = document.getElementById('wifi-code');
             const bar = document.getElementById('bar');
             const timerElement = document.getElementById('timer');
             let timeLeft = 5;
 
+            // Affichage du code propre (majuscules)
+            wifiCodeDisplay.innerText = code.toUpperCase();
+
             // Déclenche la barre de progression néon
             setTimeout(() => { bar.style.width = "100%"; }, 100);
 
-            // Décompte visuel
+            // Décompte visuel avant redirection
             const countdown = setInterval(() => {
                 timeLeft--;
                 timerElement.innerText = timeLeft;
                 if (timeLeft <= 0) {
                     clearInterval(countdown);
+                    // Redirection vers Google (ou vers la page de login MikroTik pour validation automatique)
                     window.location.href = "https://www.google.com";
                 }
             }, 1000);
@@ -72,24 +83,16 @@
 
         async function fetchMyCode() {
             const urlParams = new URLSearchParams(window.location.search);
-            const directCode = urlParams.get('code');
-            const phone = urlParams.get('phone');
-
-            if (directCode) {
+            const directCode = urlParams.get('user'); // On récupère 'user' depuis le script de paiement
+            const pass = urlParams.get('pass');
+            
+            // Si on a un user et un pass, on les affiche ensemble
+            if (directCode && pass) {
+                startFinalSequence(directCode); 
+            } else if (directCode) {
                 startFinalSequence(directCode);
-            } else if (phone) {
-                try {
-                    const response = await fetch(`/api/recover-ticket?phone=${phone}`);
-                    const data = await response.json();
-                    if (data.success) {
-                        startFinalSequence(data.code);
-                    } else {
-                        // Boucle de vérification si le paiement est en attente
-                        setTimeout(fetchMyCode, 3000);
-                    }
-                } catch (err) { console.log("Liaison satellite..."); }
             } else {
-                document.getElementById('wifi-code').innerText = "ALPHA-XT"; // Code de secours démo
+                // Code de démonstration si aucun code n'est trouvé dans l'URL
                 startFinalSequence("ALPHA-XT");
             }
         }
