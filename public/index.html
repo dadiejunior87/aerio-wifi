@@ -20,6 +20,7 @@
         .nav-links a:hover { color: white; }
         .btn-pro { background: linear-gradient(45deg, var(--primary), var(--neon)); color: white; padding: 10px 15px; border-radius: 10px; font-weight: 900; text-decoration: none; font-size: 9px; text-transform: uppercase; }
 
+        /* Style Sélecteur de langue */
         .lang-switcher { display: flex; gap: 8px; margin-left: 10px; }
         .lang-btn { cursor: pointer; font-size: 14px; opacity: 0.5; transition: 0.3s; filter: grayscale(1); }
         .lang-btn:hover, .lang-btn.active { opacity: 1; filter: grayscale(0); transform: scale(1.1); }
@@ -40,7 +41,7 @@
 
 <div id="preloader" style="position: fixed; inset: 0; background: #020617; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: 0.8s ease-in-out;">
     <div style="width: 250px; text-align: center;">
-        <div id="init-text" data-key="init_text" style="font-weight: 900; color: #00C2FF; letter-spacing: 5px; margin-bottom: 20px; font-size: 14px;">AERIO SYSTEM INITIALIZATION</div>
+        <div data-key="init_text" style="font-weight: 900; color: #00C2FF; letter-spacing: 5px; margin-bottom: 20px; font-size: 14px;">AERIO SYSTEM INITIALIZATION</div>
         <div style="width: 100%; height: 2px; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; position: relative;">
             <div id="loader-bar" style="position: absolute; height: 100%; width: 0%; background: #00C2FF; box-shadow: 0 0 15px #00C2FF; transition: 0.4s;"></div>
         </div>
@@ -52,14 +53,14 @@
         <div class="logo">🛰️ AERIO</div>
         <div class="nav-links">
             <a href="index.html" data-key="nav_home">Accueil</a>
-            <a href="#" data-key="nav_shop">Shop</a>
-            <a href="#" data-key="nav_loc">Localisation</a>
-            <a href="#" data-key="nav_vpn">VPN</a>
-            <a href="dashboard.html" class="btn-pro" data-key="nav_pro">Espace Pro</a>
+            <a href="shop.html" data-key="nav_shop">Shop</a>
+            <a href="localisation.html" data-key="nav_loc">Localisation</a>
+            <a href="vpn.html" data-key="nav_vpn">VPN</a>
+            <a href="connexion.html" class="btn-pro" data-key="nav_pro">Espace Pro</a>
             <div class="lang-switcher">
-                <span class="lang-btn active" data-lang="fr" onclick="changeLang('fr')">🇫🇷</span>
-                <span class="lang-btn" data-lang="en" onclick="changeLang('en')">🇺🇸</span>
-                <span class="lang-btn" data-lang="pt" onclick="changeLang('pt')">🇧🇷</span>
+                <span class="lang-btn active" onclick="changeLang('fr')">🇫🇷</span>
+                <span class="lang-btn" onclick="changeLang('en')">🇺🇸</span>
+                <span class="lang-btn" onclick="changeLang('pt')">🇧🇷</span>
             </div>
         </div>
     </nav>
@@ -71,7 +72,7 @@
                 <span data-key="hero_title1">Le Futur du</span> <br><span data-key="hero_title2" style="color:var(--primary)">WiFi Zone.</span>
             </h1>
             <p data-key="hero_desc" style="color: #64748b; font-size: 15px; margin-bottom: 35px; line-height: 1.6;">Monétisez votre connexion MikroTik avec la puissance du Mobile Money à l'échelle internationale.</p>
-            <a href="dashboard.html" data-key="btn_partner" style="background:white; color:black; padding:18px 35px; border-radius:18px; text-decoration:none; font-weight:900; display:inline-block; font-size:15px;">Devenir Partenaire</a>
+            <a href="inscription.html" data-key="btn_partner" style="background:white; color:black; padding:18px 35px; border-radius:18px; text-decoration:none; font-weight:900; display:inline-block; font-size:15px;">Devenir Partenaire</a>
         </div>
 
         <div class="live-card" style="background:var(--glass); padding:35px; border-radius:40px; width:100%; max-width:420px; text-align:center; border: 1px solid var(--primary); animation: neonPulse 5s infinite;">
@@ -117,6 +118,7 @@
                 <div class="flag-card">🇧🇷 <b>BRÉSIL</b><span data-key="hub_latam">Liaison Latam</span></div>
                 <div class="flag-card">🇨🇩 <b>RDC</b><span data-key="hub_link">Liaison Établie</span></div>
                 <div class="flag-card">🇸🇳 <b>SÉNÉGAL</b><span data-key="hub_active">Nœud Actif</span></div>
+                <div class="flag-card">🇨🇲 <b>CAMEROUN</b><span data-key="hub_central">Hub Central</span></div>
             </div>
         </div>
     </section>
@@ -183,22 +185,6 @@
                 wa_title1: "Send us", wa_title2: "An Alpha Message.", f_about: "About",
                 f_desc: "AERIO is the sovereign monetization unit in Cameroon.", f_sec: "Security & Compliance",
                 f_antic1: "🛡️ DECLARED PLATFORM", f_antic2: "Cybersecurity Compliance (ANTIC - Cameroon)"
-            },
-            pt: {
-                init_text: "INICIALIZAÇÃO DO SISTEMA AERIO",
-                nav_home: "Início", nav_shop: "Loja", nav_loc: "Localização", nav_vpn: "VPN", nav_pro: "Espaço Pro",
-                hero_tag: "🛰️ PROTOCOLO ALPHA ATIVADO", hero_title1: "O Futuro do", hero_title2: "WiFi Zone.",
-                hero_desc: "Monetize sua conexão MikroTik com o poder do Mobile Money internacionalmente.",
-                btn_partner: "Tornar-se Parceiro", live_title: "SEU NEGÓCIO AO VIVO (IA)", live_status: "FLUXO SEGURO ANALISADO",
-                live_net: "Rede:", live_active: "Ativo", sec2_title1: "ARSENAL", sec2_title2: "TÁTICO",
-                card1_t: "🛰️ IMPLANTAÇÃO", card1_p: "Importação CSV MikroTik industrial em 1 segundo.",
-                card2_t: "💸 VENDA AUTO", card2_p: "Pagamentos Mobile Money seguros e sem dados.",
-                card3_t: "📈 RADAR PERF", card3_p: "Acompanhamento de receita em tempo real 24/7.",
-                card4_t: "🔓 ZERO DATA", card4_p: "Walled Garden permite pagar sem plano de internet.",
-                hub_intl: "INTERNACIONAL", hub_central: "Hub Central", hub_giant: "Nó Gigante", hub_active: "Nó Ativo", hub_link: "Conexão Estabelecida", hub_gateway: "Portal Europa", hub_latam: "Conexão Latam",
-                wa_title1: "Envie-nos", wa_title2: "Uma Mensagem Alpha.", f_about: "Sobre",
-                f_desc: "AERIO é a unidade de monetização soberana em Camarões.", f_sec: "Segurança e Conformidade",
-                f_antic1: "🛡️ PLATAFORMA DECLARADA", f_antic2: "Conformidade de Cibersegurança (ANTIC)"
             }
         };
 
@@ -207,10 +193,8 @@
                 const key = el.getAttribute('data-key');
                 if (langData[lang][key]) el.innerText = langData[lang][key];
             });
-            document.querySelectorAll('.lang-btn').forEach(btn => {
-                btn.classList.remove('active');
-                if(btn.getAttribute('data-lang') === lang) btn.classList.add('active');
-            });
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
         }
 
         const bars = document.querySelectorAll('.ai-bar');
@@ -226,15 +210,10 @@
                 if (progress > 100) progress = 100;
                 bar.style.width = progress + '%';
                 percent.innerText = progress + '% - PROTOCOLE ALPHA ACTIVÉ';
-                if (progress === 100) { 
-                    clearInterval(interval); 
-                    setTimeout(() => { 
-                        preloader.style.opacity = '0'; 
-                        setTimeout(() => { preloader.style.display = 'none'; }, 800); 
-                    }, 500); 
-                }
+                if (progress === 100) { clearInterval(interval); setTimeout(() => { preloader.style.opacity = '0'; setTimeout(() => { preloader.style.display = 'none'; }, 800); }, 500); }
             }, 100);
         });
     </script>
 </body>
 </html>
+
