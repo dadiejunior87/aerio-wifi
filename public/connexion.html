@@ -8,6 +8,7 @@
     <style>
         :root { --primary: #00C2FF; --bg: #020617; --glass: rgba(15, 23, 42, 0.7); --accent: #7000FF; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        
         body { 
             background: var(--bg); 
             color: white; 
@@ -15,9 +16,10 @@
             display: flex; 
             align-items: center; 
             justify-content: center; 
-            padding: 20px; 
+            padding: 40px 20px; 
             background-image: radial-gradient(circle at bottom left, rgba(112, 0, 255, 0.1), transparent); 
-            overflow: hidden; 
+            /* ✅ REPARÉ : On autorise le défilement pour ne pas bloquer le bouton sur mobile */
+            overflow-y: auto; 
         }
 
         /* ✅ SCANNER OVERLAY */
@@ -32,13 +34,13 @@
         }
         @keyframes scanLoop { 0% { top: 0%; } 100% { top: 100%; } }
 
-        /* ✅ DESIGN GLASSMORPHISM */
+        /* ✅ DESIGN GLASSMORPHISM AMÉLIORÉ */
         .login-card { 
             background: var(--glass); 
             backdrop-filter: blur(40px); 
-            padding: 50px; 
+            padding: 50px 40px; 
             border-radius: 40px; 
-            border: 1px solid rgba(255,255,255,0.05); 
+            border: 1px solid rgba(0, 194, 255, 0.2); 
             width: 100%; 
             max-width: 450px; 
             text-align: center; 
@@ -46,9 +48,14 @@
             position: relative; 
             z-index: 10;
         }
+
+        /* Sélecteur de langue discret */
+        .lang-switcher { display: flex; gap: 10px; justify-content: center; margin-bottom: 25px; }
+        .lang-btn { cursor: pointer; font-size: 16px; opacity: 0.4; transition: 0.3s; filter: grayscale(1); }
+        .lang-btn.active { opacity: 1; filter: grayscale(0); transform: scale(1.2); }
         
         h1 { font-size: 28px; font-weight: 900; margin-bottom: 10px; letter-spacing: -1px; text-transform: uppercase; }
-        p { color: #64748b; font-size: 13px; margin-bottom: 30px; }
+        p#sub-text { color: #64748b; font-size: 13px; margin-bottom: 30px; }
 
         .input-group { text-align: left; margin-bottom: 20px; }
         label { font-size: 10px; font-weight: 900; color: var(--primary); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; display: block; }
@@ -60,7 +67,7 @@
             color: white; font-size: 14px; 
             outline: none; transition: 0.3s; 
         }
-        input:focus { border-color: var(--primary); box-shadow: 0 0 20px rgba(0, 194, 255, 0.2); }
+        input:focus { border-color: var(--primary); box-shadow: 0 0 20px rgba(0, 194, 255, 0.2); background: rgba(0,0,0,0.6); }
 
         .btn-login { 
             width: 100%; padding: 20px; 
@@ -95,48 +102,107 @@
     <div id="scanner-line"></div>
 
     <div class="login-card">
+        <div class="lang-switcher">
+            <span class="lang-btn active" onclick="changeLang('fr')">🇫🇷</span>
+            <span class="lang-btn" onclick="changeLang('en')">🇺🇸</span>
+            <span class="lang-btn" onclick="changeLang('pt')">🇧🇷</span>
+        </div>
+
         <div class="logo-box">🔐</div>
-        <h1 data-lang="nav_pro">Espace Pro</h1>
-        <p>Liaison sécurisée au cockpit de gestion AERIO.</p>
+        <h1 data-key="title_pro">Espace Pro</h1>
+        <p id="sub-text" data-key="hero_desc">Liaison sécurisée au cockpit de gestion AERIO.</p>
 
         <form id="loginForm" onsubmit="initierLiaisonAlpha(event)">
             <div class="input-group">
-                <label>Identifiant Agent Alpha</label>
-                <input type="text" id="agentID" placeholder="Email ou ID" required>
+                <label data-key="label_id">Identifiant Agent Alpha</label>
+                <input type="text" id="agentID" placeholder="Email ou ID" data-placeholder="ph_id" required>
             </div>
             <div class="input-group">
-                <label>Code de Cryptage</label>
+                <label data-key="label_key">Code de Cryptage</label>
                 <input type="password" id="agentKey" placeholder="••••••••" required>
             </div>
             
-            <button type="submit" class="btn-login" id="btnText">Initialiser la Session</button>
+            <button type="submit" class="btn-login" id="btnText" data-key="btn_init">Initialiser la Session</button>
         </form>
 
-        <a href="index.html" class="back-link">← Retour au Cockpit</a>
+        <a href="index.html" class="back-link" data-key="btn_back">← Retour au Cockpit</a>
     </div>
 
     <script>
+        const langData = {
+            fr: {
+                title_pro: "Espace Pro",
+                hero_desc: "Liaison sécurisée au cockpit de gestion AERIO.",
+                label_id: "Identifiant Agent Alpha",
+                ph_id: "Email ou ID",
+                label_key: "Code de Cryptage",
+                btn_init: "Initialiser la Session",
+                btn_back: "← Retour au Cockpit",
+                loading: "CRYPTAGE EN COURS..."
+            },
+            en: {
+                title_pro: "Pro Space",
+                hero_desc: "Secure link to the AERIO management cockpit.",
+                label_id: "Alpha Agent ID",
+                ph_id: "Email or ID",
+                label_key: "Encryption Code",
+                btn_init: "Initialize Session",
+                btn_back: "← Back to Cockpit",
+                loading: "ENCRYPTING..."
+            },
+            pt: {
+                title_pro: "Espaço Pro",
+                hero_desc: "Ligação segura ao cockpit de gestão AERIO.",
+                label_id: "ID do Agente Alpha",
+                ph_id: "E-mail ou ID",
+                label_key: "Código de Criptografia",
+                btn_init: "Inicializar Sessão",
+                btn_back: "← Voltar ao Cockpit",
+                loading: "CRIPTOGRAFANDO..."
+            }
+        };
+
+        function changeLang(lang) {
+            document.querySelectorAll('[data-key]').forEach(el => {
+                const key = el.getAttribute('data-key');
+                if (langData[lang][key]) el.innerText = langData[lang][key];
+            });
+
+            // Placeholders
+            const idInput = document.getElementById('agentID');
+            idInput.placeholder = langData[lang].ph_id;
+
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            localStorage.setItem('aerio_lang', lang);
+        }
+
         function initierLiaisonAlpha(e) {
             e.preventDefault();
+            const currentLang = localStorage.getItem('aerio_lang') || 'fr';
             const btn = document.getElementById('btnText');
             const scanner = document.getElementById('scanner-line');
             
-            // 1. Déclenchement du scan visuel
             scanner.style.display = 'block';
-            btn.innerText = "CRYPTAGE EN COURS...";
+            btn.innerText = langData[currentLang].loading;
             btn.style.opacity = "0.7";
             btn.style.pointerEvents = "none";
 
-            // 2. Simulation de vérification (1.5s) pour l'effet "Wow"
             setTimeout(() => {
-                // 3. Redirection vers le dashboard
                 window.location.href = "dashboard.html"; 
             }, 2000);
         }
 
-        // Gestion de la langue (Sécurité)
-        window.onload = function() {
-            if(typeof applyTranslations === 'function') applyTranslations();
+        // Appliquer la langue stockée au chargement
+        window.onload = () => {
+            const savedLang = localStorage.getItem('aerio_lang') || 'fr';
+            // Simuler un clic pour activer la bonne langue au départ
+            const btns = document.querySelectorAll('.lang-btn');
+            btns.forEach(b => {
+                if(b.innerText.includes('🇫🇷') && savedLang === 'fr') b.click();
+                if(b.innerText.includes('🇺🇸') && savedLang === 'en') b.click();
+                if(b.innerText.includes('🇧🇷') && savedLang === 'pt') b.click();
+            });
         };
     </script>
 </body>
