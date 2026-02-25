@@ -1,177 +1,163 @@
-></div> 
-
-                </a>
-
-                <a href="docs.html" class="action-card">
-
-                    <div class="icon-box" style="color: var(--primary);">📚</div>
-
-                    <div><b style="font-size: 11px; display:block; letter-spacing:1px;" data-key="card_academy">ACADÉMIE</b><span style="font-size: 10px; color:#64748b;" data-key="card_academy_sub">Guides Alpha</span></div>
-
-                </a>
-
-            </div>
-
-
-            <div class="smart-banner">
-
-                <span style="font-size: 40px;">🧠</span>
-
-                <div>
-
-                    <span class="ai-chip">AERIO INTELLIGENCE</span>
-
-                    <p style="margin-top:8px; font-weight:600; font-size:16px;" id="welcome-msg">Initialisation du système... Prêt pour le monitoring.</p>
-
-                </div>
-
-            </div>
-
-
-            <div class="main-stats">
-
-                <div class="card-main">
-
-                    <p style="font-size: 11px; font-weight: 900; color: #64748b; letter-spacing: 2px;" data-key="stat_balance">SOLDE DISPONIBLE</p>
-
-                    <div class="val-large">0 <small style="font-size: 20px; color: var(--primary);">XAF</small></div>
-
-                    <p style="font-size: 11px; color: #475569;" data-key="stat_pending">Aucun retrait en cours</p>
-
-                </div>
-
-                <div class="card-main">
-
-                    <p style="font-size: 11px; font-weight: 900; color: #64748b; letter-spacing: 2px;" data-key="stat_total">CHIFFRE D'AFFAIRES GLOBAL</p>
-
-                    <div class="val-large">0 <small style="font-size: 20px; color: var(--accent);">XAF</small></div>
-
-                    <p style="font-size: 11px; color: #475569;" data-key="stat_perf">Activité réseau : En attente</p>
-
-                </div>
-
-            </div>
-
-
-            <div class="mini-grid">
-
-                <div class="mini-card">
-
-                    <p style="font-size: 10px; font-weight: 900; color: #64748b; margin-bottom: 8px;" data-key="mini_passes">PASS VENDUS</p>
-
-                    <div style="font-size: 26px; font-weight: 900;">0</div>
-
-                </div>
-
-                <div class="mini-card">
-
-                    <p style="font-size: 10px; font-weight: 900; color: #64748b; margin-bottom: 8px;" data-key="mini_withdrawals">EXTRACTIONS</p>
-
-                    <div style="font-size: 26px; font-weight: 900;">0</div>
-
-                </div>
-
-                <div class="mini-card">
-
-                    <p style="font-size: 10px; font-weight: 900; color: #64748b; margin-bottom: 8px;" data-key="mini_daily">RECETTE JOUR</p>
-
-                    <div style="font-size: 26px; font-weight: 900;">0</div>
-
-                </div>
-
-                <div class="mini-card">
-
-                    <p style="font-size: 10px; font-weight: 900; color: #64748b; margin-bottom: 8px;" data-key="mini_live">AFFLUENCE LIVE</p>
-
-                    <div style="font-size: 26px; font-weight: 900;">0</div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </main>
-
-
-    <script>
-
-        // Le script de traduction reste identique pour ne pas perdre ton travail
-
-        const langData = {
-
-            fr: {
-
-                grp_pilot: "Pilotage Réseaux", nav_dash: "Tableau de bord", nav_add_wifi: "Configurer un WiFi", nav_list_wifi: "Mes Zones WiFi", nav_stats_wifi: "Analyse de Flotte",
-
-                grp_offers: "Offres & Accès", nav_add_price: "Créer un Tarif", nav_list_price: "Ma Grille Tarifaire", nav_gen_pass: "Générer un Pass", nav_list_pass: "Registre des Accès",
-
-                grp_finance: "Gestion Financière", nav_cash: "Flux de Trésorerie", nav_revenue: "Historique Recettes", nav_withdraw: "Journal d'Extractions",
-
-                card_profile: "MON COMPTE", card_profile_sub: "Profil Alpha", card_support: "ASSISTANCE LIVE", card_support_sub: "Support IA", card_academy: "ACADÉMIE", card_academy_sub: "Guides Alpha",
-
-                welcome: "Bienvenue, Chef de Projet. Le système est prêt à monitorer vos premiers revenus.",
-
-                stat_balance: "SOLDE DISPONIBLE", stat_pending: "Aucun retrait en attente", stat_total: "CHIFFRE D'AFFAIRES GLOBAL", stat_perf: "Performance du réseau : 0%",
-
-                mini_passes: "PASS VENDUS", mini_withdrawals: "EXTRACTIONS", mini_daily: "RECETTE JOUR", mini_live: "AFFLUENCE LIVE"
-
-            },
-
-            en: {
-
-                grp_pilot: "Network Control", nav_dash: "Dashboard", nav_add_wifi: "Setup WiFi", nav_list_wifi: "WiFi Zones", nav_stats_wifi: "Fleet Analysis",
-
-                grp_offers: "Offers & Access", nav_add_price: "Set Price", nav_list_price: "Pricing List", nav_gen_pass: "Generate Pass", nav_list_pass: "Access Logs",
-
-                grp_finance: "Finance", nav_cash: "Cash Flow", nav_revenue: "Revenue History", nav_withdraw: "Withdrawals",
-
-                card_profile: "MY ACCOUNT", card_profile_sub: "Alpha Profile", card_support: "LIVE SUPPORT", card_support_sub: "AI Support", card_academy: "ACADEMY", card_academy_sub: "Alpha Guides",
-
-                welcome: "Welcome, Project Lead. The system is ready to monitor your income.",
-
-                stat_balance: "AVAILABLE BALANCE", stat_pending: "No pending withdrawals", stat_total: "TOTAL REVENUE", stat_perf: "Network performance: 0%",
-
-                mini_passes: "PASSES SOLD", mini_withdrawals: "WITHDRAWALS", mini_daily: "DAILY INCOME", mini_live: "LIVE USERS"
-
-            }
-
-            // ... (pt et es restent identiques à ton fichier original)
-
-        };
-
-
-        function setLang(lang) {
-
-            document.querySelectorAll('[data-key]').forEach(el => {
-
-                const key = el.getAttribute('data-key');
-
-                if (langData[lang] && langData[lang][key]) el.innerText = langData[lang][key];
-
-            });
-
-            if(langData[lang]) document.getElementById('welcome-msg').innerText = langData[lang].welcome;
-
-            document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
-
-            document.getElementById(`btn-${lang}`).classList.add('active');
-
-            localStorage.setItem('aerio_lang', lang);
-
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AERIO | Centre de Commande Alpha</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #00C2FF;
+            --accent: #00F5A0;
+            --purple: #BC00FF;
+            --bg-deep: #020617;
+            --sidebar-bg: #0b1224;
+            --card-bg: rgba(15, 23, 42, 0.6);
+            --border: rgba(255, 255, 255, 0.08);
+            --sidebar-w: 280px;
         }
 
+        /* --- RESET & STRUCTURE --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        
+        html, body {
+            background: var(--bg-deep);
+            color: white;
+            min-height: 100vh;
+            /* C'est ici qu'on force le défilement */
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
 
-        window.onload = () => {
+        body {
+            background-image: 
+                radial-gradient(circle at 0% 0%, rgba(0, 194, 255, 0.15) 0%, transparent 35%),
+                radial-gradient(circle at 100% 100%, rgba(188, 0, 255, 0.1) 0%, transparent 35%);
+        }
 
-            const savedLang = localStorage.getItem('aerio_lang') || 'fr';
+        /* --- SIDEBAR FIXE --- */
+        .sidebar {
+            width: var(--sidebar-w);
+            background: var(--sidebar-bg);
+            padding: 30px 15px;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
 
-            setLang(savedLang);
+        .logo-title { 
+            color: var(--primary); font-weight: 900; font-size: 28px; margin-bottom: 35px; 
+            display: flex; align-items: center; gap: 10px; padding-left: 10px;
+        }
+        .logo-dot { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; box-shadow: 0 0 15px var(--accent); }
 
-        };
+        .group-label { font-size: 9px; color: #475569; font-weight: 900; text-transform: uppercase; margin: 25px 0 10px 10px; letter-spacing: 2px; }
 
-    </script>
+        .nav-button {
+            padding: 12px 15px; border-radius: 14px; display: flex; align-items: center; 
+            text-decoration: none; font-size: 13px; margin-bottom: 4px;
+            color: #94a3b8; transition: 0.3s;
+        }
+        .nav-button:hover { background: rgba(255, 255, 255, 0.05); color: white; transform: translateX(5px); }
+        .nav-button.active { 
+            background: linear-gradient(90deg, rgba(0, 194, 255, 0.15) 0%, transparent 100%); 
+            color: var(--primary); border-left: 4px solid var(--primary); font-weight: 600;
+        }
+
+        /* --- ZONE DE CONTENU (SCROLLABLE) --- */
+        main {
+            margin-left: var(--sidebar-w); /* On décale pour laisser la place à la sidebar */
+            padding: 40px;
+            min-height: 100vh;
+            display: block; /* Important pour le scroll */
+        }
+
+        .top-bar {
+            display: flex; justify-content: flex-end; align-items: center; gap: 20px;
+            margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid var(--border);
+        }
+
+        /* --- DASHBOARD CARDS --- */
+        .top-nav { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 35px; }
+        .action-card {
+            background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px;
+            padding: 20px; display: flex; align-items: center; gap: 15px; text-decoration: none; color: white;
+            transition: 0.3s;
+        }
+        .action-card:hover { transform: translateY(-5px); border-color: var(--primary); }
+
+        .main-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin-bottom: 35px; }
+        .card-main { 
+            background: var(--card-bg); padding: 40px; border-radius: 30px; border: 1px solid var(--border); text-align: center;
+        }
+        .val-large { font-size: 48px; font-weight: 900; margin: 10px 0; color: white; }
+
+        .mini-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; padding-bottom: 50px; }
+        .mini-card { background: rgba(255,255,255,0.03); padding: 25px; border-radius: 20px; border: 1px solid var(--border); }
+
+        /* RESPONSIVE */
+        @media (max-width: 1024px) {
+            .sidebar { width: 80px; }
+            .sidebar span, .group-label { display: none; }
+            main { margin-left: 80px; padding: 20px; }
+            .top-nav, .main-stats, .mini-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="logo-title"><div class="logo-dot"></div> AERIO</div>
+        
+        <div class="group-label">Pilotage</div>
+        <a href="#" class="nav-button active">🏠 <span>Dashboard</span></a>
+        <a href="#" class="nav-button">📡 <span>Zones WiFi</span></a>
+        
+        <div class="group-label">Finances</div>
+        <a href="#" class="nav-button">💰 <span>Recettes</span></a>
+        <a href="#" class="nav-button">📤 <span>Retraits</span></a>
+    </aside>
+
+    <main>
+        <div class="top-bar">
+            <span>Admin Alpha v1.0</span>
+            <div style="background: var(--primary); width: 40px; height: 40px; border-radius: 50%;"></div>
+        </div>
+
+        <div class="top-nav">
+            <div class="action-card">👤 <b>MON COMPTE</b></div>
+            <div class="action-card">💬 <b>SUPPORT IA</b></div>
+            <div class="action-card">📚 <b>ACADÉMIE</b></div>
+        </div>
+
+        <div class="main-stats">
+            <div class="card-main">
+                <p style="color: #64748b; font-size: 12px; letter-spacing: 1px;">SOLDE DISPONIBLE</p>
+                <div class="val-large">0 <small style="font-size: 18px; color: var(--primary);">XAF</small></div>
+            </div>
+            <div class="card-main">
+                <p style="color: #64748b; font-size: 12px; letter-spacing: 1px;">CHIFFRE D'AFFAIRES</p>
+                <div class="val-large">0 <small style="font-size: 18px; color: var(--accent);">XAF</small></div>
+            </div>
+        </div>
+
+        <div class="mini-grid">
+            <div class="mini-card"><p>PASS VENDUS</p><h3>0</h3></div>
+            <div class="mini-card"><p>RETRAITS</p><h3>0</h3></div>
+            <div class="mini-card"><p>SESSION LIVE</p><h3>0</h3></div>
+            <div class="mini-card"><p>ALERTE</p><h3>0</h3></div>
+        </div>
+
+        <div style="margin-top: 50px; padding: 20px; border: 1px dashed var(--border); border-radius: 20px; text-align: center;">
+            <p style="color: #475569;">Le scroll est activé. Ajoute tes tableaux ici.</p>
+        </div>
+    </main>
 
 </body>
-
-</html> 
+</html>
