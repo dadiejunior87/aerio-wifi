@@ -20,24 +20,39 @@
         .nav-links a:hover { color: white; }
         .btn-pro { background: linear-gradient(45deg, var(--primary), var(--neon)); color: white; padding: 10px 15px; border-radius: 10px; font-weight: 900; text-decoration: none; font-size: 9px; text-transform: uppercase; }
 
-        /* Style Sélecteur de langue */
         .lang-switcher { display: flex; gap: 8px; margin-left: 10px; }
         .lang-btn { cursor: pointer; font-size: 14px; opacity: 0.5; transition: 0.3s; filter: grayscale(1); }
         .lang-btn:hover, .lang-btn.active { opacity: 1; filter: grayscale(0); transform: scale(1.1); }
 
         .carousel-track { display: flex; gap: 20px; width: max-content; animation: scroll 40s linear infinite; }
         @keyframes scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+        
         .info-card { width: 300px; background: var(--glass); padding: 30px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.03); backdrop-filter: blur(20px); }
         .flag-card { min-width: 180px; background: var(--glass); padding: 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column; align-items: center; }
 
         .ai-graph { display: flex; align-items: flex-end; gap: 4px; height: 60px; justify-content: center; margin-bottom: 15px; }
         .ai-bar { width: 8px; background: var(--primary); border-radius: 2px; transition: height 0.5s ease; }
 
+        /* NOTIFICATIONS & PROUVE SOCIALE */
+        .notif-popup { position: fixed; bottom: 20px; left: -350px; background: rgba(10, 20, 40, 0.95); border-left: 4px solid var(--primary); color: white; padding: 15px 20px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); display: flex; align-items: center; gap: 12px; z-index: 10000; transition: 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .notif-popup.active { left: 20px; }
+        .notif-avatar { width: 40px; height: 40px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+        .trust-badge { display: flex; align-items: center; gap: 10px; margin-top: 20px; padding: 10px 20px; background: rgba(255,255,255,0.03); border-radius: 50px; width: fit-content; border: 1px solid rgba(255,255,255,0.05); }
+        .dot { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; animation: scan 1.5s infinite; }
+
         footer { padding: 80px 8% 40px; background: rgba(0,0,0,0.4); border-top: 1px solid rgba(255,255,255,0.05); }
         .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; }
     </style>
 </head>
 <body>
+
+<div id="notif-popup" class="notif-popup">
+    <div class="notif-avatar">👤</div>
+    <div>
+        <div id="notif-user" style="font-weight: 900; font-size: 12px; color: var(--primary);">Agent #104</div>
+        <div id="notif-action" style="font-size: 11px; color: #cbd5e1;">Vient d'activer son pack Premium</div>
+    </div>
+</div>
 
 <div id="preloader" style="position: fixed; inset: 0; background: #020617; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: 0.8s ease-in-out;">
     <div style="width: 250px; text-align: center;">
@@ -56,7 +71,7 @@
             <a href="shop.html" data-key="nav_shop">Shop</a>
             <a href="localisation.html" data-key="nav_loc">Localisation</a>
             <a href="vpn.html" data-key="nav_vpn">VPN</a>
-            <a href="connexion.html" class="btn-pro" data-key="nav_pro">Espace Pro</a>
+            <a href="dashboard.html" class="btn-pro" data-key="nav_pro">Espace Pro</a>
             <div class="lang-switcher">
                 <span class="lang-btn active" onclick="changeLang('fr')">🇫🇷</span>
                 <span class="lang-btn" onclick="changeLang('en')">🇺🇸</span>
@@ -71,8 +86,18 @@
             <h1 style="font-size: 82px; font-weight: 900; line-height: 1.1; margin-bottom: 25px; letter-spacing: -4px;">
                 <span data-key="hero_title1">Le Futur du</span> <br><span data-key="hero_title2" style="color:var(--primary)">WiFi Zone.</span>
             </h1>
-            <p data-key="hero_desc" style="color: #64748b; font-size: 15px; margin-bottom: 35px; line-height: 1.6;">Monétisez votre connexion MikroTik avec la puissance du Mobile Money à l'échelle internationale.</p>
-            <a href="inscription.html" data-key="btn_partner" style="background:white; color:black; padding:18px 35px; border-radius:18px; text-decoration:none; font-weight:900; display:inline-block; font-size:15px;">Devenir Partenaire</a>
+            <p data-key="hero_desc" style="color: #64748b; font-size: 15px; margin-bottom: 10px; line-height: 1.6;">Monétisez votre connexion MikroTik avec la puissance du Mobile Money à l'échelle internationale.</p>
+            
+            <div class="trust-badge">
+                <div class="dot"></div>
+                <div style="font-size: 10px; font-weight: 900; color: #cbd5e1;">
+                    <span id="user-count">1,248</span> GESTIONNAIRES ACTIFS EN TEMPS RÉEL
+                </div>
+            </div>
+
+            <div style="margin-top: 35px;">
+                <a href="dashboard.html" data-key="btn_partner" style="background:white; color:black; padding:18px 35px; border-radius:18px; text-decoration:none; font-weight:900; display:inline-block; font-size:15px;">Démarrer Maintenant</a>
+            </div>
         </div>
 
         <div class="live-card" style="background:var(--glass); padding:35px; border-radius:40px; width:100%; max-width:420px; text-align:center; border: 1px solid var(--primary); animation: neonPulse 5s infinite;">
@@ -116,9 +141,7 @@
                 <div class="flag-card">🇫🇷 <b>FRANCE</b><span data-key="hub_gateway">Passerelle Europe</span></div>
                 <div class="flag-card">🇬🇳 <b>GUINÉE</b><span data-key="hub_active">Nœud Actif</span></div>
                 <div class="flag-card">🇧🇷 <b>BRÉSIL</b><span data-key="hub_latam">Liaison Latam</span></div>
-                <div class="flag-card">🇨🇩 <b>RDC</b><span data-key="hub_link">Liaison Établie</span></div>
                 <div class="flag-card">🇸🇳 <b>SÉNÉGAL</b><span data-key="hub_active">Nœud Actif</span></div>
-                <div class="flag-card">🇨🇲 <b>CAMEROUN</b><span data-key="hub_central">Hub Central</span></div>
             </div>
         </div>
     </section>
@@ -153,13 +176,37 @@
     </footer>
 
     <script>
+        // SYSTÈME DE NOTIFICATIONS FANTÔMES
+        const users = ["Yannick", "M. Moussa", "Agent #237", "Boutique Alpha", "Koffi", "Sarah G.", "Ets. Global", "Telecom Plus"];
+        const actions = ["vient d'activer son pack Pro", "a généré 500 codes WiFi", "a reçu une commission Mobile Money", "vient de connecter un nouveau nœud", "vient de rejoindre l'Empire", "a mis à jour son radar MikroTik"];
+        
+        function showFakeNotif() {
+            const popup = document.getElementById('notif-popup');
+            const userEl = document.getElementById('notif-user');
+            const actionEl = document.getElementById('notif-action');
+            userEl.innerText = users[Math.floor(Math.random() * users.length)];
+            actionEl.innerText = actions[Math.floor(Math.random() * actions.length)];
+            popup.classList.add('active');
+            setTimeout(() => { popup.classList.remove('active'); }, 5000);
+        }
+        setInterval(showFakeNotif, Math.random() * (20000 - 10000) + 10000);
+        setTimeout(showFakeNotif, 4000);
+
+        // COMPTEUR DE MEMBRES
+        let baseCount = 1248;
+        setInterval(() => {
+            baseCount += Math.floor(Math.random() * 2);
+            document.getElementById('user-count').innerText = baseCount.toLocaleString();
+        }, 12000);
+
+        // SYSTÈME DE TRADUCTION
         const langData = {
             fr: {
                 init_text: "INITIALISATION DU SYSTÈME AERIO",
                 nav_home: "Accueil", nav_shop: "Shop", nav_loc: "Localisation", nav_vpn: "VPN", nav_pro: "Espace Pro",
                 hero_tag: "🛰️ PROTOCOLE ALPHA ACTIVÉ", hero_title1: "Le Futur du", hero_title2: "WiFi Zone.",
                 hero_desc: "Monétisez votre connexion MikroTik avec la puissance du Mobile Money à l'échelle internationale.",
-                btn_partner: "Devenir Partenaire", live_title: "VOTRE BUSINESS EN LIVE (IA)", live_status: "FLUX SÉCURISÉ ANALYSÉ",
+                btn_partner: "Démarrer Maintenant", live_title: "VOTRE BUSINESS EN LIVE (IA)", live_status: "FLUX SÉCURISÉ ANALYSÉ",
                 live_net: "Réseau:", live_active: "Actif", sec2_title1: "L'ARSENAL", sec2_title2: "TACTIQUE",
                 card1_t: "🛰️ DÉPLOIEMENT", card1_p: "Importation CSV MikroTik industrielle en 1 seconde.",
                 card2_t: "💸 VENTE AUTO", card2_p: "Paiements Mobile Money sécurisés et sans data.",
@@ -175,7 +222,7 @@
                 nav_home: "Home", nav_shop: "Shop", nav_loc: "Location", nav_vpn: "VPN", nav_pro: "Pro Space",
                 hero_tag: "🛰️ ALPHA PROTOCOL ACTIVATED", hero_title1: "The Future of", hero_title2: "WiFi Zone.",
                 hero_desc: "Monetize your MikroTik connection with the power of Mobile Money internationally.",
-                btn_partner: "Become a Partner", live_title: "YOUR LIVE BUSINESS (AI)", live_status: "SECURE FLOW ANALYZED",
+                btn_partner: "Start Now", live_title: "YOUR LIVE BUSINESS (AI)", live_status: "SECURE FLOW ANALYZED",
                 live_net: "Network:", live_active: "Active", sec2_title1: "TACTICAL", sec2_title2: "ARSENAL",
                 card1_t: "🛰️ DEPLOYMENT", card1_p: "Industrial MikroTik CSV import in 1 second.",
                 card2_t: "💸 AUTO SALES", card2_p: "Secure Mobile Money payments without data.",
@@ -216,4 +263,3 @@
     </script>
 </body>
 </html>
-
