@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AERIO | Registre des Accès</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;900&display=swap" rel="stylesheet">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+
     <style>
         :root {
             --primary: #00C2FF; --accent: #00F5A0; --warning: #FFAB00; --danger: #ff4757;
@@ -14,10 +18,7 @@
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         body { 
-            background: var(--bg-deep); 
-            color: white; 
-            display: flex; 
-            min-height: 100vh;
+            background: var(--bg-deep); color: white; display: flex; min-height: 100vh;
             background-image: radial-gradient(circle at bottom left, rgba(0, 194, 255, 0.03), transparent 40%);
             transition: background 0.5s ease;
         }
@@ -31,55 +32,49 @@
 
         /* --- MAIN CONTENT --- */
         .main-content { margin-left: var(--sidebar-w); flex: 1; padding: 40px; max-width: 1200px; }
-        .header-flex { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 40px; }
+        .header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; flex-wrap: wrap; gap: 20px; }
+
+        /* --- SEARCH BOX --- */
+        .search-container { position: relative; flex: 1; max-width: 400px; }
+        .search-input {
+            width: 100%; background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+            padding: 12px 20px 12px 45px; border-radius: 15px; color: white; font-size: 13px;
+            outline: none; transition: 0.3s;
+        }
+        .search-input:focus { border-color: var(--primary); background: rgba(255,255,255,0.05); box-shadow: 0 0 15px rgba(0, 194, 255, 0.1); }
+        .search-icon { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); opacity: 0.4; font-size: 14px; }
 
         /* --- BUTTONS --- */
         .btn-group { display: flex; gap: 10px; }
-        .btn-action {
-            padding: 10px 20px; border-radius: 12px; cursor: pointer; font-size: 11px; font-weight: 800;
-            transition: 0.3s; text-transform: uppercase; border: 1px solid transparent;
-        }
+        .btn-action { padding: 10px 18px; border-radius: 12px; cursor: pointer; font-size: 11px; font-weight: 800; transition: 0.3s; text-transform: uppercase; border: 1px solid transparent; }
+        .btn-pdf { background: rgba(0, 245, 160, 0.1); border-color: var(--accent); color: var(--accent); }
+        .btn-pdf:hover { background: var(--accent); color: #020617; }
         .btn-export { background: rgba(0, 194, 255, 0.1); border-color: var(--primary); color: var(--primary); }
         .btn-export:hover { background: var(--primary); color: white; }
         .btn-danger { background: rgba(255, 71, 87, 0.1); border-color: var(--danger); color: var(--danger); }
-        .btn-danger:hover { background: var(--danger); color: white; box-shadow: 0 5px 15px rgba(255, 71, 87, 0.3); }
+        .btn-danger:hover { background: var(--danger); color: white; }
 
-        /* --- STATS BAR --- */
+        /* --- STATS & TABLE --- */
         .stats-bar { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 40px; }
-        .stat-item { 
-            background: var(--card-bg); padding: 25px; border-radius: 25px; border: 1px solid var(--border);
-            position: relative; overflow: hidden; backdrop-filter: blur(10px);
-        }
+        .stat-item { background: var(--card-bg); padding: 25px; border-radius: 25px; border: 1px solid var(--border); position: relative; overflow: hidden; backdrop-filter: blur(10px); }
         .stat-item::before { content: ""; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--primary); opacity: 0.5; }
         .stat-label { font-size: 10px; color: #64748b; text-transform: uppercase; font-weight: 800; letter-spacing: 1px; }
         .stat-value { font-size: 32px; font-weight: 900; display: block; margin-top: 5px; font-variant-numeric: tabular-nums; }
 
-        /* --- REGISTRY TABLE --- */
         .registry-card { background: var(--card-bg); border-radius: 30px; border: 1px solid var(--border); padding: 10px; backdrop-filter: blur(20px); position: relative; }
         .table-container { width: 100%; overflow-x: auto; }
         table { width: 100%; border-collapse: collapse; min-width: 700px; }
         th { text-align: left; padding: 20px; font-size: 10px; text-transform: uppercase; color: #475569; letter-spacing: 1.5px; border-bottom: 1px solid var(--border); }
         td { padding: 18px 20px; font-size: 13px; border-bottom: 1px solid rgba(255,255,255,0.02); transition: 0.3s; }
         tr:hover td { background: rgba(0, 194, 255, 0.02); color: white; }
-
-        .code-badge { 
-            font-family: 'Courier New', monospace; font-weight: 700; color: var(--primary); 
-            background: rgba(0, 194, 255, 0.1); padding: 6px 12px; border-radius: 8px; border: 1px solid rgba(0, 194, 255, 0.2);
-        }
-
+        .code-badge { font-family: 'Courier New', monospace; font-weight: 700; color: var(--primary); background: rgba(0, 194, 255, 0.1); padding: 6px 12px; border-radius: 8px; border: 1px solid rgba(0, 194, 255, 0.2); }
         .status-pill { padding: 5px 12px; border-radius: 8px; font-size: 9px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px; }
         .status-available { background: rgba(0, 245, 160, 0.1); color: var(--accent); border: 1px solid rgba(0, 245, 160, 0.2); }
         .status-sold { background: rgba(255, 255, 255, 0.05); color: #475569; border: 1px solid var(--border); }
 
-        .empty-state { text-align: center; padding: 100px 20px; }
-        .empty-state span { font-size: 50px; display: block; margin-bottom: 20px; opacity: 0.5; }
-
-        .scan-line {
-            position: absolute; top: 0; left: 0; width: 100%; height: 2px;
-            background: linear-gradient(90deg, transparent, var(--primary), transparent);
-            opacity: 0.3; animation: scanMove 4s linear infinite;
-        }
+        .scan-line { position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: linear-gradient(90deg, transparent, var(--primary), transparent); opacity: 0.3; animation: scanMove 4s linear infinite; }
         @keyframes scanMove { 0% { top: 0; } 100% { top: 100%; } }
+        .empty-state { text-align: center; padding: 80px 20px; display: none; }
     </style>
 </head>
 <body>
@@ -100,15 +95,23 @@
                 <p style="color: #64748b; font-size: 13px; margin-top: 5px;">Unité de stockage de flux de données Alpha.</p>
             </div>
             <div class="btn-group">
-                <button class="btn-action btn-export" onclick="exportToCSV()">Exporter CSV 📥</button>
-                <button class="btn-action btn-danger" onclick="clearStock()">Vider l'unité ☢️</button>
+                <button class="btn-action btn-pdf" onclick="exportToPDF()">Rapport PDF 📄</button>
+                <button class="btn-action btn-export" onclick="exportToCSV()">Excel/CSV 📥</button>
+                <button class="btn-action btn-danger" onclick="clearStock()">Purger ☢️</button>
+            </div>
+        </div>
+
+        <div class="header-flex" style="margin-bottom: 25px;">
+            <div class="search-container">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="searchInput" class="search-input" placeholder="Rechercher un code, un tarif ou une date..." onkeyup="filtrerTableau()">
             </div>
         </div>
 
         <div class="stats-bar">
             <div class="stat-item">
                 <span class="stat-label">Capacité Totale</span>
-                <span id="totalCodes" class="stat-value" style="color:white">0</span>
+                <span id="totalCodes" class="stat-value">0</span>
             </div>
             <div class="stat-item" style="border-left-color: var(--accent);">
                 <span class="stat-label">Flux Disponibles</span>
@@ -123,7 +126,7 @@
         <div class="registry-card">
             <div class="scan-line"></div>
             <div class="table-container">
-                <table>
+                <table id="registryTable">
                     <thead>
                         <tr>
                             <th>Code ID</th>
@@ -136,16 +139,14 @@
                     <tbody id="stockTableBody"></tbody>
                 </table>
             </div>
-            <div id="emptyMsg" class="empty-state" style="display:none;">
-                <span>🕳️</span>
-                <h3 style="color:white; margin-bottom:10px;">Unité de stockage vide</h3>
-                <p style="color:#475569; font-size:13px;">Aucun code n'a été injecté dans la base de données.</p>
+            <div id="emptyMsg" class="empty-state">
+                <span style="font-size: 40px;">🕳️</span>
+                <h3 style="margin-top:15px;">Aucune donnée trouvée</h3>
             </div>
         </div>
     </div>
 
     <script>
-        // --- CHARGEMENT ET SYNC ---
         function chargerInventaire() {
             const config = JSON.parse(localStorage.getItem('aerio_config')) || {};
             const devise = config.currency || 'XAF';
@@ -154,7 +155,6 @@
             const stock = JSON.parse(localStorage.getItem('aerio_stock')) || [];
             const tarifs = JSON.parse(localStorage.getItem('aerio_tarifs')) || [];
             const tbody = document.getElementById('stockTableBody');
-            const emptyMsg = document.getElementById('emptyMsg');
 
             document.getElementById('totalCodes').innerText = stock.length;
             const dispo = stock.filter(s => !s.vendu).length;
@@ -162,14 +162,11 @@
             document.getElementById('soldCodes').innerText = stock.length - dispo;
 
             if (stock.length === 0) {
-                tbody.innerHTML = "";
-                emptyMsg.style.display = "block";
+                document.getElementById('emptyMsg').style.display = "block";
                 return;
             }
 
-            emptyMsg.style.display = "none";
             tbody.innerHTML = "";
-
             [...stock].reverse().forEach(item => {
                 const tarifInfo = tarifs.find(t => t.id == item.tarifId) || { nom: "Neutre", prix: "0" };
                 const row = document.createElement('tr');
@@ -186,47 +183,68 @@
                 `;
                 tbody.appendChild(row);
             });
-
             appliquerModeTemporel();
         }
 
-        // --- MODE SOMBRES AVANCÉ (TEMPOREL) ---
+        function filtrerTableau() {
+            const input = document.getElementById("searchInput").value.toUpperCase();
+            const rows = document.getElementById("stockTableBody").getElementsByTagName("tr");
+            let countVisible = 0;
+
+            for (let i = 0; i < rows.length; i++) {
+                const text = rows[i].textContent || rows[i].innerText;
+                if (text.toUpperCase().indexOf(input) > -1) {
+                    rows[i].style.display = "";
+                    countVisible++;
+                } else {
+                    rows[i].style.display = "none";
+                }
+            }
+            document.getElementById('emptyMsg').style.display = countVisible === 0 ? "block" : "none";
+        }
+
+        function exportToPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            const config = JSON.parse(localStorage.getItem('aerio_config')) || {};
+            const stock = JSON.parse(localStorage.getItem('aerio_stock')) || [];
+            const tarifs = JSON.parse(localStorage.getItem('aerio_tarifs')) || [];
+
+            doc.text(`RAPPORT D'ACTIVITE - ${config.name || 'AERIO'}`, 14, 20);
+            const rows = stock.map(item => {
+                const tarif = tarifs.find(t => t.id == item.tarifId) || { nom: "N/A", prix: "0" };
+                return [item.code, tarif.nom, tarif.prix, item.vendu ? "Vendu" : "Stock", item.dateAjout];
+            });
+
+            doc.autoTable({
+                startY: 30,
+                head: [['Code', 'Designation', 'Prix', 'Etat', 'Date']],
+                body: rows,
+                headStyles: { fillColor: [0, 194, 255] }
+            });
+            doc.save("rapport_aerio.pdf");
+        }
+
+        function exportToCSV() {
+            const stock = JSON.parse(localStorage.getItem('aerio_stock')) || [];
+            let csv = "CODE,DESIGNATION,DATE,STATUT\n";
+            stock.forEach(i => csv += `${i.code},${i.tarifId},${i.dateAjout},${i.vendu?'Vendu':'Stock'}\n`);
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url; a.download = 'export_aerio.csv'; a.click();
+        }
+
         function appliquerModeTemporel() {
             const heure = new Date().getHours();
             if (heure >= 20 || heure <= 6) {
                 document.documentElement.style.setProperty('--primary', '#0077FF'); 
                 document.documentElement.style.setProperty('--bg-deep', '#010409');
-                console.log("🌙 Mode nuit Alpha activé.");
             }
         }
 
-        // --- EXPORT CSV ---
-        function exportToCSV() {
-            const stock = JSON.parse(localStorage.getItem('aerio_stock')) || [];
-            const tarifs = JSON.parse(localStorage.getItem('aerio_tarifs')) || [];
-            
-            if (stock.length === 0) return alert("❌ Erreur : Aucun flux de données à exporter.");
-
-            let csvContent = "data:text/csv;charset=utf-8,";
-            csvContent += "CODE_ID,DESIGNATION,PRIX,ETAT,DATE_AJOUT\n";
-
-            stock.forEach(item => {
-                const tarif = tarifs.find(t => t.id == item.tarifId) || { nom: "N/A", prix: "0" };
-                const etat = item.vendu ? "Vendu" : "En Stock";
-                csvContent += `${item.code},${tarif.nom},${tarif.prix},${etat},${item.dateAjout}\n`;
-            });
-
-            const encodedUri = encodeURI(csvContent);
-            const link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
-            link.setAttribute("download", `aerio_export_${new Date().toISOString().slice(0,10)}.csv`);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
-
         function clearStock() {
-            if(confirm("☢️ ALERTE CRITIQUE : Purger toute l'unité de stockage ? Cette action est irréversible.")) {
+            if(confirm("☢️ Purger le registre définitivement ?")) {
                 localStorage.removeItem('aerio_stock');
                 chargerInventaire();
             }
