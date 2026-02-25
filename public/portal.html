@@ -45,9 +45,20 @@
             background:linear-gradient(45deg,var(--primary),var(--secondary));
             color:white; font-weight:800; cursor:pointer; transition:0.4s; text-transform:uppercase; letter-spacing:1px; margin-top: 10px;
         }
-        .btn-outline { display:block; width:100%; padding:16px; background:transparent;
-            color:var(--accent); border:2px solid var(--accent); border-radius:15px;
-            text-decoration:none; font-weight:700; text-align:center; transition:0.3s; font-size:14px;
+
+        /* --- SECTION PAIEMENT INTÉGRÉE --- */
+        .pay-section { margin-top: 10px; padding-top: 20px; border-top: 1px dashed rgba(255,255,255,0.1); }
+        .pay-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
+        .pay-card { 
+            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); 
+            padding: 15px; border-radius: 15px; cursor: pointer; transition: 0.3s;
+        }
+        .pay-card:hover { border-color: var(--accent); background: rgba(0, 245, 160, 0.05); }
+        .pay-price { font-size: 18px; font-weight: 900; color: var(--accent); }
+        .pay-desc { font-size: 9px; color: #64748b; text-transform: uppercase; }
+        .btn-pay-submit { 
+            background: var(--accent); color: #030712; width: 100%; padding: 12px; 
+            border: none; border-radius: 10px; font-weight: 800; font-size: 11px; margin-top: 10px; cursor: pointer;
         }
 
         #bot-trigger { position:fixed; bottom:25px; right:25px; width:60px; height:60px;
@@ -92,8 +103,27 @@
         </form>
     </div>
 
-    <div style="text-align:center;">
-        <a href="https://aerio-wifi.onrender.com" class="btn-outline">🛒 ACHETER UN TICKET (OM/MOMO)</a>
+    <div class="box">
+        <span class="input-label" style="text-align: center; margin-left: 0;">Pas de ticket ? Achetez ici</span>
+        <div class="pay-grid">
+            <form action="initier-paiement.php" method="POST" class="pay-card">
+                <input type="hidden" name="montant" value="100">
+                <input type="hidden" name="forfait_nom" value="1H">
+                <input type="hidden" name="partenaire_id" value="ID_DU_PARTENAIRE_ICI">
+                <div class="pay-price">100F</div>
+                <div class="pay-desc">1 HEURE</div>
+                <button type="submit" class="btn-pay-submit">MOMO/OM</button>
+            </form>
+            
+            <form action="initier-paiement.php" method="POST" class="pay-card">
+                <input type="hidden" name="montant" value="500">
+                <input type="hidden" name="forfait_nom" value="24H">
+                <input type="hidden" name="partenaire_id" value="ID_DU_PARTENAIRE_ICI">
+                <div class="pay-price">500F</div>
+                <div class="pay-desc">24 HEURES</div>
+                <button type="submit" class="btn-pay-submit">MOMO/OM</button>
+            </form>
+        </div>
     </div>
 </div>
 
@@ -101,9 +131,10 @@
 <div id="bot-window">
     <p style="font-size:12px; color:#ccc; line-height:1.4;">
         <b>Besoin d'aide ?</b><br><br>
-        1. Achetez votre ticket via le bouton vert.<br>
-        2. Entrez l'<b>User</b> et le <b>Pass</b> inscrits sur votre ticket.<br><br>
-        <a href="https://wa.me/TON_NUMERO" style="color:var(--accent); text-decoration:none;">→ Support WhatsApp</a>
+        1. Choisissez un forfait (100F ou 500F).<br>
+        2. Payez par Mobile Money.<br>
+        3. Recevez vos codes et validez en haut.<br><br>
+        <a href="https://wa.me/237692487922" style="color:var(--accent); text-decoration:none;">→ Support WhatsApp</a>
     </p>
 </div>
 
