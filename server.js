@@ -1,26 +1,44 @@
 const express = require("express");
 const helmet = require("helmet"); 
 const rateLimit = require("express-rate-limit");
-const fs = require("fs");
 const path = require("path");
 const session = require("express-session");
-const axios = require("axios"); // Pour la communication Moneroo
+const axios = require("axios");
+const mongoose = require("mongoose"); // Le nouveau moteur
 const app = express();
 
 // --- CONFIGURATION ÉLITE ---
 const PORT = process.env.PORT || 10000;
-const TICKETS_FILE = path.join(__dirname, "tickets.json");
-const PARTNERS_FILE = path.join(__dirname, "partners.json");
-
-// 🔑 CLÉ SÉCURISÉE MONEROO (MISE À JOUR)
 const MONEROO_API_KEY = "pvk_4vq949|01KJ97B9YT5PNYDQ64026G9GZP";
 
-// --- INITIALISATION DES NOYAUX ---
-const initFile = (filePath) => {
-    if (!fs.existsSync(filePath)) fs.writeFileSync(filePath, JSON.stringify([], null, 2));
-};
-initFile(TICKETS_FILE);
-initFile(PARTNERS_FILE);
+// 🔑 CONNEXION MONGODB (Remplace TON_MOT_DE_PASSE ci-dessous)
+const MONGO_URI = "mongodb+srv://aeriodadie:1123dadie@cluster0.yaf9tzq.mongodb.net/aerio_db?retryWrites=true&w=majority&appName=Cluster0";
+
+mongoose.connect(MONGO_URI)
+  .then(() => console.log("💎 DATABASE CONNECTÉE : L'EMPIRE EST PRÊT"))
+  .catch(err => console.error("❌ ERREUR CONNEXION DB:", err));
+
+// --- SCHÉMAS DE DONNÉES (Remplace les fichiers JSON) ---
+const Partner = mongoose.model('Partner', {
+    partnerID: String,
+    name: String,
+    city: String,
+    tel: String,
+    email: { type: String, unique: true },
+    password: String,
+    licence: { type: String, default: "ACTIVE" },
+    dateInscription: { type: Date, default: Date.now }
+});
+
+const Ticket = mongoose.model('Ticket', {
+    ticketID: String,
+    partnerID: String,
+    code: String,
+    amount: Number,
+    duration: String,
+    status: { type: String, default: "ACTIF" },
+    date: { type: Date, default: Date.now }
+});
 
 // --- SÉCURITÉ BASTION ---
 app.use(helmet({ contentSecurityPolicy: false })); 
@@ -44,27 +62,21 @@ function checkAuth(req, res, next) {
 }
 
 // ==========================================
-// 💳 [NOUVEAU] MOTEUR DE PAIEMENT & LIENS
+// 💳 [CONSERVÉ] MOTEUR DE PAIEMENT & LIENS
 // ==========================================
 
-// Route pour générer le lien de paiement dynamique
 app.post("/api/paiement/creer-lien", async (req, res) => {
     const { amount, duration, partnerID } = req.body;
-
     try {
         const response = await axios.post("https://api.moneroo.io/v1/payments/initialize", {
             amount: amount,
             currency: "XAF",
             description: `Accès Wi-Fi ${duration} - Partenaire ${partnerID}`,
             return_url: `https://${req.get('host')}/paiement-succes?partner=${partnerID}&amt=${amount}`,
-            metadata: {
-                partnerID: partnerID,
-                amount: amount
-            }
+            metadata: { partnerID: partnerID, amount: amount }
         }, {
             headers: { 'Authorization': `Bearer ${MONEROO_API_KEY}` }
         });
-
         res.json({ checkout_url: response.data.data.checkout_url });
     } catch (error) {
         console.error("❌ Erreur Lien Moneroo:", error.response ? error.response.data : error.message);
@@ -77,54 +89,48 @@ app.get("/paiement-succes", (req, res) => {
 });
 
 // ==========================================
-// ✅ AJOUT : INSCRIPTION DEPUIS INSCRIPTION.HTML
+// ✅ [AJOUT] INSCRIPTION DEPUIS INSCRIPTION.HTML (VERSION DB)
 // ==========================================
 
-app.post("/api/partenaires/inscription", (req, res) => {
+app.post("/api/partenaires/inscription", async (req, res) => {
     const { name, city, tel, email, pass } = req.body;
-    let partners = JSON.parse(fs.readFileSync(PARTNERS_FILE));
+    try {
+        const existing = await Partner.findOne({ email: email });
+        if (existing) {
+            return res.status(400).json({ success: false, message: "Cet email est déjà enregistré." });
+        }
 
-    if (partners.find(p => p.email === email)) {
-        return res.status(400).json({ success: false, message: "Cet email est déjà enregistré." });
+        const count = await Partner.countDocuments();
+        const newID = "AE-" + (count + 1).toString().padStart(4, '0');
+        
+        const newPartner = new Partner({
+            partnerID: newID,
+            name, city, tel, email,
+            password: pass,
+            licence: "ACTIVE",
+            dateInscription: new Date()
+        });
+
+        await newPartner.save();
+        req.session.partnerID = newID;
+        res.json({ success: true, partnerID: newID });
+    } catch (err) {
+        res.status(500).json({ success: false, message: "Erreur lors de l'inscription." });
     }
-
-    // Génération d'un ID unique type AE-0001
-    const newID = "AE-" + (partners.length + 1).toString().padStart(4, '0');
-    
-    const newPartner = {
-        partnerID: newID,
-        name,
-        city,
-        tel,
-        email,
-        password: pass, // On garde 'pass' comme envoyé par ton formulaire
-        licence: "ACTIVE",
-        dateInscription: new Date()
-    };
-
-    partners.push(newPartner);
-    fs.writeFileSync(PARTNERS_FILE, JSON.stringify(partners, null, 2));
-
-    // On connecte automatiquement le partenaire après inscription
-    req.session.partnerID = newID;
-
-    res.json({ success: true, partnerID: newID });
 });
 
 // ==========================================
-// ✅ APIS DE GESTION ALPHA (CONSERVÉES)
+// ✅ [CONSERVÉES] APIS DE GESTION ALPHA (VERSION DB)
 // ==========================================
 
-app.get("/api/my-profile", checkAuth, (req, res) => {
-    const partners = JSON.parse(fs.readFileSync(PARTNERS_FILE));
-    const partner = partners.find(p => p.partnerID === req.session.partnerID);
+app.get("/api/my-profile", checkAuth, async (req, res) => {
+    const partner = await Partner.findOne({ partnerID: req.session.partnerID });
     if (partner) res.json(partner);
     else res.status(404).send("Profil introuvable");
 });
 
-app.get("/api/my-stats", checkAuth, (req, res) => {
-    const tickets = JSON.parse(fs.readFileSync(TICKETS_FILE));
-    const myTickets = tickets.filter(t => t.partnerID === req.session.partnerID);
+app.get("/api/my-stats", checkAuth, async (req, res) => {
+    const myTickets = await Ticket.find({ partnerID: req.session.partnerID });
     
     let montantBrutTotal = 0;
     myTickets.forEach(t => {
@@ -135,13 +141,15 @@ app.get("/api/my-stats", checkAuth, (req, res) => {
 
     res.json({
         tickets: myTickets.sort((a,b) => new Date(b.date) - new Date(a.date)),
-        summary: { gain: Math.floor(montantBrutTotal), count: myTickets.filter(t => t.status === "VENDU").length }
+        summary: { 
+            gain: Math.floor(montantBrutTotal), 
+            count: myTickets.filter(t => t.status === "VENDU").length 
+        }
     });
 });
 
-app.post("/api/import-tickets-csv", checkAuth, (req, res) => {
+app.post("/api/import-tickets-csv", checkAuth, async (req, res) => {
     const { tickets, amount, duration } = req.body; 
-    let allTickets = JSON.parse(fs.readFileSync(TICKETS_FILE));
     const newTickets = tickets.map(code => ({
         ticketID: "TK-" + Math.random().toString(36).substr(2, 9).toUpperCase(),
         partnerID: req.session.partnerID,
@@ -151,41 +159,51 @@ app.post("/api/import-tickets-csv", checkAuth, (req, res) => {
         status: "ACTIF",
         date: new Date()
     }));
-    allTickets = [...allTickets, ...newTickets];
-    fs.writeFileSync(TICKETS_FILE, JSON.stringify(allTickets, null, 2));
+    
+    await Ticket.insertMany(newTickets);
     res.json({ success: true, count: newTickets.length });
 });
 
 // ==========================================
-// ✅ GESTION DES COMPTES & AUTH (CONSERVÉES)
+// ✅ [CONSERVÉES] GESTION DES COMPTES & AUTH (VERSION DB)
 // ==========================================
 
-// Ton ancienne route d'inscription (conservée au cas où)
-app.post("/api/inscription-partenaire", (req, res) => {
+app.post("/api/inscription-partenaire", async (req, res) => {
     const { name, email, password } = req.body;
-    let partners = JSON.parse(fs.readFileSync(PARTNERS_FILE));
-    if (partners.find(p => p.email === email)) return res.send("Email déjà utilisé.");
-    const newID = "AE-" + (partners.length + 1).toString().padStart(4, '0');
-    partners.push({ partnerID: newID, name, email, password, licence: "ACTIVE", dateInscription: new Date() });
-    fs.writeFileSync(PARTNERS_FILE, JSON.stringify(partners, null, 2));
-    req.session.partnerID = newID;
-    res.redirect("/dashboard");
+    try {
+        const existing = await Partner.findOne({ email });
+        if (existing) return res.send("Email déjà utilisé.");
+        
+        const count = await Partner.countDocuments();
+        const newID = "AE-" + (count + 1).toString().padStart(4, '0');
+        
+        const newPartner = new Partner({ partnerID: newID, name, email, password, licence: "ACTIVE" });
+        await newPartner.save();
+        
+        req.session.partnerID = newID;
+        res.redirect("/dashboard");
+    } catch (e) { res.status(500).send("Erreur."); }
 });
 
-app.post("/api/login-partenaire", (req, res) => {
+app.post("/api/login-partenaire", async (req, res) => {
     const { email, password } = req.body;
+    // Admin Master permanent
     if (email === "admin@aerio.com" && password === "admin123") {
         req.session.partnerID = "AE-0001";
         return res.redirect("/dashboard");
     }
-    let partners = JSON.parse(fs.readFileSync(PARTNERS_FILE));
-    const partner = partners.find(p => p.email === email && p.password === password);
-    if (partner) { req.session.partnerID = partner.partnerID; res.redirect("/dashboard"); }
-    else res.status(401).send("Erreur d'authentification.");
+    
+    const partner = await Partner.findOne({ email: email, password: password });
+    if (partner) { 
+        req.session.partnerID = partner.partnerID; 
+        res.redirect("/dashboard"); 
+    } else { 
+        res.status(401).send("Erreur d'authentification."); 
+    }
 });
 
 // ==========================================
-// ✅ ROUTES PAGES
+// ✅ [CONSERVÉES] ROUTES PAGES
 // ==========================================
 app.get("/", (req, res) => res.sendFile(path.join(__dirname, "public", "index.html")));
 app.get("/dashboard", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "dashboard.html")));
@@ -196,4 +214,4 @@ app.get("/connexion", (req, res) => res.sendFile(path.join(__dirname, "public", 
 app.get("/wifi-zone", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "wifi-zone.html")));
 app.get("/profil", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "profil.html")));
 
-app.listen(PORT, '0.0.0.0', () => console.log(`🚀 EMPIRE AERIO DÉPLOYÉ SUR PORT ${PORT}`));
+app.listen(PORT, '0.0.0.0', () => console.log(`🚀 EMPIRE AERIO DÉPLOYÉ SUR PORT ${PORT} AVEC CLOUD DATABASE`));
