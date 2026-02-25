@@ -1,3 +1,4 @@
+# Utilise l'image PHP avec Apache (vérifie bien le tiret -apache)
 FROM php:8.2-apache
 
 # Installe les outils pour la base de données SQLite
