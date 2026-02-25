@@ -56,7 +56,6 @@ app.post("/api/paiement/creer-lien", async (req, res) => {
             amount: amount,
             currency: "XAF",
             description: `Accès Wi-Fi ${duration} - Partenaire ${partnerID}`,
-            // Redirection après paiement vers ta page de succès
             return_url: `https://${req.get('host')}/paiement-succes?partner=${partnerID}&amt=${amount}`,
             metadata: {
                 partnerID: partnerID,
@@ -66,7 +65,6 @@ app.post("/api/paiement/creer-lien", async (req, res) => {
             headers: { 'Authorization': `Bearer ${MONEROO_API_KEY}` }
         });
 
-        // On renvoie l'URL du lien de paiement Moneroo au front-end
         res.json({ checkout_url: response.data.data.checkout_url });
     } catch (error) {
         console.error("❌ Erreur Lien Moneroo:", error.response ? error.response.data : error.message);
@@ -74,10 +72,43 @@ app.post("/api/paiement/creer-lien", async (req, res) => {
     }
 });
 
-// Route de réception après paiement
 app.get("/paiement-succes", (req, res) => {
-    // Cette page s'occupera d'afficher le code au client
     res.sendFile(path.join(__dirname, "public", "paiement-succes.html"));
+});
+
+// ==========================================
+// ✅ AJOUT : INSCRIPTION DEPUIS INSCRIPTION.HTML
+// ==========================================
+
+app.post("/api/partenaires/inscription", (req, res) => {
+    const { name, city, tel, email, pass } = req.body;
+    let partners = JSON.parse(fs.readFileSync(PARTNERS_FILE));
+
+    if (partners.find(p => p.email === email)) {
+        return res.status(400).json({ success: false, message: "Cet email est déjà enregistré." });
+    }
+
+    // Génération d'un ID unique type AE-0001
+    const newID = "AE-" + (partners.length + 1).toString().padStart(4, '0');
+    
+    const newPartner = {
+        partnerID: newID,
+        name,
+        city,
+        tel,
+        email,
+        password: pass, // On garde 'pass' comme envoyé par ton formulaire
+        licence: "ACTIVE",
+        dateInscription: new Date()
+    };
+
+    partners.push(newPartner);
+    fs.writeFileSync(PARTNERS_FILE, JSON.stringify(partners, null, 2));
+
+    // On connecte automatiquement le partenaire après inscription
+    req.session.partnerID = newID;
+
+    res.json({ success: true, partnerID: newID });
 });
 
 // ==========================================
@@ -96,13 +127,9 @@ app.get("/api/my-stats", checkAuth, (req, res) => {
     const myTickets = tickets.filter(t => t.partnerID === req.session.partnerID);
     
     let montantBrutTotal = 0;
-    let taCommissionAdmin = 0;
-
     myTickets.forEach(t => {
-        // Seuls les tickets vendus comptent dans les gains
         if (t.status === "VENDU") {
             montantBrutTotal += t.amount; 
-            taCommissionAdmin += (t.amount * 0.15); 
         }
     });
 
@@ -133,6 +160,7 @@ app.post("/api/import-tickets-csv", checkAuth, (req, res) => {
 // ✅ GESTION DES COMPTES & AUTH (CONSERVÉES)
 // ==========================================
 
+// Ton ancienne route d'inscription (conservée au cas où)
 app.post("/api/inscription-partenaire", (req, res) => {
     const { name, email, password } = req.body;
     let partners = JSON.parse(fs.readFileSync(PARTNERS_FILE));
@@ -153,7 +181,7 @@ app.post("/api/login-partenaire", (req, res) => {
     let partners = JSON.parse(fs.readFileSync(PARTNERS_FILE));
     const partner = partners.find(p => p.email === email && p.password === password);
     if (partner) { req.session.partnerID = partner.partnerID; res.redirect("/dashboard"); }
-    else res.status(401).send("Erreur.");
+    else res.status(401).send("Erreur d'authentification.");
 });
 
 // ==========================================
