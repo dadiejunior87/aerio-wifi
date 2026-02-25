@@ -4,14 +4,16 @@ const rateLimit = require("express-rate-limit");
 const fs = require("fs");
 const path = require("path");
 const session = require("express-session");
-const axios = require("axios"); // [NOUVEAU] Pour parler à Moneroo
+const axios = require("axios"); // Pour la communication Moneroo
 const app = express();
 
 // --- CONFIGURATION ÉLITE ---
 const PORT = process.env.PORT || 10000;
 const TICKETS_FILE = path.join(__dirname, "tickets.json");
 const PARTNERS_FILE = path.join(__dirname, "partners.json");
-const MONEROO_API_KEY = "TO_CLE_SECRET_ICI"; // 🔑 À remplacer par ta clé secrète Moneroo
+
+// 🔑 CLÉ SÉCURISÉE MONEROO (MISE À JOUR)
+const MONEROO_API_KEY = "pvk_4vq949|01KJ97B9YT5PNYDQ64026G9GZP";
 
 // --- INITIALISATION DES NOYAUX ---
 const initFile = (filePath) => {
@@ -42,10 +44,10 @@ function checkAuth(req, res, next) {
 }
 
 // ==========================================
-// 💳 [NOUVEAU] MOTEUR DE PAIEMENT MONEROO
+// 💳 [NOUVEAU] MOTEUR DE PAIEMENT & LIENS
 // ==========================================
 
-// 1. Générer le lien de paiement pour le client
+// Route pour générer le lien de paiement dynamique
 app.post("/api/paiement/creer-lien", async (req, res) => {
     const { amount, duration, partnerID } = req.body;
 
@@ -54,33 +56,32 @@ app.post("/api/paiement/creer-lien", async (req, res) => {
             amount: amount,
             currency: "XAF",
             description: `Accès Wi-Fi ${duration} - Partenaire ${partnerID}`,
+            // Redirection après paiement vers ta page de succès
             return_url: `https://${req.get('host')}/paiement-succes?partner=${partnerID}&amt=${amount}`,
             metadata: {
                 partnerID: partnerID,
-                amount: amount,
-                duration: duration
+                amount: amount
             }
         }, {
             headers: { 'Authorization': `Bearer ${MONEROO_API_KEY}` }
         });
 
-        res.json({ url: response.data.data.checkout_url });
+        // On renvoie l'URL du lien de paiement Moneroo au front-end
+        res.json({ checkout_url: response.data.data.checkout_url });
     } catch (error) {
-        console.error("❌ Erreur Moneroo:", error.response ? error.response.data : error.message);
-        res.status(500).json({ error: "Impossible de générer le lien de paiement" });
+        console.error("❌ Erreur Lien Moneroo:", error.response ? error.response.data : error.message);
+        res.status(500).json({ error: "Échec de génération du lien" });
     }
 });
 
-// 2. Page de succès (Traitement après paiement)
+// Route de réception après paiement
 app.get("/paiement-succes", (req, res) => {
-    const { partner, amt } = req.query;
-    
-    // Ici on affiche la page de succès qui va appeler une API pour récupérer le code
+    // Cette page s'occupera d'afficher le code au client
     res.sendFile(path.join(__dirname, "public", "paiement-succes.html"));
 });
 
 // ==========================================
-// ✅ APIS DE GESTION ALPHA (PRÉCÉDENT)
+// ✅ APIS DE GESTION ALPHA (CONSERVÉES)
 // ==========================================
 
 app.get("/api/my-profile", checkAuth, (req, res) => {
@@ -98,7 +99,8 @@ app.get("/api/my-stats", checkAuth, (req, res) => {
     let taCommissionAdmin = 0;
 
     myTickets.forEach(t => {
-        if(t.status === "VENDU") { // On ne compte que les vendus pour les stats
+        // Seuls les tickets vendus comptent dans les gains
+        if (t.status === "VENDU") {
             montantBrutTotal += t.amount; 
             taCommissionAdmin += (t.amount * 0.15); 
         }
@@ -128,26 +130,15 @@ app.post("/api/import-tickets-csv", checkAuth, (req, res) => {
 });
 
 // ==========================================
-// ✅ GESTION DES COMPTES (AUTO-ACTIVATION)
+// ✅ GESTION DES COMPTES & AUTH (CONSERVÉES)
 // ==========================================
 
 app.post("/api/inscription-partenaire", (req, res) => {
     const { name, email, password } = req.body;
     let partners = JSON.parse(fs.readFileSync(PARTNERS_FILE));
-    
     if (partners.find(p => p.email === email)) return res.send("Email déjà utilisé.");
-
     const newID = "AE-" + (partners.length + 1).toString().padStart(4, '0');
-
-    partners.push({ 
-        partnerID: newID, 
-        name, 
-        email, 
-        password, 
-        licence: "ACTIVE", 
-        dateInscription: new Date() 
-    });
-
+    partners.push({ partnerID: newID, name, email, password, licence: "ACTIVE", dateInscription: new Date() });
     fs.writeFileSync(PARTNERS_FILE, JSON.stringify(partners, null, 2));
     req.session.partnerID = newID;
     res.redirect("/dashboard");
@@ -173,12 +164,8 @@ app.get("/dashboard", checkAuth, (req, res) => res.sendFile(path.join(__dirname,
 app.get("/compta", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "compta.html")));
 app.get("/tickets/ajouter", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "ajouter-ticket.html")));
 app.get("/tickets", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "tickets.html")));
-app.get("/guide", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "guide.html")));
-app.get("/boutique", (req, res) => res.sendFile(path.join(__dirname, "public", "boutique.html")));
 app.get("/connexion", (req, res) => res.sendFile(path.join(__dirname, "public", "login-partenaire.html")));
 app.get("/wifi-zone", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "wifi-zone.html")));
-app.get("/liste-wifi", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "liste-wifi.html")));
 app.get("/profil", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "profil.html")));
-app.get("/recettes", checkAuth, (req, res) => res.sendFile(path.join(__dirname, "public", "recettes.html")));
 
 app.listen(PORT, '0.0.0.0', () => console.log(`🚀 EMPIRE AERIO DÉPLOYÉ SUR PORT ${PORT}`));
