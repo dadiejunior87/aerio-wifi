@@ -16,34 +16,38 @@
             justify-content: center; 
             align-items: center; 
             min-height: 100vh; 
-            overflow: hidden;
+            /* ✅ CORRECTION : On autorise le défilement pour atteindre le bouton enregistrer */
+            padding: 40px 0;
+            overflow-y: auto;
             background-image: radial-gradient(circle at center, #0f172a 0%, #020617 100%);
         }
 
-        /* Effet de particules en arrière-plan */
         .bg-dots {
-            position: absolute; width: 100%; height: 100%;
+            position: fixed; width: 100%; height: 100%; top:0; left:0;
             background-image: radial-gradient(var(--primary) 1px, transparent 1px);
             background-size: 50px 50px; opacity: 0.05; z-index: -1;
         }
 
-        .auth-container { position: relative; width: 100%; max-width: 480px; padding: 3px; border-radius: 35px; background: linear-gradient(135deg, var(--primary), var(--neon)); animation: borderRotate 10s linear infinite; }
+        /* Lang switcher positionné dans la carte pour plus de simplicité */
+        .lang-switcher { display: flex; gap: 10px; justify-content: center; margin-bottom: 20px; }
+        .lang-btn { cursor: pointer; font-size: 16px; opacity: 0.4; transition: 0.3s; filter: grayscale(1); }
+        .lang-btn.active { opacity: 1; filter: grayscale(0); transform: scale(1.2); }
+
+        .auth-container { position: relative; width: 92%; max-width: 480px; padding: 3px; border-radius: 35px; background: linear-gradient(135deg, var(--primary), var(--neon)); animation: borderRotate 10s linear infinite; }
         @keyframes borderRotate { 0% { filter: hue-rotate(0deg); } 100% { filter: hue-rotate(360deg); } }
 
         .auth-card { 
-            background: #020617; padding: 50px 40px; border-radius: 32px; 
+            background: #020617; padding: 40px 35px; border-radius: 32px; 
             text-align: center; position: relative;
         }
 
-        .header-box { margin-bottom: 40px; }
+        .header-box { margin-bottom: 30px; }
         .header-box h1 { font-weight: 900; font-size: 28px; letter-spacing: -1px; color: white; }
         .header-box span { color: var(--primary); }
-        .badge { background: rgba(0, 194, 255, 0.1); color: var(--primary); padding: 5px 15px; border-radius: 20px; font-size: 9px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; }
+        .badge { background: rgba(0, 194, 255, 0.1); color: var(--primary); padding: 5px 15px; border-radius: 20px; font-size: 9px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px; display: inline-block; }
 
-        .form-group { position: relative; margin-bottom: 25px; text-align: left; }
-        .form-group i { position: absolute; left: 15px; top: 43px; color: var(--primary); opacity: 0.7; }
-        
-        label { font-size: 10px; font-weight: 900; color: #475569; text-transform: uppercase; margin-bottom: 10px; display: block; margin-left: 5px; }
+        .form-group { position: relative; margin-bottom: 20px; text-align: left; }
+        label { font-size: 10px; font-weight: 900; color: #475569; text-transform: uppercase; margin-bottom: 8px; display: block; margin-left: 5px; }
         
         input { 
             width: 100%; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); 
@@ -57,20 +61,24 @@
             width: 100%; padding: 20px; border-radius: 20px; border: none; 
             background: linear-gradient(90deg, var(--primary), var(--neon)); 
             color: white; font-weight: 900; font-size: 15px; cursor: pointer; 
-            transition: 0.5s; margin-top: 15px; text-transform: uppercase; letter-spacing: 1px;
+            transition: 0.5s; margin-top: 10px; text-transform: uppercase; letter-spacing: 1px;
         }
         .submit-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(112, 0, 255, 0.4); }
 
-        .footer-text { margin-top: 30px; font-size: 13px; color: #64748b; }
+        .footer-text { margin-top: 25px; font-size: 13px; color: #64748b; }
         .footer-text a { color: var(--primary); text-decoration: none; font-weight: 700; }
         
-        /* Petit effet de scanner qui passe sur la carte */
         .scanner {
             position: absolute; top: 0; left: 0; width: 100%; height: 2px;
             background: linear-gradient(90deg, transparent, var(--primary), transparent);
             animation: scanMove 3s linear infinite; opacity: 0.5;
         }
         @keyframes scanMove { 0% { top: 0; } 100% { top: 100%; } }
+
+        @media (max-width: 480px) {
+            .row { flex-direction: column; gap: 0; }
+            .auth-card { padding: 30px 20px; }
+        }
     </style>
 </head>
 <body>
@@ -80,57 +88,137 @@
     <div class="auth-container">
         <div class="auth-card">
             <div class="scanner"></div>
+
+            <div class="lang-switcher">
+                <span class="lang-btn active" onclick="changeLang('fr')">🇫🇷</span>
+                <span class="lang-btn" onclick="changeLang('en')">🇺🇸</span>
+                <span class="lang-btn" onclick="changeLang('pt')">🇧🇷</span>
+            </div>
             
             <div class="header-box">
-                <div class="badge">Node Initialization</div>
-                <h1>AERIO<span>PARTNER</span></h1>
-                <p style="color: #64748b; font-size: 12px; margin-top: 10px;">Rejoignez le premier réseau WiFi décentralisé.</p>
+                <div class="badge" data-key="badge_init">Node Initialization</div>
+                <h1>AERIO<span data-key="title_partner">PARTNER</span></h1>
+                <p style="color: #64748b; font-size: 12px; margin-top: 10px;" data-key="hero_desc">Rejoignez le premier réseau WiFi décentralisé.</p>
             </div>
 
             <form id="registerForm">
                 <div class="form-group">
-                    <label>Identité Business</label>
-                    <input type="text" placeholder="Nom du Partenaire ou Structure" required>
+                    <label data-key="label_id">Identité Business</label>
+                    <input type="text" id="bizName" placeholder="Nom du Partenaire ou Structure" data-placeholder="ph_id" required>
                 </div>
 
                 <div class="row">
                     <div class="form-group" style="flex: 1;">
-                        <label>Ville</label>
-                        <input type="text" placeholder="Ex: Maroua" required>
+                        <label data-key="label_city">Ville</label>
+                        <input type="text" id="bizCity" placeholder="Ex: Maroua" data-placeholder="ph_city" required>
                     </div>
                     <div class="form-group" style="flex: 1;">
-                        <label>Contact (Paiement)</label>
-                        <input type="tel" placeholder="6xx xxx xxx" required>
+                        <label data-key="label_contact">Contact (Paiement)</label>
+                        <input type="tel" id="bizTel" placeholder="6xx xxx xxx" required>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label>Email de Gestion</label>
-                    <input type="email" placeholder="admin@aerio.net" required>
+                    <label data-key="label_email">Email de Gestion</label>
+                    <input type="email" id="bizEmail" placeholder="admin@aerio.net" required>
                 </div>
 
                 <div class="form-group">
-                    <label>Clé d'Accès (Pass)</label>
-                    <input type="password" placeholder="••••••••••••" required>
+                    <label data-key="label_pass">Clé d'Accès (Pass)</label>
+                    <input type="password" id="bizPass" placeholder="••••••••••••" required>
                 </div>
 
-                <button type="submit" class="submit-btn">Activer mon Nœud Réseau</button>
+                <button type="submit" class="submit-btn" id="submitBtn" data-key="btn_activate">Activer mon Nœud Réseau</button>
             </form>
 
             <div class="footer-text">
-                Déjà dans le réseau ? <a href="connexion.html">Accéder au Terminal</a>
+                <span data-key="footer_alt">Déjà dans le réseau ?</span> <a href="connexion.html" data-key="link_login">Accéder au Terminal</a>
             </div>
         </div>
     </div>
 
     <script>
+        const langData = {
+            fr: {
+                badge_init: "Initialisation du Nœud",
+                title_partner: "PARTENAIRE",
+                hero_desc: "Rejoignez le premier réseau WiFi décentralisé.",
+                label_id: "Identité Business",
+                ph_id: "Nom du Partenaire ou Structure",
+                label_city: "Ville",
+                ph_city: "Ex: Maroua",
+                label_contact: "Contact (Paiement)",
+                label_email: "Email de Gestion",
+                label_pass: "Clé d'Accès (Pass)",
+                btn_activate: "Activer mon Nœud Réseau",
+                footer_alt: "Déjà dans le réseau ?",
+                link_login: "Accéder au Terminal",
+                alert_success: "SYSTÈME : Données transmises avec succès au protocole ALPHA.",
+                btn_sync: "SYNCHRONISATION..."
+            },
+            en: {
+                badge_init: "Node Initialization",
+                title_partner: "PARTNER",
+                hero_desc: "Join the first decentralized WiFi network.",
+                label_id: "Business Identity",
+                ph_id: "Partner Name or Structure",
+                label_city: "City",
+                ph_city: "Ex: London",
+                label_contact: "Contact (Payment)",
+                label_email: "Management Email",
+                label_pass: "Access Key (Pass)",
+                btn_activate: "Activate my Network Node",
+                footer_alt: "Already in the network?",
+                link_login: "Access Terminal",
+                alert_success: "SYSTEM: Data successfully transmitted to ALPHA protocol.",
+                btn_sync: "SYNCHRONIZING..."
+            },
+            pt: {
+                badge_init: "Inicialização do Nó",
+                title_partner: "PARCEIRO",
+                hero_desc: "Junte-se à primeira rede WiFi descentralizada.",
+                label_id: "Identidade Comercial",
+                ph_id: "Nome do Parceiro ou Estrutura",
+                label_city: "Cidade",
+                ph_city: "Ex: Luanda",
+                label_contact: "Contato (Pagamento)",
+                label_email: "E-mail de Gestão",
+                label_pass: "Chave de Acesso",
+                btn_activate: "Ativar meu Nó de Rede",
+                footer_alt: "Já está na rede?",
+                link_login: "Acessar Terminal",
+                alert_success: "SISTEMA: Dados transmitidos com sucesso ao protocolo ALPHA.",
+                btn_sync: "SINCRONIZANDO..."
+            }
+        };
+
+        function changeLang(lang) {
+            document.querySelectorAll('[data-key]').forEach(el => {
+                const key = el.getAttribute('data-key');
+                if (langData[lang][key]) el.innerText = langData[lang][key];
+            });
+
+            // Update placeholders
+            document.querySelectorAll('[data-placeholder]').forEach(el => {
+                const key = el.getAttribute('data-placeholder');
+                if (langData[lang][key]) el.placeholder = langData[lang][key];
+            });
+
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            localStorage.setItem('aerio_lang', lang);
+        }
+
         document.getElementById('registerForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            const btn = e.target.querySelector('button');
-            btn.innerText = "SYNCHRONISATION...";
+            const currentLang = localStorage.getItem('aerio_lang') || 'fr';
+            const btn = document.getElementById('submitBtn');
+            
+            btn.innerText = langData[currentLang].btn_sync;
+            
             setTimeout(() => {
-                alert("SYSTÈME : Données transmises avec succès au protocole ALPHA.");
-                btn.innerText = "ACTIVER MON NŒUD RÉSEAU";
+                alert(langData[currentLang].alert_success);
+                btn.innerText = langData[currentLang].btn_activate;
             }, 2000);
         });
     </script>
