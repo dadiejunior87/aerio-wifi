@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AERIO | Arsenal Hardware Alpha</title>
-    <link href="https://fonts.googleapis.com" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700;900&display=swap" rel="stylesheet">
     <style>
         :root { --primary: #00C2FF; --bg: #020617; --glass: rgba(15, 23, 42, 0.6); --accent: #00F5A0; --neon: #7000FF; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
@@ -16,6 +16,11 @@
         .nav-links { display: flex; gap: 15px; align-items: center; }
         .nav-links a { color: #64748b; text-decoration: none; font-size: 10px; font-weight: 700; text-transform: uppercase; transition: 0.3s; }
         .nav-links a:hover { color: white; }
+
+        /* Style Sélecteur de langue */
+        .lang-switcher { display: flex; gap: 8px; margin-left: 10px; border-left: 1px solid rgba(255,255,255,0.1); padding-left: 10px; }
+        .lang-btn { cursor: pointer; font-size: 14px; opacity: 0.5; transition: 0.3s; filter: grayscale(1); }
+        .lang-btn:hover, .lang-btn.active { opacity: 1; filter: grayscale(0); transform: scale(1.1); }
 
         /* ✅ VITRINE DE PRESTIGE */
         .showcase { padding: 160px 8% 80px; text-align: left; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 50px; }
@@ -41,20 +46,25 @@
     <nav>
         <a href="index.html" class="logo">🛰️ AERIO</a>
         <div class="nav-links">
-            <a href="index.html">Accueil</a>
-            <a href="shop.html" style="color:white;">Shop</a>
-            <a href="connexion.html">Espace Pro</a>
+            <a href="index.html" data-key="nav_home">Accueil</a>
+            <a href="shop.html" style="color:white;" data-key="nav_shop">Shop</a>
+            <a href="connexion.html" data-key="nav_pro">Espace Pro</a>
+            <div class="lang-switcher">
+                <span class="lang-btn active" onclick="changeLang('fr')">🇫🇷</span>
+                <span class="lang-btn" onclick="changeLang('en')">🇺🇸</span>
+                <span class="lang-btn" onclick="changeLang('pt')">🇧🇷</span>
+            </div>
         </div>
     </nav>
 
     <section class="showcase">
         <div style="max-width: 700px;">
-            <p style="color:var(--primary); font-weight:900; font-size:10px; letter-spacing:4px; margin-bottom:15px;">🛰️ ARSENAL HARDWARE ALPHA</p>
-            <h1>Dominez votre <br><span style="color:var(--primary)">Empire WiFi.</span></h1>
-            <button class="btn-blue" onclick="document.getElementById('catalog').scrollIntoView({behavior: 'smooth'})">Explorer l'Arsenal</button>
+            <p data-key="shop_tag" style="color:var(--primary); font-weight:900; font-size:10px; letter-spacing:4px; margin-bottom:15px;">🛰️ ARSENAL HARDWARE ALPHA</p>
+            <h1><span data-key="shop_title1">Dominez votre</span> <br><span data-key="shop_title2" style="color:var(--primary)">Empire WiFi.</span></h1>
+            <button class="btn-blue" data-key="btn_explore" onclick="document.getElementById('catalog').scrollIntoView({behavior: 'smooth'})">Explorer l'Arsenal</button>
         </div>
         <div style="background: var(--glass); padding: 30px; border-radius: 30px; border: 1px solid var(--primary); text-align: center; backdrop-filter: blur(20px);">
-            <div style="font-size: 10px; font-weight: 900; color: #475569; letter-spacing: 2px; margin-bottom: 10px;">SYSTEM STATUS</div>
+            <div data-key="sys_status" style="font-size: 10px; font-weight: 900; color: #475569; letter-spacing: 2px; margin-bottom: 10px;">SYSTEM STATUS</div>
             <div style="font-size: 24px; font-weight: 900; color: var(--accent);">ONLINE 100%</div>
             <div style="width: 100%; height: 4px; background: rgba(0, 245, 160, 0.2); border-radius: 10px; margin-top: 15px;"><div style="width: 100%; height: 100%; background: var(--accent); box-shadow: 0 0 15px var(--accent);"></div></div>
         </div>
@@ -64,50 +74,50 @@
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 30px;">
             
             <div class="product-card">
-                <h3 style="font-weight: 900; font-size: 22px;">Liaison Accompagnement</h3>
+                <h3 style="font-weight: 900; font-size: 22px;" data-key="p1_title">Liaison Accompagnement</h3>
                 <div class="price">85 000 F</div>
-                <div class="spec-item"><div class="dot"></div><span>Configuration MikroTik à distance</span></div>
-                <div class="spec-item"><div class="dot"></div><span>Automatisation du tunnel de vente</span></div>
-                <div class="spec-item"><div class="dot"></div><span>Support Winbox Pro (30 jours)</span></div>
-                <button class="btn-blue" style="width: 100%; margin-top: 20px;" onclick="openModal('Accompagnement', '85 000')">Commander</button>
+                <div class="spec-item"><div class="dot"></div><span data-key="p1_s1">Configuration MikroTik à distance</span></div>
+                <div class="spec-item"><div class="dot"></div><span data-key="p1_s2">Automatisation du tunnel de vente</span></div>
+                <div class="spec-item"><div class="dot"></div><span data-key="p1_s3">Support Winbox Pro (30 jours)</span></div>
+                <button class="btn-blue" style="width: 100%; margin-top: 20px;" data-key="btn_order" onclick="openModal('Accompagnement', '85 000')">Commander</button>
             </div>
 
             <div class="product-card">
-                <h3 style="font-weight: 900; font-size: 22px;">Kit de Base Alpha</h3>
+                <h3 style="font-weight: 900; font-size: 22px;" data-key="p2_title">Kit de Base Alpha</h3>
                 <div class="price">185 000 F</div>
-                <div class="spec-item"><div class="dot"></div><span>Routeur MikroTik RB951-Ui</span></div>
-                <div class="spec-item"><div class="dot"></div><span>Antenne Omnidirectionnelle (150m)</span></div>
-                <div class="spec-item"><div class="dot"></div><span>Configuration & Automate inclus</span></div>
-                <button class="btn-blue" style="width: 100%; margin-top: 20px;" onclick="openModal('Kit Base', '185 000')">Commander</button>
+                <div class="spec-item"><div class="dot"></div><span data-key="p2_s1">Routeur MikroTik RB951-Ui</span></div>
+                <div class="spec-item"><div class="dot"></div><span data-key="p2_s2">Antenne Omnidirectionnelle (150m)</span></div>
+                <div class="spec-item"><div class="dot"></div><span data-key="p2_s3">Configuration & Automate inclus</span></div>
+                <button class="btn-blue" style="width: 100%; margin-top: 20px;" data-key="btn_order" onclick="openModal('Kit Base', '185 000')">Commander</button>
             </div>
 
             <div class="product-card" style="border-color: var(--primary);">
-                <div style="position: absolute; top: 15px; right: 25px; background: var(--primary); color: #020617; padding: 4px 12px; border-radius: 50px; font-size: 9px; font-weight: 900;">POPULAIRE</div>
-                <h3 style="font-weight: 900; font-size: 22px;">Kit Moyen Pro</h3>
+                <div style="position: absolute; top: 15px; right: 25px; background: var(--primary); color: #020617; padding: 4px 12px; border-radius: 50px; font-size: 9px; font-weight: 900;" data-key="tag_pop">POPULAIRE</div>
+                <h3 style="font-weight: 900; font-size: 22px;" data-key="p3_title">Kit Moyen Pro</h3>
                 <div class="price">275 000 F</div>
-                <div class="spec-item"><div class="dot"></div><span>Routeur MikroTik High Power</span></div>
-                <div class="spec-item"><div class="dot"></div><span>Antenne GrandStream (300m+)</span></div>
-                <div class="spec-item"><div class="dot"></div><span>Solution zone dense optimisée</span></div>
-                <button class="btn-blue" style="width: 100%; margin-top: 20px;" onclick="openModal('Kit Moyen', '275 000')">Commander</button>
+                <div class="spec-item"><div class="dot"></div><span data-key="p3_s1">Routeur MikroTik High Power</span></div>
+                <div class="spec-item"><div class="dot"></div><span data-key="p3_s2">Antenne GrandStream (300m+)</span></div>
+                <div class="spec-item"><div class="dot"></div><span data-key="p3_s3">Solution zone dense optimisée</span></div>
+                <button class="btn-blue" style="width: 100%; margin-top: 20px;" data-key="btn_order" onclick="openModal('Kit Moyen', '275 000')">Commander</button>
             </div>
 
             <div class="product-card">
-                <h3 style="font-weight: 900; font-size: 22px;">Kit Avancé Alpha</h3>
+                <h3 style="font-weight: 900; font-size: 22px;" data-key="p4_title">Kit Avancé Alpha</h3>
                 <div class="price">385 000 F</div>
-                <div class="spec-item"><div class="dot" style="background:#FFD700; box-shadow:0 0 10px #FFD700;"></div><span>Routeur MikroTik hAP AX²</span></div>
-                <div class="spec-item"><div class="dot" style="background:#FFD700;"></div><span>Antenne GrandStream Pro (300m+)</span></div>
-                <div class="spec-item"><div class="dot" style="background:#FFD700;"></div><span>Câble blindé & Protection Foudre</span></div>
-                <button class="btn-blue" style="width: 100%; margin-top: 20px; background:#FFD700; color:#020617;" onclick="openModal('Kit Avancé', '385 000')">Commander</button>
+                <div class="spec-item"><div class="dot" style="background:#FFD700; box-shadow:0 0 10px #FFD700;"></div><span data-key="p4_s1">Routeur MikroTik hAP AX²</span></div>
+                <div class="spec-item"><div class="dot" style="background:#FFD700;"></div><span data-key="p4_s2">Antenne GrandStream Pro (300m+)</span></div>
+                <div class="spec-item"><div class="dot" style="background:#FFD700;"></div><span data-key="p4_s3">Câble blindé & Protection Foudre</span></div>
+                <button class="btn-blue" style="width: 100%; margin-top: 20px; background:#FFD700; color:#020617;" data-key="btn_order" onclick="openModal('Kit Avancé', '385 000')">Commander</button>
             </div>
 
             <div class="product-card" style="border-color: var(--neon); background: rgba(112, 0, 255, 0.03);">
-                <div style="position: absolute; top: 15px; right: 25px; background: var(--neon); color: white; padding: 4px 12px; border-radius: 50px; font-size: 9px; font-weight: 900;">PREMIUM</div>
-                <h3 style="font-weight: 900; font-size: 22px;">Kit Premium Élite</h3>
+                <div style="position: absolute; top: 15px; right: 25px; background: var(--neon); color: white; padding: 4px 12px; border-radius: 50px; font-size: 9px; font-weight: 900;" data-key="tag_premium">PREMIUM</div>
+                <h3 style="font-weight: 900; font-size: 22px;" data-key="p5_title">Kit Premium Élite</h3>
                 <div class="price" style="color:var(--neon);">425 000 F</div>
-                <div class="spec-item"><div class="dot" style="background:var(--neon); box-shadow:0 0 10px var(--neon);"></div><span>Routeur MikroTik hAP AX³</span></div>
-                <div class="spec-item"><div class="dot" style="background:var(--neon);"></div><span>Antenne GrandStream (400m+)</span></div>
-                <div class="spec-item"><div class="dot" style="background:var(--neon);"></div><span>Support Prioritaire & Monitoring VIP</span></div>
-                <button class="btn-blue" style="width: 100%; margin-top: 20px; background:var(--neon); color:white;" onclick="openModal('Kit Premium', '425 000')">Commander</button>
+                <div class="spec-item"><div class="dot" style="background:var(--neon); box-shadow:0 0 10px var(--neon);"></div><span data-key="p5_s1">Routeur MikroTik hAP AX³</span></div>
+                <div class="spec-item"><div class="dot" style="background:var(--neon);"></div><span data-key="p5_s2">Antenne GrandStream (400m+)</span></div>
+                <div class="spec-item"><div class="dot" style="background:var(--neon);"></div><span data-key="p5_s3">Support Prioritaire & Monitoring VIP</span></div>
+                <button class="btn-blue" style="width: 100%; margin-top: 20px; background:var(--neon); color:white;" data-key="btn_order" onclick="openModal('Kit Premium', '425 000')">Commander</button>
             </div>
         </div>
     </section>
@@ -115,42 +125,102 @@
     <footer style="padding: 80px 8% 40px; background: rgba(0, 0, 0, 0.6); border-top: 2px solid var(--primary); backdrop-filter: blur(30px);">
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 50px; max-width: 1200px; margin: 0 auto;">
             <div style="border-left: 4px solid var(--primary); padding-left: 25px;">
-                <b style="color:var(--primary); font-size:11px; letter-spacing:3px; text-transform:uppercase;">Logistique Alpha</b>
-                <p style="font-size: 13px; color: #64748b; margin-top: 15px;">Les frais d'expédition sont à la charge exclusive de l'acquéreur. Déploiement sécurisé.</p>
+                <b data-key="f1_t" style="color:var(--primary); font-size:11px; letter-spacing:3px; text-transform:uppercase;">Logistique Alpha</b>
+                <p data-key="f1_p" style="font-size: 13px; color: #64748b; margin-top: 15px;">Les frais d'expédition sont à la charge exclusive de l'acquéreur. Déploiement sécurisé.</p>
             </div>
             <div style="border-left: 4px solid var(--accent); padding-left: 25px;">
-                <b style="color:var(--accent); font-size:11px; letter-spacing:3px; text-transform:uppercase;">Souveraineté AERIO</b>
-                <p style="font-size: 13px; color: #64748b; margin-top: 15px;">Solution exclusive pour sécuriser et rentabiliser votre réseau sans dépendre de tiers.</p>
+                <b data-key="f2_t" style="color:var(--accent); font-size:11px; letter-spacing:3px; text-transform:uppercase;">Souveraineté AERIO</b>
+                <p data-key="f2_p" style="font-size: 13px; color: #64748b; margin-top: 15px;">Solution exclusive pour sécuriser et rentabiliser votre réseau sans dépendre de tiers.</p>
             </div>
         </div>
         <div style="text-align:center; margin-top:60px; padding-top:40px; border-top:1px solid rgba(255,255,255,0.03);">
-            <p style="color:#475569; font-size:10px; letter-spacing:5px; font-weight:900;">AERIO ALPHA © 2026 | L'EMPIRE GLOBAL DU WIFI ZONE</p>
-            <a href="index.html" style="display:inline-block; margin-top:20px; color:#64748b; text-decoration:none; font-size:9px; font-weight:900;">← RETOUR AU COCKPIT</a>
+            <p style="color:#475569; font-size:10px; letter-spacing:5px; font-weight:900;" data-key="f_copy">AERIO ALPHA © 2026 | L'EMPIRE GLOBAL DU WIFI ZONE</p>
+            <a href="index.html" style="display:inline-block; margin-top:20px; color:#64748b; text-decoration:none; font-size:9px; font-weight:900;" data-key="f_back">← RETOUR AU COCKPIT</a>
         </div>
     </footer>
 
     <div class="modal-overlay" id="orderModal">
         <div class="modal-card">
             <span style="position:absolute; top:25px; right:25px; cursor:pointer;" onclick="closeModal()">✕</span>
-            <h2 style="font-weight: 900; margin-bottom: 30px;">Initialiser la <span style="color:var(--primary)">Transaction Alpha</span></h2>
+            <h2 style="font-weight: 900; margin-bottom: 30px;"><span data-key="m_t1">Initialiser la</span> <span data-key="m_t2" style="color:var(--primary)">Transaction Alpha</span></h2>
             <form onsubmit="processOrder(event)">
-                <input type="text" id="custName" placeholder="Identité de l'Agent" required>
+                <input type="text" id="custName" placeholder="Identité de l'Agent" data-placeholder="placeholder_agent" required>
                 <div id="dispPrice" style="font-size: 32px; font-weight: 900; color: var(--accent); margin-bottom: 30px;">--- F</div>
-                <button type="submit" class="btn-blue" style="width: 100%;">🔒 Payer via WhatsApp</button>
+                <button type="submit" class="btn-blue" style="width: 100%;" data-key="btn_wa">🔒 Payer via WhatsApp</button>
             </form>
         </div>
     </div>
 
     <script>
+        const langData = {
+            fr: {
+                nav_home: "Accueil", nav_shop: "Shop", nav_pro: "Espace Pro",
+                shop_tag: "🛰️ ARSENAL HARDWARE ALPHA", shop_title1: "Dominez votre", shop_title2: "Empire WiFi.",
+                btn_explore: "Explorer l'Arsenal", sys_status: "STATUT SYSTÈME",
+                p1_title: "Liaison Accompagnement", p1_s1: "Configuration MikroTik à distance", p1_s2: "Automatisation du tunnel de vente", p1_s3: "Support Winbox Pro (30 jours)",
+                p2_title: "Kit de Base Alpha", p2_s1: "Routeur MikroTik RB951-Ui", p2_s2: "Antenne Omnidirectionnelle (150m)", p2_s3: "Configuration & Automate inclus",
+                p3_title: "Kit Moyen Pro", p3_s1: "Routeur MikroTik High Power", p3_s2: "Antenne GrandStream (300m+)", p3_s3: "Solution zone dense optimisée",
+                p4_title: "Kit Avancé Alpha", p4_s1: "Routeur MikroTik hAP AX²", p4_s2: "Antenne GrandStream Pro (300m+)", p4_s3: "Câble blindé & Protection Foudre",
+                p5_title: "Kit Premium Élite", p5_s1: "Routeur MikroTik hAP AX³", p5_s2: "Antenne GrandStream (400m+)", p5_s3: "Support Prioritaire & Monitoring VIP",
+                tag_pop: "POPULAIRE", tag_premium: "PREMIUM", btn_order: "Commander",
+                f1_t: "Logistique Alpha", f1_p: "Les frais d'expédition sont à la charge exclusive de l'acquéreur. Déploiement sécurisé.",
+                f2_t: "Souveraineté AERIO", f2_p: "Solution exclusive pour sécuriser et rentabiliser votre réseau sans dépendre de tiers.",
+                f_copy: "AERIO ALPHA © 2026 | L'EMPIRE GLOBAL DU WIFI ZONE", f_back: "← RETOUR AU COCKPIT",
+                m_t1: "Initialiser la", m_t2: "Transaction Alpha", btn_wa: "🔒 Payer via WhatsApp", placeholder_agent: "Identité de l'Agent"
+            },
+            en: {
+                nav_home: "Home", nav_shop: "Shop", nav_pro: "Pro Space",
+                shop_tag: "🛰️ ALPHA HARDWARE ARSENAL", shop_title1: "Dominate your", shop_title2: "WiFi Empire.",
+                btn_explore: "Explore Arsenal", sys_status: "SYSTEM STATUS",
+                p1_title: "Support Liaison", p1_s1: "Remote MikroTik configuration", p1_s2: "Sales funnel automation", p1_s3: "Winbox Pro Support (30 days)",
+                p2_title: "Alpha Base Kit", p2_s1: "MikroTik RB951-Ui Router", p2_s2: "Omnidirectional Antenna (150m)", p2_s3: "Config & Automate included",
+                p3_title: "Pro Medium Kit", p3_s1: "High Power MikroTik Router", p3_s2: "GrandStream Antenna (300m+)", p3_s3: "Optimized dense area solution",
+                p4_title: "Alpha Advanced Kit", p4_s1: "MikroTik hAP AX² Router", p4_s2: "GrandStream Pro Antenna (300m+)", p4_s3: "Shielded Cable & Lightning Protection",
+                p5_title: "Elite Premium Kit", p5_s1: "MikroTik hAP AX³ Router", p5_s2: "GrandStream Antenna (400m+)", p5_s3: "Priority Support & VIP Monitoring",
+                tag_pop: "POPULAR", tag_premium: "PREMIUM", btn_order: "Order Now",
+                f1_t: "Alpha Logistics", f1_p: "Shipping costs are the sole responsibility of the buyer. Secure deployment.",
+                f2_t: "AERIO Sovereignty", f2_p: "Exclusive solution to secure and monetize your network without third parties.",
+                f_copy: "AERIO ALPHA © 2026 | THE GLOBAL WIFI ZONE EMPIRE", f_back: "← BACK TO COCKPIT",
+                m_t1: "Initialize", m_t2: "Alpha Transaction", btn_wa: "🔒 Pay via WhatsApp", placeholder_agent: "Agent Identity"
+            },
+            pt: {
+                nav_home: "Início", nav_shop: "Loja", nav_pro: "Espaço Pro",
+                shop_tag: "🛰️ ARSENAL HARDWARE ALPHA", shop_title1: "Domine seu", shop_title2: "Império WiFi.",
+                btn_explore: "Explorar Arsenal", sys_status: "STATUS DO SISTEMA",
+                p1_title: "Ligação de Suporte", p1_s1: "Configuração remota MikroTik", p1_s2: "Automação do funil de vendas", p1_s3: "Suporte Winbox Pro (30 dias)",
+                p2_title: "Kit Base Alpha", p2_s1: "Roteador MikroTik RB951-Ui", p2_s2: "Antena Omnidirecional (150m)", p2_s3: "Config e Automação inclusos",
+                p3_title: "Kit Médio Pro", p3_s1: "Roteador MikroTik High Power", p3_s2: "Antena GrandStream (300m+)", p3_s3: "Solução para zona densa",
+                p4_title: "Kit Avançado Alpha", p4_s1: "Roteador MikroTik hAP AX²", p4_s2: "Antena GrandStream Pro (300m+)", p4_s3: "Cabo Blindado e Proteção",
+                p5_title: "Kit Premium Elite", p5_s1: "Roteador MikroTik hAP AX³", p5_s2: "Antena GrandStream (400m+)", p5_s3: "Suporte Prioritário e VIP",
+                tag_pop: "POPULAR", tag_premium: "PREMIUM", btn_order: "Encomendar",
+                f1_t: "Logística Alpha", f1_p: "Custos de envio por conta do comprador. Implantação segura.",
+                f2_t: "Soberania AERIO", f2_p: "Solução exclusiva para rentabilizar sua rede sem terceiros.",
+                f_copy: "AERIO ALPHA © 2026 | O IMPÉRIO GLOBAL DO WIFI ZONE", f_back: "← VOLTAR AO COCKPIT",
+                m_t1: "Inicializar", m_t2: "Transação Alpha", btn_wa: "🔒 Pagar via WhatsApp", placeholder_agent: "Identidade do Agente"
+            }
+        };
+
+        function changeLang(lang) {
+            document.querySelectorAll('[data-key]').forEach(el => {
+                const key = el.getAttribute('data-key');
+                if (langData[lang][key]) el.innerText = langData[lang][key];
+            });
+            // Pour les placeholders
+            const agentInput = document.getElementById('custName');
+            agentInput.placeholder = langData[lang].placeholder_agent;
+
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            localStorage.setItem('aerio_lang', lang);
+        }
+
         let kitSel = "";
         function openModal(k, p) { 
             kitSel = k; 
             document.getElementById('dispPrice').innerText = p + " F"; 
             document.getElementById('orderModal').style.display = 'flex'; 
         }
-        function closeModal() { 
-            document.getElementById('orderModal').style.display = 'none'; 
-        }
+        function closeModal() { document.getElementById('orderModal').style.display = 'none'; }
         function processOrder(e) { 
             e.preventDefault(); 
             const n = document.getElementById('custName').value; 
