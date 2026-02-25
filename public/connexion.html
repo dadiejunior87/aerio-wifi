@@ -6,7 +6,14 @@
     <title>AERIO | Connexion Espace Pro</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #00C2FF; --bg: #020617; --glass: rgba(15, 23, 42, 0.7); --accent: #7000FF; }
+        :root { 
+            --primary: #00C2FF; 
+            --bg: #020617; 
+            --glass: rgba(15, 23, 42, 0.6); 
+            --accent: #7000FF; 
+            --neon-glow: rgba(0, 194, 255, 0.4);
+        }
+        
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         
         body { 
@@ -16,85 +23,115 @@
             display: flex; 
             align-items: center; 
             justify-content: center; 
-            padding: 40px 20px; 
-            background-image: radial-gradient(circle at bottom left, rgba(112, 0, 255, 0.1), transparent); 
-            /* ✅ REPARÉ : On autorise le défilement pour ne pas bloquer le bouton sur mobile */
+            padding: 20px; 
+            /* Fond avec halos de lumière */
+            background-image: 
+                radial-gradient(circle at 10% 10%, rgba(0, 194, 255, 0.05), transparent 40%),
+                radial-gradient(circle at 90% 90%, rgba(112, 0, 255, 0.1), transparent 40%);
             overflow-y: auto; 
         }
 
-        /* ✅ SCANNER OVERLAY */
+        /* --- OVERLAY NOTIFICATION QUANTIQUE --- */
+        .aerio-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(10px);
+            display: flex; justify-content: center; align-items: center;
+            z-index: 10000;
+        }
+        .quantum-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--primary);
+            border-radius: 20px;
+            padding: 30px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 0 40px var(--neon-glow);
+            text-align: left;
+        }
+
+        /* --- SCANNER ALPHA --- */
         #scanner-line {
             display: none;
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 5px;
+            top: 0; left: 0; width: 100%; height: 4px;
             background: var(--primary);
             box-shadow: 0 0 20px var(--primary);
             z-index: 10000;
-            animation: scanLoop 1.5s ease-in-out infinite;
+            animation: scanLoop 2s ease-in-out infinite;
         }
         @keyframes scanLoop { 0% { top: 0%; } 100% { top: 100%; } }
 
-        /* ✅ DESIGN GLASSMORPHISM AMÉLIORÉ */
+        /* --- LOGIN CARD HYPER-AERIO --- */
         .login-card { 
             background: var(--glass); 
-            backdrop-filter: blur(40px); 
-            padding: 50px 40px; 
-            border-radius: 40px; 
-            border: 1px solid rgba(0, 194, 255, 0.2); 
+            backdrop-filter: blur(30px); 
+            padding: 45px 35px; 
+            border-radius: 35px; 
+            border: 1px solid rgba(255, 255, 255, 0.1); 
             width: 100%; 
-            max-width: 450px; 
+            max-width: 420px; 
             text-align: center; 
-            box-shadow: 0 25px 50px rgba(0,0,0,0.5); 
+            box-shadow: 0 30px 60px rgba(0,0,0,0.6); 
             position: relative; 
-            z-index: 10;
+            transition: 0.5s;
+        }
+        .login-card::before {
+            content: ''; position: absolute; top: -2px; left: -2px; right: -2px; bottom: -2px;
+            background: linear-gradient(45deg, var(--primary), transparent, var(--accent));
+            z-index: -1; border-radius: 37px; opacity: 0.3;
         }
 
-        /* Sélecteur de langue discret */
-        .lang-switcher { display: flex; gap: 10px; justify-content: center; margin-bottom: 25px; }
-        .lang-btn { cursor: pointer; font-size: 16px; opacity: 0.4; transition: 0.3s; filter: grayscale(1); }
-        .lang-btn.active { opacity: 1; filter: grayscale(0); transform: scale(1.2); }
+        .lang-switcher { display: flex; gap: 15px; justify-content: center; margin-bottom: 25px; }
+        .lang-btn { cursor: pointer; font-size: 18px; opacity: 0.3; transition: 0.4s; filter: grayscale(1); }
+        .lang-btn.active { opacity: 1; filter: grayscale(0); transform: scale(1.3); }
         
-        h1 { font-size: 28px; font-weight: 900; margin-bottom: 10px; letter-spacing: -1px; text-transform: uppercase; }
-        p#sub-text { color: #64748b; font-size: 13px; margin-bottom: 30px; }
+        h1 { font-size: 26px; font-weight: 900; margin-bottom: 8px; letter-spacing: -0.5px; text-transform: uppercase; color: #fff; }
+        p#sub-text { color: #94a3b8; font-size: 13px; margin-bottom: 35px; }
 
         .input-group { text-align: left; margin-bottom: 20px; }
-        label { font-size: 10px; font-weight: 900; color: var(--primary); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; display: block; }
+        label { font-size: 10px; font-weight: 900; color: var(--primary); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 10px; display: block; }
+        
         input { 
-            width: 100%; padding: 18px 25px; 
-            background: rgba(0, 0, 0, 0.4); 
-            border: 1px solid rgba(255, 255, 255, 0.1); 
-            border-radius: 20px; 
+            width: 100%; padding: 16px 20px; 
+            background: rgba(0, 0, 0, 0.5); 
+            border: 1px solid rgba(255, 255, 255, 0.08); 
+            border-radius: 15px; 
             color: white; font-size: 14px; 
             outline: none; transition: 0.3s; 
         }
-        input:focus { border-color: var(--primary); box-shadow: 0 0 20px rgba(0, 194, 255, 0.2); background: rgba(0,0,0,0.6); }
+        input:focus { border-color: var(--primary); box-shadow: 0 0 15px rgba(0, 194, 255, 0.15); background: rgba(0,0,0,0.7); }
 
         .btn-login { 
-            width: 100%; padding: 20px; 
-            background: linear-gradient(45deg, var(--primary), var(--accent)); 
-            color: white; border-radius: 20px; 
+            width: 100%; padding: 18px; 
+            background: linear-gradient(135deg, var(--primary), var(--accent)); 
+            color: white; border-radius: 15px; 
             font-weight: 900; border: none; 
             cursor: pointer; text-transform: uppercase; 
-            letter-spacing: 2px; margin-top: 10px; 
+            letter-spacing: 1.5px; margin-top: 15px; 
             transition: 0.4s; 
         }
-        .btn-login:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(112, 0, 255, 0.3); }
+        .btn-login:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(0, 194, 255, 0.4); }
 
-        .back-link { display: block; margin-top: 30px; color: #475569; text-decoration: none; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; transition: 0.3s; }
-        .back-link:hover { color: white; }
+        .back-link { display: block; margin-top: 25px; color: #64748b; text-decoration: none; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; }
+        .back-link:hover { color: var(--primary); }
 
-        /* ✅ LOGO ANIMÉ */
         .logo-box {
-            width: 70px; height: 70px;
-            background: rgba(0, 194, 255, 0.1);
-            border-radius: 20px;
+            width: 65px; height: 65px;
+            background: rgba(0, 194, 255, 0.05);
+            border-radius: 18px;
             display: flex; align-items: center; justify-content: center;
             margin: 0 auto 20px;
             border: 1px solid var(--primary);
-            font-size: 30px;
-            animation: pulse 2s infinite;
+            font-size: 28px;
+            box-shadow: 0 0 20px rgba(0, 194, 255, 0.2);
         }
-        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(0, 194, 255, 0.4); } 70% { box-shadow: 0 0 0 20px rgba(0, 194, 255, 0); } 100% { box-shadow: 0 0 0 0 rgba(0, 194, 255, 0); } }
+
+        /* Barre de progression notification */
+        .prog-notif { width: 100%; height: 3px; background: rgba(255,255,255,0.1); margin-top: 15px; border-radius: 2px; overflow: hidden; }
+        .bar-notif { width: 40%; height: 100%; background: var(--primary); animation: moveBar 1.5s infinite linear; }
+        @keyframes moveBar { from { transform: translateX(-100%); } to { transform: translateX(300%); } }
     </style>
 </head>
 <body>
@@ -108,14 +145,14 @@
             <span class="lang-btn" onclick="changeLang('pt')">🇧🇷</span>
         </div>
 
-        <div class="logo-box">🔐</div>
+        <div class="logo-box">🔒</div>
         <h1 data-key="title_pro">Espace Pro</h1>
         <p id="sub-text" data-key="hero_desc">Liaison sécurisée au cockpit de gestion AERIO.</p>
 
         <form id="loginForm" onsubmit="initierLiaisonAlpha(event)">
             <div class="input-group">
                 <label data-key="label_id">Identifiant Agent Alpha</label>
-                <input type="text" id="agentID" placeholder="Email ou ID" data-placeholder="ph_id" required>
+                <input type="text" id="agentID" placeholder="Email ou ID" required>
             </div>
             <div class="input-group">
                 <label data-key="label_key">Code de Cryptage</label>
@@ -129,6 +166,19 @@
     </div>
 
     <script>
+        function showQuantumAlert(message) {
+            const alertHtml = `
+            <div class="aerio-overlay" id="quantumAlert">
+                <div class="quantum-card">
+                    <div style="opacity: 0.5; font-size: 0.7rem; margin-bottom: 8px; color:var(--primary);">SYSTÈME ALPHA SECURE</div>
+                    <div style="font-weight:900; letter-spacing:0.5px; margin-bottom:10px; font-size:1.1rem;">LIAISON ÉTABLIE</div>
+                    <div style="font-size:0.85rem; color:#cbd5e1; line-height:1.4;">${message}</div>
+                    <div class="prog-notif"><div class="bar-notif"></div></div>
+                </div>
+            </div>`;
+            document.body.insertAdjacentHTML('beforeend', alertHtml);
+        }
+
         const langData = {
             fr: {
                 title_pro: "Espace Pro",
@@ -138,7 +188,8 @@
                 label_key: "Code de Cryptage",
                 btn_init: "Initialiser la Session",
                 btn_back: "← Retour au Cockpit",
-                loading: "CRYPTAGE EN COURS..."
+                loading: "CRYPTAGE...",
+                success: "Accès autorisé. Synchronisation du cockpit Alpha en cours."
             },
             en: {
                 title_pro: "Pro Space",
@@ -148,7 +199,8 @@
                 label_key: "Encryption Code",
                 btn_init: "Initialize Session",
                 btn_back: "← Back to Cockpit",
-                loading: "ENCRYPTING..."
+                loading: "ENCRYPTING...",
+                success: "Access granted. Synchronizing Alpha cockpit."
             },
             pt: {
                 title_pro: "Espaço Pro",
@@ -158,7 +210,8 @@
                 label_key: "Código de Criptografia",
                 btn_init: "Inicializar Sessão",
                 btn_back: "← Voltar ao Cockpit",
-                loading: "CRIPTOGRAFANDO..."
+                loading: "CRIPTOGRAFANDO...",
+                success: "Acesso concedido. Sincronizando o cockpit Alpha."
             }
         };
 
@@ -167,13 +220,9 @@
                 const key = el.getAttribute('data-key');
                 if (langData[lang][key]) el.innerText = langData[lang][key];
             });
-
-            // Placeholders
-            const idInput = document.getElementById('agentID');
-            idInput.placeholder = langData[lang].ph_id;
-
+            document.getElementById('agentID').placeholder = langData[lang].ph_id;
             document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
+            if(event) event.target.classList.add('active');
             localStorage.setItem('aerio_lang', lang);
         }
 
@@ -189,19 +238,23 @@
             btn.style.pointerEvents = "none";
 
             setTimeout(() => {
-                window.location.href = "dashboard.html"; 
-            }, 2000);
+                showQuantumAlert(langData[currentLang].success);
+                setTimeout(() => {
+                    window.location.href = "dashboard.html"; 
+                }, 2000);
+            }, 1500);
         }
 
-        // Appliquer la langue stockée au chargement
         window.onload = () => {
             const savedLang = localStorage.getItem('aerio_lang') || 'fr';
-            // Simuler un clic pour activer la bonne langue au départ
+            changeLang(savedLang);
+            // Mise à jour visuelle des boutons de langue
             const btns = document.querySelectorAll('.lang-btn');
             btns.forEach(b => {
-                if(b.innerText.includes('🇫🇷') && savedLang === 'fr') b.click();
-                if(b.innerText.includes('🇺🇸') && savedLang === 'en') b.click();
-                if(b.innerText.includes('🇧🇷') && savedLang === 'pt') b.click();
+                b.classList.remove('active');
+                if(b.innerText.includes('🇫🇷') && savedLang === 'fr') b.classList.add('active');
+                if(b.innerText.includes('🇺🇸') && savedLang === 'en') b.classList.add('active');
+                if(b.innerText.includes('🇧🇷') && savedLang === 'pt') b.classList.add('active');
             });
         };
     </script>
