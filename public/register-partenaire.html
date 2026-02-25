@@ -3,98 +3,132 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AERIO | Inscription Élite Afrique</title>
-    <link href="https://fonts.googleapis.com" rel="stylesheet">
+    <title>AERIO | Inscription Partenaire Alpha</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;900&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #00C2FF; --secondary: #7000FF; --bg: #030712; }
+        :root {
+            --primary: #00F5A0; --accent: #00C2FF; --bg: #020617;
+            --card: rgba(15, 23, 42, 0.8); --border: rgba(255, 255, 255, 0.1);
+        }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         
-        body { background: var(--bg); height: 100vh; display: flex; justify-content: center; align-items: center; overflow: hidden; position: relative; }
-        .bg-glow { position: absolute; width: 600px; height: 600px; background: radial-gradient(circle, rgba(112, 0, 255, 0.1) 0%, transparent 70%); top: -200px; right: -200px; z-index: -1; }
-
-        .register-container {
-            background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(20px);
-            padding: 40px; border-radius: 40px; width: 90%; max-width: 500px;
-            border: 1px solid rgba(255, 255, 255, 0.05); text-align: center;
+        body { 
+            background: var(--bg); color: white; height: 100vh; 
+            display: flex; align-items: center; justify-content: center;
+            overflow: hidden; position: relative;
         }
 
-        .logo-box { display: flex; align-items: center; justify-content: center; margin-bottom: 25px; }
-        .logo-text { font-weight: 800; font-size: 26px; color: var(--primary); margin-left: 12px; letter-spacing: -1px; }
-
-        h2 { font-weight: 800; font-size: 22px; margin-bottom: 30px; letter-spacing: -1px; }
-
-        .input-group { margin-bottom: 20px; text-align: left; }
-        label { display: block; font-size: 10px; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px; margin-left: 15px; }
-
-        input, select {
-            width: 100%; padding: 15px 20px; background: rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 15px;
-            color: white; font-size: 14px; outline: none; transition: 0.3s;
-        }
-        input:focus, select:focus { border-color: var(--primary); background: rgba(0, 194, 255, 0.05); }
-
-        .btn-register {
-            width: 100%; padding: 18px; border: none; border-radius: 15px;
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
-            color: white; font-weight: 800; cursor: pointer; text-transform: uppercase; margin-top: 10px;
+        /* Effet de fond "Glow" */
+        body::before {
+            content: ""; position: absolute; width: 500px; height: 500px;
+            background: radial-gradient(circle, rgba(0, 245, 160, 0.05) 0%, transparent 70%);
+            top: -10%; left: -10%;
         }
 
-        .footer-links { margin-top: 25px; font-size: 12px; color: #666; }
-        .footer-links a { color: var(--primary); text-decoration: none; font-weight: 600; }
+        .auth-container {
+            width: 100%; max-width: 450px; z-index: 10; padding: 20px;
+            animation: fadeIn 1s ease-out;
+        }
+
+        .auth-card {
+            background: var(--card); backdrop-filter: blur(20px);
+            padding: 40px; border-radius: 35px; border: 1px solid var(--border);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+        }
+
+        .logo-area { text-align: center; margin-bottom: 30px; }
+        .logo-area h1 { font-size: 35px; font-weight: 900; letter-spacing: -2px; color: var(--accent); }
+        .logo-area p { font-size: 10px; color: #64748b; text-transform: uppercase; letter-spacing: 2px; font-weight: 700; }
+
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-size: 10px; font-weight: 800; color: var(--primary); margin-bottom: 8px; text-transform: uppercase; }
+        
+        input {
+            width: 100%; background: rgba(0,0,0,0.3); border: 1px solid var(--border);
+            padding: 15px; border-radius: 12px; color: white; font-size: 14px;
+            transition: 0.3s;
+        }
+        input:focus { border-color: var(--primary); outline: none; background: rgba(0,0,0,0.5); box-shadow: 0 0 15px rgba(0, 245, 160, 0.1); }
+
+        .btn-join {
+            width: 100%; background: linear-gradient(90deg, var(--primary), var(--accent));
+            color: #020617; border: none; padding: 18px; border-radius: 12px;
+            font-weight: 900; font-size: 14px; cursor: pointer; margin-top: 10px;
+            transition: 0.3s; text-transform: uppercase;
+        }
+        .btn-join:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0, 245, 160, 0.3); }
+
+        .footer-link { text-align: center; margin-top: 25px; font-size: 12px; color: #64748b; }
+        .footer-link a { color: var(--accent); text-decoration: none; font-weight: 700; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
-    <div class="bg-glow"></div>
-    <div class="register-container">
-        <div class="logo-box">
-            <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org">
-                <circle cx="50" cy="50" r="48" stroke="#00C2FF" stroke-width="4" stroke-dasharray="10 5"/>
-                <path d="M50 25L25 75H35L50 45L65 75H75L50 25Z" fill="#00C2FF"/>
-            </svg>
-            <span class="logo-text">AERIO</span>
+
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="logo-area">
+                <h1>AERIO <span style="color:white;">Alpha</span></h1>
+                <p>Déployez votre empire WiFi</p>
+            </div>
+
+            <form id="regForm"> 
+                <div class="form-group">
+                    <label>Nom complet du Partenaire</label>
+                    <input type="text" placeholder="Ex: Jean Dupont" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Nom de votre Réseau (SSID)</label>
+                    <input type="text" placeholder="Ex: AERIO_FREE_WIFI" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Numéro WhatsApp</label>
+                    <input type="tel" placeholder="Ex: 6XXXXXXXX" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Mot de passe Alpha</label>
+                    <input type="password" placeholder="••••••••" required>
+                </div>
+
+                <button type="submit" class="btn-join" id="submitBtn">
+                    <span id="btnText">Activer mon accès Partenaire 🚀</span>
+                </button>
+            </form>
+
+            <div class="footer-link">
+                Déjà partenaire ? <a href="connexion.html">Connectez-vous ici</a>
+            </div>
         </div>
-
-        <h2>REJOINDRE LE RÉSEAU ALPHA</h2>
-        
-        <form action="/api/register-account" method="POST">
-            <div class="input-group">
-                <label>Nom de l'Espace WiFi</label>
-                <input type="text" name="name" placeholder="Ex: Dakar Cyber-Net" required>
-            </div>
-
-            <!-- SÉLECTEUR DE PAYS PANAFRICAIN -->
-            <div class="input-group">
-                <label>Zone d'Opération (Pays)</label>
-                <select name="country" id="country-select" required>
-                    <option value="CM">🇨🇲 Cameroun (XAF)</option>
-                    <option value="TD">🇹🇩 Tchad (XAF) - Airtel / Moov</option>
-                    <option value="CI">🇨🇮 Côte d'Ivoire (XOF)</option>
-                    <option value="SN">🇸🇳 Sénégal (XOF)</option>
-                    <option value="BJ">🇧🇯 Bénin (XOF)</option>
-                    <option value="BF">🇧🇫 Burkina Faso (XOF)</option>
-                    <option value="TG">🇹🇬 Togo (XOF)</option>
-                    <option value="ML">🇲🇱 Mali (XOF)</option>
-                    <option value="GA">🇬🇦 Gabon (XAF)</option>
-                    <option value="CG">🇨🇬 Congo (XAF)</option>
-                </select>
-            </div>
-
-            <div class="input-group">
-                <label>Email Professionnel</label>
-                <input type="email" name="email" placeholder="votre@email.com" required>
-            </div>
-
-            <div class="input-group">
-                <label>Mot de passe sécurisé</label>
-                <input type="password" name="password" placeholder="••••••••" required>
-            </div>
-
-            <button type="submit" class="btn-register">Initialiser mon compte</button>
-        </form>
-
-        <div class="footer-links">
-            Déjà membre ? <a href="/connexion">Accès Partenaire</a>
-        </div>
+        <p style="text-align: center; font-size: 10px; color: #475569; margin-top: 20px;">
+            En vous inscrivant, vous acceptez les conditions d'exploitation AERIO Alpha.
+        </p>
     </div>
+
+    <script>
+        document.getElementById('regForm').addEventListener('submit', function(e) {
+            e.preventDefault(); // Empêche l'envoi immédiat pour l'effet de transition
+            
+            const btn = document.getElementById('submitBtn');
+            const text = document.getElementById('btnText');
+            
+            // Simulation d'initialisation technologique Alpha
+            btn.style.opacity = "0.7";
+            btn.style.cursor = "wait";
+            text.innerText = "INITIALISATION DU SYSTÈME...";
+            
+            setTimeout(() => {
+                text.innerText = "DÉPLOIEMENT DU DASHBOARD...";
+                setTimeout(() => {
+                    // Redirection finale vers le dashboard
+                    window.location.href = "dashboard.html";
+                }, 1000);
+            }, 1200);
+        });
+    </script>
+
 </body>
 </html>
