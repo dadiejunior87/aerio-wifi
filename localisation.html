@@ -1,15 +1,160 @@
-<script>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AERIO | Radar Satellite Alpha</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #00C2FF; --bg: #020617; --glass: rgba(15, 23, 42, 0.8); --accent: #00F5A0; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        
+        body { 
+            background: var(--bg); 
+            color: white; 
+            min-height: 100vh; 
+            overflow: hidden; 
+            background-image: radial-gradient(circle at center, #0a192f 0%, #020617 100%);
+        }
+
+        /* Barre de navigation */
+        nav { padding: 20px 5%; display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.5); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(0, 194, 255, 0.2); }
+        .back-btn { color: white; text-decoration: none; font-size: 11px; font-weight: 900; letter-spacing: 1px; }
+
+        /* Conteneur Radar */
+        .radar-box {
+            position: relative;
+            width: 90vw;
+            height: 60vh;
+            margin: 20px auto;
+            background: url('https://www.transparenttextures.com/patterns/carbon-fibre.png'), rgba(0,0,0,0.5);
+            border: 2px solid rgba(0, 194, 255, 0.3);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 0 50px rgba(0, 194, 255, 0.1) inset;
+        }
+
+        /* Ligne de balayage du Radar */
+        .sweep {
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            top: -50%;
+            left: -50%;
+            background: conic-gradient(from 0deg, transparent 80%, rgba(0, 194, 255, 0.3) 100%);
+            animation: rotate 4s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        /* Points du réseau (Nodes) */
+        .node {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: var(--primary);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 15px var(--primary);
+            z-index: 10;
+            transition: 0.3s;
+        }
+        .node:hover { transform: scale(1.5); background: var(--accent); box-shadow: 0 0 20px var(--accent); }
+
+        /* Interface de contrôle en bas */
+        .controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            padding: 20px 5%;
+        }
+
+        .stat-card {
+            background: var(--glass);
+            padding: 15px;
+            border-radius: 15px;
+            border: 1px solid rgba(255,255,255,0.05);
+            text-align: center;
+        }
+
+        .stat-val { display: block; font-size: 20px; font-weight: 900; color: var(--primary); }
+        .stat-label { font-size: 9px; color: #64748b; text-transform: uppercase; }
+
+        input {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--primary);
+            padding: 12px;
+            border-radius: 10px;
+            color: white;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .btn-scan {
+            background: var(--primary);
+            color: black;
+            border: none;
+            padding: 12px;
+            width: 100%;
+            border-radius: 10px;
+            font-weight: 900;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        /* Lang Switcher */
+        .lang-switcher { display: flex; gap: 10px; }
+        .lang-btn { cursor: pointer; opacity: 0.5; transition: 0.3s; }
+        .lang-btn.active { opacity: 1; transform: scale(1.2); }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="index.html" class="back-btn" data-key="nav_back">← RETOUR AU COCKPIT ALPHA</a>
+        <div class="lang-switcher">
+            <span id="btn-fr" class="lang-btn" onclick="setLang('fr')">🇫🇷</span>
+            <span id="btn-en" class="lang-btn" onclick="setLang('en')">🇺🇸</span>
+            <span id="btn-pt" class="lang-btn" onclick="setLang('pt')">🇧🇷</span>
+        </div>
+    </nav>
+
+    <div style="padding: 20px 5%;">
+        <h2 id="title" data-key="title_radar" style="font-weight: 900; letter-spacing: -1px;">Scanner Satellite AERIO</h2>
+        <p data-key="status_active" style="font-size: 10px; color: var(--accent); font-weight: 900;">🛰️ PROTOCOLE DE SCAN ALPHA ACTIF</p>
+    </div>
+
+    <div class="radar-box" id="map">
+        <div class="sweep"></div>
+        </div>
+
+    <div class="controls">
+        <div class="stat-card">
+            <input type="text" id="searchInput" placeholder="RECHERCHE DE RÉSEAU...">
+            <button class="btn-scan" data-key="btn_scan" onclick="simulateGPS()">LANCER LE SCAN GPS</button>
+        </div>
+        <div class="stat-card">
+            <span class="stat-label" data-key="data_nodes">NODES CONNECTÉS:</span>
+            <span class="stat-val" id="nodes-count">284</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-label" data-key="data_revenue">ENCOURS:</span>
+            <span class="stat-val" id="revenue-live">12 450 F</span>
+        </div>
+    </div>
+
+    <script>
+        // TON SCRIPT INTÉGRÉ ICI
         const langData = {
             fr: {
                 title_radar: "Scanner Satellite AERIO",
                 status_active: "🛰️ PROTOCOLE DE SCAN ALPHA ACTIF",
                 ph_search: "RECHERCHE DE RÉSEAU DANS VOTRE ZONE...",
                 btn_scan: "LANCER LE SCAN GPS",
-                live_title: "FLUX RÉSEAU LIVE",
-                data_nodes: "NODES CONNECTÉS:",
-                data_signal: "SIGNAL MOYEN:",
-                data_revenue: "ENCOURS:",
                 nav_back: "RETOUR AU COCKPIT ALPHA",
+                data_nodes: "NODES CONNECTÉS:",
+                data_revenue: "ENCOURS:",
                 alert_gps: "🛰️ GPS VERROUILLÉ SUR : ",
                 alert_searching: "Recherche de nœuds AERIO à proximité...",
                 node_active: "📶 RÉSEAU ACTIF",
@@ -19,13 +164,11 @@
             en: {
                 title_radar: "AERIO Satellite Scanner",
                 status_active: "🛰️ ALPHA SCAN PROTOCOL ACTIVE",
-                ph_search: "SEARCHING FOR NETWORK IN YOUR AREA...",
+                ph_search: "SEARCHING FOR NETWORK...",
                 btn_scan: "LAUNCH GPS SCAN",
-                live_title: "LIVE NETWORK STREAM",
-                data_nodes: "CONNECTED NODES:",
-                data_signal: "AVERAGE SIGNAL:",
-                data_revenue: "CURRENT:",
                 nav_back: "BACK TO ALPHA COCKPIT",
+                data_nodes: "CONNECTED NODES:",
+                data_revenue: "CURRENT:",
                 alert_gps: "🛰️ GPS LOCKED ON: ",
                 alert_searching: "Searching for AERIO nodes nearby...",
                 node_active: "📶 NETWORK ACTIVE",
@@ -35,34 +178,16 @@
             pt: {
                 title_radar: "Scanner de Satélite AERIO",
                 status_active: "🛰️ PROTOCOLO DE SCAN ALPHA ATIVO",
-                ph_search: "PESQUISANDO REDE NA SUA ÁREA...",
+                ph_search: "PESQUISANDO REDE...",
                 btn_scan: "INICIAR SCAN GPS",
-                live_title: "FLUXO DE REDE AO VIVO",
-                data_nodes: "NÓS CONECTADOS:",
-                data_signal: "SINAL MÉDIO:",
-                data_revenue: "ATUAL:",
                 nav_back: "VOLTAR AO COCKPIT ALPHA",
+                data_nodes: "NÓS CONECTADOS:",
+                data_revenue: "ATUAL:",
                 alert_gps: "🛰️ GPS BLOQUEADO EM: ",
                 alert_searching: "Procurando nós AERIO próximos...",
                 node_active: "📶 REDE ATIVA",
                 node_quality: "Qualidade: Excelente",
                 node_owner: "Proprietário: Parceiro AERIO Certificado"
-            },
-            es: {
-                title_radar: "Escáner Satelital AERIO",
-                status_active: "🛰️ PROTOCOLO DE ESCANEO ALPHA ACTIVO",
-                ph_search: "BUSCANDO RED EN TU ÁREA...",
-                btn_scan: "INICIAR ESCANEO GPS",
-                live_title: "FLUJO DE RED EN VIVO",
-                data_nodes: "NODOS CONECTADOS:",
-                data_signal: "SEÑAL PROMEDIO:",
-                data_revenue: "ACTUAL:",
-                nav_back: "VOLVER AL COCKPIT ALPHA",
-                alert_gps: "🛰️ GPS BLOQUEADO EN: ",
-                alert_searching: "Buscando nodos AERIO cercanos...",
-                node_active: "📶 RED ACTIVA",
-                node_quality: "Calidad: Excelente",
-                node_owner: "Propietario: Socio AERIO Certificado"
             }
         };
 
@@ -71,35 +196,29 @@
                 const key = el.getAttribute('data-key');
                 if (langData[lang][key]) el.innerText = langData[lang][key];
             });
-            const searchInput = document.getElementById('searchInput');
-            searchInput.placeholder = langData[lang].ph_search;
+            document.getElementById('searchInput').placeholder = langData[lang].ph_search;
             document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
-            const targetBtn = document.getElementById(`btn-${lang}`);
-            if(targetBtn) targetBtn.classList.add('active');
+            document.getElementById(`btn-${lang}`).classList.add('active');
             localStorage.setItem('aerio_lang', lang);
         }
 
         function createNodes() {
             const map = document.getElementById('map');
-            for (let i = 0; i < 8; i++) {
+            for (let i = 0; i < 12; i++) {
                 const node = document.createElement('div');
                 node.className = 'node';
-                node.style.top = Math.random() * 80 + 10 + '%';
-                node.style.left = Math.random() * 80 + 10 + '%';
+                node.style.top = Math.random() * 80 + 5 + '%';
+                node.style.left = Math.random() * 90 + 5 + '%';
                 node.onclick = () => showNode(`Alpha-${Math.floor(Math.random() * 999)}`);
                 map.appendChild(node);
             }
         }
 
-        // ✅ MODIFICATION : Verrouillage sur Maroua
         function simulateGPS() {
             const currentLang = localStorage.getItem('aerio_lang') || 'fr';
-            // Si le champ est vide, on utilise MAROUA par défaut
             const input = document.getElementById('searchInput').value || 'MAROUA, FAR NORTH';
-            const nodesCountDisplay = document.getElementById('nodes-count');
-            
             alert(`${langData[currentLang].alert_gps} ${input}\n${langData[currentLang].alert_searching}`);
-            nodesCountDisplay.innerText = Math.floor(Math.random() * 50) + 150;
+            document.getElementById('nodes-count').innerText = Math.floor(Math.random() * 50) + 150;
         }
 
         function showNode(name) {
@@ -109,18 +228,15 @@
 
         setInterval(() => {
             const rev = document.getElementById('revenue-live');
-            if(rev) {
-                let current = parseInt(rev.innerText.replace(/\s/g, '').replace('F', ''));
-                current += Math.floor(Math.random() * 85);
-                rev.innerText = current.toLocaleString() + " F";
-            }
+            let current = parseInt(rev.innerText.replace(/\s/g, '').replace('F', ''));
+            current += Math.floor(Math.random() * 85);
+            rev.innerText = current.toLocaleString() + " F";
         }, 2500);
 
         window.onload = () => {
             createNodes();
-            const savedLang = localStorage.getItem('aerio_lang') || 'fr';
-            setLang(savedLang);
-            // Log de confirmation dans la console
-            console.log("AERIO Radar : Système initialisé sur le secteur Maroua.");
+            setLang(localStorage.getItem('aerio_lang') || 'fr');
         };
     </script>
+</body>
+</html>
