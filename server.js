@@ -4,12 +4,14 @@ const rateLimit = require("express-rate-limit");
 const fs = require("fs");
 const path = require("path");
 const session = require("express-session");
+const axios = require("axios"); // [NOUVEAU] Pour parler à Moneroo
 const app = express();
 
 // --- CONFIGURATION ÉLITE ---
 const PORT = process.env.PORT || 10000;
 const TICKETS_FILE = path.join(__dirname, "tickets.json");
 const PARTNERS_FILE = path.join(__dirname, "partners.json");
+const MONEROO_API_KEY = "TO_CLE_SECRET_ICI"; // 🔑 À remplacer par ta clé secrète Moneroo
 
 // --- INITIALISATION DES NOYAUX ---
 const initFile = (filePath) => {
@@ -40,7 +42,45 @@ function checkAuth(req, res, next) {
 }
 
 // ==========================================
-// ✅ APIS DE GESTION ALPHA
+// 💳 [NOUVEAU] MOTEUR DE PAIEMENT MONEROO
+// ==========================================
+
+// 1. Générer le lien de paiement pour le client
+app.post("/api/paiement/creer-lien", async (req, res) => {
+    const { amount, duration, partnerID } = req.body;
+
+    try {
+        const response = await axios.post("https://api.moneroo.io/v1/payments/initialize", {
+            amount: amount,
+            currency: "XAF",
+            description: `Accès Wi-Fi ${duration} - Partenaire ${partnerID}`,
+            return_url: `https://${req.get('host')}/paiement-succes?partner=${partnerID}&amt=${amount}`,
+            metadata: {
+                partnerID: partnerID,
+                amount: amount,
+                duration: duration
+            }
+        }, {
+            headers: { 'Authorization': `Bearer ${MONEROO_API_KEY}` }
+        });
+
+        res.json({ url: response.data.data.checkout_url });
+    } catch (error) {
+        console.error("❌ Erreur Moneroo:", error.response ? error.response.data : error.message);
+        res.status(500).json({ error: "Impossible de générer le lien de paiement" });
+    }
+});
+
+// 2. Page de succès (Traitement après paiement)
+app.get("/paiement-succes", (req, res) => {
+    const { partner, amt } = req.query;
+    
+    // Ici on affiche la page de succès qui va appeler une API pour récupérer le code
+    res.sendFile(path.join(__dirname, "public", "paiement-succes.html"));
+});
+
+// ==========================================
+// ✅ APIS DE GESTION ALPHA (PRÉCÉDENT)
 // ==========================================
 
 app.get("/api/my-profile", checkAuth, (req, res) => {
@@ -58,15 +98,16 @@ app.get("/api/my-stats", checkAuth, (req, res) => {
     let taCommissionAdmin = 0;
 
     myTickets.forEach(t => {
-        montantBrutTotal += t.amount; 
-        taCommissionAdmin += (t.amount * 0.15); 
+        if(t.status === "VENDU") { // On ne compte que les vendus pour les stats
+            montantBrutTotal += t.amount; 
+            taCommissionAdmin += (t.amount * 0.15); 
+        }
     });
 
     res.json({
         tickets: myTickets.sort((a,b) => new Date(b.date) - new Date(a.date)),
-        summary: { gain: Math.floor(montantBrutTotal), count: myTickets.length }
+        summary: { gain: Math.floor(montantBrutTotal), count: myTickets.filter(t => t.status === "VENDU").length }
     });
-    console.log(`📊 LOGS : Partenaire ${req.session.partnerID} | Brut: ${montantBrutTotal}F | Com (15%): ${taCommissionAdmin}F`);
 });
 
 app.post("/api/import-tickets-csv", checkAuth, (req, res) => {
@@ -98,19 +139,16 @@ app.post("/api/inscription-partenaire", (req, res) => {
 
     const newID = "AE-" + (partners.length + 1).toString().padStart(4, '0');
 
-    // ✅ ACTIVATION AUTOMATIQUE : LA LICENCE PASSE EN "ACTIVE" DIRECTEMENT [1.2]
     partners.push({ 
         partnerID: newID, 
         name, 
         email, 
         password, 
-        licence: "ACTIVE", // 🚀 S'allume en vert instantanément sur le dashboard
+        licence: "ACTIVE", 
         dateInscription: new Date() 
     });
 
     fs.writeFileSync(PARTNERS_FILE, JSON.stringify(partners, null, 2));
-    
-    // Connexion automatique immédiate pour l'agent
     req.session.partnerID = newID;
     res.redirect("/dashboard");
 });
