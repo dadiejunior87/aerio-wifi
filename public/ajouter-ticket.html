@@ -91,7 +91,7 @@
     </div>
 
     <div class="sidebar">
-        <div class="logo-title">AERIO</div>
+        <div class="logo-title" id="sideLogo">AERIO</div>
         <a href="dashboard.html" class="nav-link">🏠 Dashboard</a>
         <a href="ajouter-tarif.html" class="nav-link">💎 Ajouter un Tarif</a>
         <a href="ajouter-ticket.html" class="nav-link active">🎫 Générer un Pass</a>
@@ -185,15 +185,28 @@
     </div>
 
     <script>
-        // Chargement des tarifs
+        // --- LOGIQUE DE SYNCHRONISATION AVEC LE PROFIL ---
         window.onload = function() {
             const tarifSelect = document.getElementById('tarifSelect');
+            const sideLogo = document.getElementById('sideLogo');
+            
+            // 1. Récupérer la config du profil
+            const config = JSON.parse(localStorage.getItem('aerio_config')) || {};
+            const devise = config.currency || 'XAF'; // Devise dynamique
+            
+            // Mettre à jour le logo avec le nom du réseau
+            if(config.name) {
+                sideLogo.innerText = config.name;
+            }
+
+            // 2. Charger les tarifs avec la bonne devise
             const tarifsEnregistres = JSON.parse(localStorage.getItem('aerio_tarifs')) || [];
             
             tarifsEnregistres.forEach(t => {
                 let option = document.createElement('option');
                 option.value = t.id;
-                option.textContent = `${t.nom} — ${t.prix} XAF`;
+                // On affiche le prix avec la devise choisie dans le profil
+                option.textContent = `${t.nom} — ${t.prix} ${devise}`;
                 tarifSelect.appendChild(option);
             });
         };
@@ -204,7 +217,6 @@
             element.classList.add('active');
             document.getElementById(mode + '-config').classList.add('active');
             
-            // Update circles
             document.querySelectorAll('.circle').forEach(c => c.classList.remove('active'));
             document.getElementById('circ-' + mode).classList.add('active');
         }
@@ -216,7 +228,6 @@
                 return;
             }
 
-            // Animation de déploiement quantique
             const modal = document.getElementById('deployModal');
             const bar = document.getElementById('deployBar');
             modal.style.display = 'flex';
@@ -235,10 +246,11 @@
             }, 30);
         }
 
-        // Simuler l'analyse de fichier
         document.getElementById('fileInput').addEventListener('change', function(e) {
-            const fileName = e.target.files[0].name;
-            document.getElementById('fileInfo').innerHTML = `<span style="color:var(--accent)">✔ ${fileName} analysé</span><br>128 codes détectés.`;
+            if(e.target.files.length > 0) {
+                const fileName = e.target.files[0].name;
+                document.getElementById('fileInfo').innerHTML = `<span style="color:var(--accent)">✔ ${fileName} analysé</span><br>Prêt pour injection.`;
+            }
         });
     </script>
 </body>
