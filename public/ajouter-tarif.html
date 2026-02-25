@@ -3,56 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AERIO | Créateur d'Offres</title>
+    <title>AERIO | Forge de Tarifs</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;900&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #00C2FF; --accent: #00F5A0; --purple: #BC00FF;
-            --bg-deep: #020617; --card-bg: rgba(15, 23, 42, 0.8);
+            --bg-deep: #020617; --card-bg: rgba(15, 23, 42, 0.7);
             --border: rgba(255, 255, 255, 0.08); --sidebar-w: 260px;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        body { background: var(--bg-deep); color: white; display: flex; min-height: 100vh; }
+        body { 
+            background: var(--bg-deep); 
+            color: white; 
+            display: flex; 
+            min-height: 100vh;
+            background-image: radial-gradient(circle at 70% 20%, rgba(188, 0, 255, 0.05), transparent 50%);
+        }
 
         /* --- SIDEBAR SYNC --- */
-        .sidebar { width: var(--sidebar-w); background: #0b0f1a; padding: 30px 15px; height: 100vh; position: fixed; border-right: 1px solid var(--border); }
-        .logo-title { color: var(--primary); font-weight: 900; font-size: 24px; margin-bottom: 40px; display: flex; align-items: center; gap: 10px; }
-        .logo-dot { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; box-shadow: 0 0 15px var(--accent); }
-        .nav-link { padding: 12px; color: #64748b; text-decoration: none; display: block; font-size: 13px; border-radius: 10px; transition: 0.3s; margin-bottom: 5px; }
-        .nav-link.active { background: rgba(0, 194, 255, 0.1); color: var(--primary); font-weight: 600; }
-        .nav-link:hover { color: white; background: rgba(255,255,255,0.05); }
+        .sidebar { width: var(--sidebar-w); background: #0b0f1a; padding: 30px 20px; height: 100vh; position: fixed; border-right: 1px solid var(--border); z-index: 100; }
+        .logo-title { color: var(--primary); font-weight: 900; font-size: 24px; margin-bottom: 40px; display: flex; align-items: center; gap: 12px; letter-spacing: -1px; }
+        .logo-dot { width: 10px; height: 10px; background: var(--accent); border-radius: 50%; box-shadow: 0 0 15px var(--accent); animation: pulse 2s infinite; }
+        
+        .nav-link { padding: 14px 18px; color: #64748b; text-decoration: none; display: flex; align-items: center; gap: 12px; font-size: 13px; border-radius: 12px; transition: 0.3s; margin-bottom: 8px; }
+        .nav-link:hover { background: rgba(255,255,255,0.03); color: white; }
+        .nav-link.active { background: linear-gradient(90deg, rgba(0, 194, 255, 0.15), transparent); color: var(--primary); font-weight: 600; border-left: 3px solid var(--primary); }
 
         /* --- MAIN CONTENT --- */
         .main-content { margin-left: var(--sidebar-w); flex: 1; padding: 40px; }
-        .config-wrapper { max-width: 900px; margin: 0 auto; }
-        .section-header { margin-bottom: 35px; }
-        .section-header h1 { font-size: 30px; font-weight: 900; }
+        .config-wrapper { max-width: 850px; margin: 0 auto; animation: fadeInUp 0.8s ease; }
+        
+        .section-header { margin-bottom: 40px; }
+        .section-header h1 { font-size: 32px; font-weight: 900; letter-spacing: -1px; text-transform: uppercase; }
 
         /* --- CONFIG CARD --- */
-        .config-card { background: var(--card-bg); border-radius: 35px; border: 1px solid var(--border); padding: 40px; backdrop-filter: blur(20px); position: relative; }
+        .config-card { 
+            background: var(--card-bg); border-radius: 35px; border: 1px solid var(--border); 
+            padding: 45px; backdrop-filter: blur(25px); position: relative;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+        }
+        
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
-        .input-box { margin-bottom: 25px; }
-        label { font-size: 10px; font-weight: 900; color: #64748b; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 12px; display: block; }
+        .input-box { margin-bottom: 10px; }
+        
+        label { font-size: 10px; font-weight: 800; color: var(--primary); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 15px; display: block; }
         
         input, select { 
-            width: 100%; background: rgba(2, 6, 23, 0.9); border: 1px solid var(--border); 
-            padding: 18px; border-radius: 16px; color: white; font-size: 14px; outline: none; transition: 0.3s;
+            width: 100%; background: rgba(0, 0, 0, 0.4); border: 1px solid var(--border); 
+            padding: 18px; border-radius: 16px; color: white; font-size: 14px; outline: none; transition: 0.4s;
         }
-        input:focus, select:focus { border-color: var(--primary); box-shadow: 0 0 15px rgba(0, 194, 255, 0.1); }
+        input:focus, select:focus { border-color: var(--primary); background: rgba(0, 194, 255, 0.05); box-shadow: 0 0 20px rgba(0, 194, 255, 0.1); }
 
+        /* --- LIVE PREVIEW --- */
         .live-preview {
-            background: linear-gradient(135deg, rgba(188, 0, 255, 0.05) 0%, rgba(0, 194, 255, 0.05) 100%);
-            border: 1px solid var(--border); border-radius: 20px; padding: 25px; margin-top: 30px;
-            display: flex; align-items: center; justify-content: space-between; border-left: 4px solid var(--accent);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.02), rgba(0, 194, 255, 0.05));
+            border: 1px solid var(--border); border-radius: 22px; padding: 30px; margin-top: 40px;
+            display: flex; align-items: center; justify-content: space-between;
+            position: relative; overflow: hidden;
         }
+        .live-preview::before {
+            content: ""; position: absolute; left: 0; top: 0; width: 4px; height: 100%; background: var(--accent);
+        }
+
+        .preview-label { font-size: 9px; color: #64748b; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; }
+        .preview-title { color: white; font-size: 18px; font-weight: 700; margin-top: 4px; transition: 0.3s; }
+        .preview-price { font-size: 28px; font-weight: 900; color: var(--accent); text-shadow: 0 0 15px rgba(0, 245, 160, 0.3); }
 
         .btn-save { 
-            width: 100%; padding: 20px; border-radius: 18px; border: none; background: var(--primary); 
-            color: #020617; font-weight: 900; font-size: 14px; text-transform: uppercase; 
-            cursor: pointer; margin-top: 30px; transition: 0.3s; letter-spacing: 1px;
+            width: 100%; padding: 22px; border-radius: 20px; border: none; 
+            background: linear-gradient(135deg, var(--primary), var(--purple));
+            color: white; font-weight: 900; font-size: 14px; text-transform: uppercase; 
+            cursor: pointer; margin-top: 35px; transition: 0.4s; letter-spacing: 2px;
         }
-        .btn-save:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(0, 194, 255, 0.4); }
+        .btn-save:hover { transform: translateY(-4px); box-shadow: 0 15px 40px rgba(188, 0, 255, 0.3); }
+
+        /* --- ANIMATIONS --- */
+        @keyframes pulse { 0% { opacity: 0.5; transform: scale(1); } 50% { opacity: 1; transform: scale(1.2); } 100% { opacity: 0.5; transform: scale(1); } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
     </style>
 </head>
 <body>
@@ -69,71 +98,78 @@
     <div class="main-content">
         <div class="config-wrapper">
             <div class="section-header">
-                <span style="color:var(--primary); font-size:10px; font-weight:900; letter-spacing:3px;">FORGE DE PRIX</span>
+                <p style="color:var(--primary); font-size:10px; font-weight:900; letter-spacing:4px; margin-bottom:10px;">UNITÉ DE CONFIGURATION</p>
                 <h1>Nouveau <span style="color:var(--primary)">Tarif</span> Alpha</h1>
             </div>
 
             <div class="config-card">
                 <div class="form-grid">
                     <div class="input-box">
-                        <label>Nom de l'offre commerciale</label>
-                        <input type="text" id="nomOffre" placeholder="Saisir le nom (ex: Pack Silver)" oninput="updatePreview()">
+                        <label>Nom de l'offre</label>
+                        <input type="text" id="nomOffre" placeholder="ex: Pass Gaming Ultra" oninput="updatePreview()">
                     </div>
                     <div class="input-box">
-                        <label>Prix de vente (XAF)</label>
-                        <input type="number" id="prixOffre" placeholder="0" oninput="updatePreview()">
+                        <label>Valeur (XAF)</label>
+                        <input type="number" id="prixOffre" placeholder="500" oninput="updatePreview()">
                     </div>
                     
                     <div class="input-box">
-                        <label>Durée du Ticket</label>
+                        <label>Fenêtre Temporelle</label>
                         <select id="dureeOffre" onchange="updatePreview()">
-                            <option value="" disabled selected>-- Définir la durée --</option>
+                            <option value="" disabled selected>-- Durée du flux --</option>
                             <option value="30 min">30 Minutes</option>
                             <option value="1 Heure">1 Heure</option>
-                            <option value="2 Heures">2 Heures</option>
-                            <option value="10 Heures">10 Heures</option>
+                            <option value="5 Heures">5 Heures</option>
+                            <option value="12 Heures">12 Heures</option>
                             <option value="24 Heures">24 Heures</option>
-                            <option value="7 Jours">7 Jours</option>
+                            <option value="1 Mois">1 Mois</option>
                         </select>
                     </div>
 
                     <div class="input-box">
-                        <label>Nom du Profil Mikhmon (Vitesse)</label>
+                        <label>Profil de Vitesse (MikroTik)</label>
                         <select id="profilOffre">
-                            <option value="default">Profil_Vitesse_Standard</option>
-                            <option value="premium">Profil_Vitesse_Boost</option>
-                            <option value="gaming">Profil_Vitesse_Gaming</option>
+                            <option value="standard">Profil_A_Standard</option>
+                            <option value="boost">Profil_B_Turbo</option>
+                            <option value="unlimited">Profil_X_Illimité</option>
                         </select>
                     </div>
                 </div>
 
                 <div class="live-preview">
                     <div>
-                        <p style="font-size: 10px; color: #64748b; font-weight: 900;">PRÉVISUALISATION DU TICKET</p>
-                        <h3 id="preview-text" style="color: var(--accent); margin-top: 5px;">Configuration en cours...</h3>
+                        <p class="preview-label">Flux de sortie estimé</p>
+                        <h3 id="preview-text" class="preview-title">En attente de données...</h3>
                     </div>
                     <div style="text-align: right;">
-                        <span id="preview-price" style="font-size: 24px; font-weight: 900; color: white;">0 XAF</span>
+                        <span id="preview-price" class="preview-price">0 <small style="font-size: 12px;">XAF</small></span>
                     </div>
                 </div>
 
-                <button class="btn-save" onclick="saveTarif()">DÉPLOYER L'OFFRE SUR LA GRILLE</button>
+                <button class="btn-save" onclick="saveTarif()">DÉPLOYER L'UNITÉ DE PRIX</button>
             </div>
         </div>
     </div>
 
     <script>
-        // Met à jour l'aperçu visuel quand on tape
         function updatePreview() {
             const nom = document.getElementById('nomOffre').value;
             const prix = document.getElementById('prixOffre').value;
             const duree = document.getElementById('dureeOffre').value;
 
+            const previewText = document.getElementById('preview-text');
+            const previewPrice = document.getElementById('preview-price');
+
             if(nom || duree) {
-                document.getElementById('preview-text').innerText = (nom || "Forfait") + " (" + (duree || "Durée non fixée") + ")";
+                previewText.innerText = (nom || "Nouveau Forfait") + " — [" + (duree || "∞") + "]";
+                previewText.style.color = "white";
+            } else {
+                previewText.innerText = "En attente de données...";
+                previewText.style.color = "rgba(255,255,255,0.3)";
             }
+
             if(prix) {
-                document.getElementById('preview-price').innerText = prix + " XAF";
+                previewPrice.innerHTML = prix + ' <small style="font-size: 12px;">XAF</small>';
             }
         }
 
@@ -144,11 +180,10 @@
             const profil = document.getElementById('profilOffre').value;
 
             if(!nom || !prix || !duree) {
-                alert("⚠️ Erreur : Veuillez remplir le nom, le prix et la durée.");
+                alert("🔴 PROTOCOLE INCOMPLET : Veuillez renseigner tous les paramètres critiques.");
                 return;
             }
 
-            // Création de l'objet tarif
             const nouveauTarif = {
                 id: Date.now(),
                 nom: nom,
@@ -157,12 +192,12 @@
                 profil: profil
             };
 
-            // Sauvegarde locale
             let listeTarifs = JSON.parse(localStorage.getItem('aerio_tarifs')) || [];
             listeTarifs.push(nouveauTarif);
             localStorage.setItem('aerio_tarifs', JSON.stringify(listeTarifs));
 
-            alert("🚀 DÉPLOIEMENT RÉUSSI : L'offre " + nom + " est active !");
+            // Petit effet sonore visuel (optionnel via l'alerte)
+            alert("⚡ SYNCHRONISATION : L'unité " + nom + " a été ajoutée au registre Alpha.");
             window.location.href = 'liste-tarif.html';
         }
     </script>
