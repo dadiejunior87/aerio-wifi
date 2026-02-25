@@ -14,25 +14,23 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        body { background-color: var(--bg-deep); display: flex; color: white; }
+        body { background-color: var(--bg-deep); display: flex; color: white; min-height: 100vh; }
 
-        /* --- SIDEBAR (Réutilisation du style exact) --- */
+        /* --- SIDEBAR --- */
         .sidebar {
             width: 300px; background: #111418; padding: 30px 15px; height: 100vh;
             position: fixed; border-right: 1px solid var(--border); display: flex; flex-direction: column;
         }
-
         .nav-button {
             background: var(--card-bg); border: 1px solid var(--border);
             padding: 14px 18px; border-radius: 12px; display: flex; align-items: center;
-            text-decoration: none; color: #d1d5db; font-size: 13px; margin-bottom: 8px;
+            text-decoration: none; color: #d1d5db; font-size: 13px; margin-bottom: 8px; transition: 0.3s;
         }
-
+        .nav-button:hover { background: rgba(0, 194, 255, 0.05); }
         .nav-button.active { border-left: 4px solid var(--primary); background: rgba(0, 194, 255, 0.1); color: var(--primary); }
 
         /* --- ZONE CONTENU --- */
         .content { margin-left: 300px; flex: 1; padding: 40px; }
-
         .profile-container { max-width: 900px; margin: 0 auto; }
 
         .profile-header {
@@ -47,38 +45,34 @@
         }
 
         .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-
         .info-card {
             background: var(--card-bg); padding: 25px; border-radius: 20px;
             border: 1px solid var(--border); position: relative;
         }
-
         .info-card label {
             display: block; font-size: 10px; font-weight: 900; color: var(--text-dim);
             text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px;
         }
-
-        .info-card input {
+        .info-card input, .info-card select {
             background: transparent; border: none; color: white; font-size: 16px;
             font-weight: 600; width: 100%; outline: none;
         }
+        select option { background: var(--bg-deep); }
 
         .btn-update {
             margin-top: 30px; background: var(--primary); color: var(--bg-deep);
-            border: none; padding: 15px 40px; border-radius: 15px; font-weight: 900;
-            cursor: pointer; transition: 0.3s;
+            border: none; padding: 18px 40px; border-radius: 15px; font-weight: 900;
+            cursor: pointer; transition: 0.3s; width: 100%;
         }
-
-        .btn-update:hover { transform: scale(1.02); box-shadow: 0 10px 20px rgba(0, 194, 255, 0.3); }
-
+        .btn-update:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0, 194, 255, 0.3); }
     </style>
 </head>
 <body>
 
     <div class="sidebar">
-        <div style="color:var(--primary); font-weight:900; font-size:24px; margin-bottom:40px; padding-left:10px;">AERIO</div>
+        <div style="color:var(--primary); font-weight:900; font-size:24px; margin-bottom:40px; padding-left:10px;">🛰️ AERIO</div>
         <a href="dashboard.html" class="nav-button">🏠 Tableau de Bord</a>
-        <a href="statistiques-wifi.html" class="nav-button">📊 Statistiques</a>
+        <a href="rapports.html" class="nav-button">📊 Statistiques</a>
         <a href="profil.html" class="nav-button active">👤 Mon Profil</a>
         <a href="support.html" class="nav-button">🎧 Support Client</a>
     </div>
@@ -86,44 +80,76 @@
     <div class="content">
         <div class="profile-container">
             <p style="color: var(--primary); font-size: 10px; font-weight: 900; letter-spacing: 3px;">IDENTITÉ PARTENAIRE</p>
-            <h1 style="font-size: 36px; font-weight: 900; margin-bottom: 30px;">Mon <span style="color:var(--primary)">Profil</span></h1>
+            <h1 style="font-size: 36px; font-weight: 900; margin-bottom: 30px;">Configuration <span style="color:var(--primary)">Profil</span></h1>
 
             <div class="profile-header">
                 <div class="avatar-box">👤</div>
                 <div>
-                    <h2 style="font-size: 24px;">Utilisateur Alpha</h2>
+                    <h2 id="display-name" style="font-size: 24px;">Utilisateur Alpha</h2>
                     <p style="color: var(--text-dim); font-size: 14px;">ID Partenaire: #AE-2026-001</p>
                     <span style="background: rgba(0, 245, 160, 0.1); color: #00F5A0; font-size: 10px; padding: 4px 10px; border-radius: 20px; font-weight: 900;">COMPTE VÉRIFIÉ</span>
                 </div>
             </div>
 
-            <form class="info-grid">
+            <form id="profileForm" class="info-grid">
                 <div class="info-card">
-                    <label>Nom complet</label>
-                    <input type="text" value="Utilisateur Alpha" readonly>
+                    <label>Nom complet du Réseau</label>
+                    <input type="text" id="netName" placeholder="Votre nom ou entreprise">
                 </div>
                 <div class="info-card">
-                    <label>Adresse E-mail</label>
-                    <input type="email" value="partenaire@aerio.com" readonly>
+                    <label>Devise de Vente</label>
+                    <select id="currency">
+                        <option value="XAF">Franc CFA (XAF)</option>
+                        <option value="EUR">Euro (€)</option>
+                        <option value="USD">Dollar ($)</option>
+                    </select>
                 </div>
                 <div class="info-card">
-                    <label>Numéro de téléphone</label>
-                    <input type="text" value="+237 6XX XXX XXX">
+                    <label>Numéro WhatsApp</label>
+                    <input type="text" id="netPhone" placeholder="+237 6XX XXX XXX">
                 </div>
                 <div class="info-card">
                     <label>Localisation</label>
-                    <input type="text" value="Maroua, Cameroun">
+                    <input type="text" id="netLoc" placeholder="Ville, Pays">
                 </div>
                 <div class="info-card" style="grid-column: span 2;">
-                    <label>Mot de passe</label>
-                    <input type="password" value="********">
-                    <span style="position:absolute; right:20px; top:40px; color:var(--primary); font-size:12px; cursor:pointer;">Modifier</span>
+                    <label>Mot de passe Administration</label>
+                    <input type="password" id="pass" value="********">
                 </div>
+                
+                <button type="submit" class="btn-update">SAUVEGARDER LES PARAMÈTRES 🛰️</button>
             </form>
-
-            <button class="btn-update">ENREGISTRER LES MODIFICATIONS</button>
         </div>
     </div>
 
+    <script>
+        const form = document.getElementById('profileForm');
+
+        // CHARGER LES DONNÉES
+        window.onload = () => {
+            const config = JSON.parse(localStorage.getItem('aerio_config')) || {};
+            if(config.name) {
+                document.getElementById('netName').value = config.name;
+                document.getElementById('display-name').innerText = config.name;
+            }
+            if(config.currency) document.getElementById('currency').value = config.currency;
+            if(config.phone) document.getElementById('netPhone').value = config.phone;
+            if(config.loc) document.getElementById('netLoc').value = config.loc;
+        };
+
+        // ENREGISTRER
+        form.onsubmit = (e) => {
+            e.preventDefault();
+            const config = {
+                name: document.getElementById('netName').value,
+                currency: document.getElementById('currency').value,
+                phone: document.getElementById('netPhone').value,
+                loc: document.getElementById('netLoc').value
+            };
+            localStorage.setItem('aerio_config', JSON.stringify(config));
+            document.getElementById('display-name').innerText = config.name;
+            alert("🚀 Profil AERIO mis à jour !");
+        };
+    </script>
 </body>
 </html>
