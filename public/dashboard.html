@@ -40,28 +40,27 @@
         .nav-button.active { border-left: 4px solid var(--primary); background: rgba(0, 194, 255, 0.1); color: var(--primary); font-weight: 600; }
         .nav-button i { margin-right: 10px; font-style: normal; font-size: 16px; }
 
-        /* --- TOP BAR & NOTIFICATIONS --- */
+        /* ✅ SÉLECTEUR DE LANGUE DANS LA TOP BAR */
         .top-bar {
-            display: flex; justify-content: flex-end; align-items: center;
+            display: flex; justify-content: flex-end; align-items: center; gap: 20px;
             padding: 20px 40px; position: sticky; top: 0; z-index: 90;
             background: rgba(2, 6, 23, 0.8); backdrop-filter: blur(10px);
         }
+        .lang-switcher { display: flex; gap: 5px; background: rgba(255,255,255,0.05); padding: 4px; border-radius: 10px; }
+        .lang-btn { background: none; border: none; color: #475569; font-size: 9px; font-weight: 900; cursor: pointer; padding: 5px 8px; border-radius: 6px; }
+        .lang-btn.active { background: var(--primary); color: #020617; }
 
         .notif-wrapper { position: relative; }
-        
         .notif-trigger {
             background: var(--card-bg); border: 1px solid var(--border);
             width: 45px; height: 45px; border-radius: 12px;
             display: flex; align-items: center; justify-content: center;
             cursor: pointer; transition: 0.3s; position: relative; font-size: 20px;
         }
-        .notif-trigger:hover { border-color: var(--primary); background: rgba(0, 194, 255, 0.1); }
-        
         .notif-badge {
             position: absolute; top: -5px; right: -5px;
             background: #ff4b4b; color: white; font-size: 9px; font-weight: 900;
-            padding: 2px 6px; border-radius: 50%; border: 2px solid var(--bg-deep);
-            display: none; 
+            padding: 2px 6px; border-radius: 50%; border: 2px solid var(--bg-deep); display: none; 
         }
 
         .notif-dropdown {
@@ -71,21 +70,17 @@
             box-shadow: 0 20px 40px rgba(0,0,0,0.6); z-index: 1000;
         }
         .notif-dropdown.active { display: block; animation: slideDown 0.3s ease; }
-        
         @keyframes slideDown { from { opacity:0; transform: translateY(-10px); } to { opacity:1; transform: translateY(0); } }
-
-        .notif-header { font-size: 11px; font-weight: 900; color: #64748b; margin-bottom: 15px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
-        .notif-empty-state { padding: 20px; text-align: center; color: #475569; font-size: 11px; }
 
         /* --- CONTENU --- */
         .content { margin-left: var(--sidebar-w); flex: 1; padding: 10px 40px 40px 40px; }
-        .top-nav { display: flex; gap: 15px; margin-bottom: 40px; }
+        .top-nav { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 40px; }
         .action-card {
             background: #0f172a; border: 1px solid var(--border); border-radius: 20px;
             padding: 15px 20px; display: flex; align-items: center; gap: 15px;
-            text-decoration: none; transition: 0.4s; flex: 1;
+            text-decoration: none; transition: 0.4s;
         }
-        .action-card:hover { transform: translateY(-5px); border-color: var(--primary); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .action-card:hover { transform: translateY(-5px); border-color: var(--primary); }
         .icon-box { 
             width: 45px; height: 45px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 20px;
             background: rgba(255,255,255,0.03); border: 1px solid var(--border);
@@ -95,7 +90,6 @@
         .smart-banner {
             background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
             border-radius: 25px; padding: 25px; margin-bottom: 35px; display: flex; justify-content: space-between; align-items: center;
-            box-shadow: 0 15px 35px rgba(99, 102, 241, 0.25);
         }
 
         /* --- STATS --- */
@@ -111,7 +105,14 @@
             padding: 25px 15px; border-radius: 25px; border: 1px solid var(--border); 
             text-align: center; background: rgba(255,255,255,0.02); transition: 0.3s;
         }
-        .mini-card:hover { background: rgba(255,255,255,0.05); transform: translateY(-5px); }
+
+        @media (max-width: 1024px) {
+            .sidebar { width: 80px; }
+            .sidebar .logo-title, .sidebar .group-label, .sidebar .nav-button span { display: none; }
+            .content { margin-left: 80px; }
+            .mini-grid { grid-template-columns: 1fr 1fr; }
+            .top-nav { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
@@ -119,34 +120,40 @@
     <div class="sidebar">
         <div class="logo-title">AERIO</div>
         
-        <div class="group-label">Pilotage Réseaux</div>
-        <a href="dashboard.html" class="nav-button active"><i>🏠</i> Tableau de bord</a>
-        <a href="ajouter-wifi.html" class="nav-button"><i>➕</i> Configurer un WiFi</a>
-        <a href="liste-wifi.html" class="nav-button"><i>📡</i> Mes Zones WiFi</a>
-        <a href="statistiques-wifi.html" class="nav-button"><i>📊</i> Analyse de Flotte</a>
+        <div class="group-label" data-key="grp_pilot">Pilotage Réseaux</div>
+        <a href="dashboard.html" class="nav-button active"><i>🏠</i> <span data-key="nav_dash">Tableau de bord</span></a>
+        <a href="ajouter-wifi.html" class="nav-button"><i>➕</i> <span data-key="nav_add_wifi">Configurer un WiFi</span></a>
+        <a href="liste-wifi.html" class="nav-button"><i>📡</i> <span data-key="nav_list_wifi">Mes Zones WiFi</span></a>
+        <a href="statistiques-wifi.html" class="nav-button"><i>📊</i> <span data-key="nav_stats_wifi">Analyse de Flotte</span></a>
 
-        <div class="group-label">Offres & Accès</div>
-        <a href="ajouter-tarif.html" class="nav-button"><i>💎</i> Créer un Tarif</a>
-        <a href="liste-tarif.html" class="nav-button"><i>📜</i> Ma Grille Tarifaire</a>
-        <a href="ajouter-ticket.html" class="nav-button"><i>🎫</i> Générer un Pass</a>
-        <a href="liste-tickets.html" class="nav-button"><i>🔑</i> Registre des Accès</a>
+        <div class="group-label" data-key="grp_offers">Offres & Accès</div>
+        <a href="ajouter-tarif.html" class="nav-button"><i>💎</i> <span data-key="nav_add_price">Créer un Tarif</span></a>
+        <a href="liste-tarif.html" class="nav-button"><i>📜</i> <span data-key="nav_list_price">Ma Grille Tarifaire</span></a>
+        <a href="ajouter-ticket.html" class="nav-button"><i>🎫</i> <span data-key="nav_gen_pass">Générer un Pass</span></a>
+        <a href="liste-tickets.html" class="nav-button"><i>🔑</i> <span data-key="nav_list_pass">Registre des Accès</span></a>
 
-        <div class="group-label">Gestion Financière</div>
-        <a href="comptabilite.html" class="nav-button"><i>💰</i> Flux de Trésorerie</a>
-        <a href="mes-recettes.html" class="nav-button"><i>📈</i> Historique Recettes</a>
-        <a href="mes-retraits.html" class="nav-button"><i>📤</i> Journal d'Extractions</a>
+        <div class="group-label" data-key="grp_finance">Gestion Financière</div>
+        <a href="comptabilite.html" class="nav-button"><i>💰</i> <span data-key="nav_cash">Flux de Trésorerie</span></a>
+        <a href="mes-recettes.html" class="nav-button"><i>📈</i> <span data-key="nav_revenue">Historique Recettes</span></a>
+        <a href="mes-retraits.html" class="nav-button"><i>📤</i> <span data-key="nav_withdraw">Journal d'Extractions</span></a>
     </div>
 
     <main style="flex:1; display:flex; flex-direction:column;">
         <div class="top-bar">
+            <div class="lang-switcher">
+                <button onclick="setLang('fr')" id="btn-fr" class="lang-btn active">FR</button>
+                <button onclick="setLang('en')" id="btn-en" class="lang-btn">EN</button>
+                <button onclick="setLang('pt')" id="btn-pt" class="lang-btn">PT</button>
+                <button onclick="setLang('es')" id="btn-es" class="lang-btn">ES</button>
+            </div>
+
             <div class="notif-wrapper">
                 <div class="notif-trigger" onclick="toggleNotifs()">
                     🔔 <span class="notif-badge">0</span>
                 </div>
-                
                 <div class="notif-dropdown" id="notifDropdown">
-                    <div class="notif-header">NOTIFICATIONS RÉCENTES</div>
-                    <div class="notif-empty-state">
+                    <div class="notif-header" data-key="notif_head">NOTIFICATIONS RÉCENTES</div>
+                    <div class="notif-empty-state" data-key="notif_empty">
                         ✨ Bienvenue ! Aucune notification pour le moment.
                     </div>
                 </div>
@@ -157,57 +164,57 @@
             <div class="top-nav">
                 <a href="profil.html" class="action-card">
                     <div class="icon-box" style="box-shadow: 0 0 20px rgba(188, 0, 255, 0.4);">👤</div>
-                    <div><b style="font-size: 11px; display:block; letter-spacing:1px;">MON COMPTE</b><span style="font-size: 10px; color:#64748b;">Gérer mon profil Alpha</span></div>
+                    <div><b style="font-size: 11px; display:block; letter-spacing:1px;" data-key="card_profile">MON COMPTE</b><span style="font-size: 10px; color:#64748b;" data-key="card_profile_sub">Gérer mon profil Alpha</span></div>
                 </a>
                 
                 <a href="support.html" class="action-card">
                     <div class="icon-box" style="box-shadow: 0 0 20px rgba(0, 245, 160, 0.4);">💬</div>
-                    <div><b style="font-size: 11px; display:block; letter-spacing:1px;">ASSISTANCE LIVE</b><span style="font-size: 10px; color:#64748b;">IA de nouvelle génération</span></div>
+                    <div><b style="font-size: 11px; display:block; letter-spacing:1px;" data-key="card_support">ASSISTANCE LIVE</b><span style="font-size: 10px; color:#64748b;" data-key="card_support_sub">IA de nouvelle génération</span></div>
                 </a>
 
                 <a href="docs.html" class="action-card">
                     <div class="icon-box" style="box-shadow: 0 0 20px rgba(0, 194, 255, 0.4);">📚</div>
-                    <div><b style="font-size: 11px; display:block; letter-spacing:1px;">ACADÉMIE</b><span style="font-size: 10px; color:#64748b;">Guides & Tutoriels Alpha</span></div>
+                    <div><b style="font-size: 11px; display:block; letter-spacing:1px;" data-key="card_academy">ACADÉMIE</b><span style="font-size: 10px; color:#64748b;" data-key="card_academy_sub">Guides & Tutoriels Alpha</span></div>
                 </a>
             </div>
 
             <div class="smart-banner">
                 <div>
                     <span style="background:white; color:#6366f1; padding:4px 12px; border-radius:20px; font-size:10px; font-weight:900;">ALPHA IA</span>
-                    <p style="margin-top:12px; font-weight:600; font-size:15px; letter-spacing:-0.3px;">Bienvenue, Chef de Projet. Le système est prêt à monitorer vos premiers revenus.</p>
+                    <p style="margin-top:12px; font-weight:600; font-size:15px; letter-spacing:-0.3px;" id="welcome-msg">Bienvenue, Chef de Projet. Le système est prêt à monitorer vos premiers revenus.</p>
                 </div>
             </div>
 
             <div class="main-stats">
                 <div class="card-main">
                     <div class="icon-box" style="margin: 0 auto 15px; color: var(--primary); background: rgba(0,194,255,0.05);">💳</div>
-                    <p style="font-size: 11px; font-weight: 900; color: #64748b; letter-spacing: 1px;">SOLDE DISPONIBLE</p>
+                    <p style="font-size: 11px; font-weight: 900; color: #64748b; letter-spacing: 1px;" data-key="stat_balance">SOLDE DISPONIBLE</p>
                     <div class="val-large">0 <small style="font-size: 18px; color: var(--primary);">XAF</small></div>
-                    <p style="font-size: 10px; color: #475569;">Aucun retrait en attente</p>
+                    <p style="font-size: 10px; color: #475569;" data-key="stat_pending">Aucun retrait en attente</p>
                 </div>
                 <div class="card-main">
                     <div class="icon-box" style="margin: 0 auto 15px; color: var(--accent); background: rgba(0,245,160,0.05);">💎</div>
-                    <p style="font-size: 11px; font-weight: 900; color: #64748b; letter-spacing: 1px;">CHIFFRE D'AFFAIRES GLOBAL</p>
+                    <p style="font-size: 11px; font-weight: 900; color: #64748b; letter-spacing: 1px;" data-key="stat_total">CHIFFRE D'AFFAIRES GLOBAL</p>
                     <div class="val-large">0 <small style="font-size: 18px; color: var(--accent);">XAF</small></div>
-                    <p style="font-size: 10px; color: #475569;">Performance du réseau : 0%</p>
+                    <p style="font-size: 10px; color: #475569;" data-key="stat_perf">Performance du réseau : 0%</p>
                 </div>
             </div>
 
             <div class="mini-grid">
                 <div class="mini-card" style="border-bottom: 4px solid #FFCC00;">
-                    <p style="font-size: 9px; font-weight: 900; color: #64748b; margin-bottom: 10px;">PASS VENDUS</p>
+                    <p style="font-size: 9px; font-weight: 900; color: #64748b; margin-bottom: 10px;" data-key="mini_passes">PASS VENDUS</p>
                     <div style="font-size: 28px; font-weight: 900;">0</div>
                 </div>
                 <div class="mini-card" style="border-bottom: 4px solid #FF4B4B;">
-                    <p style="font-size: 9px; font-weight: 900; color: #64748b; margin-bottom: 10px;">EXTRACTIONS</p>
+                    <p style="font-size: 9px; font-weight: 900; color: #64748b; margin-bottom: 10px;" data-key="mini_withdrawals">EXTRACTIONS</p>
                     <div style="font-size: 28px; font-weight: 900;">0</div>
                 </div>
                 <div class="mini-card" style="border-bottom: 4px solid #BC00FF;">
-                    <p style="font-size: 9px; font-weight: 900; color: #64748b; margin-bottom: 10px;">RECETTE JOUR</p>
+                    <p style="font-size: 9px; font-weight: 900; color: #64748b; margin-bottom: 10px;" data-key="mini_daily">RECETTE JOUR</p>
                     <div style="font-size: 28px; font-weight: 900;">0</div>
                 </div>
                 <div class="mini-card" style="border-bottom: 4px solid #00F5A0;">
-                    <p style="font-size: 9px; font-weight: 900; color: #64748b; margin-bottom: 10px;">AFFLUENCE LIVE</p>
+                    <p style="font-size: 9px; font-weight: 900; color: #64748b; margin-bottom: 10px;" data-key="mini_live">AFFLUENCE LIVE</p>
                     <div style="font-size: 28px; font-weight: 900;">0</div>
                 </div>
             </div>
@@ -215,19 +222,75 @@
     </main>
 
     <script>
+        const langData = {
+            fr: {
+                grp_pilot: "Pilotage Réseaux", nav_dash: "Tableau de bord", nav_add_wifi: "Configurer un WiFi", nav_list_wifi: "Mes Zones WiFi", nav_stats_wifi: "Analyse de Flotte",
+                grp_offers: "Offres & Accès", nav_add_price: "Créer un Tarif", nav_list_price: "Ma Grille Tarifaire", nav_gen_pass: "Générer un Pass", nav_list_pass: "Registre des Accès",
+                grp_finance: "Gestion Financière", nav_cash: "Flux de Trésorerie", nav_revenue: "Historique Recettes", nav_withdraw: "Journal d'Extractions",
+                notif_head: "NOTIFICATIONS RÉCENTES", notif_empty: "✨ Bienvenue ! Aucune notification pour le moment.",
+                card_profile: "MON COMPTE", card_profile_sub: "Gérer mon profil Alpha", card_support: "ASSISTANCE LIVE", card_support_sub: "IA de nouvelle génération", card_academy: "ACADÉMIE", card_academy_sub: "Guides & Tutoriels Alpha",
+                welcome: "Bienvenue, Chef de Projet à Maroua. Le système est prêt à monitorer vos revenus.",
+                stat_balance: "SOLDE DISPONIBLE", stat_pending: "Aucun retrait en attente", stat_total: "CHIFFRE D'AFFAIRES GLOBAL", stat_perf: "Performance du réseau : 0%",
+                mini_passes: "PASS VENDUS", mini_withdrawals: "EXTRACTIONS", mini_daily: "RECETTE JOUR", mini_live: "AFFLUENCE LIVE"
+            },
+            en: {
+                grp_pilot: "Network Management", nav_dash: "Dashboard", nav_add_wifi: "Configure WiFi", nav_list_wifi: "My WiFi Zones", nav_stats_wifi: "Fleet Analysis",
+                grp_offers: "Offers & Access", nav_add_price: "Create Price", nav_list_price: "Pricing Table", nav_gen_pass: "Generate Pass", nav_list_pass: "Access Log",
+                grp_finance: "Financial Mgmt", nav_cash: "Cash Flow", nav_revenue: "Revenue History", nav_withdraw: "Withdrawal Log",
+                notif_head: "RECENT NOTIFICATIONS", notif_empty: "✨ Welcome! No notifications at the moment.",
+                card_profile: "MY ACCOUNT", card_profile_sub: "Manage Alpha Profile", card_support: "LIVE SUPPORT", card_support_sub: "Next-gen AI", card_academy: "ACADEMY", card_academy_sub: "Alpha Guides & Tutorials",
+                welcome: "Welcome, Project Lead in Maroua. The system is ready to monitor your income.",
+                stat_balance: "AVAILABLE BALANCE", stat_pending: "No pending withdrawals", stat_total: "TOTAL REVENUE", stat_perf: "Network performance: 0%",
+                mini_passes: "PASSES SOLD", mini_withdrawals: "WITHDRAWALS", mini_daily: "DAILY INCOME", mini_live: "LIVE USERS"
+            },
+            pt: {
+                grp_pilot: "Gestão de Redes", nav_dash: "Painel de Controle", nav_add_wifi: "Configurar WiFi", nav_list_wifi: "Minhas Zonas WiFi", nav_stats_wifi: "Análise de Frota",
+                grp_offers: "Ofertas e Acesso", nav_add_price: "Criar Tarifa", nav_list_price: "Tabela de Preços", nav_gen_pass: "Gerar Passe", nav_list_pass: "Registro de Acesso",
+                grp_finance: "Gestão Financeira", nav_cash: "Fluxo de Caixa", nav_revenue: "Histórico de Receita", nav_withdraw: "Extratos",
+                notif_head: "NOTIFICAÇÕES RECENTES", notif_empty: "✨ Bem-vindo! Nenhuma notificação no momento.",
+                card_profile: "MINHA CONTA", card_profile_sub: "Gerenciar Perfil Alpha", card_support: "SUPORTE AO VIVO", card_support_sub: "IA de última geração", card_academy: "ACADEMIA", card_academy_sub: "Guias e Tutoriais Alpha",
+                welcome: "Bem-vindo, Líder de Projeto em Maroua. O sistema está pronto para monitorar sua renda.",
+                stat_balance: "SALDO DISPONÍVEL", stat_pending: "Nenhum saque pendente", stat_total: "RECEITA TOTAL", stat_perf: "Desempenho da rede: 0%",
+                mini_passes: "PASSES VENDIDOS", mini_withdrawals: "SAQUES", mini_daily: "RECEITA DIÁRIA", mini_live: "USUÁRIOS AO VIVO"
+            },
+            es: {
+                grp_pilot: "Gestión de Redes", nav_dash: "Panel de Control", nav_add_wifi: "Configurar WiFi", nav_list_wifi: "Mis Zonas WiFi", nav_stats_wifi: "Análisis de Flota",
+                grp_offers: "Ofertas y Acceso", nav_add_price: "Crear Tarifa", nav_list_price: "Lista de Precios", nav_gen_pass: "Generar Pase", nav_list_pass: "Registro de Acceso",
+                grp_finance: "Gestión Financiera", nav_cash: "Flujo de Caja", nav_revenue: "Historial de Ingresos", nav_withdraw: "Extracciones",
+                notif_head: "NOTIFICACIONES RECIENTES", notif_empty: "✨ ¡Bienvenido! No hay notificaciones por ahora.",
+                card_profile: "MI CUENTA", card_profile_sub: "Gestionar Perfil Alpha", card_support: "SOPORTE EN VIVO", card_support_sub: "IA de nueva generación", card_academy: "ACADEMIA", card_academy_sub: "Guías y Tutoriales Alpha",
+                welcome: "Bienvenido, Jefe de Proyecto en Maroua. El sistema está listo para monitorear sus ingresos.",
+                stat_balance: "SALDO DISPONIBLE", stat_pending: "Sin retiros pendientes", stat_total: "INGRESOS TOTALES", stat_perf: "Rendimiento de red: 0%",
+                mini_passes: "PASES VENDIDOS", mini_withdrawals: "EXTRACCIONES", mini_daily: "INGRESOS DIARIOS", mini_live: "AFUENCIA EN VIVO"
+            }
+        };
+
+        function setLang(lang) {
+            document.querySelectorAll('[data-key]').forEach(el => {
+                const key = el.getAttribute('data-key');
+                if (langData[lang][key]) el.innerText = langData[lang][key];
+            });
+            document.getElementById('welcome-msg').innerText = langData[lang].welcome;
+            document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(`btn-${lang}`).classList.add('active');
+            localStorage.setItem('aerio_lang', lang);
+        }
+
         function toggleNotifs() {
-            const dropdown = document.getElementById('notifDropdown');
-            dropdown.classList.toggle('active');
+            document.getElementById('notifDropdown').classList.toggle('active');
         }
 
         window.onclick = function(event) {
             if (!event.target.closest('.notif-wrapper')) {
                 const dropdown = document.getElementById('notifDropdown');
-                if (dropdown.classList.contains('active')) {
-                    dropdown.classList.remove('active');
-                }
+                if (dropdown && dropdown.classList.contains('active')) dropdown.classList.remove('active');
             }
         }
+
+        window.onload = () => {
+            const savedLang = localStorage.getItem('aerio_lang') || 'fr';
+            setLang(savedLang);
+        };
     </script>
 </body>
 </html>
