@@ -1,65 +1,40 @@
 <?php
-// On inclut la configuration pour avoir les clés API et le taux de 15%
-require_once('config-pay.php');
+// --- CONFIGURATION AERIO SYSTEM ---
+$mon_api_key = "TON_API_KEY_ICI";
+$commission_rate = 0.15; // Tes 15%
 
-/**
- * Ce script est appelé quand le client clique sur "Acheter"
- * On récupère les infos du forfait (normalement envoyées par le bouton)
- */
+// 1. RÉCUPÉRATION DES DONNÉES DU PORTAIL
+$montant = $_POST['montant'];
+$forfait = $_POST['forfait_nom'];
+$partenaire_id = $_POST['partenaire_id'];
+$telephone = $_POST['telephone_client']; // À ajouter dans un petit champ si besoin
 
-$montant_forfait = $_POST['montant'] ?? 0; // Le montant choisi (ex: 500)
-$nom_forfait = $_POST['forfait_nom'] ?? 'Forfait WiFi';
-$id_partenaire = $_POST['partenaire_id'] ?? '0'; // Pour savoir qui a vendu le ticket
+// 2. CALCUL AUTOMATIQUE DES PARTS
+$ma_commission = $montant * $commission_rate;
+$part_partenaire = $montant - $ma_commission;
 
-if ($montant_forfait <= 0) {
-    die("Erreur : Montant invalide.");
-}
+// 3. APPEL À L'API DE PAIEMENT (Exemple logique)
+/* Ici, le script envoie une requête à l'API. 
+   L'API déclenche le "Push" sur le téléphone du client (*126# ou *150#).
+*/
 
-// 1. Calcul de la commission AERIO (15%) avant d'envoyer à Moneroo
-$repartition = calculerRepartition($montant_forfait);
-$commission_aerio = $repartition['aerio'];
-$net_partenaire = $repartition['partenaire'];
+$statut_paiement = "SUCCESS"; // Simulé pour l'exemple
 
-// 2. Préparation de l'appel à l'API Moneroo
-$url_moneroo = "https://api.moneroo.io/v1/payments/initialize";
+if($statut_paiement == "SUCCESS") {
+    
+    // 4. GÉNÉRATION DU CODE WIFI (Connexion à ton MikroTik ou via API Mikhmon)
+    $user_wifi = "AX-" . rand(1000, 9999);
+    $pass_wifi = rand(100, 999);
 
-$donnees_paiement = [
-    'amount'      => $montant_forfait,
-    'currency'    => 'XAF',
-    'description' => "Achat " . $nom_forfait . " - AERIO",
-    'customer'    => [
-        'email' => 'client@aerio.com', // Optionnel
-        'name'  => 'Client WiFi'
-    ],
-    'return_url'  => 'https://ton-site.com/succes.php', // Où le client revient après avoir payé
-    'metadata'    => [
-        'commission_aerio' => $commission_aerio,
-        'gain_partenaire'  => $net_partenaire,
-        'partenaire_id'    => $id_partenaire
-    ]
-];
+    // 5. ENVOI DU SMS AUTOMATIQUE
+    // Utilisation d'un service comme Twilio ou un gateway SMS local
+    $message = "AERIO ZONE : Votre ticket est pret. User: $user_wifi | Pass: $pass_wifi. Durée: $forfait. Merci !";
+    
+    // Commande d'envoi SMS ici...
 
-// 3. Envoi de la requête à Moneroo (via CURL)
-$ch = curl_init($url_moneroo);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($ch, CURLOPT_HTTPHEADER, [
-    'Authorization: Bearer ' . MONEROO_SECRET_KEY,
-    'Content-Type: application/json'
-]);
-curl_setopt($ch, CURLOPT_POST, true);
-curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($donnees_paiement));
-
-$reponse = curl_exec($ch);
-$info = curl_getinfo($ch);
-curl_close($ch);
-
-$resultat = json_decode($reponse, true);
-
-// 4. Redirection vers Moneroo si tout est OK
-if (isset($resultat['data']['checkout_url'])) {
-    header('Location: ' . $resultat['data']['checkout_url']);
-    exit();
+    // 6. REDIRECTION VERS UNE PAGE DE SUCCÈS
+    header("Location: succes.html?user=$user_wifi&pass=$pass_wifi");
 } else {
-    echo "Erreur d'initialisation : " . ($resultat['message'] ?? 'Impossible de contacter Moneroo.');
+    echo "Erreur lors du paiement. Veuillez réessayer.";
 }
 ?>
