@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AERIO - Succès du Paiement</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --gold: #d4af37;
+            --dark: #0a0a0a;
+            --card: #161616;
+            --neon: #ff0055;
+        }
+
+        body {
+            background-color: var(--dark);
+            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .success-container {
+            background: var(--card);
+            padding: 40px;
+            border-radius: 25px;
+            border: 1px solid var(--gold);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.15);
+            position: relative;
+        }
+
+        .check-icon {
+            font-size: 60px;
+            color: var(--gold);
+            margin-bottom: 20px;
+            animation: scaleIn 0.5s ease-out;
+        }
+
+        h1 { font-size: 24px; margin-bottom: 10px; letter-spacing: 1px; }
+        p { color: #888; font-size: 14px; }
+
+        .ticket-box {
+            background: #000;
+            border: 2px dashed var(--neon);
+            padding: 20px;
+            margin: 25px 0;
+            border-radius: 15px;
+            position: relative;
+        }
+
+        .ticket-label {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--neon);
+            color: white;
+            font-size: 10px;
+            padding: 2px 10px;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+
+        .wifi-code {
+            font-size: 35px;
+            font-weight: 900;
+            color: white;
+            letter-spacing: 6px;
+            text-shadow: 0 0 10px var(--neon);
+        }
+
+        .btn-connect {
+            background: var(--gold);
+            color: black;
+            text-decoration: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-weight: bold;
+            display: block;
+            transition: 0.3s;
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+        }
+
+        .btn-connect:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(212, 175, 55, 0.5); }
+
+        @keyframes scaleIn {
+            0% { transform: scale(0); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .loader {
+            border: 3px solid #333;
+            border-top: 3px solid var(--gold);
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+<div class="success-container">
+    <div class="check-icon"><i class="fas fa-circle-check"></i></div>
+    <h1>PAIEMENT REÇU</h1>
+    <p>Système Aerio-Cloud : Authentification en cours...</p>
+
+    <div id="loading-area">
+        <div class="loader"></div>
+        <p style="font-style: italic;">Génération de votre clé d'accès...</p>
+    </div>
+
+    <div id="ticket-area" style="display: none;">
+        <div class="ticket-box">
+            <span class="ticket-label">VOTRE CODE WIFI</span>
+            <div class="wifi-code" id="final-code">------</div>
+        </div>
+        <p style="margin-bottom: 25px;">Montant : <span id="display-amt">0</span> F CFA</p>
+        <a href="#" class="btn-connect" onclick="window.location.href='http://10.0.0.1/login'">ACTIVER MA CONNEXION</a>
+    </div>
+</div>
+
+<script>
+    // Récupération automatique des paramètres
+    const params = new URLSearchParams(window.location.search);
+    const amount = params.get('amt') || "500";
+    
+    // Simulation d'extraction du ticket du stock JSON
+    setTimeout(() => {
+        document.getElementById('loading-area').style.display = 'none';
+        document.getElementById('ticket-area').style.display = 'block';
+        document.getElementById('display-amt').innerText = amount;
+        
+        // Ici, plus tard, on fera un fetch() pour avoir un vrai code du fichier JSON
+        const codesTest = ["AR-8829", "BK-9921", "WF-1029", "ZE-4432"];
+        document.getElementById('final-code').innerText = codesTest[Math.floor(Math.random()*codesTest.length)];
+    }, 3000);
+</script>
+
+</body>
+</html>
