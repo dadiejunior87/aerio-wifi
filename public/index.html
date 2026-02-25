@@ -20,6 +20,11 @@
         .nav-links a:hover { color: white; }
         .btn-pro { background: linear-gradient(45deg, var(--primary), var(--neon)); color: white; padding: 10px 15px; border-radius: 10px; font-weight: 900; text-decoration: none; font-size: 9px; text-transform: uppercase; }
 
+        /* Style Sélecteur de langue */
+        .lang-switcher { display: flex; gap: 8px; margin-left: 10px; }
+        .lang-btn { cursor: pointer; font-size: 14px; opacity: 0.5; transition: 0.3s; filter: grayscale(1); }
+        .lang-btn:hover, .lang-btn.active { opacity: 1; filter: grayscale(0); transform: scale(1.1); }
+
         .carousel-track { display: flex; gap: 20px; width: max-content; animation: scroll 40s linear infinite; }
         @keyframes scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
         .info-card { width: 300px; background: var(--glass); padding: 30px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.03); backdrop-filter: blur(20px); }
@@ -36,7 +41,7 @@
 
 <div id="preloader" style="position: fixed; inset: 0; background: #020617; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: 0.8s ease-in-out;">
     <div style="width: 250px; text-align: center;">
-        <div style="font-weight: 900; color: #00C2FF; letter-spacing: 5px; margin-bottom: 20px; font-size: 14px;">AERIO SYSTEM INITIALIZATION</div>
+        <div data-key="init_text" style="font-weight: 900; color: #00C2FF; letter-spacing: 5px; margin-bottom: 20px; font-size: 14px;">AERIO SYSTEM INITIALIZATION</div>
         <div style="width: 100%; height: 2px; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; position: relative;">
             <div id="loader-bar" style="position: absolute; height: 100%; width: 0%; background: #00C2FF; box-shadow: 0 0 15px #00C2FF; transition: 0.4s;"></div>
         </div>
@@ -47,66 +52,73 @@
     <nav>
         <div class="logo">🛰️ AERIO</div>
         <div class="nav-links">
-            <a href="index.html">Accueil</a>
-            <a href="shop.html">Shop</a>
-            <a href="localisation.html">Localisation</a>
-            <a href="vpn.html">VPN</a>
-            <a href="connexion.html" class="btn-pro">Espace Pro</a>
+            <a href="index.html" data-key="nav_home">Accueil</a>
+            <a href="shop.html" data-key="nav_shop">Shop</a>
+            <a href="localisation.html" data-key="nav_loc">Localisation</a>
+            <a href="vpn.html" data-key="nav_vpn">VPN</a>
+            <a href="connexion.html" class="btn-pro" data-key="nav_pro">Espace Pro</a>
+            <div class="lang-switcher">
+                <span class="lang-btn active" onclick="changeLang('fr')">🇫🇷</span>
+                <span class="lang-btn" onclick="changeLang('en')">🇺🇸</span>
+                <span class="lang-btn" onclick="changeLang('pt')">🇧🇷</span>
+            </div>
         </div>
     </nav>
 
     <section style="padding: 180px 8% 100px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap;">
         <div class="hero-text" style="max-width: 600px;">
-            <p style="color:var(--primary); font-weight:900; font-size:10px; letter-spacing:3px;">🛰️ PROTOCOLE ALPHA ACTIVÉ</p>
-            <h1 style="font-size: 82px; font-weight: 900; line-height: 1.1; margin-bottom: 25px; letter-spacing: -4px;">Le Futur du <br><span style="color:var(--primary)">WiFi Zone.</span></h1>
-            <p style="color: #64748b; font-size: 15px; margin-bottom: 35px; line-height: 1.6;">Monétisez votre connexion MikroTik avec la puissance du Mobile Money à l'échelle internationale.</p>
-            <a href="inscription.html" style="background:white; color:black; padding:18px 35px; border-radius:18px; text-decoration:none; font-weight:900; display:inline-block; font-size:15px;">Devenir Partenaire</a>
+            <p data-key="hero_tag" style="color:var(--primary); font-weight:900; font-size:10px; letter-spacing:3px;">🛰️ PROTOCOLE ALPHA ACTIVÉ</p>
+            <h1 style="font-size: 82px; font-weight: 900; line-height: 1.1; margin-bottom: 25px; letter-spacing: -4px;">
+                <span data-key="hero_title1">Le Futur du</span> <br><span data-key="hero_title2" style="color:var(--primary)">WiFi Zone.</span>
+            </h1>
+            <p data-key="hero_desc" style="color: #64748b; font-size: 15px; margin-bottom: 35px; line-height: 1.6;">Monétisez votre connexion MikroTik avec la puissance du Mobile Money à l'échelle internationale.</p>
+            <a href="inscription.html" data-key="btn_partner" style="background:white; color:black; padding:18px 35px; border-radius:18px; text-decoration:none; font-weight:900; display:inline-block; font-size:15px;">Devenir Partenaire</a>
         </div>
 
         <div class="live-card" style="background:var(--glass); padding:35px; border-radius:40px; width:100%; max-width:420px; text-align:center; border: 1px solid var(--primary); animation: neonPulse 5s infinite;">
-            <h3 style="font-size:9px; color:#475569; letter-spacing:2px; margin-bottom:15px;">VOTRE BUSINESS EN LIVE (IA)</h3>
+            <h3 data-key="live_title" style="font-size:9px; color:#475569; letter-spacing:2px; margin-bottom:15px;">VOTRE BUSINESS EN LIVE (IA)</h3>
             <div class="ai-graph" id="ai-bars">
                 <div class="ai-bar" style="height: 40%"></div><div class="ai-bar" style="height: 80%"></div><div class="ai-bar" style="height: 60%"></div><div class="ai-bar" style="height: 90%"></div><div class="ai-bar" style="height: 50%"></div><div class="ai-bar" style="height: 70%"></div>
             </div>
-            <div style="font-size:10px; color:var(--accent); font-weight:900; margin-bottom:10px;">FLUX SÉCURISÉ ANALYSÉ</div>
+            <div data-key="live_status" style="font-size:10px; color:var(--accent); font-weight:900; margin-bottom:10px;">FLUX SÉCURISÉ ANALYSÉ</div>
             <div style="width:100%; height:6px; background:rgba(255,255,255,0.05); border-radius:10px; margin:20px 0; overflow:hidden;">
                 <div style="width:100%; height:100%; background:var(--primary); box-shadow:0 0 20px var(--primary);"></div>
             </div>
             <div style="display:flex; justify-content:space-between; font-size:8px; font-weight:900; color:#475569; text-transform:uppercase;">
-                <div>Réseau: <span style="color:var(--accent)">Actif</span></div>
+                <div><span data-key="live_net">Réseau:</span> <span style="color:var(--accent)" data-key="live_active">Actif</span></div>
                 <div>Hub: International</div>
             </div>
         </div>
     </section>
 
     <section style="padding: 80px 0; background: rgba(0,0,0,0.2);">
-        <h2 style="text-align:center; margin-bottom:40px; font-weight:900; font-size:28px;">L'ARSENAL <span style="color:var(--primary)">TACTIQUE</span></h2>
+        <h2 style="text-align:center; margin-bottom:40px; font-weight:900; font-size:28px;"><span data-key="sec2_title1">L'ARSENAL</span> <span data-key="sec2_title2" style="color:var(--primary)">TACTIQUE</span></h2>
         <div style="width:100%; overflow:hidden;">
             <div class="carousel-track">
-                <div class="info-card"><h3>🛰️ DÉPLOIEMENT</h3><p>Importation CSV MikroTik industrielle en 1 seconde.</p></div>
-                <div class="info-card"><h3>💸 VENTE AUTO</h3><p>Paiements Mobile Money sécurisés et sans data.</p></div>
-                <div class="info-card"><h3>📈 RADAR PERF</h3><p>Suivi des recettes brutes en temps réel 24h/7j.</p></div>
-                <div class="info-card"><h3>🔓 ZERO DATA</h3><p>Le Walled Garden permet de payer sans forfait internet.</p></div>
-                <div class="info-card"><h3>🛰️ DÉPLOIEMENT</h3><p>Importation CSV MikroTik industrielle en 1 seconde.</p></div>
-                <div class="info-card"><h3>💸 VENTE AUTO</h3><p>Paiements Mobile Money sécurisés et sans data.</p></div>
+                <div class="info-card"><h3 data-key="card1_t">🛰️ DÉPLOIEMENT</h3><p data-key="card1_p">Importation CSV MikroTik industrielle en 1 seconde.</p></div>
+                <div class="info-card"><h3 data-key="card2_t">💸 VENTE AUTO</h3><p data-key="card2_p">Paiements Mobile Money sécurisés et sans data.</p></div>
+                <div class="info-card"><h3 data-key="card3_t">📈 RADAR PERF</h3><p data-key="card3_p">Suivi des recettes brutes en temps réel 24h/7j.</p></div>
+                <div class="info-card"><h3 data-key="card4_t">🔓 ZERO DATA</h3><p data-key="card4_p">Le Walled Garden permet de payer sans forfait internet.</p></div>
+                <div class="info-card"><h3 data-key="card1_t">🛰️ DÉPLOIEMENT</h3><p data-key="card1_p">Importation CSV MikroTik industrielle en 1 seconde.</p></div>
+                <div class="info-card"><h3 data-key="card2_t">💸 VENTE AUTO</h3><p data-key="card2_p">Paiements Mobile Money sécurisés et sans data.</p></div>
             </div>
         </div>
     </section>
 
     <section style="padding: 80px 0; text-align:center;">
-        <h2 style="font-weight:900; font-size:28px;">HUB <span style="color:var(--primary)">INTERNATIONAL</span></h2>
+        <h2 style="font-weight:900; font-size:28px;">HUB <span style="color:var(--primary)" data-key="hub_intl">INTERNATIONAL</span></h2>
         <div style="width:100%; overflow:hidden; margin-top:40px;">
             <div class="carousel-track" style="animation-duration: 35s;">
-                <div class="flag-card">🇨🇲 <b>CAMEROUN</b><span>Hub Central</span></div>
-                <div class="flag-card">🇳🇬 <b>NIGERIA</b><span>Nœud Géant</span></div>
-                <div class="flag-card">🇨🇮 <b>CÔTE D'IVOIRE</b><span>Nœud Actif</span></div>
-                <div class="flag-card">🇬🇦 <b>GABON</b><span>Liaison Établie</span></div>
-                <div class="flag-card">🇫🇷 <b>FRANCE</b><span>Passerelle Europe</span></div>
-                <div class="flag-card">🇬🇳 <b>GUINÉE</b><span>Nœud Actif</span></div>
-                <div class="flag-card">🇧🇷 <b>BRÉSIL</b><span>Liaison Latam</span></div>
-                <div class="flag-card">🇨🇩 <b>RDC</b><span>Liaison Établie</span></div>
-                <div class="flag-card">🇸🇳 <b>SÉNÉGAL</b><span>Nœud Actif</span></div>
-                <div class="flag-card">🇨🇲 <b>CAMEROUN</b><span>Hub Central</span></div>
+                <div class="flag-card">🇨🇲 <b>CAMEROUN</b><span data-key="hub_central">Hub Central</span></div>
+                <div class="flag-card">🇳🇬 <b>NIGERIA</b><span data-key="hub_giant">Nœud Géant</span></div>
+                <div class="flag-card">🇨🇮 <b>CÔTE D'IVOIRE</b><span data-key="hub_active">Nœud Actif</span></div>
+                <div class="flag-card">🇬🇦 <b>GABON</b><span data-key="hub_link">Liaison Établie</span></div>
+                <div class="flag-card">🇫🇷 <b>FRANCE</b><span data-key="hub_gateway">Passerelle Europe</span></div>
+                <div class="flag-card">🇬🇳 <b>GUINÉE</b><span data-key="hub_active">Nœud Actif</span></div>
+                <div class="flag-card">🇧🇷 <b>BRÉSIL</b><span data-key="hub_latam">Liaison Latam</span></div>
+                <div class="flag-card">🇨🇩 <b>RDC</b><span data-key="hub_link">Liaison Établie</span></div>
+                <div class="flag-card">🇸🇳 <b>SÉNÉGAL</b><span data-key="hub_active">Nœud Actif</span></div>
+                <div class="flag-card">🇨🇲 <b>CAMEROUN</b><span data-key="hub_central">Hub Central</span></div>
             </div>
         </div>
     </section>
@@ -114,7 +126,7 @@
     <section style="padding: 100px 8%;">
         <div style="background:var(--glass); padding:60px; border-radius:40px; border:1px solid #25D366; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 50px;">
             <div>
-                <h2 style="font-size: 32px; font-weight: 900; margin-bottom: 25px;">Envoyez-nous <span style="color:#25D366">Un Message Alpha.</span></h2>
+                <h2 style="font-size: 32px; font-weight: 900; margin-bottom: 25px;"><span data-key="wa_title1">Envoyez-nous</span> <span data-key="wa_title2" style="color:#25D366">Un Message Alpha.</span></h2>
                 <a href="https://wa.me/237692487922?text=Bonjour%20AERIO,%20je%20souhaite%20obtenir%20des%20informations%20sur%20le%20système%20Alpha." style="background:#25D366; color:white; padding:20px 40px; border-radius:20px; text-decoration:none; font-weight:900; display:inline-block; box-shadow: 0 0 20px rgba(37, 211, 102, 0.3);">💬 WHATSAPP DIRECT</a>
             </div>
             <div style="font-size: 80px; animation: scan 3s infinite;">🛰️</div>
@@ -124,16 +136,16 @@
     <footer>
         <div class="footer-grid">
             <div class="footer-col">
-                <h4>À Propos</h4>
-                <p style="color: #64748b; font-size: 12px; margin-top:15px;">AERIO est l'unité de monétisation souveraine au Cameroun.</p>
+                <h4 data-key="f_about">À Propos</h4>
+                <p data-key="f_desc" style="color: #64748b; font-size: 12px; margin-top:15px;">AERIO est l'unité de monétisation souveraine au Cameroun.</p>
                 <p style="margin-top:20px; font-size:11px; font-weight:900; color:var(--primary);">📍 Maroua, Cameroun 🇨🇲</p>
             </div>
             <div class="footer-col">
-                <h4>Sécurité & Conformité</h4>
+                <h4 data-key="f_sec">Sécurité & Conformité</h4>
                 <div style="background:rgba(255,255,255,0.02); padding:20px; border-radius:20px; border:1px solid rgba(255,255,255,0.05); text-align:center; margin-top:15px;">
                     <div style="width:50px; height:50px; background:white; border-radius:10px; margin:0 auto 10px; color:#020617; font-weight:900; display:flex; align-items:center; justify-content:center; font-size:9px;">ANTIC</div>
-                    <p style="font-size:9px; font-weight:900; color:var(--accent);">🛡️ PLATEFORME DÉCLARÉE</p>
-                    <p style="font-size:8px; color:#64748b; margin-top:5px;">Conformité Cybersécurité (ANTIC - Cameroun)</p>
+                    <p data-key="f_antic1" style="font-size:9px; font-weight:900; color:var(--accent);">🛡️ PLATEFORME DÉCLARÉE</p>
+                    <p data-key="f_antic2" style="font-size:8px; color:#64748b; margin-top:5px;">Conformité Cybersécurité (ANTIC - Cameroun)</p>
                 </div>
             </div>
         </div>
@@ -141,15 +153,53 @@
     </footer>
 
     <script>
-        // IA BARS ANIMATION
-        const bars = document.querySelectorAll('.ai-bar');
-        setInterval(() => {
-            bars.forEach(bar => {
-                bar.style.height = (Math.floor(Math.random() * 80) + 20) + '%';
-            });
-        }, 600);
+        const langData = {
+            fr: {
+                init_text: "INITIALISATION DU SYSTÈME AERIO",
+                nav_home: "Accueil", nav_shop: "Shop", nav_loc: "Localisation", nav_vpn: "VPN", nav_pro: "Espace Pro",
+                hero_tag: "🛰️ PROTOCOLE ALPHA ACTIVÉ", hero_title1: "Le Futur du", hero_title2: "WiFi Zone.",
+                hero_desc: "Monétisez votre connexion MikroTik avec la puissance du Mobile Money à l'échelle internationale.",
+                btn_partner: "Devenir Partenaire", live_title: "VOTRE BUSINESS EN LIVE (IA)", live_status: "FLUX SÉCURISÉ ANALYSÉ",
+                live_net: "Réseau:", live_active: "Actif", sec2_title1: "L'ARSENAL", sec2_title2: "TACTIQUE",
+                card1_t: "🛰️ DÉPLOIEMENT", card1_p: "Importation CSV MikroTik industrielle en 1 seconde.",
+                card2_t: "💸 VENTE AUTO", card2_p: "Paiements Mobile Money sécurisés et sans data.",
+                card3_t: "📈 RADAR PERF", card3_p: "Suivi des recettes brutes en temps réel 24h/7j.",
+                card4_t: "🔓 ZERO DATA", card4_p: "Le Walled Garden permet de payer sans forfait internet.",
+                hub_intl: "INTERNATIONAL", hub_central: "Hub Central", hub_giant: "Nœud Géant", hub_active: "Nœud Actif", hub_link: "Liaison Établie", hub_gateway: "Passerelle Europe", hub_latam: "Liaison Latam",
+                wa_title1: "Envoyez-nous", wa_title2: "Un Message Alpha.", f_about: "À Propos",
+                f_desc: "AERIO est l'unité de monétisation souveraine au Cameroun.", f_sec: "Sécurité & Conformité",
+                f_antic1: "🛡️ PLATEFORME DÉCLARÉE", f_antic2: "Conformité Cybersécurité (ANTIC - Cameroun)"
+            },
+            en: {
+                init_text: "AERIO SYSTEM INITIALIZATION",
+                nav_home: "Home", nav_shop: "Shop", nav_loc: "Location", nav_vpn: "VPN", nav_pro: "Pro Space",
+                hero_tag: "🛰️ ALPHA PROTOCOL ACTIVATED", hero_title1: "The Future of", hero_title2: "WiFi Zone.",
+                hero_desc: "Monetize your MikroTik connection with the power of Mobile Money internationally.",
+                btn_partner: "Become a Partner", live_title: "YOUR LIVE BUSINESS (AI)", live_status: "SECURE FLOW ANALYZED",
+                live_net: "Network:", live_active: "Active", sec2_title1: "TACTICAL", sec2_title2: "ARSENAL",
+                card1_t: "🛰️ DEPLOYMENT", card1_p: "Industrial MikroTik CSV import in 1 second.",
+                card2_t: "💸 AUTO SALES", card2_p: "Secure Mobile Money payments without data.",
+                card3_t: "📈 PERF RADAR", card3_p: "Real-time revenue tracking 24/7.",
+                card4_t: "🔓 ZERO DATA", card4_p: "Walled Garden allows paying without internet plan.",
+                hub_intl: "INTERNATIONAL", hub_central: "Central Hub", hub_giant: "Giant Node", hub_active: "Active Node", hub_link: "Established Link", hub_gateway: "Europe Gateway", hub_latam: "Latam Link",
+                wa_title1: "Send us", wa_title2: "An Alpha Message.", f_about: "About",
+                f_desc: "AERIO is the sovereign monetization unit in Cameroon.", f_sec: "Security & Compliance",
+                f_antic1: "🛡️ DECLARED PLATFORM", f_antic2: "Cybersecurity Compliance (ANTIC - Cameroon)"
+            }
+        };
 
-        // PRELOADER SCRIPT
+        function changeLang(lang) {
+            document.querySelectorAll('[data-key]').forEach(el => {
+                const key = el.getAttribute('data-key');
+                if (langData[lang][key]) el.innerText = langData[lang][key];
+            });
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        const bars = document.querySelectorAll('.ai-bar');
+        setInterval(() => { bars.forEach(bar => { bar.style.height = (Math.floor(Math.random() * 80) + 20) + '%'; }); }, 600);
+
         window.addEventListener('load', () => {
             let progress = 0;
             const bar = document.getElementById('loader-bar');
@@ -160,10 +210,7 @@
                 if (progress > 100) progress = 100;
                 bar.style.width = progress + '%';
                 percent.innerText = progress + '% - PROTOCOLE ALPHA ACTIVÉ';
-                if (progress === 100) {
-                    clearInterval(interval);
-                    setTimeout(() => { preloader.style.opacity = '0'; setTimeout(() => { preloader.style.display = 'none'; }, 800); }, 500);
-                }
+                if (progress === 100) { clearInterval(interval); setTimeout(() => { preloader.style.opacity = '0'; setTimeout(() => { preloader.style.display = 'none'; }, 800); }, 500); }
             }, 100);
         });
     </script>
