@@ -9,9 +9,10 @@
         :root { 
             --primary: #00C2FF; 
             --bg: #020617; 
-            --glass: rgba(15, 23, 42, 0.7); 
+            --glass: rgba(15, 23, 42, 0.6); 
             --accent: #00F5A0; 
             --border: rgba(255, 255, 255, 0.08);
+            --glow: rgba(0, 194, 255, 0.3);
         }
         
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
@@ -19,101 +20,134 @@
         body { 
             background: var(--bg); 
             color: white; 
-            padding: 40px;
-            background-image: radial-gradient(circle at top left, rgba(0, 194, 255, 0.03), transparent);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
+            overflow: hidden;
+            background-image: 
+                radial-gradient(circle at 50% 50%, rgba(0, 194, 255, 0.05), transparent 70%),
+                radial-gradient(circle at 0% 0%, rgba(112, 0, 255, 0.05), transparent 40%);
         }
 
-        .container { max-width: 900px; width: 100%; text-align: center; }
+        /* Effet de particules en arrière-plan */
+        body::before {
+            content: "";
+            position: absolute;
+            width: 200%; height: 200%;
+            background-image: url('https://www.transparenttextures.com/patterns/stardust.pattern');
+            opacity: 0.1;
+            animation: moveDust 60s linear infinite;
+        }
+        @keyframes moveDust { from { transform: translate(0,0); } to { transform: translate(-50%, -50%); } }
 
-        /* HEADER UNIQUE */
-        .brand-header { margin-bottom: 50px; }
-        .brand-header h1 { font-weight: 900; font-size: 38px; letter-spacing: -1.5px; line-height: 1; }
-        .brand-header span { color: var(--primary); }
-        .brand-header p { font-size: 10px; font-weight: 900; letter-spacing: 5px; color: #475569; text-transform: uppercase; margin-top: 10px; }
+        .container { max-width: 800px; width: 90%; text-align: center; position: relative; z-index: 10; }
 
-        /* ZONE D'ACTION VIDE (EMPTY STATE DESIGNER) */
+        /* HEADER */
+        .brand-header { margin-bottom: 40px; animation: fadeInDown 1s ease; }
+        .brand-header h1 { font-weight: 900; font-size: clamp(30px, 5vw, 42px); letter-spacing: -1.5px; text-transform: uppercase; }
+        .brand-header span { color: var(--primary); text-shadow: 0 0 20px var(--glow); }
+        .brand-header p { font-size: 10px; font-weight: 900; letter-spacing: 6px; color: #475569; text-transform: uppercase; margin-top: 12px; }
+
+        /* EMPTY STATE CARD */
         .empty-dashboard {
             background: var(--glass);
             border: 1px solid var(--border);
             border-radius: 40px;
-            padding: 60px 30px;
+            padding: 80px 40px;
+            backdrop-filter: blur(30px);
+            box-shadow: 0 25px 60px rgba(0,0,0,0.5);
             position: relative;
-            backdrop-filter: blur(25px);
             overflow: hidden;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            animation: zoomIn 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
         }
 
-        /* Décoration géométrique pour ne pas faire "vide" */
-        .geo-decor {
+        .empty-dashboard::after {
+            content: "";
             position: absolute;
-            top: -50px; right: -50px;
-            width: 150px; height: 150px;
-            border: 2px solid rgba(0, 194, 255, 0.1);
-            border-radius: 50%;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: conic-gradient(from 0deg, transparent, var(--glow), transparent 30%);
+            animation: rotateGlow 10s linear infinite;
+            z-index: -1;
         }
+        @keyframes rotateGlow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
+        /* VISUAL CORE ANIMÉ */
         .visual-core {
-            width: 100px; height: 100px;
-            margin: 0 auto 30px;
-            background: rgba(0, 194, 255, 0.05);
-            border: 1px solid var(--primary);
-            border-radius: 30px;
+            width: 110px; height: 110px;
+            margin: 0 auto 35px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid var(--primary);
+            border-radius: 35px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 40px;
-            box-shadow: 0 0 30px rgba(0, 194, 255, 0.2);
-            animation: float 3s ease-in-out infinite;
+            font-size: 45px;
+            box-shadow: 0 0 30px var(--glow);
+            position: relative;
+        }
+        .visual-core::before {
+            content: "";
+            position: absolute;
+            width: 100%; height: 100%;
+            border-radius: 35px;
+            border: 1px solid var(--primary);
+            animation: pulse 2s infinite;
         }
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(1.6); opacity: 0; }
         }
 
-        h2 { font-weight: 900; font-size: 20px; margin-bottom: 15px; }
-        .description { color: #64748b; font-size: 13px; line-height: 1.6; max-width: 450px; margin: 0 auto 35px; }
+        h2 { font-weight: 900; font-size: 22px; margin-bottom: 15px; letter-spacing: -0.5px; }
+        .description { color: #94a3b8; font-size: 14px; line-height: 1.7; max-width: 480px; margin: 0 auto 40px; }
 
-        /* BOUTON ULTRA DESIGN */
+        /* BOUTON ALPHA */
         .btn-alpha {
-            background: var(--primary);
-            color: var(--bg);
+            background: linear-gradient(135deg, var(--primary), #7000FF);
+            color: white;
             border: none;
-            padding: 18px 45px;
-            border-radius: 18px;
+            padding: 20px 50px;
+            border-radius: 20px;
             font-weight: 900;
             font-size: 13px;
             text-transform: uppercase;
-            letter-spacing: 1.5px;
+            letter-spacing: 2px;
             cursor: pointer;
             transition: 0.4s;
             display: inline-flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
+            box-shadow: 0 10px 25px rgba(0, 194, 255, 0.2);
         }
         .btn-alpha:hover { 
-            transform: translateY(-3px); 
-            box-shadow: 0 15px 40px rgba(0, 194, 255, 0.4);
-            letter-spacing: 2.5px;
+            transform: translateY(-5px) scale(1.02); 
+            box-shadow: 0 20px 40px rgba(112, 0, 255, 0.4);
+            letter-spacing: 3px;
         }
 
-        /* BARRE DE STATUT BAS DE PAGE */
+        /* STATUS BAR */
         .system-status {
-            margin-top: 50px;
+            margin-top: 60px;
             display: flex;
             justify-content: center;
-            gap: 30px;
+            gap: 40px;
             font-size: 9px;
             font-weight: 900;
-            color: #334155;
-            letter-spacing: 1px;
+            color: #475569;
+            letter-spacing: 2px;
+            animation: fadeInUp 1s ease 0.5s backwards;
         }
-        .status-item { display: flex; align-items: center; gap: 8px; }
-        .dot { width: 6px; height: 6px; border-radius: 50%; background: #1e293b; }
+        .status-item { display: flex; align-items: center; gap: 10px; }
+        .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 8px var(--accent); }
+        .dot.idle { background: #334155; box-shadow: none; }
+
+        /* ANIMATIONS */
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes zoomIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
 
     </style>
 </head>
@@ -126,13 +160,11 @@
         </header>
 
         <div class="empty-dashboard">
-            <div class="geo-decor"></div>
-            
             <div class="visual-core">📡</div>
             
             <h2>Architecture Vierge</h2>
             <p class="description">
-                Aucun nœud WiFi n'est actuellement déployé sur votre infrastructure. Commencez par lier votre premier routeur pour activer le monitoring.
+                Aucun nœud WiFi n'est détecté sur votre infrastructure. L'unité centrale AERIO attend la liaison d'un routeur pour activer le monitoring de flux.
             </p>
 
             <button class="btn-alpha" onclick="location.href='ajouter-wifi.html'">
@@ -141,9 +173,9 @@
         </div>
 
         <div class="system-status">
-            <div class="status-item"><div class="dot"></div> SQL DB: READY</div>
-            <div class="status-item"><div class="dot"></div> MIKROTIK BRIDGE: IDLE</div>
-            <div class="status-item"><div class="dot"></div> ENCRYPTION: AES-256</div>
+            <div class="status-item"><div class="dot"></div> SQL DB: ONLINE</div>
+            <div class="status-item"><div class="dot idle"></div> MIKROTIK: WAITING</div>
+            <div class="status-item"><div class="dot"></div> ENCRYPTION: ACTIVE</div>
         </div>
     </div>
 
