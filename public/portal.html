@@ -47,7 +47,6 @@
         }
 
         /* --- SECTION PAIEMENT INTÉGRÉE --- */
-        .pay-section { margin-top: 10px; padding-top: 20px; border-top: 1px dashed rgba(255,255,255,0.1); }
         .pay-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
         .pay-card { 
             background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); 
@@ -106,10 +105,11 @@
     <div class="box">
         <span class="input-label" style="text-align: center; margin-left: 0;">Pas de ticket ? Achetez ici</span>
         <div class="pay-grid">
+            
             <form action="initier-paiement.php" method="POST" class="pay-card">
                 <input type="hidden" name="montant" value="100">
                 <input type="hidden" name="forfait_nom" value="1H">
-                <input type="hidden" name="partenaire_id" value="ID_DU_PARTENAIRE_ICI">
+                <input type="hidden" class="partner-id-field" name="partenaire_id" value="DEFAULT_AERIO">
                 <div class="pay-price">100F</div>
                 <div class="pay-desc">1 HEURE</div>
                 <button type="submit" class="btn-pay-submit">MOMO/OM</button>
@@ -118,11 +118,12 @@
             <form action="initier-paiement.php" method="POST" class="pay-card">
                 <input type="hidden" name="montant" value="500">
                 <input type="hidden" name="forfait_nom" value="24H">
-                <input type="hidden" name="partenaire_id" value="ID_DU_PARTENAIRE_ICI">
+                <input type="hidden" class="partner-id-field" name="partenaire_id" value="DEFAULT_AERIO">
                 <div class="pay-price">500F</div>
                 <div class="pay-desc">24 HEURES</div>
                 <button type="submit" class="btn-pay-submit">MOMO/OM</button>
             </form>
+
         </div>
     </div>
 </div>
@@ -133,7 +134,7 @@
         <b>Besoin d'aide ?</b><br><br>
         1. Choisissez un forfait (100F ou 500F).<br>
         2. Payez par Mobile Money.<br>
-        3. Recevez vos codes et validez en haut.<br><br>
+        3. Recevez vos codes par SMS et validez en haut.<br><br>
         <a href="https://wa.me/237692487922" style="color:var(--accent); text-decoration:none;">→ Support WhatsApp</a>
     </p>
 </div>
@@ -141,6 +142,21 @@
 <footer>POWERED BY AERIO SYSTEM & STARLINK TECH</footer>
 
 <script>
+// SCRIPT DE RÉCUPÉRATION DYNAMIQUE DU PARTENAIRE
+window.onload = function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const pid = urlParams.get('pid'); // Récupère le ?pid=... dans l'URL
+    
+    if (pid) {
+        // Si un ID partenaire est présent, on l'injecte dans tous les formulaires
+        const fields = document.querySelectorAll('.partner-id-field');
+        fields.forEach(field => {
+            field.value = pid;
+        });
+        console.log("AERIO: Partenaire identifié : " + pid);
+    }
+};
+
 function toggleBot() {
     var win = document.getElementById('bot-window');
     win.style.display = (win.style.display === 'block') ? 'none' : 'block';
