@@ -38,6 +38,11 @@
         /* --- CONTENU --- */
         .content { margin-left: 280px; flex: 1; padding: 40px; }
 
+        /* ✅ LANG SWITCHER DISCRET */
+        .lang-switcher { display: flex; gap: 5px; justify-content: flex-end; margin-bottom: 20px; }
+        .lang-btn { background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: #475569; font-size: 8px; font-weight: 900; cursor: pointer; padding: 5px 10px; border-radius: 8px; }
+        .lang-btn.active { background: var(--primary); color: #020617; }
+
         /* IA ADVISOR */
         .ai-predictor-box {
             background: linear-gradient(90deg, rgba(0, 194, 255, 0.1), rgba(188, 0, 255, 0.05));
@@ -46,7 +51,7 @@
             display: flex; align-items: center; gap: 20px; position: relative;
         }
 
-        /* OPERATOR GRID (LOGOS VECTORIELS) */
+        /* OPERATOR GRID (LOGOS VECTORIELS CONSERVÉS) */
         .operator-grid {
             display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
             gap: 15px; margin: 20px 0 30px 0;
@@ -57,7 +62,6 @@
             background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: 20px;
             padding: 20px 10px; display: flex; flex-direction: column; align-items: center; gap: 12px; transition: 0.3s;
         }
-        /* DESIGN DU LOGO VECTORIEL */
         .logo-v { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 14px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
 
         .op-card input:checked + .op-content { border-color: var(--primary); background: rgba(0, 194, 255, 0.1); transform: translateY(-5px); }
@@ -73,6 +77,12 @@
         input:focus { border-color: var(--primary); }
         .btn-withdraw { grid-column: span 2; background: var(--accent); color: #020617; padding: 22px; border-radius: 20px; font-weight: 900; border: none; cursor: pointer; transition: 0.4s; letter-spacing: 1px; margin-top: 10px; }
         .btn-withdraw:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0, 245, 160, 0.2); }
+        
+        @media (max-width: 768px) {
+            .sidebar { display: none; }
+            .content { margin-left: 0; padding: 20px; }
+            .status-grid, .form-grid { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
@@ -80,22 +90,28 @@
     <div class="sidebar">
         <div style="color:var(--primary); font-weight:900; font-size:24px; margin-bottom:40px; padding-left:10px; letter-spacing: -1px;">AERIO</div>
         
-        <a href="dashboard.html" class="nav-button">🏠 Tableau de Bord</a>
-        <a href="statistiques-wifi.html" class="nav-button">📊 Statistiques</a>
-        <a href="comptabilite.html" class="nav-button active">💰 Comptabilité Alpha</a>
+        <a href="dashboard.html" class="nav-button"><span data-key="nav_dash">🏠 Tableau de Bord</span></a>
+        <a href="statistiques-wifi.html" class="nav-button"><span data-key="nav_stats">📊 Statistiques</span></a>
+        <a href="comptabilite.html" class="nav-button active"><span data-key="nav_compta">💰 Comptabilité Alpha</span></a>
         
         <div class="sidebar-footer">
-            <a href="profil.html" class="footer-link">👤 Mon Profil</a>
-            <a href="https://wa.me/votre-numero" class="footer-link">💬 Support Live</a>
-            <a href="docs.html" class="footer-link">📚 Contact & Documentation</a>
+            <a href="profil.html" class="footer-link" data-key="nav_profile">👤 Mon Profil</a>
+            <a href="https://wa.me/votre-numero" class="footer-link" data-key="nav_support">💬 Support Live</a>
+            <a href="docs.html" class="footer-link" data-key="nav_docs">📚 Contact & Documentation</a>
         </div>
     </div>
 
     <div class="content">
+        <div class="lang-switcher">
+            <button onclick="setLang('fr')" id="btn-fr" class="lang-btn active">FR</button>
+            <button onclick="setLang('en')" id="btn-en" class="lang-btn">EN</button>
+            <button onclick="setLang('pt')" id="btn-pt" class="lang-btn">PT</button>
+            <button onclick="setLang('es')" id="btn-es" class="lang-btn">ES</button>
+        </div>
         
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
-            <h1 style="font-size: 32px; font-weight: 900; letter-spacing: -1px;">Gestion <span style="color:var(--primary)">Financière</span></h1>
-            <div style="background: rgba(0, 194, 255, 0.1); padding: 8px 15px; border-radius: 10px; color: var(--primary); font-size: 10px; font-weight: 900; border: 1px solid rgba(0, 194, 255, 0.2);">
+            <h1 style="font-size: 32px; font-weight: 900; letter-spacing: -1px;"><span data-key="title_main">Gestion</span> <span style="color:var(--primary)" data-key="title_sub">Financière</span></h1>
+            <div style="background: rgba(0, 194, 255, 0.1); padding: 8px 15px; border-radius: 10px; color: var(--primary); font-size: 10px; font-weight: 900; border: 1px solid rgba(0, 194, 255, 0.2);" data-key="session_tag">
                 SESSION ALPHA SECURE
             </div>
         </div>
@@ -103,7 +119,7 @@
         <div class="ai-predictor-box">
             <div style="font-size: 30px;">🧠</div>
             <div>
-                <p style="font-size: 12px; line-height: 1.6;">
+                <p style="font-size: 12px; line-height: 1.6;" id="ai-msg">
                     <span style="color: var(--primary); font-weight: 900;">AERIO AI :</span> Analyse des flux terminée. Vos revenus sont optimisés et prêts pour une extraction immédiate.
                 </p>
             </div>
@@ -111,17 +127,17 @@
 
         <div class="status-grid">
             <div class="card-status">
-                <div style="font-size:10px; color:#475569; font-weight:900; letter-spacing: 2px;">SOLDE RÉEL</div>
+                <div style="font-size:10px; color:#475569; font-weight:900; letter-spacing: 2px;" data-key="label_balance">SOLDE RÉEL</div>
                 <div id="balance-net" style="font-size:54px; font-weight:900;">0 F</div>
             </div>
             <div class="card-status" style="display: flex; flex-direction: column; justify-content: center;">
-                <div style="color:var(--accent); font-weight:900; font-size: 14px;">COMPTE VÉRIFIÉ ✅</div>
-                <p style="font-size: 10px; color: #475569; margin-top: 8px;">EXTRACTION PRIORITAIRE ACTIVÉE</p>
+                <div style="color:var(--accent); font-weight:900; font-size: 14px;" data-key="label_verified">COMPTE VÉRIFIÉ ✅</div>
+                <p style="font-size: 10px; color: #475569; margin-top: 8px;" data-key="label_priority">EXTRACTION PRIORITAIRE ACTIVÉE</p>
             </div>
         </div>
 
         <div style="background: var(--card-bg); padding: 45px; border-radius: 40px; border: 1px solid var(--border);">
-            <h2 style="font-size: 18px; font-weight: 900; margin-bottom: 25px;">🚀 Choisir la Passerelle</h2>
+            <h2 style="font-size: 18px; font-weight: 900; margin-bottom: 25px;" data-key="form_title">🚀 Choisir la Passerelle</h2>
             
             <form id="payoutForm">
                 <div class="operator-grid">
@@ -164,20 +180,66 @@
 
                 <div class="form-grid">
                     <div class="form-group">
-                        <label>Numéro de téléphone</label>
+                        <label data-key="label_phone">Numéro de téléphone</label>
                         <input type="text" id="phone" placeholder="Ex: 6XXXXXXXX" required>
                     </div>
                     <div class="form-group">
-                        <label>Montant (XAF)</label>
+                        <label data-key="label_amount">Montant (XAF)</label>
                         <input type="number" id="amount" placeholder="Min: 5 000" min="5000" required>
                     </div>
-                    <button type="submit" class="btn-withdraw">🚀 CONFIRMER L'EXTRACTION</button>
+                    <button type="submit" class="btn-withdraw" data-key="btn_confirm">🚀 CONFIRMER L'EXTRACTION</button>
                 </div>
             </form>
         </div>
     </div>
 
     <script>
+        const langData = {
+            fr: {
+                nav_dash: "🏠 Tableau de Bord", nav_stats: "📊 Statistiques", nav_compta: "💰 Comptabilité Alpha",
+                nav_profile: "👤 Mon Profil", nav_support: "💬 Support Live", nav_docs: "📚 Contact & Documentation",
+                title_main: "Gestion", title_sub: "Financière", session_tag: "SESSION ALPHA SECURE",
+                ai_msg: "AERIO AI : Analyse terminée à Maroua. Vos revenus sont prêts pour une extraction immédiate.",
+                label_balance: "SOLDE RÉEL", label_verified: "COMPTE VÉRIFIÉ ✅", label_priority: "EXTRACTION PRIORITAIRE ACTIVÉE",
+                form_title: "🚀 Choisir la Passerelle", label_phone: "Numéro de téléphone", label_amount: "Montant (XAF)", btn_confirm: "🚀 CONFIRMER L'EXTRACTION"
+            },
+            en: {
+                nav_dash: "🏠 Dashboard", nav_stats: "📊 Statistics", nav_compta: "💰 Alpha Accounting",
+                nav_profile: "👤 My Profile", nav_support: "💬 Live Support", nav_docs: "📚 Docs & Contact",
+                title_main: "Financial", title_sub: "Management", session_tag: "ALPHA SECURE SESSION",
+                ai_msg: "AERIO AI: Analysis complete in Maroua. Your income is ready for immediate extraction.",
+                label_balance: "REAL BALANCE", label_verified: "VERIFIED ACCOUNT ✅", label_priority: "PRIORITY EXTRACTION ACTIVE",
+                form_title: "🚀 Choose Gateway", label_phone: "Phone Number", label_amount: "Amount (XAF)", btn_confirm: "🚀 CONFIRM EXTRACTION"
+            },
+            pt: {
+                nav_dash: "🏠 Painel", nav_stats: "📊 Estatísticas", nav_compta: "💰 Contabilidade Alpha",
+                nav_profile: "👤 Perfil", nav_support: "💬 Suporte", nav_docs: "📚 Documentação",
+                title_main: "Gestão", title_sub: "Financeira", session_tag: "SESSÃO ALPHA SEGURA",
+                ai_msg: "AERIO AI: Análise em Maroua concluída. Seus ganhos estão prontos para extração.",
+                label_balance: "SALDO REAL", label_verified: "CONTA VERIFICADA ✅", label_priority: "EXTRAÇÃO PRIORITÁRIA ATIVA",
+                form_title: "🚀 Escolher Gateway", label_phone: "Número de telefone", label_amount: "Montante (XAF)", btn_confirm: "🚀 CONFIRMAR EXTRAÇÃO"
+            },
+            es: {
+                nav_dash: "🏠 Panel", nav_stats: "📊 Estadísticas", nav_compta: "💰 Contabilidad Alpha",
+                nav_profile: "👤 Perfil", nav_support: "💬 Soporte", nav_docs: "📚 Documentación",
+                title_main: "Gestión", title_sub: "Financiera", session_tag: "SESIÓN ALPHA SEGURA",
+                ai_msg: "AERIO AI: Análisis en Maroua finalizado. Sus ingresos están listos para la extracción.",
+                label_balance: "SALDO REAL", label_verified: "CUENTA VERIFICADA ✅", label_priority: "EXTRACCIÓN PRIORITARIA ACTIVA",
+                form_title: "🚀 Elegir Pasarela", label_phone: "Número de teléfono", label_amount: "Monto (XAF)", btn_confirm: "🚀 CONFIRMAR EXTRACCIÓN"
+            }
+        };
+
+        function setLang(lang) {
+            document.querySelectorAll('[data-key]').forEach(el => {
+                const key = el.getAttribute('data-key');
+                if (langData[lang][key]) el.innerText = langData[lang][key];
+            });
+            document.getElementById('ai-msg').innerHTML = `<span style="color: var(--primary); font-weight: 900;">AERIO AI :</span> ${langData[lang].ai_msg}`;
+            document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(`btn-${lang}`).classList.add('active');
+            localStorage.setItem('aerio_lang', lang);
+        }
+
         async function loadCompta() {
             try {
                 const res = await fetch('/api/my-stats');
@@ -185,7 +247,12 @@
                 document.getElementById('balance-net').innerText = Math.floor(data.summary.gain).toLocaleString() + " F";
             } catch(e) { console.log("Synchronisation Alpha..."); }
         }
-        window.onload = loadCompta;
+
+        window.onload = () => {
+            loadCompta();
+            const savedLang = localStorage.getItem('aerio_lang') || 'fr';
+            setLang(savedLang);
+        };
     </script>
 </body>
 </html>
