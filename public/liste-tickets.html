@@ -20,61 +20,62 @@
         body { 
             background: var(--bg-deep); color: white; display: flex; min-height: 100vh;
             background-image: radial-gradient(circle at bottom left, rgba(0, 194, 255, 0.03), transparent 40%);
-            transition: background 0.5s ease;
         }
 
         /* --- SIDEBAR --- */
         .sidebar { width: var(--sidebar-w); background: #0b0f1a; padding: 30px 20px; height: 100vh; position: fixed; border-right: 1px solid var(--border); z-index: 100; }
         .logo-title { color: var(--primary); font-weight: 900; font-size: 24px; margin-bottom: 40px; letter-spacing: -1px; }
         .nav-link { padding: 14px 18px; color: #64748b; text-decoration: none; display: flex; align-items: center; gap: 12px; font-size: 13px; border-radius: 12px; transition: 0.3s; margin-bottom: 8px; }
-        .nav-link:hover { background: rgba(255,255,255,0.03); color: white; }
         .nav-link.active { background: linear-gradient(90deg, rgba(0, 194, 255, 0.15), transparent); color: var(--primary); font-weight: 600; border-left: 3px solid var(--primary); }
 
         /* --- MAIN CONTENT --- */
         .main-content { margin-left: var(--sidebar-w); flex: 1; padding: 40px; max-width: 1200px; }
         .header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; flex-wrap: wrap; gap: 20px; }
 
-        /* --- SEARCH BOX --- */
-        .search-container { position: relative; flex: 1; max-width: 400px; }
-        .search-input {
-            width: 100%; background: rgba(255,255,255,0.03); border: 1px solid var(--border);
-            padding: 12px 20px 12px 45px; border-radius: 15px; color: white; font-size: 13px;
-            outline: none; transition: 0.3s;
+        /* --- VUE CARTES RÉALISTES --- */
+        .grid-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; display: none; }
+        
+        .ticket-visual {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border-radius: 20px; padding: 20px; position: relative;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            overflow: hidden; transition: 0.3s;
         }
-        .search-input:focus { border-color: var(--primary); background: rgba(255,255,255,0.05); box-shadow: 0 0 15px rgba(0, 194, 255, 0.1); }
-        .search-icon { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); opacity: 0.4; font-size: 14px; }
+        .ticket-visual:hover { transform: translateY(-5px); border-color: var(--primary); }
+        .ticket-visual::after { 
+            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.03), transparent);
+            transform: rotate(30deg); pointer-events: none;
+        }
 
-        /* --- BUTTONS --- */
-        .btn-group { display: flex; gap: 10px; }
-        .btn-action { padding: 10px 18px; border-radius: 12px; cursor: pointer; font-size: 11px; font-weight: 800; transition: 0.3s; text-transform: uppercase; border: 1px solid transparent; }
-        .btn-pdf { background: rgba(0, 245, 160, 0.1); border-color: var(--accent); color: var(--accent); }
-        .btn-pdf:hover { background: var(--accent); color: #020617; }
-        .btn-export { background: rgba(0, 194, 255, 0.1); border-color: var(--primary); color: var(--primary); }
-        .btn-export:hover { background: var(--primary); color: white; }
-        .btn-danger { background: rgba(255, 71, 87, 0.1); border-color: var(--danger); color: var(--danger); }
-        .btn-danger:hover { background: var(--danger); color: white; }
+        .ticket-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+        .ticket-logo { font-weight: 900; font-size: 14px; color: var(--primary); }
+        .ticket-price { background: var(--primary); color: #020617; padding: 4px 10px; border-radius: 8px; font-weight: 900; font-size: 12px; }
+        
+        .ticket-body { text-align: center; padding: 10px 0; border-top: 1px dashed rgba(255,255,255,0.1); border-bottom: 1px dashed rgba(255,255,255,0.1); margin: 15px 0; }
+        .ticket-code { font-family: 'monospace'; font-size: 24px; font-weight: 900; letter-spacing: 2px; color: white; display: block; margin: 5px 0; }
+        .ticket-label { font-size: 10px; color: #64748b; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* --- STATS & TABLE --- */
-        .stats-bar { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 40px; }
-        .stat-item { background: var(--card-bg); padding: 25px; border-radius: 25px; border: 1px solid var(--border); position: relative; overflow: hidden; backdrop-filter: blur(10px); }
-        .stat-item::before { content: ""; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--primary); opacity: 0.5; }
-        .stat-label { font-size: 10px; color: #64748b; text-transform: uppercase; font-weight: 800; letter-spacing: 1px; }
-        .stat-value { font-size: 32px; font-weight: 900; display: block; margin-top: 5px; font-variant-numeric: tabular-nums; }
+        /* --- SWITCHER --- */
+        .view-switcher { display: flex; background: rgba(0,0,0,0.2); padding: 5px; border-radius: 12px; margin-bottom: 20px; width: fit-content; }
+        .switch-btn { padding: 8px 20px; border-radius: 8px; border: none; background: transparent; color: #64748b; cursor: pointer; font-size: 12px; font-weight: 600; transition: 0.3s; }
+        .switch-btn.active { background: var(--primary); color: #020617; }
 
-        .registry-card { background: var(--card-bg); border-radius: 30px; border: 1px solid var(--border); padding: 10px; backdrop-filter: blur(20px); position: relative; }
-        .table-container { width: 100%; overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; min-width: 700px; }
-        th { text-align: left; padding: 20px; font-size: 10px; text-transform: uppercase; color: #475569; letter-spacing: 1.5px; border-bottom: 1px solid var(--border); }
-        td { padding: 18px 20px; font-size: 13px; border-bottom: 1px solid rgba(255,255,255,0.02); transition: 0.3s; }
-        tr:hover td { background: rgba(0, 194, 255, 0.02); color: white; }
-        .code-badge { font-family: 'Courier New', monospace; font-weight: 700; color: var(--primary); background: rgba(0, 194, 255, 0.1); padding: 6px 12px; border-radius: 8px; border: 1px solid rgba(0, 194, 255, 0.2); }
-        .status-pill { padding: 5px 12px; border-radius: 8px; font-size: 9px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px; }
-        .status-available { background: rgba(0, 245, 160, 0.1); color: var(--accent); border: 1px solid rgba(0, 245, 160, 0.2); }
-        .status-sold { background: rgba(255, 255, 255, 0.05); color: #475569; border: 1px solid var(--border); }
-
-        .scan-line { position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: linear-gradient(90deg, transparent, var(--primary), transparent); opacity: 0.3; animation: scanMove 4s linear infinite; }
-        @keyframes scanMove { 0% { top: 0; } 100% { top: 100%; } }
-        .empty-state { text-align: center; padding: 80px 20px; display: none; }
+        /* ... Ton CSS existant pour le tableau et les stats ... */
+        .stats-bar { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 30px; }
+        .stat-item { background: var(--card-bg); padding: 20px; border-radius: 20px; border: 1px solid var(--border); }
+        .stat-label { font-size: 10px; color: #64748b; text-transform: uppercase; font-weight: 800; }
+        .stat-value { font-size: 28px; font-weight: 900; display: block; }
+        .registry-card { background: var(--card-bg); border-radius: 25px; border: 1px solid var(--border); padding: 20px; }
+        table { width: 100%; border-collapse: collapse; }
+        th { text-align: left; padding: 15px; font-size: 10px; color: #475569; border-bottom: 1px solid var(--border); }
+        td { padding: 15px; font-size: 13px; border-bottom: 1px solid rgba(255,255,255,0.02); }
+        .code-badge { font-family: monospace; color: var(--primary); background: rgba(0, 194, 255, 0.1); padding: 4px 8px; border-radius: 5px; }
+        .btn-group { display: flex; gap: 8px; }
+        .btn-action { padding: 8px 15px; border-radius: 10px; cursor: pointer; font-size: 10px; font-weight: 800; border: 1px solid transparent; }
+        .btn-danger { color: var(--danger); background: rgba(255,71,87,0.1); border-color: var(--danger); }
+        .search-input { width: 100%; max-width: 300px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); padding: 10px 15px; border-radius: 10px; color: white; margin-bottom: 20px; }
     </style>
 </head>
 <body>
@@ -91,162 +92,124 @@
     <div class="main-content">
         <div class="header-flex">
             <div>
-                <h1 style="font-size: 32px; font-weight: 900; letter-spacing: -1px;">REGISTRE DES <span style="color:var(--primary)">ACCÈS</span></h1>
-                <p style="color: #64748b; font-size: 13px; margin-top: 5px;">Unité de stockage de flux de données Alpha.</p>
+                <h1 style="font-size: 28px; font-weight: 900;">UNITÉ DE <span style="color:var(--primary)">STOCKAGE</span></h1>
             </div>
             <div class="btn-group">
-                <button class="btn-action btn-pdf" onclick="exportToPDF()">Rapport PDF 📄</button>
-                <button class="btn-action btn-export" onclick="exportToCSV()">Excel/CSV 📥</button>
-                <button class="btn-action btn-danger" onclick="clearStock()">Purger ☢️</button>
-            </div>
-        </div>
-
-        <div class="header-flex" style="margin-bottom: 25px;">
-            <div class="search-container">
-                <span class="search-icon">🔍</span>
-                <input type="text" id="searchInput" class="search-input" placeholder="Rechercher un code, un tarif ou une date..." onkeyup="filtrerTableau()">
+                <button class="btn-action btn-danger" onclick="clearStock()">Vider le Stock ☢️</button>
             </div>
         </div>
 
         <div class="stats-bar">
             <div class="stat-item">
-                <span class="stat-label">Capacité Totale</span>
+                <span class="stat-label">Total Injecté</span>
                 <span id="totalCodes" class="stat-value">0</span>
             </div>
-            <div class="stat-item" style="border-left-color: var(--accent);">
-                <span class="stat-label">Flux Disponibles</span>
+            <div class="stat-item">
+                <span class="stat-label">Disponibles</span>
                 <span id="stockDispo" class="stat-value" style="color:var(--accent)">0</span>
             </div>
-            <div class="stat-item" style="border-left-color: var(--warning);">
-                <span class="stat-label">Sorties (Ventes)</span>
+            <div class="stat-item">
+                <span class="stat-label">Ventes</span>
                 <span id="soldCodes" class="stat-value" style="color:var(--warning)">0</span>
             </div>
         </div>
 
-        <div class="registry-card">
-            <div class="scan-line"></div>
-            <div class="table-container">
-                <table id="registryTable">
-                    <thead>
-                        <tr>
-                            <th>Code ID</th>
-                            <th>Désignation</th>
-                            <th>Valeur Flux</th>
-                            <th>État</th>
-                            <th>Horodatage</th>
-                        </tr>
-                    </thead>
-                    <tbody id="stockTableBody"></tbody>
-                </table>
+        <div class="view-switcher">
+            <button class="switch-btn active" onclick="toggleView('table', this)">Vue Liste</button>
+            <button class="switch-btn" onclick="toggleView('cards', this)">Vue Cartes (Réaliste)</button>
+        </div>
+
+        <input type="text" id="searchInput" class="search-input" placeholder="🔍 Rechercher un code..." onkeyup="filtrer()">
+
+        <div id="tableView" class="registry-card">
+            <table>
+                <thead>
+                    <tr><th>CODE</th><th>OFFRE</th><th>PRIX</th><th>DATE</th></tr>
+                </thead>
+                <tbody id="stockTableBody"></tbody>
+            </table>
+        </div>
+
+        <div id="cardsView" class="grid-cards">
             </div>
-            <div id="emptyMsg" class="empty-state">
-                <span style="font-size: 40px;">🕳️</span>
-                <h3 style="margin-top:15px;">Aucune donnée trouvée</h3>
-            </div>
+
+        <div id="emptyMsg" style="text-align:center; padding:50px; display:none;">
+            <h3>🕳️ Stock vide</h3>
         </div>
     </div>
 
     <script>
+        function toggleView(view, btn) {
+            document.querySelectorAll('.switch-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            if(view === 'table') {
+                document.getElementById('tableView').style.display = 'block';
+                document.getElementById('cardsView').style.display = 'none';
+            } else {
+                document.getElementById('tableView').style.display = 'none';
+                document.getElementById('cardsView').style.display = 'grid';
+            }
+        }
+
         function chargerInventaire() {
             const config = JSON.parse(localStorage.getItem('aerio_config')) || {};
             const devise = config.currency || 'XAF';
-            if(config.name) document.getElementById('sideLogo').innerText = config.name;
+            document.getElementById('sideLogo').innerText = config.name || "AERIO";
 
             const stock = JSON.parse(localStorage.getItem('aerio_stock')) || [];
             const tarifs = JSON.parse(localStorage.getItem('aerio_tarifs')) || [];
-            const tbody = document.getElementById('stockTableBody');
-
+            
             document.getElementById('totalCodes').innerText = stock.length;
             const dispo = stock.filter(s => !s.vendu).length;
             document.getElementById('stockDispo').innerText = dispo;
             document.getElementById('soldCodes').innerText = stock.length - dispo;
 
-            if (stock.length === 0) {
-                document.getElementById('emptyMsg').style.display = "block";
+            const tbody = document.getElementById('stockTableBody');
+            const cardsContainer = document.getElementById('cardsView');
+            
+            if(stock.length === 0) {
+                document.getElementById('emptyMsg').style.display = 'block';
                 return;
             }
 
             tbody.innerHTML = "";
+            cardsContainer.innerHTML = "";
+
             [...stock].reverse().forEach(item => {
-                const tarifInfo = tarifs.find(t => t.id == item.tarifId) || { nom: "Neutre", prix: "0" };
-                const row = document.createElement('tr');
-                row.innerHTML = `
+                const tarif = tarifs.find(t => t.id == item.tarifId) || { nom: "Standard", prix: "0" };
+                
+                // 1. Remplissage Tableau
+                tbody.innerHTML += `<tr>
                     <td><span class="code-badge">${item.code}</span></td>
-                    <td style="font-weight:600; color:#cbd5e1;">${tarifInfo.nom}</td>
-                    <td style="color:var(--primary); font-weight:800;">${tarifInfo.prix} <small>${devise}</small></td>
-                    <td>
-                        <span class="status-pill ${item.vendu ? 'status-sold' : 'status-available'}">
-                            ${item.vendu ? 'Transmis' : 'En Stock'}
-                        </span>
-                    </td>
-                    <td style="color:#475569; font-size:11px; font-family:monospace;">${item.dateAjout}</td>
+                    <td>${tarif.nom}</td>
+                    <td style="color:var(--primary)">${tarif.prix} ${devise}</td>
+                    <td>${item.dateAjout}</td>
+                </tr>`;
+
+                // 2. Remplissage Cartes Réalistes
+                cardsContainer.innerHTML += `
+                    <div class="ticket-visual">
+                        <div class="ticket-header">
+                            <span class="ticket-logo">${config.name || 'AERIO'}</span>
+                            <span class="ticket-price">${tarif.prix} ${devise}</span>
+                        </div>
+                        <div class="ticket-label">Pass Accès Internet</div>
+                        <div class="ticket-body">
+                            <span class="ticket-label">Votre Code</span>
+                            <span class="ticket-code">${item.code}</span>
+                        </div>
+                        <div style="font-size:9px; color:#475569; text-align:center;">
+                            Validité : ${tarif.nom} <br> Connectez-vous au réseau pour activer.
+                        </div>
+                    </div>
                 `;
-                tbody.appendChild(row);
             });
-            appliquerModeTemporel();
-        }
-
-        function filtrerTableau() {
-            const input = document.getElementById("searchInput").value.toUpperCase();
-            const rows = document.getElementById("stockTableBody").getElementsByTagName("tr");
-            let countVisible = 0;
-
-            for (let i = 0; i < rows.length; i++) {
-                const text = rows[i].textContent || rows[i].innerText;
-                if (text.toUpperCase().indexOf(input) > -1) {
-                    rows[i].style.display = "";
-                    countVisible++;
-                } else {
-                    rows[i].style.display = "none";
-                }
-            }
-            document.getElementById('emptyMsg').style.display = countVisible === 0 ? "block" : "none";
-        }
-
-        function exportToPDF() {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-            const config = JSON.parse(localStorage.getItem('aerio_config')) || {};
-            const stock = JSON.parse(localStorage.getItem('aerio_stock')) || [];
-            const tarifs = JSON.parse(localStorage.getItem('aerio_tarifs')) || [];
-
-            doc.text(`RAPPORT D'ACTIVITE - ${config.name || 'AERIO'}`, 14, 20);
-            const rows = stock.map(item => {
-                const tarif = tarifs.find(t => t.id == item.tarifId) || { nom: "N/A", prix: "0" };
-                return [item.code, tarif.nom, tarif.prix, item.vendu ? "Vendu" : "Stock", item.dateAjout];
-            });
-
-            doc.autoTable({
-                startY: 30,
-                head: [['Code', 'Designation', 'Prix', 'Etat', 'Date']],
-                body: rows,
-                headStyles: { fillColor: [0, 194, 255] }
-            });
-            doc.save("rapport_aerio.pdf");
-        }
-
-        function exportToCSV() {
-            const stock = JSON.parse(localStorage.getItem('aerio_stock')) || [];
-            let csv = "CODE,DESIGNATION,DATE,STATUT\n";
-            stock.forEach(i => csv += `${i.code},${i.tarifId},${i.dateAjout},${i.vendu?'Vendu':'Stock'}\n`);
-            const blob = new Blob([csv], { type: 'text/csv' });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url; a.download = 'export_aerio.csv'; a.click();
-        }
-
-        function appliquerModeTemporel() {
-            const heure = new Date().getHours();
-            if (heure >= 20 || heure <= 6) {
-                document.documentElement.style.setProperty('--primary', '#0077FF'); 
-                document.documentElement.style.setProperty('--bg-deep', '#010409');
-            }
         }
 
         function clearStock() {
-            if(confirm("☢️ Purger le registre définitivement ?")) {
+            if(confirm("Purger tout le stock ?")) {
                 localStorage.removeItem('aerio_stock');
-                chargerInventaire();
+                location.reload();
             }
         }
 
