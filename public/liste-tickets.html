@@ -75,7 +75,6 @@
         .empty-state { text-align: center; padding: 100px 20px; }
         .empty-state span { font-size: 50px; display: block; margin-bottom: 20px; opacity: 0.5; }
 
-        /* Animation de scan */
         .scan-line {
             position: absolute; top: 0; left: 0; width: 100%; height: 2px;
             background: linear-gradient(90deg, transparent, var(--primary), transparent);
@@ -88,7 +87,7 @@
 <body>
 
     <div class="sidebar">
-        <div class="logo-title">AERIO</div>
+        <div class="logo-title" id="sideLogo">AERIO</div>
         <a href="dashboard.html" class="nav-link">🏠 Dashboard</a>
         <a href="ajouter-tarif.html" class="nav-link">💎 Ajouter un Tarif</a>
         <a href="liste-tarif.html" class="nav-link">📜 Ma Grille Tarifaire</a>
@@ -134,7 +133,7 @@
                         </tr>
                     </thead>
                     <tbody id="stockTableBody">
-                        </tbody>
+                    </tbody>
                 </table>
             </div>
             <div id="emptyMsg" class="empty-state" style="display:none;">
@@ -147,12 +146,18 @@
 
     <script>
         function chargerInventaire() {
+            // 1. Récupérer la config (Devise + Nom)
+            const config = JSON.parse(localStorage.getItem('aerio_config')) || {};
+            const devise = config.currency || 'XAF';
+            if(config.name) document.getElementById('sideLogo').innerText = config.name;
+
+            // 2. Récupérer les données
             const stock = JSON.parse(localStorage.getItem('aerio_stock')) || [];
             const tarifs = JSON.parse(localStorage.getItem('aerio_tarifs')) || [];
             const tbody = document.getElementById('stockTableBody');
             const emptyMsg = document.getElementById('emptyMsg');
 
-            // Mise à jour des moniteurs
+            // 3. Mise à jour des moniteurs (Stats)
             document.getElementById('totalCodes').innerText = stock.length;
             const dispo = stock.filter(s => !s.vendu).length;
             document.getElementById('stockDispo').innerText = dispo;
@@ -167,14 +172,15 @@
             emptyMsg.style.display = "none";
             tbody.innerHTML = "";
 
-            stock.reverse().forEach(item => { // Derniers ajoutés en premier
+            // 4. Remplissage du tableau (Inversion pour voir les nouveaux en haut)
+            [...stock].reverse().forEach(item => {
                 const tarifInfo = tarifs.find(t => t.id == item.tarifId) || { nom: "Neutre", prix: "0" };
                 
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td><span class="code-badge">${item.code}</span></td>
                     <td style="font-weight:600; color:#cbd5e1;">${tarifInfo.nom}</td>
-                    <td style="color:var(--primary); font-weight:800;">${tarifInfo.prix} <small>XAF</small></td>
+                    <td style="color:var(--primary); font-weight:800;">${tarifInfo.prix} <small>${devise}</small></td>
                     <td>
                         <span class="status-pill ${item.vendu ? 'status-sold' : 'status-available'}">
                             ${item.vendu ? 'Transmis' : 'En Stock'}
@@ -187,7 +193,7 @@
         }
 
         function clearStock() {
-            if(confirm("ALERTE : Cette action va purger toute l'unité de stockage. Continuer ?")) {
+            if(confirm("ALERTE CRITIQUE : Cette action va purger toute l'unité de stockage définitivement. Continuer ?")) {
                 localStorage.removeItem('aerio_stock');
                 chargerInventaire();
             }
