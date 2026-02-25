@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AERIO | Centre de Commande Alpha</title>
+    <title>AERIO | Centre de Commande Alpha (DADIE IA)</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -14,11 +14,11 @@
             --card-bg: rgba(15, 23, 42, 0.6);
             --border: rgba(255, 255, 255, 0.1);
             --sidebar-w: 280px;
+            --dadie-glow: rgba(112, 0, 255, 0.3);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         
-        /* --- FOND DYNAMIQUE --- */
         body { 
             background: var(--bg-deep); 
             color: white; 
@@ -28,7 +28,7 @@
             background-image: radial-gradient(circle at 50% 50%, #0f172a 0%, #020617 100%);
         }
 
-        /* --- EFFET OVERLAY QUANTIQUE (AJOUTÉ) --- */
+        /* --- EFFET OVERLAY QUANTIQUE --- */
         .aerio-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -60,6 +60,8 @@
             text-shadow: 0 0 15px rgba(0, 194, 255, 0.5);
         }
 
+        .group-label { font-size: 10px; text-transform: uppercase; color: #475569; font-weight: 900; margin: 20px 0 10px 10px; letter-spacing: 2px; }
+
         .nav-button {
             background: rgba(255,255,255,0.02); padding: 12px 15px; border-radius: 12px;
             display: flex; align-items: center; text-decoration: none; font-size: 12px; margin-bottom: 5px; 
@@ -74,7 +76,7 @@
             border-left: 4px solid var(--primary); color: var(--primary); font-weight: 600;
         }
 
-        /* --- TOP BAR & LANGUES --- */
+        /* --- TOP BAR & NOTIFS --- */
         .top-bar {
             display: flex; justify-content: flex-end; align-items: center; gap: 20px;
             padding: 20px 40px; position: sticky; top: 0; z-index: 90;
@@ -87,38 +89,55 @@
         }
         .lang-btn.active { background: var(--primary); color: #020617; box-shadow: 0 0 10px var(--primary); }
 
-        /* --- CARDS & STATS (LOOK FUTURISTE) --- */
+        .notif-trigger { cursor: pointer; font-size: 18px; position: relative; }
+        .notif-badge { position: absolute; top: -5px; right: -5px; background: red; font-size: 9px; padding: 2px 5px; border-radius: 10px; }
+
+        /* --- DADIE IA INTERFACE (UPGRADE DE LA BANNER) --- */
         .content { margin-left: var(--sidebar-w); flex: 1; padding: 10px 40px 40px 40px; }
         
+        .dadie-brain {
+            background: linear-gradient(135deg, #0d1117 0%, #161b22 100%);
+            border: 1px solid var(--purple);
+            border-radius: 25px; padding: 25px; margin-bottom: 35px;
+            box-shadow: 0 10px 40px var(--dadie-glow);
+            display: flex; align-items: center; gap: 20px;
+            position: relative; overflow: hidden;
+        }
+
+        .dadie-avatar {
+            width: 70px; height: 70px; background: var(--purple);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 35px; box-shadow: 0 0 20px var(--purple);
+            animation: pulseIA 2s infinite;
+        }
+        @keyframes pulseIA { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+
+        /* --- CARDS & STATS --- */
         .action-card {
             background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px;
             padding: 15px 20px; display: flex; align-items: center; gap: 15px;
             text-decoration: none; transition: 0.4s; backdrop-filter: blur(10px);
         }
-        .action-card:hover { 
-            transform: translateY(-5px); border-color: var(--primary);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-        }
-
-        .smart-banner {
-            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
-            border-radius: 25px; padding: 25px; margin-bottom: 35px;
-            box-shadow: 0 10px 40px rgba(99, 102, 241, 0.3);
-        }
+        .action-card:hover { transform: translateY(-5px); border-color: var(--primary); }
 
         .card-main { 
             background: var(--card-bg); padding: 35px; border-radius: 35px; border: 1px solid var(--border); 
             text-align: center; backdrop-filter: blur(15px); transition: 0.3s;
         }
-        .card-main:hover { border-color: rgba(0, 194, 255, 0.3); transform: scale(1.02); }
-        .val-large { font-size: 48px; font-weight: 900; margin: 10px 0; letter-spacing: -2px; text-shadow: 0 0 20px rgba(255,255,255,0.1); }
+        .val-large { font-size: 48px; font-weight: 900; margin: 10px 0; letter-spacing: -2px; }
 
         .mini-card { 
             padding: 25px 15px; border-radius: 25px; border: 1px solid var(--border); 
-            text-align: center; background: rgba(255,255,255,0.03); transition: 0.3s; backdrop-filter: blur(5px);
+            text-align: center; background: rgba(255,255,255,0.03);
         }
 
-        /* --- ANIMATION PROGRESS BAR --- */
+        /* --- IA CONTROL PANEL (NOUVEAU) --- */
+        .ai-control {
+            margin-top: 30px; background: rgba(188, 0, 255, 0.05);
+            border: 1px solid rgba(188, 0, 255, 0.2); border-radius: 20px; padding: 20px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+
         .progress-container { width: 100%; height: 4px; background: rgba(255,255,255,0.1); margin: 15px 0; border-radius: 2px; overflow: hidden; }
         .progress-bar { width: 40%; height: 100%; background: var(--primary); animation: moveBar 2s infinite linear; }
         @keyframes moveBar { from { transform: translateX(-100%); } to { transform: translateX(300%); } }
@@ -162,15 +181,9 @@
                 <button onclick="setLang('es')" id="btn-es" class="lang-btn">ES</button>
             </div>
 
-            <div class="notif-wrapper">
+            <div class="notif-wrapper" style="position:relative;">
                 <div class="notif-trigger" onclick="toggleNotifs()">
-                    🔔 <span class="notif-badge">0</span>
-                </div>
-                <div class="notif-dropdown" id="notifDropdown">
-                    <div style="font-size: 10px; font-weight: 900; color: var(--primary); margin-bottom: 10px;" data-key="notif_head">NOTIFICATIONS RÉCENTES</div>
-                    <div id="notif-content" style="font-size: 11px; color: #94a3b8;" data-key="notif_empty">
-                        ✨ Bienvenue ! Aucune notification pour le moment.
-                    </div>
+                    🔔 <span class="notif-badge">1</span>
                 </div>
             </div>
         </div>
@@ -193,10 +206,13 @@
                 </a>
             </div>
 
-            <div class="smart-banner">
+            <div class="dadie-brain">
+                <div class="dadie-avatar">🧠</div>
                 <div>
-                    <span style="background:white; color:#6366f1; padding:4px 12px; border-radius:20px; font-size:10px; font-weight:900;">ALPHA IA</span>
-                    <p style="margin-top:12px; font-weight:600; font-size:15px; letter-spacing:-0.3px;" id="welcome-msg">Chargement du système...</p>
+                    <span style="background:var(--purple); color:white; padding:4px 12px; border-radius:20px; font-size:10px; font-weight:900;">DADIE IA v1.0</span>
+                    <p style="margin-top:12px; font-weight:600; font-size:15px; letter-spacing:-0.3px; color: #fff;" id="welcome-msg">
+                        Analyse en cours...
+                    </p>
                 </div>
             </div>
 
@@ -231,17 +247,27 @@
                     <div style="font-size: 28px; font-weight: 900;">0</div>
                 </div>
             </div>
+
+            <div class="ai-control">
+                <div>
+                    <h4 style="font-size: 12px; color: var(--purple);">OPTIMISATION SATELLITAIRE</h4>
+                    <p style="font-size: 10px; color: #64748b;">DADIE IA surveille la latence de vos passerelles.</p>
+                </div>
+                <button onclick="boostAction()" style="background: var(--purple); border:none; color:white; padding:10px 20px; border-radius:10px; font-weight:900; cursor:pointer; font-size:10px;">
+                    BOOST ALPHA
+                </button>
+            </div>
         </div>
     </main>
 
     <script>
-        // --- SYSTÈME DE NOTIFICATION QUANTIQUE (AJOUTÉ) ---
+        // --- SYSTÈME DE NOTIFICATION QUANTIQUE ---
         function showQuantumAlert(message) {
             const alertHtml = `
             <div class="aerio-overlay" id="quantumAlert">
                 <div class="quantum-card">
                     <div style="opacity: 0.5; font-size: 0.7rem; margin-bottom: 10px;">🌐 system.aerio.alpha</div>
-                    <div style="color:var(--primary); font-weight:900; letter-spacing:1px; margin-bottom:5px;">AERIO CORE NOTIFICATION</div>
+                    <div style="color:var(--primary); font-weight:900; letter-spacing:1px; margin-bottom:5px;">AERIO CORE & DADIE IA</div>
                     <div style="font-size:0.9rem; color:#fff; margin-bottom:15px;">${message}</div>
                     <div class="progress-container"><div class="progress-bar"></div></div>
                     <button onclick="document.getElementById('quantumAlert').remove()" 
@@ -258,43 +284,26 @@
                 grp_pilot: "Pilotage Réseaux", nav_dash: "Tableau de bord", nav_add_wifi: "Configurer un WiFi", nav_list_wifi: "Mes Zones WiFi", nav_stats_wifi: "Analyse de Flotte",
                 grp_offers: "Offres & Accès", nav_add_price: "Créer un Tarif", nav_list_price: "Ma Grille Tarifaire", nav_gen_pass: "Générer un Pass", nav_list_pass: "Registre des Accès",
                 grp_finance: "Gestion Financière", nav_cash: "Flux de Trésorerie", nav_revenue: "Historique Recettes", nav_withdraw: "Journal d'Extractions",
-                notif_head: "NOTIFICATIONS RÉCENTES", notif_empty: "✨ Bienvenue ! Aucune notification pour le moment.",
-                card_profile: "MON COMPTE", card_profile_sub: "Gérer mon profil Alpha", card_support: "ASSISTANCE LIVE", card_support_sub: "IA de nouvelle génération", card_academy: "ACADÉMIE", card_academy_sub: "Guides & Tutoriels Alpha",
-                welcome: "Bienvenue, Chef de Projet. Le système est prêt à monitorer vos revenus.",
-                stat_balance: "SOLDE DISPONIBLE", stat_pending: "Aucun retrait en attente", stat_total: "CHIFFRE D'AFFAIRES GLOBAL", stat_perf: "Performance du réseau : 0%",
+                welcome: "Bonjour Agent Alpha. DADIE IA analyse votre secteur de Maroua. Tout est stable.",
+                stat_balance: "SOLDE DISPONIBLE", stat_total: "CHIFFRE D'AFFAIRES GLOBAL",
                 mini_passes: "PASS VENDUS", mini_withdrawals: "EXTRACTIONS", mini_daily: "RECETTE JOUR", mini_live: "AFFLUENCE LIVE"
             },
             en: {
                 grp_pilot: "Network Management", nav_dash: "Dashboard", nav_add_wifi: "Configure WiFi", nav_list_wifi: "My WiFi Zones", nav_stats_wifi: "Fleet Analysis",
                 grp_offers: "Offers & Access", nav_add_price: "Create Price", nav_list_price: "Pricing Table", nav_gen_pass: "Generate Pass", nav_list_pass: "Access Log",
                 grp_finance: "Financial Mgmt", nav_cash: "Cash Flow", nav_revenue: "Revenue History", nav_withdraw: "Withdrawal Log",
-                notif_head: "RECENT NOTIFICATIONS", notif_empty: "✨ Welcome! No notifications at the moment.",
-                card_profile: "MY ACCOUNT", card_profile_sub: "Manage Alpha Profile", card_support: "LIVE SUPPORT", card_support_sub: "Next-gen AI", card_academy: "ACADEMY", card_academy_sub: "Alpha Guides & Tutorials",
-                welcome: "Welcome, Project Lead. The system is ready to monitor your income.",
-                stat_balance: "AVAILABLE BALANCE", stat_pending: "No pending withdrawals", stat_total: "TOTAL REVENUE", stat_perf: "Network performance: 0%",
+                welcome: "Hello Agent Alpha. DADIE IA is scanning your Maroua sector. Status: Stable.",
+                stat_balance: "AVAILABLE BALANCE", stat_total: "TOTAL REVENUE",
                 mini_passes: "PASSES SOLD", mini_withdrawals: "WITHDRAWALS", mini_daily: "DAILY INCOME", mini_live: "LIVE USERS"
-            },
-            pt: {
-                grp_pilot: "Gestão de Redes", nav_dash: "Painel de Controle", nav_add_wifi: "Configurar WiFi", nav_list_wifi: "Minhas Zonas WiFi", nav_stats_wifi: "Análise de Frota",
-                grp_offers: "Ofertas e Acesso", nav_add_price: "Criar Tarifa", nav_list_price: "Tabela de Preços", nav_gen_pass: "Gerar Passe", nav_list_pass: "Registro de Acesso",
-                grp_finance: "Gestão Financeira", nav_cash: "Fluxo de Caixa", nav_revenue: "Histórico de Receita", nav_withdraw: "Extratos",
-                notif_head: "NOTIFICAÇÕES RECENTES", notif_empty: "✨ Bem-vindo! Nenhuma notificação no momento.",
-                card_profile: "MINHA CONTA", card_profile_sub: "Gerenciar Perfil Alpha", card_support: "SUPORTE AO VIVO", card_support_sub: "IA de última geração", card_academy: "ACADEMIA", card_academy_sub: "Guias e Tutoriais Alpha",
-                welcome: "Bem-vindo, Líder de Projeto. O sistema está pronto para monitorar sua renda.",
-                stat_balance: "SALDO DISPONÍVEL", stat_pending: "Nenhum saque pendente", stat_total: "RECEITA TOTAL", stat_perf: "Desempenho da rede: 0%",
-                mini_passes: "PASSES VENDIDOS", mini_withdrawals: "SAQUES", mini_daily: "RECEITA DIÁRIA", mini_live: "USUÁRIOS AO VIVO"
-            },
-            es: {
-                grp_pilot: "Gestión de Redes", nav_dash: "Panel de Control", nav_add_wifi: "Configurar WiFi", nav_list_wifi: "Mis Zonas WiFi", nav_stats_wifi: "Análisis de Flota",
-                grp_offers: "Ofertas y Acceso", nav_add_price: "Crear Tarifa", nav_list_price: "Lista de Precios", nav_gen_pass: "Generar Pase", nav_list_pass: "Registro de Acceso",
-                grp_finance: "Gestión Financiera", nav_cash: "Flujo de Caja", nav_revenue: "Historial de Ingresos", nav_withdraw: "Extracciones",
-                notif_head: "NOTIFICACIONES RECIENTES", notif_empty: "✨ ¡Bienvenido! No hay notificaciones por ahora.",
-                card_profile: "MI CUENTA", card_profile_sub: "Gestionar Perfil Alpha", card_support: "SOPORTE EN VIVO", card_support_sub: "IA de nueva generación", card_academy: "ACADEMIA", card_academy_sub: "Guías y Tutoriales Alpha",
-                welcome: "Bienvenido, Jefe de Proyecto. El sistema está listo para monitorear sus ingresos.",
-                stat_balance: "SALDO DISPONIBLE", stat_pending: "Sin retiros pendientes", stat_total: "INGRESOS TOTALES", stat_perf: "Rendimiento de red: 0%",
-                mini_passes: "PASES VENDIDOS", mini_withdrawals: "EXTRACCIONES", mini_daily: "INGRESOS DIARIOS", mini_live: "AFUENCIA EN VIVO"
             }
         };
+
+        const dadieQuotes = [
+            "Analyse terminée : +12% de connexions ce soir.",
+            "Secteur Maroua : Signal optimal. Aucune micro-coupure.",
+            "Agent Alpha, vos revenus sont sécurisés par le protocole DADIE.",
+            "Optimisation : J'ai libéré de la bande passante pour le nœud central."
+        ];
 
         function setLang(lang) {
             document.querySelectorAll('[data-key]').forEach(el => {
@@ -307,22 +316,24 @@
             localStorage.setItem('aerio_lang', lang);
         }
 
-        function toggleNotifs() {
-            document.getElementById('notifDropdown').classList.toggle('active');
+        function boostAction() {
+            showQuantumAlert("DADIE IA : Calibration des ondes terminée. Vitesse boostée sur toute la zone.");
         }
 
-        window.onclick = function(event) {
-            if (!event.target.closest('.notif-wrapper')) {
-                const dropdown = document.getElementById('notifDropdown');
-                if (dropdown && dropdown.classList.contains('active')) dropdown.classList.remove('active');
-            }
-        }
+        // Cycle de parole pour DADIE IA
+        setInterval(() => {
+            const welcome = document.getElementById('welcome-msg');
+            welcome.style.opacity = 0;
+            setTimeout(() => {
+                welcome.innerText = dadieQuotes[Math.floor(Math.random() * dadieQuotes.length)];
+                welcome.style.opacity = 1;
+            }, 500);
+        }, 15000);
 
         window.onload = () => {
             const savedLang = localStorage.getItem('aerio_lang') || 'fr';
             setLang(savedLang);
-            // On affiche une petite notification stylée au chargement
-            setTimeout(() => showQuantumAlert("Initialisation de l'Interface Alpha terminée."), 1000);
+            setTimeout(() => showQuantumAlert("Initialisation terminée. DADIE IA est désormais en ligne."), 1000);
         };
     </script>
 </body>
