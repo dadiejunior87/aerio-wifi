@@ -17,9 +17,11 @@
 
         /* --- SIDEBAR SYNC --- */
         .sidebar { width: var(--sidebar-w); background: #0b0f1a; padding: 30px 15px; height: 100vh; position: fixed; border-right: 1px solid var(--border); }
-        .logo-title { color: var(--primary); font-weight: 900; font-size: 24px; margin-bottom: 40px; }
+        .logo-title { color: var(--primary); font-weight: 900; font-size: 24px; margin-bottom: 40px; display: flex; align-items: center; gap: 10px; }
+        .logo-dot { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; box-shadow: 0 0 15px var(--accent); }
         .nav-link { padding: 12px; color: #64748b; text-decoration: none; display: block; font-size: 13px; border-radius: 10px; transition: 0.3s; margin-bottom: 5px; }
         .nav-link.active { background: rgba(0, 194, 255, 0.1); color: var(--primary); font-weight: 600; }
+        .nav-link:hover { color: white; background: rgba(255,255,255,0.05); }
 
         /* --- MAIN CONTENT --- */
         .main-content { margin-left: var(--sidebar-w); flex: 1; padding: 40px; }
@@ -37,18 +39,18 @@
             width: 100%; background: rgba(2, 6, 23, 0.9); border: 1px solid var(--border); 
             padding: 18px; border-radius: 16px; color: white; font-size: 14px; outline: none; transition: 0.3s;
         }
-        input:focus { border-color: var(--primary); box-shadow: 0 0 15px rgba(0, 194, 255, 0.1); }
+        input:focus, select:focus { border-color: var(--primary); box-shadow: 0 0 15px rgba(0, 194, 255, 0.1); }
 
         .live-preview {
             background: linear-gradient(135deg, rgba(188, 0, 255, 0.05) 0%, rgba(0, 194, 255, 0.05) 100%);
             border: 1px solid var(--border); border-radius: 20px; padding: 25px; margin-top: 30px;
-            display: flex; align-items: center; justify-content: space-between;
+            display: flex; align-items: center; justify-content: space-between; border-left: 4px solid var(--accent);
         }
 
         .btn-save { 
             width: 100%; padding: 20px; border-radius: 18px; border: none; background: var(--primary); 
             color: #020617; font-weight: 900; font-size: 14px; text-transform: uppercase; 
-            cursor: pointer; margin-top: 30px; transition: 0.3s;
+            cursor: pointer; margin-top: 30px; transition: 0.3s; letter-spacing: 1px;
         }
         .btn-save:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(0, 194, 255, 0.4); }
     </style>
@@ -56,7 +58,7 @@
 <body>
 
     <div class="sidebar">
-        <div class="logo-title">AERIO</div>
+        <div class="logo-title"><div class="logo-dot"></div> AERIO</div>
         <a href="dashboard.html" class="nav-link">🏠 Dashboard</a>
         <a href="ajouter-tarif.html" class="nav-link active">💎 Créer un Tarif</a>
         <a href="liste-tarif.html" class="nav-link">📜 Ma Grille Tarifaire</a>
@@ -75,24 +77,32 @@
                 <div class="form-grid">
                     <div class="input-box">
                         <label>Nom de l'offre commerciale</label>
-                        <input type="text" id="nomOffre" placeholder="Saisir le nom (ex: Pack Silver)">
+                        <input type="text" id="nomOffre" placeholder="Saisir le nom (ex: Pack Silver)" oninput="updatePreview()">
                     </div>
                     <div class="input-box">
                         <label>Prix de vente (XAF)</label>
-                        <input type="number" id="prixOffre" placeholder="0">
+                        <input type="number" id="prixOffre" placeholder="0" oninput="updatePreview()">
                     </div>
                     
                     <div class="input-box">
                         <label>Durée du Ticket</label>
-                        <select id="dureeOffre">
+                        <select id="dureeOffre" onchange="updatePreview()">
                             <option value="" disabled selected>-- Définir la durée --</option>
-                            </select>
+                            <option value="30 min">30 Minutes</option>
+                            <option value="1 Heure">1 Heure</option>
+                            <option value="2 Heures">2 Heures</option>
+                            <option value="10 Heures">10 Heures</option>
+                            <option value="24 Heures">24 Heures</option>
+                            <option value="7 Jours">7 Jours</option>
+                        </select>
                     </div>
 
                     <div class="input-box">
                         <label>Nom du Profil Mikhmon (Vitesse)</label>
                         <select id="profilOffre">
-                            <option value="" disabled selected>-- Aucun profil détecté --</option>
+                            <option value="default">Profil_Vitesse_Standard</option>
+                            <option value="premium">Profil_Vitesse_Boost</option>
+                            <option value="gaming">Profil_Vitesse_Gaming</option>
                         </select>
                     </div>
                 </div>
@@ -100,7 +110,7 @@
                 <div class="live-preview">
                     <div>
                         <p style="font-size: 10px; color: #64748b; font-weight: 900;">PRÉVISUALISATION DU TICKET</p>
-                        <h3 id="preview-text" style="color: var(--accent); margin-top: 5px;">En attente de configuration...</h3>
+                        <h3 id="preview-text" style="color: var(--accent); margin-top: 5px;">Configuration en cours...</h3>
                     </div>
                     <div style="text-align: right;">
                         <span id="preview-price" style="font-size: 24px; font-weight: 900; color: white;">0 XAF</span>
@@ -113,14 +123,47 @@
     </div>
 
     <script>
+        // Met à jour l'aperçu visuel quand on tape
+        function updatePreview() {
+            const nom = document.getElementById('nomOffre').value;
+            const prix = document.getElementById('prixOffre').value;
+            const duree = document.getElementById('dureeOffre').value;
+
+            if(nom || duree) {
+                document.getElementById('preview-text').innerText = (nom || "Forfait") + " (" + (duree || "Durée non fixée") + ")";
+            }
+            if(prix) {
+                document.getElementById('preview-price').innerText = prix + " XAF";
+            }
+        }
+
         function saveTarif() {
             const nom = document.getElementById('nomOffre').value;
-            if(!nom) {
-                alert("⚠️ Veuillez configurer au moins le nom de l'offre avant le déploiement.");
-            } else {
-                alert("🚀 DÉPLOIEMENT RÉUSSI : L'offre " + nom + " a été ajoutée à votre registre.");
-                window.location.href = 'liste-tarif.html';
+            const prix = document.getElementById('prixOffre').value;
+            const duree = document.getElementById('dureeOffre').value;
+            const profil = document.getElementById('profilOffre').value;
+
+            if(!nom || !prix || !duree) {
+                alert("⚠️ Erreur : Veuillez remplir le nom, le prix et la durée.");
+                return;
             }
+
+            // Création de l'objet tarif
+            const nouveauTarif = {
+                id: Date.now(),
+                nom: nom,
+                prix: prix,
+                duree: duree,
+                profil: profil
+            };
+
+            // Sauvegarde locale
+            let listeTarifs = JSON.parse(localStorage.getItem('aerio_tarifs')) || [];
+            listeTarifs.push(nouveauTarif);
+            localStorage.setItem('aerio_tarifs', JSON.stringify(listeTarifs));
+
+            alert("🚀 DÉPLOIEMENT RÉUSSI : L'offre " + nom + " est active !");
+            window.location.href = 'liste-tarif.html';
         }
     </script>
 </body>
