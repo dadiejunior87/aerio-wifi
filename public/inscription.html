@@ -16,7 +16,6 @@
             justify-content: center; 
             align-items: center; 
             min-height: 100vh; 
-            /* ✅ CORRECTION : On autorise le défilement pour atteindre le bouton enregistrer */
             padding: 40px 0;
             overflow-y: auto;
             background-image: radial-gradient(circle at center, #0f172a 0%, #020617 100%);
@@ -28,7 +27,6 @@
             background-size: 50px 50px; opacity: 0.05; z-index: -1;
         }
 
-        /* Lang switcher positionné dans la carte pour plus de simplicité */
         .lang-switcher { display: flex; gap: 10px; justify-content: center; margin-bottom: 20px; }
         .lang-btn { cursor: pointer; font-size: 16px; opacity: 0.4; transition: 0.3s; filter: grayscale(1); }
         .lang-btn.active { opacity: 1; filter: grayscale(0); transform: scale(1.2); }
@@ -75,6 +73,9 @@
         }
         @keyframes scanMove { 0% { top: 0; } 100% { top: 100%; } }
 
+        /* Style pour l'affichage du lien partenaire après succès */
+        #successBox { display: none; background: rgba(0, 245, 160, 0.1); border: 1px solid var(--accent); padding: 20px; border-radius: 20px; margin-top: 20px; }
+
         @media (max-width: 480px) {
             .row { flex-direction: column; gap: 0; }
             .auth-card { padding: 30px 20px; }
@@ -104,13 +105,13 @@
             <form id="registerForm">
                 <div class="form-group">
                     <label data-key="label_id">Identité Business</label>
-                    <input type="text" id="bizName" placeholder="Nom du Partenaire ou Structure" data-placeholder="ph_id" required>
+                    <input type="text" id="bizName" placeholder="Nom du Partenaire ou Structure" required>
                 </div>
 
                 <div class="row">
                     <div class="form-group" style="flex: 1;">
                         <label data-key="label_city">Ville</label>
-                        <input type="text" id="bizCity" placeholder="Ex: Maroua" data-placeholder="ph_city" required>
+                        <input type="text" id="bizCity" placeholder="Ex: Maroua" required>
                     </div>
                     <div class="form-group" style="flex: 1;">
                         <label data-key="label_contact">Contact (Paiement)</label>
@@ -131,6 +132,12 @@
                 <button type="submit" class="submit-btn" id="submitBtn" data-key="btn_activate">Activer mon Nœud Réseau</button>
             </form>
 
+            <div id="successBox">
+                <p style="color: var(--accent); font-weight: 900; font-size: 12px;" data-key="alert_success">NŒUD ACTIVÉ !</p>
+                <p style="font-size: 10px; margin: 10px 0;">Votre lien de vente :</p>
+                <code id="partnerLink" style="color: var(--primary); font-size: 11px; word-break: break-all;"></code>
+            </div>
+
             <div class="footer-text">
                 <span data-key="footer_alt">Déjà dans le réseau ?</span> <a href="connexion.html" data-key="link_login">Accéder au Terminal</a>
             </div>
@@ -144,16 +151,14 @@
                 title_partner: "PARTENAIRE",
                 hero_desc: "Rejoignez le premier réseau WiFi décentralisé.",
                 label_id: "Identité Business",
-                ph_id: "Nom du Partenaire ou Structure",
                 label_city: "Ville",
-                ph_city: "Ex: Maroua",
                 label_contact: "Contact (Paiement)",
                 label_email: "Email de Gestion",
                 label_pass: "Clé d'Accès (Pass)",
                 btn_activate: "Activer mon Nœud Réseau",
                 footer_alt: "Déjà dans le réseau ?",
                 link_login: "Accéder au Terminal",
-                alert_success: "SYSTÈME : Données transmises avec succès au protocole ALPHA.",
+                alert_success: "SYSTÈME : Nœud activé avec succès sur le protocole ALPHA.",
                 btn_sync: "SYNCHRONISATION..."
             },
             en: {
@@ -161,65 +166,70 @@
                 title_partner: "PARTNER",
                 hero_desc: "Join the first decentralized WiFi network.",
                 label_id: "Business Identity",
-                ph_id: "Partner Name or Structure",
                 label_city: "City",
-                ph_city: "Ex: London",
                 label_contact: "Contact (Payment)",
                 label_email: "Management Email",
                 label_pass: "Access Key (Pass)",
                 btn_activate: "Activate my Network Node",
                 footer_alt: "Already in the network?",
                 link_login: "Access Terminal",
-                alert_success: "SYSTEM: Data successfully transmitted to ALPHA protocol.",
+                alert_success: "SYSTEM: Node successfully activated on ALPHA protocol.",
                 btn_sync: "SYNCHRONIZING..."
-            },
-            pt: {
-                badge_init: "Inicialização do Nó",
-                title_partner: "PARCEIRO",
-                hero_desc: "Junte-se à primeira rede WiFi descentralizada.",
-                label_id: "Identidade Comercial",
-                ph_id: "Nome do Parceiro ou Estrutura",
-                label_city: "Cidade",
-                ph_city: "Ex: Luanda",
-                label_contact: "Contato (Pagamento)",
-                label_email: "E-mail de Gestão",
-                label_pass: "Chave de Acesso",
-                btn_activate: "Ativar meu Nó de Rede",
-                footer_alt: "Já está na rede?",
-                link_login: "Acessar Terminal",
-                alert_success: "SISTEMA: Dados transmitidos com sucesso ao protocolo ALPHA.",
-                btn_sync: "SINCRONIZANDO..."
             }
         };
 
         function changeLang(lang) {
             document.querySelectorAll('[data-key]').forEach(el => {
                 const key = el.getAttribute('data-key');
-                if (langData[lang][key]) el.innerText = langData[lang][key];
+                if (langData[lang] && langData[lang][key]) el.innerText = langData[lang][key];
             });
-
-            // Update placeholders
-            document.querySelectorAll('[data-placeholder]').forEach(el => {
-                const key = el.getAttribute('data-placeholder');
-                if (langData[lang][key]) el.placeholder = langData[lang][key];
-            });
-
             document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
+            if(event) event.target.classList.add('active');
             localStorage.setItem('aerio_lang', lang);
         }
 
-        document.getElementById('registerForm').addEventListener('submit', function(e) {
+        document.getElementById('registerForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            const currentLang = localStorage.getItem('aerio_lang') || 'fr';
             const btn = document.getElementById('submitBtn');
+            const currentLang = localStorage.getItem('aerio_lang') || 'fr';
             
             btn.innerText = langData[currentLang].btn_sync;
-            
-            setTimeout(() => {
-                alert(langData[currentLang].alert_success);
+            btn.disabled = true;
+
+            const partnerData = {
+                name: document.getElementById('bizName').value,
+                city: document.getElementById('bizCity').value,
+                tel: document.getElementById('bizTel').value,
+                email: document.getElementById('bizEmail').value,
+                pass: document.getElementById('bizPass').value
+            };
+
+            try {
+                // APPEL RÉEL À TON API VERCEL
+                const response = await fetch('/api/partenaires/inscription', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(partnerData)
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    document.getElementById('registerForm').style.display = 'none';
+                    document.getElementById('successBox').style.display = 'block';
+                    // On génère le lien personnalisé automatiquement
+                    const myLink = window.location.origin + "/?partnerID=" + result.partnerID;
+                    document.getElementById('partnerLink').innerText = myLink;
+                } else {
+                    alert("Erreur: " + result.message);
+                    btn.disabled = false;
+                    btn.innerText = langData[currentLang].btn_activate;
+                }
+            } catch (error) {
+                console.error("Erreur de connexion");
+                btn.disabled = false;
                 btn.innerText = langData[currentLang].btn_activate;
-            }, 2000);
+            }
         });
     </script>
 </body>
