@@ -24,14 +24,13 @@
             min-height: 100vh; overflow-x: hidden;
         }
 
-        /* --- SIDEBAR ALPHA --- */
+        /* --- SIDEBAR --- */
         .sidebar {
             width: 280px; background: rgba(11, 15, 26, 0.8); 
             backdrop-filter: blur(15px); padding: 30px 15px; height: 100vh;
             position: fixed; border-right: 1px solid var(--border); display: flex; flex-direction: column;
             z-index: 100;
         }
-
         .nav-button {
             background: rgba(255,255,255,0.02); padding: 12px 15px; border-radius: 12px;
             display: flex; align-items: center; text-decoration: none; font-size: 12px; margin-bottom: 8px; 
@@ -41,11 +40,7 @@
 
         /* --- CONTENU --- */
         .content { margin-left: 280px; padding: 40px; }
-
-        .profile-matrix {
-            max-width: 1000px; margin: 0 auto; display: grid;
-            grid-template-columns: 350px 1fr; gap: 30px;
-        }
+        .profile-matrix { max-width: 1000px; margin: 0 auto; display: grid; grid-template-columns: 350px 1fr; gap: 30px; }
 
         /* --- CARTE HOLOGRAPHIQUE --- */
         .id-card {
@@ -54,68 +49,44 @@
             text-align: center; backdrop-filter: blur(20px); position: relative;
             box-shadow: 0 20px 50px rgba(0,0,0,0.5); overflow: hidden;
         }
-
-        .id-card::before {
-            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(0, 194, 255, 0.05), transparent);
-            transform: rotate(45deg); animation: shine 6s infinite linear;
-        }
-
-        @keyframes shine {
-            0% { transform: translateX(-100%) rotate(45deg); }
-            100% { transform: translateX(100%) rotate(45deg); }
-        }
-
         .avatar-vault {
             width: 120px; height: 120px; border-radius: 25px; border: 2px solid var(--primary);
-            margin: 0 auto 20px; display: flex; align-items: center;
-            justify-content: center; background: #000; box-shadow: 0 0 30px rgba(0, 194, 255, 0.2);
-            font-size: 50px;
+            margin: 0 auto 20px; display: flex; align-items: center; justify-content: center;
+            background: #000; box-shadow: 0 0 30px rgba(0, 194, 255, 0.2); font-size: 50px;
         }
-
         .user-rank {
             background: var(--primary); color: #000; font-weight: 900;
             padding: 4px 12px; border-radius: 8px; font-size: 9px;
             letter-spacing: 1px; position: absolute; bottom: 155px; left: 50%; transform: translateX(-50%);
         }
 
-        /* --- FORMULAIRE DE CONFIGURATION --- */
-        .config-vault {
-            background: var(--card-bg); border-radius: 30px; border: 1px solid rgba(255,255,255,0.05);
-            padding: 30px;
-        }
-
+        /* --- CONFIGURATION --- */
+        .config-vault { background: var(--card-bg); border-radius: 30px; border: 1px solid rgba(255,255,255,0.05); padding: 30px; }
         .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        
-        .info-card {
-            background: rgba(255,255,255,0.03); padding: 20px; border-radius: 20px;
-            border: 1px solid rgba(255,255,255,0.05); transition: 0.3s;
-        }
-        .info-card:focus-within { border-color: var(--primary); background: rgba(0, 194, 255, 0.05); }
-
-        .info-card label {
-            display: block; font-size: 9px; font-weight: 900; color: var(--primary);
-            text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;
-        }
-
-        .info-card input, .info-card select {
-            background: transparent; border: none; color: white; font-size: 15px;
-            font-weight: 600; width: 100%; outline: none;
-        }
+        .info-card { background: rgba(255,255,255,0.03); padding: 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); }
+        .info-card label { display: block; font-size: 9px; font-weight: 900; color: var(--primary); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+        .info-card input, .info-card select { background: transparent; border: none; color: white; font-size: 15px; font-weight: 600; width: 100%; outline: none; }
 
         .btn-save {
-            grid-column: span 2; margin-top: 10px;
-            background: var(--primary); color: #020617; border: none;
-            padding: 18px; border-radius: 15px; font-weight: 900;
-            cursor: pointer; transition: 0.3s; letter-spacing: 1px;
+            grid-column: span 2; background: var(--primary); color: #020617; border: none;
+            padding: 18px; border-radius: 15px; font-weight: 900; cursor: pointer; transition: 0.3s;
         }
         .btn-save:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(0, 194, 255, 0.4); }
 
-        /* DNA Signature Animation */
-        .dna-box {
-            height: 60px; width: 100%; border: 1px dashed var(--purple);
-            border-radius: 15px; margin-top: 20px; display: flex; align-items: center; justify-content: center;
+        /* --- SECTION BADGES (NOUVEAU) --- */
+        .achievements-section { grid-column: span 2; margin-top: 30px; }
+        .badges-container { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-top: 20px; }
+        .badge-item {
+            background: rgba(255,255,255,0.02); border: 1px solid var(--border);
+            padding: 20px; border-radius: 20px; text-align: center; transition: 0.4s;
+            filter: grayscale(1); opacity: 0.5;
         }
+        .badge-item.unlocked { filter: grayscale(0); opacity: 1; border-color: var(--accent); background: rgba(0, 245, 160, 0.05); }
+        .badge-icon { font-size: 30px; margin-bottom: 10px; display: block; }
+        .badge-name { font-size: 10px; font-weight: 900; color: #fff; text-transform: uppercase; }
+        .badge-desc { font-size: 8px; color: var(--text-dim); margin-top: 5px; }
+
+        .dna-box { height: 60px; width: 100%; border: 1px dashed var(--purple); border-radius: 15px; margin-top: 20px; display: flex; align-items: center; justify-content: center; }
         .dna-line { width: 80%; height: 2px; background: var(--purple); box-shadow: 0 0 15px var(--purple); animation: pulseDNA 2s infinite; }
         @keyframes pulseDNA { 0%, 100% { opacity: 0.2; transform: scaleX(0.9); } 50% { opacity: 1; transform: scaleX(1.1); } }
     </style>
@@ -135,54 +106,49 @@
             <div class="id-card">
                 <div class="avatar-vault">👤</div>
                 <div class="user-rank">GOLD PILOT</div>
-                <h2 id="display-name" style="margin-top: 20px; font-weight: 900; letter-spacing: -1px;">Utilisateur Alpha</h2>
-                <p id="display-id" style="color: var(--text-dim); font-size: 11px; margin-bottom: 20px;">ID: #AE-2026-001</p>
-                
-                <div style="text-align: left; margin-top: 30px;">
-                    <label style="font-size: 8px; color: var(--purple); font-weight: 900; letter-spacing: 2px;">SIGNATURE BIO-NUMÉRIQUE</label>
-                    <div class="dna-box"><div class="dna-line"></div></div>
-                </div>
-
+                <h2 id="display-name" style="margin-top: 20px; font-weight: 900;">Utilisateur Alpha</h2>
+                <p style="color: var(--text-dim); font-size: 11px;">ID: #AE-2026-001</p>
+                <div class="dna-box"><div class="dna-line"></div></div>
                 <div style="margin-top: 30px; padding: 15px; background: rgba(0, 245, 160, 0.05); border-radius: 15px; border: 1px solid rgba(0, 245, 160, 0.2);">
-                    <p style="color: #00F5A0; font-size: 10px; font-weight: 900;">STATUT: COMPTE VÉRIFIÉ</p>
+                    <p style="color: #00F5A0; font-size: 10px; font-weight: 900;">STATUT: ACTIF</p>
                 </div>
             </div>
 
             <div class="config-vault">
-                <h2 style="font-size: 20px; font-weight: 900; margin-bottom: 25px;">CONFIGURATION <span style="color: var(--primary);">SYSTÈME</span></h2>
-                
+                <h2 style="font-size: 20px; font-weight: 900; margin-bottom: 25px;">PARAMÈTRES <span style="color: var(--primary);">ALPHA</span></h2>
                 <form id="profileForm" class="info-grid">
-                    <div class="info-card">
-                        <label>Nom complet du Réseau</label>
-                        <input type="text" id="netName" placeholder="Ex: Cyber-Espace Alpha">
-                    </div>
-                    <div class="info-card">
-                        <label>Devise de Vente</label>
-                        <select id="currency">
-                            <option value="XAF">Franc CFA (XAF)</option>
-                            <option value="EUR">Euro (€)</option>
-                            <option value="USD">Dollar ($)</option>
-                        </select>
-                    </div>
-                    <div class="info-card">
-                        <label>Numéro WhatsApp</label>
-                        <input type="text" id="netPhone" placeholder="+237 6xx xxx xxx">
-                    </div>
-                    <div class="info-card">
-                        <label>Localisation</label>
-                        <input type="text" id="netLoc" placeholder="Maroua, Cameroun">
-                    </div>
-                    <div class="info-card" style="grid-column: span 2;">
-                        <label>Clé d'accès Administration (Mot de passe)</label>
-                        <input type="password" id="pass" value="********">
-                    </div>
-                    
-                    <button type="submit" class="btn-save">METTRE À JOUR LA MATRICE 🛰️</button>
+                    <div class="info-card"><label>Nom du Réseau</label><input type="text" id="netName" placeholder="Nom"></div>
+                    <div class="info-card"><label>Devise</label><select id="currency"><option value="XAF">XAF</option><option value="EUR">EUR</option></select></div>
+                    <div class="info-card"><label>WhatsApp</label><input type="text" id="netPhone" placeholder="+237"></div>
+                    <div class="info-card"><label>Ville</label><input type="text" id="netLoc" placeholder="Localisation"></div>
+                    <button type="submit" class="btn-save">SAUVEGARDER LES MODIFICATIONS</button>
                 </form>
+            </div>
 
-                <p style="margin-top: 30px; font-size: 10px; color: var(--text-dim); text-align: center;">
-                    DADIE IA : Les modifications de profil impactent vos tickets de vente.
-                </p>
+            <div class="achievements-section">
+                <h3 style="font-size: 14px; font-weight: 900; color: var(--accent); letter-spacing: 2px;">RÉCOMPENSES DE CARRIÈRE</h3>
+                <div class="badges-container">
+                    <div class="badge-item unlocked">
+                        <span class="badge-icon">🚀</span>
+                        <span class="badge-name">Pionnier</span>
+                        <p class="badge-desc">A rejoint le réseau AERIO.</p>
+                    </div>
+                    <div class="badge-item" id="badge-rich">
+                        <span class="badge-icon">💰</span>
+                        <span class="badge-name">Capitaliste</span>
+                        <p class="badge-desc">A généré plus de 50.000 XAF.</p>
+                    </div>
+                    <div class="badge-item">
+                        <span class="badge-icon">🛡️</span>
+                        <span class="badge-name">Gardien</span>
+                        <p class="badge-desc">Zéro incident en 30 jours.</p>
+                    </div>
+                    <div class="badge-item">
+                        <span class="badge-icon">⚡</span>
+                        <span class="badge-name">Overclock</span>
+                        <p class="badge-desc">A utilisé le Boost Alpha 10 fois.</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -190,7 +156,6 @@
     <script>
         const form = document.getElementById('profileForm');
 
-        // CHARGER LES DONNÉES (On garde ta logique localeStorage)
         window.onload = () => {
             const config = JSON.parse(localStorage.getItem('aerio_config')) || {};
             if(config.name) {
@@ -200,9 +165,15 @@
             if(config.currency) document.getElementById('currency').value = config.currency;
             if(config.phone) document.getElementById('netPhone').value = config.phone;
             if(config.loc) document.getElementById('netLoc').value = config.loc;
+
+            // Logique de déblocage visuelle (Exemple pour le badge Capitaliste)
+            // Imaginons que tu vérifies le CA ici :
+            const caTotal = 60000; // Ce chiffre viendrait de ta base de données/localStorage
+            if(caTotal > 50000) {
+                document.getElementById('badge-rich').classList.add('unlocked');
+            }
         };
 
-        // ENREGISTRER
         form.onsubmit = (e) => {
             e.preventDefault();
             const config = {
@@ -212,16 +183,13 @@
                 loc: document.getElementById('netLoc').value
             };
             localStorage.setItem('aerio_config', JSON.stringify(config));
-            
-            // Mise à jour visuelle instantanée
             document.getElementById('display-name').innerText = config.name;
             
-            // Petit effet de succès premium
             const btn = document.querySelector('.btn-save');
-            btn.innerText = "MATRICE MISE À JOUR ✓";
+            btn.innerText = "SYNCHRONISATION RÉUSSIE ✓";
             btn.style.background = "var(--accent)";
             setTimeout(() => {
-                btn.innerText = "METTRE À JOUR LA MATRICE 🛰️";
+                btn.innerText = "SAUVEGARDER LES MODIFICATIONS";
                 btn.style.background = "var(--primary)";
             }, 2000);
         };
