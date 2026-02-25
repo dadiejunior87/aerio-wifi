@@ -10,6 +10,7 @@
             --primary: #00C2FF;
             --accent: #00F5A0;
             --purple: #BC00FF;
+            --gold: #FFD700;
             --bg-deep: #020617;
             --card-bg: rgba(15, 23, 42, 0.7);
             --border: rgba(0, 194, 255, 0.2);
@@ -40,7 +41,7 @@
 
         /* --- CONTENU --- */
         .content { margin-left: 280px; padding: 40px; }
-        .profile-matrix { max-width: 1000px; margin: 0 auto; display: grid; grid-template-columns: 350px 1fr; gap: 30px; }
+        .profile-matrix { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 380px 1fr; gap: 30px; }
 
         /* --- CARTE HOLOGRAPHIQUE --- */
         .id-card {
@@ -57,8 +58,13 @@
         .user-rank {
             background: var(--primary); color: #000; font-weight: 900;
             padding: 4px 12px; border-radius: 8px; font-size: 9px;
-            letter-spacing: 1px; position: absolute; bottom: 155px; left: 50%; transform: translateX(-50%);
+            letter-spacing: 1px; margin-bottom: 10px; display: inline-block;
         }
+
+        /* --- RATING SYSTEM --- */
+        .rating-box { margin: 15px 0; padding: 10px; background: rgba(255, 215, 0, 0.05); border-radius: 15px; border: 1px solid rgba(255, 215, 0, 0.1); }
+        .stars { color: var(--gold); font-size: 20px; letter-spacing: 3px; }
+        .rating-val { font-weight: 900; font-size: 16px; margin-left: 5px; }
 
         /* --- CONFIGURATION --- */
         .config-vault { background: var(--card-bg); border-radius: 30px; border: 1px solid rgba(255,255,255,0.05); padding: 30px; }
@@ -69,11 +75,11 @@
 
         .btn-save {
             grid-column: span 2; background: var(--primary); color: #020617; border: none;
-            padding: 18px; border-radius: 15px; font-weight: 900; cursor: pointer; transition: 0.3s;
+            padding: 18px; border-radius: 15px; font-weight: 900; cursor: pointer; transition: 0.3s; margin-top: 10px;
         }
         .btn-save:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(0, 194, 255, 0.4); }
 
-        /* --- SECTION BADGES (NOUVEAU) --- */
+        /* --- BADGES --- */
         .achievements-section { grid-column: span 2; margin-top: 30px; }
         .badges-container { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-top: 20px; }
         .badge-item {
@@ -81,12 +87,11 @@
             padding: 20px; border-radius: 20px; text-align: center; transition: 0.4s;
             filter: grayscale(1); opacity: 0.5;
         }
-        .badge-item.unlocked { filter: grayscale(0); opacity: 1; border-color: var(--accent); background: rgba(0, 245, 160, 0.05); }
+        .badge-item.unlocked { filter: grayscale(0); opacity: 1; border-color: var(--accent); background: rgba(0, 245, 160, 0.05); box-shadow: 0 0 20px rgba(0, 245, 160, 0.1); }
         .badge-icon { font-size: 30px; margin-bottom: 10px; display: block; }
-        .badge-name { font-size: 10px; font-weight: 900; color: #fff; text-transform: uppercase; }
-        .badge-desc { font-size: 8px; color: var(--text-dim); margin-top: 5px; }
+        .badge-name { font-size: 10px; font-weight: 900; color: #fff; }
 
-        .dna-box { height: 60px; width: 100%; border: 1px dashed var(--purple); border-radius: 15px; margin-top: 20px; display: flex; align-items: center; justify-content: center; }
+        .dna-box { height: 50px; width: 100%; border: 1px dashed var(--purple); border-radius: 15px; margin-top: 15px; display: flex; align-items: center; justify-content: center; }
         .dna-line { width: 80%; height: 2px; background: var(--purple); box-shadow: 0 0 15px var(--purple); animation: pulseDNA 2s infinite; }
         @keyframes pulseDNA { 0%, 100% { opacity: 0.2; transform: scaleX(0.9); } 50% { opacity: 1; transform: scaleX(1.1); } }
     </style>
@@ -106,22 +111,32 @@
             <div class="id-card">
                 <div class="avatar-vault">👤</div>
                 <div class="user-rank">GOLD PILOT</div>
-                <h2 id="display-name" style="margin-top: 20px; font-weight: 900;">Utilisateur Alpha</h2>
+                
+                <div class="rating-box">
+                    <div class="stars">★★★★★<span class="rating-val">4.9</span></div>
+                    <p style="font-size: 8px; color: var(--text-dim); text-transform: uppercase; margin-top: 5px;">Fiabilité Partenaire (DADIE IA)</p>
+                </div>
+
+                <h2 id="display-name" style="font-weight: 900; letter-spacing: -1px;">Utilisateur Alpha</h2>
                 <p style="color: var(--text-dim); font-size: 11px;">ID: #AE-2026-001</p>
+                
                 <div class="dna-box"><div class="dna-line"></div></div>
-                <div style="margin-top: 30px; padding: 15px; background: rgba(0, 245, 160, 0.05); border-radius: 15px; border: 1px solid rgba(0, 245, 160, 0.2);">
-                    <p style="color: #00F5A0; font-size: 10px; font-weight: 900;">STATUT: ACTIF</p>
+
+                <div style="margin-top: 25px; padding: 15px; background: rgba(0, 245, 160, 0.05); border-radius: 15px; border: 1px solid rgba(0, 245, 160, 0.2);">
+                    <p style="color: #00F5A0; font-size: 10px; font-weight: 900;">STATUT : OPÉRATIONNEL</p>
+                    <p style="color: var(--text-dim); font-size: 8px; margin-top: 5px;">Commissions fixes : 15% (Protégé)</p>
                 </div>
             </div>
 
             <div class="config-vault">
-                <h2 style="font-size: 20px; font-weight: 900; margin-bottom: 25px;">PARAMÈTRES <span style="color: var(--primary);">ALPHA</span></h2>
+                <h2 style="font-size: 20px; font-weight: 900; margin-bottom: 25px;">CONFIGURATION <span style="color: var(--primary);">ALPHA</span></h2>
                 <form id="profileForm" class="info-grid">
                     <div class="info-card"><label>Nom du Réseau</label><input type="text" id="netName" placeholder="Nom"></div>
-                    <div class="info-card"><label>Devise</label><select id="currency"><option value="XAF">XAF</option><option value="EUR">EUR</option></select></div>
-                    <div class="info-card"><label>WhatsApp</label><input type="text" id="netPhone" placeholder="+237"></div>
-                    <div class="info-card"><label>Ville</label><input type="text" id="netLoc" placeholder="Localisation"></div>
-                    <button type="submit" class="btn-save">SAUVEGARDER LES MODIFICATIONS</button>
+                    <div class="info-card"><label>Devise Active</label><select id="currency"><option value="XAF">Franc CFA (XAF)</option><option value="EUR">Euro (€)</option></select></div>
+                    <div class="info-card"><label>WhatsApp Pro</label><input type="text" id="netPhone" placeholder="+237"></div>
+                    <div class="info-card"><label>Zone Géographique</label><input type="text" id="netLoc" placeholder="Ville, Pays"></div>
+                    <div class="info-card" style="grid-column: span 2;"><label>Clé de Sécurité Admin</label><input type="password" id="pass" value="********"></div>
+                    <button type="submit" class="btn-save">METTRE À JOUR LA MATRICE</button>
                 </form>
             </div>
 
@@ -131,22 +146,22 @@
                     <div class="badge-item unlocked">
                         <span class="badge-icon">🚀</span>
                         <span class="badge-name">Pionnier</span>
-                        <p class="badge-desc">A rejoint le réseau AERIO.</p>
+                        <p style="font-size: 8px; color: var(--text-dim); margin-top: 5px;">Installation réussie du terminal.</p>
                     </div>
                     <div class="badge-item" id="badge-rich">
-                        <span class="badge-icon">💰</span>
-                        <span class="badge-name">Capitaliste</span>
-                        <p class="badge-desc">A généré plus de 50.000 XAF.</p>
+                        <span class="badge-icon">💎</span>
+                        <span class="badge-name">Elite Seller</span>
+                        <p style="font-size: 8px; color: var(--text-dim); margin-top: 5px;">Plus de 500 tickets générés.</p>
                     </div>
                     <div class="badge-item">
-                        <span class="badge-icon">🛡️</span>
-                        <span class="badge-name">Gardien</span>
-                        <p class="badge-desc">Zéro incident en 30 jours.</p>
+                        <span class="badge-icon">👑</span>
+                        <span class="badge-name">Roi du Secteur</span>
+                        <p style="font-size: 8px; color: var(--text-dim); margin-top: 5px;">Meilleur vendeur du mois.</p>
                     </div>
                     <div class="badge-item">
-                        <span class="badge-icon">⚡</span>
-                        <span class="badge-name">Overclock</span>
-                        <p class="badge-desc">A utilisé le Boost Alpha 10 fois.</p>
+                        <span class="badge-icon">🔥</span>
+                        <span class="badge-name">Alpha Strike</span>
+                        <p style="font-size: 8px; color: var(--text-dim); margin-top: 5px;">10 ventes en moins d'une heure.</p>
                     </div>
                 </div>
             </div>
@@ -166,12 +181,9 @@
             if(config.phone) document.getElementById('netPhone').value = config.phone;
             if(config.loc) document.getElementById('netLoc').value = config.loc;
 
-            // Logique de déblocage visuelle (Exemple pour le badge Capitaliste)
-            // Imaginons que tu vérifies le CA ici :
-            const caTotal = 60000; // Ce chiffre viendrait de ta base de données/localStorage
-            if(caTotal > 50000) {
-                document.getElementById('badge-rich').classList.add('unlocked');
-            }
+            // Déblocage automatique de l'Elite Seller pour le test visuel
+            // Tu pourras lier ça à tes vraies stats plus tard
+            document.getElementById('badge-rich').classList.add('unlocked');
         };
 
         form.onsubmit = (e) => {
@@ -186,10 +198,10 @@
             document.getElementById('display-name').innerText = config.name;
             
             const btn = document.querySelector('.btn-save');
-            btn.innerText = "SYNCHRONISATION RÉUSSIE ✓";
+            btn.innerText = "SYNCHRONISATION ALPHA RÉUSSIE ✓";
             btn.style.background = "var(--accent)";
             setTimeout(() => {
-                btn.innerText = "SAUVEGARDER LES MODIFICATIONS";
+                btn.innerText = "METTRE À JOUR LA MATRICE";
                 btn.style.background = "var(--primary)";
             }, 2000);
         };
