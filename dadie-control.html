@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DADIE IA | Control Center</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;900&display=swap" rel="stylesheet">
+    <style>
+        :root { --boss-color: #BC00FF; --money-color: #00F5A0; --bg: #050505; }
+        body { background: var(--bg); color: white; font-family: 'Poppins', sans-serif; padding: 40px; }
+        
+        .header { border-bottom: 2px solid var(--boss-color); padding-bottom: 20px; margin-bottom: 40px; display: flex; justify-content: space-between; align-items: center; }
+        h1 { font-weight: 900; letter-spacing: -1px; color: var(--boss-color); }
+
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+        .card { background: #111; border: 1px solid #222; padding: 30px; border-radius: 20px; position: relative; }
+        .card h3 { font-size: 10px; text-transform: uppercase; color: #666; letter-spacing: 2px; }
+        .card .value { font-size: 32px; font-weight: 900; margin-top: 10px; display: block; }
+        .card.money { border-color: var(--money-color); }
+        .card.money .value { color: var(--money-color); }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 40px; font-size: 12px; }
+        th { text-align: left; padding: 15px; color: #666; border-bottom: 1px solid #222; }
+        td { padding: 15px; border-bottom: 1px solid #111; }
+        .status-pill { padding: 4px 8px; background: rgba(0,245,160,0.1); color: var(--money-color); border-radius: 5px; font-size: 10px; font-weight: 800; }
+
+        .lock-screen { position: fixed; inset: 0; background: #000; z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        input { background: #111; border: 1px solid var(--boss-color); padding: 15px; color: white; border-radius: 10px; text-align: center; margin-bottom: 10px; outline: none; }
+        button { background: var(--boss-color); color: white; border: none; padding: 10px 30px; border-radius: 10px; font-weight: 800; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <div id="lockScreen" class="lock-screen">
+        <h2 style="color:var(--boss-color); margin-bottom: 20px;">DADIE IA ACCESS</h2>
+        <input type="password" id="passkey" placeholder="Code Maître">
+        <button onclick="checkPass()">ENTRER</button>
+    </div>
+
+    <div class="header">
+        <h1>BOSS <span style="color:white">DASHBOARD</span></h1>
+        <div id="clock" style="font-weight: 900; opacity: 0.5;">00:00:00</div>
+    </div>
+
+    <div class="grid">
+        <div class="card money">
+            <h3>Commissions Totales (15%)</h3>
+            <span id="totalDadie" class="value">0 XAF</span>
+        </div>
+        <div class="card">
+            <h3>Volume d'Affaires Global</h3>
+            <span id="totalVolume" class="value">0 XAF</span>
+        </div>
+        <div class="card">
+            <h3>Nombre de Partenaires</h3>
+            <span id="totalPartners" class="value">0</span>
+        </div>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>DATE</th>
+                <th>PARTENAIRE</th>
+                <th>FORFAIT</th>
+                <th>MONTANT</th>
+                <th>MA PART (15%)</th>
+                <th>STATUS</th>
+            </tr>
+        </thead>
+        <tbody id="tableBody">
+            </tbody>
+    </table>
+
+    <script>
+        // Sécurité de base (Change le code '1234' par celui de ton choix)
+        function checkPass() {
+            const pass = document.getElementById('passkey').value;
+            if(pass === "2026") { // TON CODE D'ACCÈS ICI
+                document.getElementById('lockScreen').style.display = 'none';
+                loadBossData();
+            } else {
+                alert("Accès refusé.");
+            }
+        }
+
+        async function loadBossData() {
+            try {
+                const response = await fetch('database/tickets_vendus.json');
+                const ventes = await response.json();
+                
+                let totalVentes = 0;
+                let totalCom = 0;
+                let partners = new Set();
+                const tbody = document.getElementById('tableBody');
+                tbody.innerHTML = "";
+
+                ventes.reverse().forEach(v => {
+                    totalVentes += parseInt(v.montant);
+                    let com = parseFloat(v.commission_dadie || (v.montant * 0.15));
+                    totalCom += com;
+                    partners.add(v.partenaire_id);
+
+                    const row = `<tr>
+                        <td>${v.date}</td>
+                        <td style="color:var(--boss-color); font-weight:700;">${v.partenaire_id}</td>
+                        <td>${v.forfait}</td>
+                        <td>${v.montant} F</td>
+                        <td style="color:var(--money-color); font-weight:800;">+ ${com.toFixed(0)} F</td>
+                        <td><span class="status-pill">ENCAISSÉ</span></td>
+                    </tr>`;
+                    tbody.innerHTML += row;
+                });
+
+                document.getElementById('totalDadie').innerText = totalCom.toLocaleString() + " XAF";
+                document.getElementById('totalVolume').innerText = totalVentes.toLocaleString() + " XAF";
+                document.getElementById('totalPartners').innerText = partners.size;
+
+            } catch (e) {
+                console.error("Erreur de lecture du registre", e);
+            }
+        }
+
+        setInterval(() => {
+            document.getElementById('clock').innerText = new Date().toLocaleTimeString();
+        }, 1000);
+    </script>
+</body>
+</html>
