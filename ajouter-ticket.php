@@ -1,3 +1,11 @@
+<?php
+session_start();
+// DADIE IA : Vérification de la connexion
+if (!isset($_SESSION['agent_id'])) {
+    header('Location: connexion.php');
+    exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -69,7 +77,7 @@
         .quantum-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(2, 6, 23, 0.9); backdrop-filter: blur(10px); display: none; justify-content: center; align-items: center; z-index: 2000; }
         .quantum-modal { background: #0b0f1a; border: 1px solid var(--primary); padding: 40px; border-radius: 25px; text-align: center; max-width: 400px; box-shadow: 0 0 50px rgba(0, 194, 255, 0.2); }
         .loader-bar { width: 100%; height: 4px; background: rgba(255,255,255,0.05); margin-top: 25px; border-radius: 10px; overflow: hidden; }
-        .loader-progress { width: 0%; height: 100%; background: var(--primary); box-shadow: 0 0 15px var(--primary); }
+        .loader-progress { width: 0%; height: 100%; background: var(--primary); box-shadow: 0 0 15px var(--primary); transition: width 0.3s ease; }
 
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     </style>
@@ -80,19 +88,19 @@
         <div class="quantum-modal">
             <div style="font-size: 40px; margin-bottom: 20px;">⚡</div>
             <h2 id="modalStatus" style="text-transform: uppercase; letter-spacing: 2px; font-size: 18px;">Injection Alpha</h2>
-            <p id="modalSub" style="font-size: 13px; color: #94a3b8; margin-top: 10px;">Synchronisation des flux...</p>
+            <p id="modalSub" style="font-size: 13px; color: #94a3b8; margin-top: 10px;">DADIE IA : Synchronisation des flux...</p>
             <div class="loader-bar"><div class="loader-progress" id="deployBar"></div></div>
         </div>
     </div>
 
     <div class="sidebar">
         <div class="logo-title" id="sideLogo">AERIO</div>
-        <a href="dashboard.html" class="nav-link">🏠 Dashboard</a>
-        <a href="liste-tarif.html" class="nav-link">💎 Ma Grille Tarifaire</a>
-        <a href="ajouter-ticket.html" class="nav-link active">🎫 Générer un Pass</a>
-        <a href="liste-tickets.html" class="nav-link">🔑 Registre des Accès</a>
-        <a href="rapports.html" class="nav-link">📊 Analyse & Revenus</a>
-        <a href="profil.html" class="nav-link">👤 Mon Profil</a>
+        <a href="dashboard.php" class="nav-link">🏠 Dashboard</a>
+        <a href="liste-tarif.php" class="nav-link">💎 Ma Grille Tarifaire</a>
+        <a href="ajouter-ticket.php" class="nav-link active">🎫 Générer un Pass</a>
+        <a href="liste-tickets.php" class="nav-link">🔑 Registre des Accès</a>
+        <a href="rapports.php" class="nav-link">📊 Analyse & Revenus</a>
+        <a href="profil.php" class="nav-link">👤 Mon Profil</a>
     </div>
 
     <div class="main-content">
@@ -130,90 +138,4 @@
                 </div>
                 <div style="background: rgba(0,0,0,0.3); border-radius: 20px; padding: 25px; border: 1px solid var(--border); text-align: center;">
                     <label>Statut de l'Analyse</label>
-                    <div id="fileInfo" style="font-size: 12px; color: #64748b;">Aucun flux détecté.</div>
-                </div>
-            </div>
-        </div>
-
-        <div id="cloud-config" class="config-panel">
-            <label>Endpoint API</label>
-            <input type="text" placeholder="https://api.aerio-cloud.com/v1/sync-pass" disabled>
-            <p style="font-size: 10px; color: var(--purple); margin-top: 10px;">Indisponible dans la version d'essai.</p>
-        </div>
-
-        <div class="deploy-panel">
-            <div class="deploy-grid">
-                <div>
-                    <label>Configuration Réseau</label>
-                    <select id="wifiZone" style="margin-bottom: 15px;">
-                        <option>Zone Principale</option>
-                        <option>Zone VIP</option>
-                    </select>
-                    <select id="tarifSelect">
-                        <option value="" disabled selected>-- Lier à un tarif --</option>
-                    </select>
-                </div>
-                <div>
-                    <label>Analyse de Charge</label>
-                    <div style="height: 100px; background: rgba(0,0,0,0.4); border-radius: 15px; display: flex; align-items: flex-end; gap: 6px; padding: 15px;">
-                        <div style="flex:1; height:40%; background:var(--primary); opacity:0.5;"></div>
-                        <div style="flex:1; height:70%; background:var(--primary); opacity:0.7;"></div>
-                        <div style="flex:1; height:90%; background:var(--accent); box-shadow: 0 0 15px var(--accent);"></div>
-                    </div>
-                </div>
-                <div style="text-align: center;">
-                    <label>Mode Actif</label>
-                    <div class="status-circles">
-                        <div class="circle active" id="circ-simple">MANU</div>
-                        <div class="circle" id="circ-massive">CSV</div>
-                        <div class="circle" id="circ-cloud">CLD</div>
-                    </div>
-                </div>
-            </div>
-            <div style="text-align: right; margin-top: 35px; border-top: 1px solid var(--border); padding-top: 25px;">
-                <button class="btn-main" onclick="processDeployment()">DÉPLOYER LES ACCÈS</button>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        let currentMode = 'simple';
-        let extractedCodes = [];
-
-        window.onload = function() {
-            const config = JSON.parse(localStorage.getItem('aerio_config')) || {};
-            const sideLogo = document.getElementById('sideLogo');
-            if(config.name) sideLogo.innerText = config.name;
-
-            const tarifSelect = document.getElementById('tarifSelect');
-            const tarifs = JSON.parse(localStorage.getItem('aerio_tarifs')) || [];
-            tarifs.forEach(t => {
-                let opt = document.createElement('option');
-                opt.value = t.id;
-                opt.textContent = `${t.nom} — ${t.prix} ${config.currency || 'XAF'}`;
-                tarifSelect.appendChild(opt);
-            });
-        };
-
-        function switchMode(mode, element) {
-            currentMode = mode;
-            document.querySelectorAll('.mode-card').forEach(c => c.classList.remove('active'));
-            document.querySelectorAll('.config-panel').forEach(p => p.classList.remove('active'));
-            document.querySelectorAll('.circle').forEach(c => c.classList.remove('active'));
-            
-            element.classList.add('active');
-            document.getElementById(mode + '-config').classList.add('active');
-            document.getElementById('circ-' + mode).classList.add('active');
-        }
-
-        // Lecture du fichier CSV/TXT
-        document.getElementById('fileInput').addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (!file) return;
-
-            const reader = new FileReader();
-            reader.onload = function(event) {
-                const content = event.target.result;
-                // Extraction des codes (on nettoie les espaces et les lignes vides)
-                extractedCodes = content.split(/[\n,]+/).map(c => c.trim()).filter(c => c.length > 0);
-                document.
+                    <div id="fileInfo" style="font-size: 12px; color: #64748
