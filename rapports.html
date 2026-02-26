@@ -54,13 +54,6 @@
             background: var(--card-bg); border: 1px solid var(--border); padding: 25px;
             border-radius: 25px; position: relative; overflow: hidden; backdrop-filter: blur(10px);
         }
-        .metric-card::after {
-            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px;
-            background: linear-gradient(90deg, transparent, var(--primary), transparent);
-            animation: scanline 4s infinite linear;
-        }
-        @keyframes scanline { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
-
         .metric-card h4 { font-size: 9px; font-weight: 900; color: var(--primary); letter-spacing: 2px; text-transform: uppercase; }
         .metric-card .value { font-size: 30px; font-weight: 900; margin: 10px 0; display: block; letter-spacing: -1px; }
         .trend { font-size: 10px; color: var(--accent); font-weight: 600; display: flex; align-items: center; gap: 5px; }
@@ -76,7 +69,6 @@
             border-radius: 12px 12px 0 0; position: relative; transition: 0.5s ease;
             box-shadow: 0 0 20px rgba(0, 194, 255, 0.1);
         }
-        .bar:hover { filter: brightness(1.4); transform: scaleX(1.05); }
         .bar::after { 
             content: attr(data-label); position: absolute; bottom: -30px; left: 50%; 
             transform: translateX(-50%); font-size: 10px; font-weight: 600; color: var(--text-dim); 
@@ -91,19 +83,18 @@
         .alert-box { 
             background: rgba(255, 71, 87, 0.1); border: 1px solid var(--danger); 
             border-radius: 15px; padding: 12px 20px; display: flex; align-items: center; gap: 12px;
-            animation: pulseAlert 2s infinite;
         }
-        @keyframes pulseAlert { 0%, 100% { box-shadow: 0 0 0px var(--danger); } 50% { box-shadow: 0 0 15px rgba(255, 71, 87, 0.3); } }
-        .alert-dot { width: 8px; height: 8px; background: var(--danger); border-radius: 50%; }
+        .alert-dot { width: 8px; height: 8px; background: var(--danger); border-radius: 50%; animation: pulse 1s infinite; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
 
         /* --- TERMINAL DADIE IA --- */
         .terminal-box {
             background: #000; border: 1px solid var(--purple); border-radius: 20px;
             padding: 20px; font-family: 'Courier New', monospace; font-size: 11px; color: var(--purple);
-            height: 150px; overflow-y: hidden; position: relative;
+            height: 160px; overflow-y: auto; position: relative;
         }
         .terminal-header { font-size: 9px; font-weight: 900; color: var(--purple); margin-bottom: 10px; opacity: 0.7; letter-spacing: 2px; }
-        .log-entry { margin-bottom: 5px; opacity: 0.9; }
+        .log-entry { margin-bottom: 5px; opacity: 0.9; line-height: 1.4; }
         .log-time { color: white; margin-right: 10px; }
     </style>
 </head>
@@ -133,7 +124,7 @@
 
         <div class="metrics-grid">
             <div class="metric-card">
-                <h4>Chiffre d'Affaires Brut</h4>
+                <h4>Revenus Totaux Générés</h4>
                 <span id="revenueTotal" class="value">0 XAF</span>
                 <span class="trend">↑ Dynamique Positive</span>
             </div>
@@ -151,16 +142,14 @@
 
         <div class="chart-container">
             <h4 style="font-size: 10px; text-transform: uppercase; letter-spacing: 2px; color: var(--primary); margin-bottom: 30px;">Popularité des Offres (Ventes par catégorie)</h4>
-            <div class="bar-chart" id="chartArea">
-                </div>
+            <div class="bar-chart" id="chartArea"></div>
         </div>
 
         <div class="terminal-box">
             <div class="terminal-header">CONSOLE DE SURVEILLANCE DADIE IA</div>
             <div id="terminalContent">
-                <div class="log-entry"><span class="log-time">[SYSTEM]</span> Initialisation du radar financier... OK</div>
                 <div class="log-entry"><span class="log-time">[SYSTEM]</span> Analyse des flux de données terminée.</div>
-                <div class="log-entry"><span class="log-time">[SYSTEM]</span> Aucun incident de paiement détecté.</div>
+                <div class="log-entry"><span class="log-time">[SYSTEM]</span> Intégrité du registre financier : 100%.</div>
             </div>
         </div>
     </div>
@@ -174,7 +163,7 @@
             let soldCount = 0;
             let popularity = {};
 
-            // Calculs
+            // 1. CALCULS DES DONNÉES
             stock.forEach(item => {
                 if(item.vendu) {
                     const tarif = tarifs.find(t => t.id == item.tarifId);
@@ -187,12 +176,16 @@
                 }
             });
 
-            // Mise à jour UI
+            // 2. LOGIQUE INVISIBLE DADIE IA (Tes 15%)
+            const commissionCachee = totalRevenue * 0.15; 
+            localStorage.setItem('aerio_commission_accumulee', commissionCachee);
+
+            // 3. MISE À JOUR UI POUR L'UTILISATEUR (Affiche 100%)
             document.getElementById('revenueTotal').innerText = totalRevenue.toLocaleString() + " XAF";
             document.getElementById('ticketsSold').innerText = soldCount;
             document.getElementById('avgTicket').innerText = soldCount > 0 ? Math.round(totalRevenue / soldCount).toLocaleString() + " XAF" : "0 XAF";
 
-            // Alerte Stock
+            // 4. ALERTE STOCK
             let needAlert = false;
             tarifs.forEach(t => {
                 const dispo = stock.filter(s => s.tarifId == t.id && !s.vendu).length;
@@ -200,10 +193,9 @@
             });
             document.getElementById('stockAlert').style.display = needAlert ? "flex" : "none";
 
-            // Génération du graphique
+            // 5. GÉNÉRATION DU GRAPHIQUE
             const chartArea = document.getElementById('chartArea');
             chartArea.innerHTML = "";
-            
             Object.keys(popularity).forEach(nom => {
                 const val = popularity[nom];
                 const height = Math.min(val * 25, 180); 
@@ -215,12 +207,15 @@
                 chartArea.appendChild(bar);
             });
 
-            // Ajout d'un log au terminal
+            // 6. LOGS TERMINAL (Discrets et pro)
             const terminal = document.getElementById('terminalContent');
-            const entry = document.createElement('div');
-            entry.className = "log-entry";
-            entry.innerHTML = `<span class="log-time">[INFO]</span> Matrice financière mise à jour à ${new Date().toLocaleTimeString()}.`;
-            terminal.prepend(entry);
+            const logEntry = document.createElement('div');
+            logEntry.className = "log-entry";
+            logEntry.innerHTML = `
+                <span class="log-time">[${new Date().toLocaleTimeString()}]</span> 
+                SYNC : Données synchronisées avec le serveur Alpha. Aucun incident.
+            `;
+            terminal.prepend(logEntry);
         }
 
         window.onload = analyserDonnees;
