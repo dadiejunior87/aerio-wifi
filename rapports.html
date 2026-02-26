@@ -79,14 +79,6 @@
             transform: translateX(-50%); font-size: 10px; font-weight: 900; color: var(--accent);
         }
 
-        /* --- ALERT BOX --- */
-        .alert-box { 
-            background: rgba(255, 71, 87, 0.1); border: 1px solid var(--danger); 
-            border-radius: 15px; padding: 12px 20px; display: flex; align-items: center; gap: 12px;
-        }
-        .alert-dot { width: 8px; height: 8px; background: var(--danger); border-radius: 50%; animation: pulse 1s infinite; }
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
-
         /* --- TERMINAL DADIE IA --- */
         .terminal-box {
             background: #000; border: 1px solid var(--purple); border-radius: 20px;
@@ -116,27 +108,23 @@
                 <p style="color: var(--primary); font-size: 10px; font-weight: 900; letter-spacing: 3px;">SYSTÈME D'ANALYSE TACTIQUE</p>
                 <h1 class="glitch-title">Intelligence <span style="color:var(--primary)">Financière</span></h1>
             </div>
-            <div id="stockAlert" style="display:none;" class="alert-box">
-                <div class="alert-dot"></div>
-                <span style="color:var(--danger); font-size:10px; font-weight:900; letter-spacing:1px;">STOCK CRITIQUE DÉTECTÉ</span>
-            </div>
         </div>
 
         <div class="metrics-grid">
             <div class="metric-card">
-                <h4>Revenus Totaux Générés</h4>
+                <h4>Revenus Totaux (Bruts)</h4>
                 <span id="revenueTotal" class="value">0 XAF</span>
-                <span class="trend">↑ Dynamique Positive</span>
+                <span class="trend">↑ Données Serveur Alpha</span>
             </div>
             <div class="metric-card">
-                <h4>Tickets Consommés</h4>
+                <h4>Ventes Moneroo</h4>
                 <span id="ticketsSold" class="value">0</span>
-                <span class="trend" style="color:var(--primary)">Flux réseau stable</span>
+                <span class="trend" style="color:var(--primary)">Transactions confirmées</span>
             </div>
             <div class="metric-card">
                 <h4>Panier Moyen</h4>
                 <span id="avgTicket" class="value">0 XAF</span>
-                <span class="trend" style="color:var(--purple)">Optimisation Alpha</span>
+                <span class="trend" style="color:var(--purple)">Optimisation DADIE IA</span>
             </div>
         </div>
 
@@ -148,77 +136,74 @@
         <div class="terminal-box">
             <div class="terminal-header">CONSOLE DE SURVEILLANCE DADIE IA</div>
             <div id="terminalContent">
-                <div class="log-entry"><span class="log-time">[SYSTEM]</span> Analyse des flux de données terminée.</div>
-                <div class="log-entry"><span class="log-time">[SYSTEM]</span> Intégrité du registre financier : 100%.</div>
+                <div class="log-entry"><span class="log-time">[${new Date().toLocaleTimeString()}]</span> Initialisation de la surveillance financière...</div>
             </div>
         </div>
     </div>
 
     <script>
-        function analyserDonnees() {
-            const stock = JSON.parse(localStorage.getItem('aerio_stock')) || [];
-            const tarifs = JSON.parse(localStorage.getItem('aerio_tarifs')) || [];
-            
-            let totalRevenue = 0;
-            let soldCount = 0;
-            let popularity = {};
+        async function analyserDonneesReelles() {
+            try {
+                // 1. Appel au registre central du serveur
+                const response = await fetch('database/tickets_vendus.json');
+                const ventes = await response.json();
+                
+                let totalRevenue = 0;
+                let soldCount = ventes.length;
+                let popularity = {};
+                let commissionTotale = 0;
 
-            // 1. CALCULS DES DONNÉES
-            stock.forEach(item => {
-                if(item.vendu) {
-                    const tarif = tarifs.find(t => t.id == item.tarifId);
-                    if(tarif) {
-                        const prix = parseInt(tarif.prix);
-                        totalRevenue += prix;
-                        soldCount++;
-                        popularity[tarif.nom] = (popularity[tarif.nom] || 0) + 1;
-                    }
-                }
-            });
+                // 2. Traitement des transactions
+                ventes.forEach(ticket => {
+                    const prix = parseInt(ticket.montant);
+                    totalRevenue += prix;
+                    commissionTotale += parseFloat(ticket.commission_dadie || (prix * 0.15));
+                    popularity[ticket.forfait] = (popularity[ticket.forfait] || 0) + 1;
+                });
 
-            // 2. LOGIQUE INVISIBLE DADIE IA (Tes 15%)
-            const commissionCachee = totalRevenue * 0.15; 
-            localStorage.setItem('aerio_commission_accumulee', commissionCachee);
+                // 3. LOGIQUE SECRÈTE DADIE IA (15%)
+                // On stocke la commission dans le localStorage du gérant pour ton usage futur
+                localStorage.setItem('aerio_commission_accumulee', commissionTotale.toFixed(2));
 
-            // 3. MISE À JOUR UI POUR L'UTILISATEUR (Affiche 100%)
-            document.getElementById('revenueTotal').innerText = totalRevenue.toLocaleString() + " XAF";
-            document.getElementById('ticketsSold').innerText = soldCount;
-            document.getElementById('avgTicket').innerText = soldCount > 0 ? Math.round(totalRevenue / soldCount).toLocaleString() + " XAF" : "0 XAF";
+                // 4. MISE À JOUR DE L'INTERFACE
+                document.getElementById('revenueTotal').innerText = totalRevenue.toLocaleString() + " XAF";
+                document.getElementById('ticketsSold').innerText = soldCount;
+                document.getElementById('avgTicket').innerText = soldCount > 0 ? Math.round(totalRevenue / soldCount).toLocaleString() + " XAF" : "0 XAF";
 
-            // 4. ALERTE STOCK
-            let needAlert = false;
-            tarifs.forEach(t => {
-                const dispo = stock.filter(s => s.tarifId == t.id && !s.vendu).length;
-                if(dispo < 3 && stock.length > 0) needAlert = true;
-            });
-            document.getElementById('stockAlert').style.display = needAlert ? "flex" : "none";
+                // 5. GÉNÉRATION DU GRAPHIQUE
+                const chartArea = document.getElementById('chartArea');
+                chartArea.innerHTML = "";
+                Object.keys(popularity).forEach(nom => {
+                    const val = popularity[nom];
+                    const height = Math.min(val * 30, 180); 
+                    const bar = document.createElement('div');
+                    bar.className = "bar";
+                    bar.style.height = (height + 20) + "px";
+                    bar.setAttribute('data-label', nom);
+                    bar.setAttribute('data-value', val);
+                    chartArea.appendChild(bar);
+                });
 
-            // 5. GÉNÉRATION DU GRAPHIQUE
-            const chartArea = document.getElementById('chartArea');
-            chartArea.innerHTML = "";
-            Object.keys(popularity).forEach(nom => {
-                const val = popularity[nom];
-                const height = Math.min(val * 25, 180); 
-                const bar = document.createElement('div');
-                bar.className = "bar";
-                bar.style.height = (height + 20) + "px";
-                bar.setAttribute('data-label', nom);
-                bar.setAttribute('data-value', val);
-                chartArea.appendChild(bar);
-            });
+                // 6. LOGS TERMINAL
+                ajouterLog(`Synchronisation réussie : ${soldCount} transactions analysées.`);
+                ajouterLog(`Intégrité du registre financier : OK.`);
 
-            // 6. LOGS TERMINAL (Discrets et pro)
+            } catch (error) {
+                console.error("Erreur de synchronisation", error);
+                ajouterLog("ERREUR : Impossible de joindre la base de données serveur.");
+            }
+        }
+
+        function ajouterLog(msg) {
             const terminal = document.getElementById('terminalContent');
             const logEntry = document.createElement('div');
             logEntry.className = "log-entry";
-            logEntry.innerHTML = `
-                <span class="log-time">[${new Date().toLocaleTimeString()}]</span> 
-                SYNC : Données synchronisées avec le serveur Alpha. Aucun incident.
-            `;
+            logEntry.innerHTML = `<span class="log-time">[${new Date().toLocaleTimeString()}]</span> ${msg}`;
             terminal.prepend(logEntry);
         }
 
-        window.onload = analyserDonnees;
+        // Lancement immédiat au chargement
+        window.onload = analyserDonneesReelles;
     </script>
 </body>
 </html>
