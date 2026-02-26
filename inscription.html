@@ -1,3 +1,4 @@
+<?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -73,7 +74,6 @@
         }
         @keyframes scanMove { 0% { top: 0; } 100% { top: 100%; } }
 
-        /* Style pour l'affichage du lien partenaire après succès */
         #successBox { display: none; background: rgba(0, 245, 160, 0.1); border: 1px solid var(--accent); padding: 20px; border-radius: 20px; margin-top: 20px; }
 
         @media (max-width: 480px) {
@@ -105,28 +105,28 @@
             <form id="registerForm">
                 <div class="form-group">
                     <label data-key="label_id">Identité Business</label>
-                    <input type="text" id="bizName" placeholder="Nom du Partenaire ou Structure" required>
+                    <input type="text" id="bizName" name="name" placeholder="Nom du Partenaire ou Structure" required>
                 </div>
 
                 <div class="row">
                     <div class="form-group" style="flex: 1;">
                         <label data-key="label_city">Ville</label>
-                        <input type="text" id="bizCity" placeholder="Ex: Maroua" required>
+                        <input type="text" id="bizCity" name="city" placeholder="Ex: Maroua" required>
                     </div>
                     <div class="form-group" style="flex: 1;">
                         <label data-key="label_contact">Contact (Paiement)</label>
-                        <input type="tel" id="bizTel" placeholder="6xx xxx xxx" required>
+                        <input type="tel" id="bizTel" name="tel" placeholder="6xx xxx xxx" required>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label data-key="label_email">Email de Gestion</label>
-                    <input type="email" id="bizEmail" placeholder="admin@aerio.net" required>
+                    <input type="email" id="bizEmail" name="email" placeholder="admin@aerio.net" required>
                 </div>
 
                 <div class="form-group">
                     <label data-key="label_pass">Clé d'Accès (Pass)</label>
-                    <input type="password" id="bizPass" placeholder="••••••••••••" required>
+                    <input type="password" id="bizPass" name="pass" placeholder="••••••••••••" required>
                 </div>
 
                 <button type="submit" class="submit-btn" id="submitBtn" data-key="btn_activate">Activer mon Nœud Réseau</button>
@@ -139,7 +139,7 @@
             </div>
 
             <div class="footer-text">
-                <span data-key="footer_alt">Déjà dans le réseau ?</span> <a href="connexion.html" data-key="link_login">Accéder au Terminal</a>
+                <span data-key="footer_alt">Déjà dans le réseau ?</span> <a href="connexion.php" data-key="link_login">Accéder au Terminal</a>
             </div>
         </div>
     </div>
@@ -205,8 +205,8 @@
             };
 
             try {
-                // APPEL RÉEL À TON API VERCEL
-                const response = await fetch('/api/partenaires/inscription', {
+                // Liaison avec ton script PHP local (DADIE IA Secure)
+                const response = await fetch('register_process.php', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(partnerData)
@@ -214,19 +214,18 @@
 
                 const result = await response.json();
 
-                if (response.ok) {
+                if (result.status === "success") {
                     document.getElementById('registerForm').style.display = 'none';
                     document.getElementById('successBox').style.display = 'block';
-                    // On génère le lien personnalisé automatiquement
-                    const myLink = window.location.origin + "/?partnerID=" + result.partnerID;
+                    const myLink = window.location.origin + "/index.html?partnerID=" + result.partnerID;
                     document.getElementById('partnerLink').innerText = myLink;
                 } else {
-                    alert("Erreur: " + result.message);
+                    alert("Erreur Système: " + result.message);
                     btn.disabled = false;
                     btn.innerText = langData[currentLang].btn_activate;
                 }
             } catch (error) {
-                console.error("Erreur de connexion");
+                console.error("Liaison interrompue");
                 btn.disabled = false;
                 btn.innerText = langData[currentLang].btn_activate;
             }
