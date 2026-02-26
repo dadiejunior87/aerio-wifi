@@ -38,6 +38,7 @@
         .input-field { width:100%; padding:15px; 
             background: rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1);
             border-radius:15px; color:white; outline:none; text-align:center; font-size:16px; transition: 0.3s;
+            text-transform: uppercase;
         }
         .input-field:focus { border-color: var(--primary); background: rgba(0, 194, 255, 0.05); }
 
@@ -46,11 +47,12 @@
             color:white; font-weight:800; cursor:pointer; transition:0.4s; text-transform:uppercase; letter-spacing:1px; margin-top: 10px;
         }
 
-        /* --- SECTION PAIEMENT INTÉGRÉE --- */
+        /* --- SECTION PAIEMENT --- */
         .pay-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
         .pay-card { 
             background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); 
             padding: 15px; border-radius: 15px; cursor: pointer; transition: 0.3s;
+            text-decoration: none; color: inherit;
         }
         .pay-card:hover { border-color: var(--accent); background: rgba(0, 245, 160, 0.05); }
         .pay-price { font-size: 18px; font-weight: 900; color: var(--accent); }
@@ -79,50 +81,35 @@
 
 <header>
     <h1>AERIO ZONE</h1>
-    <p style="color: var(--primary); font-size:9px; font-weight:700; letter-spacing:3px;">RÉSEAU ÉLITE • MIKHMON READY</p>
+    <p style="color: var(--primary); font-size:9px; font-weight:700; letter-spacing:3px;">RÉSEAU ÉLITE • DADIE IA SECURED</p>
 </header>
 
 <div class="container">
     <div class="box">
-        <form name="login" action="$(link-login-only)" method="post">
-            <input type="hidden" name="dst" value="$(link-orig)">
-            <input type="hidden" name="popup" value="true">
-            
+        <div id="loginForm">
             <div class="input-group">
-                <span class="input-label">Identifiant (User)</span>
-                <input type="text" name="username" class="input-field" placeholder="Ex: AX-123" required>
+                <span class="input-label">Code d'accès</span>
+                <input type="text" id="accessCode" class="input-field" placeholder="EX: AX-789" required>
             </div>
-
-            <div class="input-group">
-                <span class="input-label">Mot de passe (Pass)</span>
-                <input type="password" name="password" class="input-field" placeholder="••••" required>
-            </div>
-
-            <button type="submit" class="btn-main">ACTIVER L'ACCÈS 🚀</button>
-        </form>
+            <button type="button" onclick="validerConnexion()" class="btn-main">ACTIVER L'ACCÈS 🚀</button>
+        </div>
     </div>
 
     <div class="box">
         <span class="input-label" style="text-align: center; margin-left: 0;">Pas de ticket ? Achetez ici</span>
         <div class="pay-grid">
             
-            <form action="initier-paiement.php" method="POST" class="pay-card">
-                <input type="hidden" name="montant" value="100">
-                <input type="hidden" name="forfait_nom" value="1H">
-                <input type="hidden" class="partner-id-field" name="partenaire_id" value="DEFAULT_AERIO">
+            <div class="pay-card" onclick="alert('Redirection vers passerelle de paiement...')">
                 <div class="pay-price">100F</div>
                 <div class="pay-desc">1 HEURE</div>
-                <button type="submit" class="btn-pay-submit">MOMO/OM</button>
-            </form>
+                <button class="btn-pay-submit">MOMO/OM</button>
+            </div>
             
-            <form action="initier-paiement.php" method="POST" class="pay-card">
-                <input type="hidden" name="montant" value="500">
-                <input type="hidden" name="forfait_nom" value="24H">
-                <input type="hidden" class="partner-id-field" name="partenaire_id" value="DEFAULT_AERIO">
+            <div class="pay-card" onclick="alert('Redirection vers passerelle de paiement...')">
                 <div class="pay-price">500F</div>
                 <div class="pay-desc">24 HEURES</div>
-                <button type="submit" class="btn-pay-submit">MOMO/OM</button>
-            </form>
+                <button class="btn-pay-submit">MOMO/OM</button>
+            </div>
 
         </div>
     </div>
@@ -132,35 +119,62 @@
 <div id="bot-window">
     <p style="font-size:12px; color:#ccc; line-height:1.4;">
         <b>Besoin d'aide ?</b><br><br>
-        1. Choisissez un forfait (100F ou 500F).<br>
-        2. Payez par Mobile Money.<br>
-        3. Recevez vos codes par SMS et validez en haut.<br><br>
+        1. Achetez un code via MOMO/OM.<br>
+        2. Entrez le code reçu dans le champ "Code d'accès".<br>
+        3. Cliquez sur Activer.<br><br>
         <a href="https://wa.me/237692487922" style="color:var(--accent); text-decoration:none;">→ Support WhatsApp</a>
     </p>
 </div>
 
-<footer>POWERED BY AERIO SYSTEM & STARLINK TECH</footer>
+<footer>POWERED BY DADIE IA & STARLINK TECH</footer>
 
 <script>
-// SCRIPT DE RÉCUPÉRATION DYNAMIQUE DU PARTENAIRE
-window.onload = function() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const pid = urlParams.get('pid'); // Récupère le ?pid=... dans l'URL
+// LOGIQUE DE CONNEXION DADIE IA
+function validerConnexion() {
+    const codeSaisi = document.getElementById('accessCode').value.trim().toUpperCase();
+    if(!codeSaisi) return alert("Veuillez entrer un code.");
+
+    let stock = JSON.parse(localStorage.getItem('aerio_stock')) || [];
     
-    if (pid) {
-        // Si un ID partenaire est présent, on l'injecte dans tous les formulaires
-        const fields = document.querySelectorAll('.partner-id-field');
-        fields.forEach(field => {
-            field.value = pid;
-        });
-        console.log("AERIO: Partenaire identifié : " + pid);
+    // On cherche le code dans le stock (non vendu)
+    const ticketIndex = stock.findIndex(t => t.code.toUpperCase() === codeSaisi && !t.vendu);
+
+    if (ticketIndex !== -1) {
+        // TICKET VALIDE
+        stock[ticketIndex].vendu = true;
+        stock[ticketIndex].dateVente = new Date().toLocaleString();
+        
+        // Sauvegarde
+        localStorage.setItem('aerio_stock', JSON.stringify(stock));
+
+        // Succès
+        const btn = document.querySelector('.btn-main');
+        btn.innerHTML = "SESSION ACTIVÉE ✅";
+        btn.style.background = "var(--accent)";
+        btn.style.color = "#000";
+
+        setTimeout(() => {
+            alert("Accès autorisé ! Bienvenue sur le réseau.");
+            window.location.href = "https://www.google.com";
+        }, 1500);
+    } else {
+        alert("❌ Code invalide ou déjà expiré.");
     }
-};
+}
 
 function toggleBot() {
     var win = document.getElementById('bot-window');
     win.style.display = (win.style.display === 'block') ? 'none' : 'block';
 }
+
+// RECUPERATION PARTENAIRE
+window.onload = function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const pid = urlParams.get('pid');
+    if (pid) {
+        console.log("AERIO: Partenaire identifié : " + pid);
+    }
+};
 </script>
 </body>
 </html>
