@@ -1,3 +1,18 @@
+<?php
+// --- ÉTAPE 2 : LE VERROU DE SÉCURITÉ DADIE IA ---
+session_start();
+
+// Si la session n'existe pas, on redirige vers la connexion
+if (!isset($_SESSION['user_id'])) {
+    header('Location: connexion.html');
+    exit();
+}
+
+// Récupération des infos de l'utilisateur connecté
+$userName = $_SESSION['user_name'] ?? 'Agent Alpha';
+$userCity = $_SESSION['user_city'] ?? 'Secteur Inconnu';
+$userRank = $_SESSION['user_rank'] ?? 'GOLD PILOT';
+?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -82,15 +97,7 @@
             padding: 20px 40px; position: sticky; top: 0; z-index: 90;
             background: rgba(2, 6, 23, 0.6); backdrop-filter: blur(12px);
         }
-        .lang-btn { 
-            background: rgba(255,255,255,0.05); border: 1px solid var(--border); 
-            color: #475569; font-size: 9px; font-weight: 900; cursor: pointer; 
-            padding: 5px 10px; border-radius: 8px; transition: 0.3s;
-        }
-        .lang-btn.active { background: var(--primary); color: #020617; box-shadow: 0 0 10px var(--primary); }
-
-        .notif-trigger { cursor: pointer; font-size: 18px; position: relative; }
-        .notif-badge { position: absolute; top: -5px; right: -5px; background: red; font-size: 9px; padding: 2px 5px; border-radius: 10px; }
+        .logout-btn { background: #ef4444; border: none; color: white; padding: 8px 15px; border-radius: 10px; font-size: 10px; font-weight: 900; cursor: pointer; text-decoration: none; }
 
         /* --- DADIE IA INTERFACE --- */
         .content { margin-left: var(--sidebar-w); flex: 1; padding: 10px 40px 40px 40px; }
@@ -112,52 +119,38 @@
         }
         @keyframes pulseIA { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
 
-        /* --- NOUVEAUX STYLES DE PRESTIGE (AJOUTS) --- */
         .rank-badge {
             display: inline-block; padding: 4px 10px; border-radius: 8px;
             font-size: 9px; font-weight: 900; text-transform: uppercase;
             background: linear-gradient(45deg, #ffd700, #ffa500);
             color: black; box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
             margin-left: 10px; vertical-align: middle;
-            animation: rankGlow 2s infinite alternate;
         }
-        @keyframes rankGlow { from { opacity: 0.8; } to { opacity: 1; box-shadow: 0 0 20px rgba(255, 215, 0, 0.6); } }
 
         .card-main { 
             background: var(--card-bg); padding: 35px; border-radius: 35px; border: 1px solid var(--border); 
-            text-align: center; backdrop-filter: blur(15px); transition: 0.3s;
-            position: relative; overflow: hidden; /* Pour les particules */
+            text-align: center; backdrop-filter: blur(15px); position: relative; overflow: hidden;
         }
-        .particles-bg {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none; opacity: 0.4;
-        }
+        .particles-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; opacity: 0.4; }
 
-        /* --- CARDS & STATS --- */
         .action-card {
             background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px;
             padding: 15px 20px; display: flex; align-items: center; gap: 15px;
             text-decoration: none; transition: 0.4s; backdrop-filter: blur(10px);
         }
-        .action-card:hover { transform: translateY(-5px); border-color: var(--primary); }
 
-        .val-large { font-size: 48px; font-weight: 900; margin: 10px 0; letter-spacing: -2px; position: relative; z-index: 2; }
+        .val-large { font-size: 48px; font-weight: 900; margin: 10px 0; letter-spacing: -2px; z-index: 2; position: relative; }
 
         .mini-card { 
             padding: 25px 15px; border-radius: 25px; border: 1px solid var(--border); 
             text-align: center; background: rgba(255,255,255,0.03);
         }
 
-        /* --- IA CONTROL PANEL --- */
         .ai-control {
             margin-top: 30px; background: rgba(188, 0, 255, 0.05);
             border: 1px solid rgba(188, 0, 255, 0.2); border-radius: 20px; padding: 20px;
             display: flex; justify-content: space-between; align-items: center;
         }
-
-        .progress-container { width: 100%; height: 4px; background: rgba(255,255,255,0.1); margin: 15px 0; border-radius: 2px; overflow: hidden; }
-        .progress-bar { width: 40%; height: 100%; background: var(--primary); animation: moveBar 2s infinite linear; }
-        @keyframes moveBar { from { transform: translateX(-100%); } to { transform: translateX(300%); } }
 
         @media (max-width: 1024px) {
             .sidebar { width: 80px; }
@@ -171,55 +164,37 @@
     <div class="sidebar">
         <div class="logo-title">AERIO</div>
         
-        <div class="group-label" data-key="grp_pilot">Pilotage Réseaux</div>
-        <a href="dashboard.html" class="nav-button active"><i>🏠</i> <span data-key="nav_dash">Tableau de bord</span></a>
-        <a href="ajouter-wifi.html" class="nav-button"><i>➕</i> <span data-key="nav_add_wifi">Configurer un WiFi</span></a>
-        <a href="liste-wifi.html" class="nav-button"><i>📡</i> <span data-key="nav_list_wifi">Mes Zones WiFi</span></a>
-        <a href="statistiques-wifi.html" class="nav-button"><i>📊</i> <span data-key="nav_stats_wifi">Analyse de Flotte</span></a>
+        <div class="group-label">Pilotage Réseaux</div>
+        <a href="dashboard.php" class="nav-button active"><i>🏠</i> <span>Tableau de bord</span></a>
+        <a href="ajouter-ticket.html" class="nav-button"><i>🎫</i> <span>Générer un Pass</span></a>
+        <a href="liste-tickets.html" class="nav-button"><i>🔑</i> <span>Registre des Accès</span></a>
 
-        <div class="group-label" data-key="grp_offers">Offres & Accès</div>
-        <a href="ajouter-tarif.html" class="nav-button"><i>💎</i> <span data-key="nav_add_price">Créer un Tarif</span></a>
-        <a href="liste-tarif.html" class="nav-button"><i>📜</i> <span data-key="nav_list_price">Ma Grille Tarifaire</span></a>
-        <a href="ajouter-ticket.html" class="nav-button"><i>🎫</i> <span data-key="nav_gen_pass">Générer un Pass</span></a>
-        <a href="liste-tickets.html" class="nav-button"><i>🔑</i> <span data-key="nav_list_pass">Registre des Accès</span></a>
-
-        <div class="group-label" data-key="grp_finance">Gestion Financière</div>
-        <a href="comptabilite.html" class="nav-button"><i>💰</i> <span data-key="nav_cash">Flux de Trésorerie</span></a>
-        <a href="mes-recettes.html" class="nav-button"><i>📈</i> <span data-key="nav_revenue">Historique Recettes</span></a>
-        <a href="mes-retraits.html" class="nav-button"><i>📤</i> <span data-key="nav_withdraw">Journal d'Extractions</span></a>
+        <div class="group-label">Gestion Financière</div>
+        <a href="comptabilite.html" class="nav-button"><i>💰</i> <span>Flux de Trésorerie</span></a>
+        <a href="logout.php" class="nav-button" style="color: #ef4444;"><i>🚪</i> <span>Déconnexion</span></a>
     </div>
 
     <main style="flex:1; display:flex; flex-direction:column;">
         <div class="top-bar">
-            <div class="lang-switcher">
-                <button onclick="setLang('fr')" id="btn-fr" class="lang-btn active">FR</button>
-                <button onclick="setLang('en')" id="btn-en" class="lang-btn">EN</button>
-                <button onclick="setLang('pt')" id="btn-pt" class="lang-btn">PT</button>
-                <button onclick="setLang('es')" id="btn-es" class="lang-btn">ES</button>
-            </div>
-
-            <div class="notif-wrapper" style="position:relative;">
-                <div class="notif-trigger" onclick="toggleNotifs()">
-                    🔔 <span class="notif-badge">1</span>
-                </div>
-            </div>
+             <div style="font-size: 11px; color: #475569;">Connecté : <b style="color:var(--primary)"><?php echo htmlspecialchars($userName); ?></b></div>
+             <a href="logout.php" class="logout-btn">QUITTER</a>
         </div>
 
         <div class="content">
             <div class="top-nav" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 40px;">
                 <a href="profil.html" class="action-card">
                     <div class="icon-box" style="width:45px; height:45px; border-radius:12px; display:flex; align-items:center; justify-content:center; background: rgba(188, 0, 255, 0.1); border: 1px solid var(--purple);">👤</div>
-                    <div><b style="font-size: 11px; display:block; letter-spacing:1px;" data-key="card_profile">MON COMPTE</b><span style="font-size: 10px; color:#64748b;" data-key="card_profile_sub">Gérer mon profil Alpha</span></div>
+                    <div><b style="font-size: 11px; display:block; letter-spacing:1px;">MON COMPTE</b><span style="font-size: 10px; color:#64748b;">Gérer mon profil Alpha</span></div>
                 </a>
                 
                 <a href="support.html" class="action-card">
                     <div class="icon-box" style="width:45px; height:45px; border-radius:12px; display:flex; align-items:center; justify-content:center; background: rgba(0, 245, 160, 0.1); border: 1px solid var(--accent);">💬</div>
-                    <div><b style="font-size: 11px; display:block; letter-spacing:1px;" data-key="card_support">ASSISTANCE LIVE</b><span style="font-size: 10px; color:#64748b;" data-key="card_support_sub">IA de nouvelle génération</span></div>
+                    <div><b style="font-size: 11px; display:block; letter-spacing:1px;">ASSISTANCE LIVE</b><span style="font-size: 10px; color:#64748b;">DADIE IA de nouvelle génération</span></div>
                 </a>
 
                 <a href="docs.html" class="action-card">
                     <div class="icon-box" style="width:45px; height:45px; border-radius:12px; display:flex; align-items:center; justify-content:center; background: rgba(0, 194, 255, 0.1); border: 1px solid var(--primary);">📚</div>
-                    <div><b style="font-size: 11px; display:block; letter-spacing:1px;" data-key="card_academy">ACADÉMIE</b><span style="font-size: 10px; color:#64748b;" data-key="card_academy_sub">Guides & Tutoriels Alpha</span></div>
+                    <div><b style="font-size: 11px; display:block; letter-spacing:1px;">ACADÉMIE</b><span style="font-size: 10px; color:#64748b;">Guides & Tutoriels Alpha</span></div>
                 </a>
             </div>
 
@@ -228,7 +203,7 @@
                 <div>
                     <span style="background:var(--purple); color:white; padding:4px 12px; border-radius:20px; font-size:10px; font-weight:900;">DADIE IA v1.1</span>
                     <p style="margin-top:12px; font-weight:600; font-size:15px; letter-spacing:-0.3px; color: #fff;" id="welcome-msg">
-                        Initialisation des protocoles de prestige...
+                        Bonjour Agent <?php echo htmlspecialchars($userName); ?>. DADIE IA analyse votre secteur de <?php echo htmlspecialchars($userCity); ?>. Statut : Stable.
                     </p>
                 </div>
             </div>
@@ -237,35 +212,35 @@
                 <div class="card-main">
                     <canvas id="balance-particles" class="particles-bg"></canvas>
                     <p style="font-size: 11px; font-weight: 900; color: #64748b; letter-spacing: 1px; position: relative; z-index: 2;">
-                        <span data-key="stat_balance">SOLDE DISPONIBLE</span>
-                        <span class="rank-badge">GOLD PILOT</span>
+                        SOLDE DISPONIBLE
+                        <span class="rank-badge"><?php echo htmlspecialchars($userRank); ?></span>
                     </p>
                     <div class="val-large">0 <small style="font-size: 18px; color: var(--primary);">XAF</small></div>
-                    <p style="font-size: 10px; color: #475569; position: relative; z-index: 2;" data-key="stat_pending">Aucun retrait en attente</p>
+                    <p style="font-size: 10px; color: #475569; position: relative; z-index: 2;">Aucun retrait en attente</p>
                 </div>
 
                 <div class="card-main">
                     <p style="font-size: 11px; font-weight: 900; color: #64748b; letter-spacing: 1px;">CHIFFRE D'AFFAIRES GLOBAL</p>
                     <div class="val-large">0 <small style="font-size: 18px; color: var(--accent);">XAF</small></div>
-                    <p style="font-size: 10px; color: #475569;" data-key="stat_perf">Performance du réseau : 0%</p>
+                    <p style="font-size: 10px; color: #475569;">Performance du réseau : 0%</p>
                 </div>
             </div>
 
             <div class="mini-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px;">
                 <div class="mini-card" style="border-bottom: 4px solid #FFCC00;">
-                    <p style="font-size: 9px; font-weight: 900; color: #64748b; margin-bottom: 10px;" data-key="mini_passes">PASS VENDUS</p>
+                    <p style="font-size: 9px; font-weight: 900; color: #64748b; margin-bottom: 10px;">PASS VENDUS</p>
                     <div style="font-size: 28px; font-weight: 900;">0</div>
                 </div>
                 <div class="mini-card" style="border-bottom: 4px solid #FF4B4B;">
-                    <p style="font-size: 9px; font-weight: 900; color: #64748b; margin-bottom: 10px;" data-key="mini_withdrawals">EXTRACTIONS</p>
+                    <p style="font-size: 9px; font-weight: 900; color: #64748b; margin-bottom: 10px;">EXTRACTIONS</p>
                     <div style="font-size: 28px; font-weight: 900;">0</div>
                 </div>
                 <div class="mini-card" style="border-bottom: 4px solid #BC00FF;">
-                    <p style="font-size: 9px; font-weight: 900; color: #64748b; margin-bottom: 10px;" data-key="mini_daily">RECETTE JOUR</p>
+                    <p style="font-size: 9px; font-weight: 900; color: #64748b; margin-bottom: 10px;">RECETTE JOUR</p>
                     <div style="font-size: 28px; font-weight: 900;">0</div>
                 </div>
                 <div class="mini-card" style="border-bottom: 4px solid #00F5A0;">
-                    <p style="font-size: 9px; font-weight: 900; color: #64748b; margin-bottom: 10px;" data-key="mini_live">AFFLUENCE LIVE</p>
+                    <p style="font-size: 9px; font-weight: 900; color: #64748b; margin-bottom: 10px;">AFFLUENCE LIVE</p>
                     <div style="font-size: 28px; font-weight: 900;">0</div>
                 </div>
             </div>
@@ -283,39 +258,27 @@
     </main>
 
     <script>
-        // --- MOTEUR DE PARTICULES HOLOGRAPHIQUES ---
         function initHologram() {
             const canvas = document.getElementById('balance-particles');
             const ctx = canvas.getContext('2d');
             canvas.width = canvas.offsetWidth;
             canvas.height = canvas.offsetHeight;
             let particles = [];
-
             for(let i = 0; i < 40; i++) {
-                particles.push({
-                    x: Math.random() * canvas.width,
-                    y: Math.random() * canvas.height,
-                    speed: Math.random() * 0.4 + 0.1,
-                    size: Math.random() * 2
-                });
+                particles.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height, speed: Math.random() * 0.4 + 0.1, size: Math.random() * 2 });
             }
-
             function animate() {
                 ctx.clearRect(0,0,canvas.width, canvas.height);
                 ctx.fillStyle = "#00C2FF";
                 particles.forEach(p => {
-                    ctx.beginPath();
-                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-                    ctx.fill();
-                    p.y -= p.speed;
-                    if(p.y < 0) p.y = canvas.height;
+                    ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2); ctx.fill();
+                    p.y -= p.speed; if(p.y < 0) p.y = canvas.height;
                 });
                 requestAnimationFrame(animate);
             }
             animate();
         }
 
-        // --- SYSTÈME DE NOTIFICATION QUANTIQUE ---
         function showQuantumAlert(message) {
             const alertHtml = `
             <div class="aerio-overlay" id="quantumAlert">
@@ -323,7 +286,6 @@
                     <div style="opacity: 0.5; font-size: 0.7rem; margin-bottom: 10px;">🌐 system.aerio.alpha</div>
                     <div style="color:var(--primary); font-weight:900; letter-spacing:1px; margin-bottom:5px;">AERIO CORE & DADIE IA</div>
                     <div style="font-size:0.9rem; color:#fff; margin-bottom:15px;">${message}</div>
-                    <div class="progress-container"><div class="progress-bar"></div></div>
                     <button onclick="document.getElementById('quantumAlert').remove()" 
                             style="background:var(--primary); border:none; color:#000; padding:8px 20px; border-radius:8px; font-weight:900; cursor:pointer; float:right;">
                         CONTINUER
@@ -333,49 +295,18 @@
             document.body.insertAdjacentHTML('beforeend', alertHtml);
         }
 
-        const langData = {
-            fr: {
-                grp_pilot: "Pilotage Réseaux", nav_dash: "Tableau de bord", nav_add_wifi: "Configurer un WiFi", nav_list_wifi: "Mes Zones WiFi", nav_stats_wifi: "Analyse de Flotte",
-                grp_offers: "Offres & Accès", nav_add_price: "Créer un Tarif", nav_list_price: "Ma Grille Tarifaire", nav_gen_pass: "Générer un Pass", nav_list_pass: "Registre des Accès",
-                grp_finance: "Gestion Financière", nav_cash: "Flux de Trésorerie", nav_revenue: "Historique Recettes", nav_withdraw: "Journal d'Extractions",
-                welcome: "Bonjour Agent Alpha. DADIE IA analyse votre secteur de Maroua. Tout est stable.",
-                stat_balance: "SOLDE DISPONIBLE", stat_total: "CHIFFRE D'AFFAIRES GLOBAL",
-                mini_passes: "PASS VENDUS", mini_withdrawals: "EXTRACTIONS", mini_daily: "RECETTE JOUR", mini_live: "AFFLUENCE LIVE"
-            },
-            en: {
-                grp_pilot: "Network Management", nav_dash: "Dashboard", nav_add_wifi: "Configure WiFi", nav_list_wifi: "My WiFi Zones", nav_stats_wifi: "Fleet Analysis",
-                grp_offers: "Offers & Access", nav_add_price: "Create Price", nav_list_price: "Pricing Table", nav_gen_pass: "Generate Pass", nav_list_pass: "Access Log",
-                grp_finance: "Financial Mgmt", nav_cash: "Cash Flow", nav_revenue: "Revenue History", nav_withdraw: "Withdrawal Log",
-                welcome: "Hello Agent Alpha. DADIE IA is scanning your Maroua sector. Status: Stable.",
-                stat_balance: "AVAILABLE BALANCE", stat_total: "TOTAL REVENUE",
-                mini_passes: "PASSES SOLD", mini_withdrawals: "WITHDRAWALS", mini_daily: "DAILY INCOME", mini_live: "LIVE USERS"
-            }
-        };
-
         const dadieQuotes = [
             "Analyse terminée : +12% de connexions ce soir.",
-            "Secteur Maroua : Signal optimal. Aucune micro-coupure.",
-            "Agent Alpha, vos revenus sont sécurisés par le protocole DADIE.",
-            "Optimisation : J'ai libéré de la bande passante pour le nœud central.",
-            "Félicitations Agent, vous maintenez le rang GOLD PILOT."
+            "Signal optimal dans le secteur <?php echo $userCity; ?>.",
+            "Agent <?php echo $userName; ?>, vos revenus sont sécurisés.",
+            "Optimisation : J'ai libéré de la bande passante.",
+            "Félicitations Agent, vous maintenez le rang <?php echo $userRank; ?>."
         ];
 
-        function setLang(lang) {
-            document.querySelectorAll('[data-key]').forEach(el => {
-                const key = el.getAttribute('data-key');
-                if (langData[lang][key]) el.innerText = langData[lang][key];
-            });
-            document.getElementById('welcome-msg').innerText = langData[lang].welcome;
-            document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById(`btn-${lang}`).classList.add('active');
-            localStorage.setItem('aerio_lang', lang);
-        }
-
         function boostAction() {
-            showQuantumAlert("DADIE IA : Calibration des ondes terminée. Vitesse boostée sur toute la zone.");
+            showQuantumAlert("DADIE IA : Calibration des ondes terminée. Vitesse boostée.");
         }
 
-        // Cycle de parole pour DADIE IA
         setInterval(() => {
             const welcome = document.getElementById('welcome-msg');
             welcome.style.opacity = 0;
@@ -386,10 +317,8 @@
         }, 15000);
 
         window.onload = () => {
-            initHologram(); // Lancer l'effet visuel
-            const savedLang = localStorage.getItem('aerio_lang') || 'fr';
-            setLang(savedLang);
-            setTimeout(() => showQuantumAlert("Initialisation terminée. DADIE IA est désormais en ligne avec le protocole Prestige."), 1000);
+            initHologram();
+            setTimeout(() => showQuantumAlert("Initialisation terminée. DADIE IA est connectée."), 1000);
         };
     </script>
 </body>
