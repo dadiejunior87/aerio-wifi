@@ -3,99 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AERIO | Radar Tactique (Intelligence Financière)</title>
+    <title>AERIO | Profil & Paramètres</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;900&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #00C2FF;
             --accent: #00F5A0;
             --purple: #BC00FF;
-            --danger: #FF4757;
             --bg-deep: #020617;
             --card-bg: rgba(15, 23, 42, 0.7);
             --border: rgba(0, 194, 255, 0.2);
-            --text-dim: #64748b;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         body { 
             background: var(--bg-deep); color: white; 
             background-image: radial-gradient(circle at 0% 0%, #0f172a 0%, #020617 100%);
-            min-height: 100vh; display: flex; overflow-x: hidden;
+            min-height: 100vh; display: flex;
         }
 
-        /* --- SIDEBAR --- */
         .sidebar {
             width: 280px; background: rgba(11, 15, 26, 0.8); 
             backdrop-filter: blur(15px); padding: 30px 15px; height: 100vh;
             position: fixed; border-right: 1px solid var(--border); display: flex; flex-direction: column;
-            z-index: 100;
         }
         .nav-link {
             padding: 14px 18px; color: #64748b; text-decoration: none; display: flex; align-items: center; 
             gap: 12px; font-size: 13px; border-radius: 12px; transition: 0.3s; margin-bottom: 8px;
-            border: 1px solid transparent;
         }
-        .nav-link:hover { background: rgba(255,255,255,0.03); color: white; border: 1px solid var(--border); }
-        .nav-link.active { 
-            background: rgba(0, 194, 255, 0.1); color: var(--primary); font-weight: 600; 
-            border-left: 4px solid var(--primary); border-right: 1px solid var(--border);
-        }
+        .nav-link.active { background: rgba(0, 194, 255, 0.1); color: var(--primary); border-left: 4px solid var(--primary); }
 
-        /* --- MAIN CONTENT --- */
         .main-content { margin-left: 280px; flex: 1; padding: 40px; }
-        
-        .header-flex { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 40px; }
-        .glitch-title { font-size: 32px; font-weight: 900; letter-spacing: -1px; line-height: 1; }
 
-        /* --- METRICS --- */
-        .metrics-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 30px; }
-        .metric-card {
-            background: var(--card-bg); border: 1px solid var(--border); padding: 25px;
-            border-radius: 25px; position: relative; overflow: hidden; backdrop-filter: blur(10px);
+        .profile-container { max-width: 800px; margin: 0 auto; }
+        .user-card {
+            background: var(--card-bg); border: 1px solid var(--border); padding: 40px;
+            border-radius: 30px; text-align: center; margin-bottom: 30px;
         }
-        .metric-card h4 { font-size: 9px; font-weight: 900; color: var(--primary); letter-spacing: 2px; text-transform: uppercase; }
-        .metric-card .value { font-size: 30px; font-weight: 900; margin: 10px 0; display: block; letter-spacing: -1px; }
-        .trend { font-size: 10px; color: var(--accent); font-weight: 600; display: flex; align-items: center; gap: 5px; }
-
-        /* --- CHART AREA --- */
-        .chart-container {
-            background: var(--card-bg); border: 1px solid var(--border); padding: 30px;
-            border-radius: 30px; margin-bottom: 30px; position: relative;
-        }
-        .bar-chart { display: flex; align-items: flex-end; gap: 20px; height: 220px; padding-top: 40px; border-bottom: 1px solid var(--border); }
-        .bar { 
-            flex: 1; background: linear-gradient(to top, var(--primary), rgba(0, 194, 255, 0.1)); 
-            border-radius: 12px 12px 0 0; position: relative; transition: 0.5s ease;
-            box-shadow: 0 0 20px rgba(0, 194, 255, 0.1);
-        }
-        .bar::after { 
-            content: attr(data-label); position: absolute; bottom: -30px; left: 50%; 
-            transform: translateX(-50%); font-size: 10px; font-weight: 600; color: var(--text-dim); 
-            white-space: nowrap;
-        }
-        .bar::before {
-            content: attr(data-value); position: absolute; top: -25px; left: 50%;
-            transform: translateX(-50%); font-size: 10px; font-weight: 900; color: var(--accent);
+        .avatar-circle {
+            width: 100px; height: 100px; background: linear-gradient(45deg, var(--primary), var(--purple));
+            border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center;
+            font-size: 40px; font-weight: 900; box-shadow: 0 0 30px rgba(0, 194, 255, 0.3);
         }
 
-        /* --- ALERT BOX --- */
-        .alert-box { 
-            background: rgba(255, 71, 87, 0.1); border: 1px solid var(--danger); 
-            border-radius: 15px; padding: 12px 20px; display: flex; align-items: center; gap: 12px;
+        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 30px; }
+        .info-item {
+            background: rgba(255,255,255,0.03); padding: 20px; border-radius: 15px; border: 1px solid var(--border);
+            text-align: left;
         }
-        .alert-dot { width: 8px; height: 8px; background: var(--danger); border-radius: 50%; animation: pulse 1s infinite; }
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+        .info-item label { font-size: 10px; color: var(--primary); text-transform: uppercase; letter-spacing: 1px; }
+        .info-item p { font-size: 16px; font-weight: 600; margin-top: 5px; }
 
-        /* --- TERMINAL DADIE IA --- */
-        .terminal-box {
-            background: #000; border: 1px solid var(--purple); border-radius: 20px;
-            padding: 20px; font-family: 'Courier New', monospace; font-size: 11px; color: var(--purple);
-            height: 160px; overflow-y: auto; position: relative;
+        /* --- SECTION RETRAIT (LA MAGIE) --- */
+        .withdraw-section {
+            background: linear-gradient(135deg, rgba(188, 0, 255, 0.1), rgba(0, 194, 255, 0.1));
+            border: 1px solid var(--purple); padding: 30px; border-radius: 30px; margin-top: 40px;
         }
-        .terminal-header { font-size: 9px; font-weight: 900; color: var(--purple); margin-bottom: 10px; opacity: 0.7; letter-spacing: 2px; }
-        .log-entry { margin-bottom: 5px; opacity: 0.9; line-height: 1.4; }
-        .log-time { color: white; margin-right: 10px; }
+        .withdraw-btn {
+            width: 100%; padding: 18px; background: var(--primary); border: none; border-radius: 15px;
+            color: #000; font-weight: 900; font-size: 16px; cursor: pointer; transition: 0.3s;
+            margin-top: 20px; text-transform: uppercase;
+        }
+        .withdraw-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0, 194, 255, 0.4); }
+
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8);
+            display: none; align-items: center; justify-content: center; z-index: 1000;
+        }
+        .modal-content {
+            background: var(--bg-deep); border: 2px solid var(--primary); padding: 40px;
+            border-radius: 30px; width: 450px; text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -106,119 +84,108 @@
         <a href="liste-tarif.html" class="nav-link">📜 Ma Grille Tarifaire</a>
         <a href="ajouter-ticket.html" class="nav-link">🎫 Générer un Pass</a>
         <a href="liste-tickets.html" class="nav-link">🔑 Registre des Accès</a>
-        <a href="rapports.html" class="nav-link active">📊 Analyse & Revenus</a>
-        <a href="profil.html" class="nav-link">👤 Mon Profil</a>
+        <a href="rapports.html" class="nav-link">📊 Analyse & Revenus</a>
+        <a href="profil.html" class="nav-link active">👤 Mon Profil</a>
     </div>
 
     <div class="main-content">
-        <div class="header-flex">
-            <div>
-                <p style="color: var(--primary); font-size: 10px; font-weight: 900; letter-spacing: 3px;">SYSTÈME D'ANALYSE TACTIQUE</p>
-                <h1 class="glitch-title">Intelligence <span style="color:var(--primary)">Financière</span></h1>
+        <div class="profile-container">
+            <h1 style="font-weight:900; font-size:32px; margin-bottom:30px;">Configuration <span style="color:var(--primary)">Profil</span></h1>
+            
+            <div class="user-card">
+                <div class="avatar-circle">P</div>
+                <h2 id="userName">Propriétaire du Réseau</h2>
+                <p style="color:var(--text-dim); font-size:12px;">ID Partenaire: #AE-2026-X9</p>
+
+                <div class="info-grid">
+                    <div class="info-item">
+                        <label>Statut Compte</label>
+                        <p style="color:var(--accent)">Vérifié & Actif</p>
+                    </div>
+                    <div class="info-item">
+                        <label>Solde Disponible</label>
+                        <p id="soldeAffiche">0 XAF</p>
+                    </div>
+                </div>
             </div>
-            <div id="stockAlert" style="display:none;" class="alert-box">
-                <div class="alert-dot"></div>
-                <span style="color:var(--danger); font-size:10px; font-weight:900; letter-spacing:1px;">STOCK CRITIQUE DÉTECTÉ</span>
+
+            <div class="withdraw-section">
+                <h3 style="color:var(--primary); font-weight:900;">💳 CENTRE DE RETRAIT</h3>
+                <p style="font-size:12px; color:var(--text-dim); margin-top:10px;">Récupérez vos gains directement vers votre portefeuille Mobile Money.</p>
+                <button class="withdraw-btn" onclick="ouvrirRetrait()">Demander le Retrait</button>
             </div>
         </div>
+    </div>
 
-        <div class="metrics-grid">
-            <div class="metric-card">
-                <h4>Revenus Totaux Générés</h4>
-                <span id="revenueTotal" class="value">0 XAF</span>
-                <span class="trend">↑ Dynamique Positive</span>
+    <div class="modal-overlay" id="modalRetrait">
+        <div class="modal-content">
+            <h2 style="color:var(--primary); margin-bottom:20px;">Vérification Finale</h2>
+            <div style="text-align:left; margin-bottom:20px; font-size:14px;">
+                <p>Brut accumulé : <span id="modalBrut" style="float:right">0 XAF</span></p>
+                <p style="color:var(--danger); margin:10px 0;">Frais de maintenance (15%) : <span id="modalComm" style="float:right">- 0 XAF</span></p>
+                <hr style="border:0; border-top:1px solid var(--border); margin:10px 0;">
+                <p style="font-weight:900; font-size:18px;">Net à recevoir : <span id="modalNet" style="float:right; color:var(--accent)">0 XAF</span></p>
             </div>
-            <div class="metric-card">
-                <h4>Tickets Consommés</h4>
-                <span id="ticketsSold" class="value">0</span>
-                <span class="trend" style="color:var(--primary)">Flux réseau stable</span>
-            </div>
-            <div class="metric-card">
-                <h4>Panier Moyen</h4>
-                <span id="avgTicket" class="value">0 XAF</span>
-                <span class="trend" style="color:var(--purple)">Optimisation Alpha</span>
-            </div>
-        </div>
-
-        <div class="chart-container">
-            <h4 style="font-size: 10px; text-transform: uppercase; letter-spacing: 2px; color: var(--primary); margin-bottom: 30px;">Popularité des Offres (Ventes par catégorie)</h4>
-            <div class="bar-chart" id="chartArea"></div>
-        </div>
-
-        <div class="terminal-box">
-            <div class="terminal-header">CONSOLE DE SURVEILLANCE DADIE IA</div>
-            <div id="terminalContent">
-                <div class="log-entry"><span class="log-time">[SYSTEM]</span> Analyse des flux de données terminée.</div>
-                <div class="log-entry"><span class="log-time">[SYSTEM]</span> Intégrité du registre financier : 100%.</div>
-            </div>
+            <p style="font-size:10px; color:var(--text-dim); margin-bottom:20px;">En confirmant, vous acceptez les conditions d'utilisation du service AERIO (Propulsé par DADIE IA).</p>
+            <button class="withdraw-btn" style="background:var(--accent)" onclick="confirmerRetrait()">Confirmer le Retrait</button>
+            <button class="withdraw-btn" style="background:transparent; color:white; border:1px solid var(--border); margin-top:10px;" onclick="fermerModal()">Annuler</button>
         </div>
     </div>
 
     <script>
-        function analyserDonnees() {
+        function chargerProfil() {
             const stock = JSON.parse(localStorage.getItem('aerio_stock')) || [];
             const tarifs = JSON.parse(localStorage.getItem('aerio_tarifs')) || [];
             
-            let totalRevenue = 0;
-            let soldCount = 0;
-            let popularity = {};
-
-            // 1. CALCULS DES DONNÉES
+            let total = 0;
             stock.forEach(item => {
                 if(item.vendu) {
-                    const tarif = tarifs.find(t => t.id == item.tarifId);
-                    if(tarif) {
-                        const prix = parseInt(tarif.prix);
-                        totalRevenue += prix;
-                        soldCount++;
-                        popularity[tarif.nom] = (popularity[tarif.nom] || 0) + 1;
-                    }
+                    const t = tarifs.find(x => x.id == item.tarifId);
+                    if(t) total += parseInt(t.prix);
                 }
             });
 
-            // 2. LOGIQUE INVISIBLE DADIE IA (Tes 15%)
-            const commissionCachee = totalRevenue * 0.15; 
-            localStorage.setItem('aerio_commission_accumulee', commissionCachee);
-
-            // 3. MISE À JOUR UI POUR L'UTILISATEUR (Affiche 100%)
-            document.getElementById('revenueTotal').innerText = totalRevenue.toLocaleString() + " XAF";
-            document.getElementById('ticketsSold').innerText = soldCount;
-            document.getElementById('avgTicket').innerText = soldCount > 0 ? Math.round(totalRevenue / soldCount).toLocaleString() + " XAF" : "0 XAF";
-
-            // 4. ALERTE STOCK
-            let needAlert = false;
-            tarifs.forEach(t => {
-                const dispo = stock.filter(s => s.tarifId == t.id && !s.vendu).length;
-                if(dispo < 3 && stock.length > 0) needAlert = true;
-            });
-            document.getElementById('stockAlert').style.display = needAlert ? "flex" : "none";
-
-            // 5. GÉNÉRATION DU GRAPHIQUE
-            const chartArea = document.getElementById('chartArea');
-            chartArea.innerHTML = "";
-            Object.keys(popularity).forEach(nom => {
-                const val = popularity[nom];
-                const height = Math.min(val * 25, 180); 
-                const bar = document.createElement('div');
-                bar.className = "bar";
-                bar.style.height = (height + 20) + "px";
-                bar.setAttribute('data-label', nom);
-                bar.setAttribute('data-value', val);
-                chartArea.appendChild(bar);
-            });
-
-            // 6. LOGS TERMINAL (Discrets et pro)
-            const terminal = document.getElementById('terminalContent');
-            const logEntry = document.createElement('div');
-            logEntry.className = "log-entry";
-            logEntry.innerHTML = `
-                <span class="log-time">[${new Date().toLocaleTimeString()}]</span> 
-                SYNC : Données synchronisées avec le serveur Alpha. Aucun incident.
-            `;
-            terminal.prepend(logEntry);
+            document.getElementById('soldeAffiche').innerText = total.toLocaleString() + " XAF";
         }
 
-        window.onload = analyserDonnees;
+        function ouvrirRetrait() {
+            const stock = JSON.parse(localStorage.getItem('aerio_stock')) || [];
+            const tarifs = JSON.parse(localStorage.getItem('aerio_tarifs')) || [];
+            
+            let total = 0;
+            stock.forEach(item => {
+                if(item.vendu) {
+                    const t = tarifs.find(x => x.id == item.tarifId);
+                    if(t) total += parseInt(t.prix);
+                }
+            });
+
+            if(total <= 0) {
+                alert("Votre solde est vide. Vendez des tickets pour encaisser !");
+                return;
+            }
+
+            const comm = total * 0.15;
+            const net = total - comm;
+
+            document.getElementById('modalBrut').innerText = total.toLocaleString() + " XAF";
+            document.getElementById('modalComm').innerText = "- " + comm.toLocaleString() + " XAF";
+            document.getElementById('modalNet').innerText = net.toLocaleString() + " XAF";
+            
+            document.getElementById('modalRetrait').style.display = "flex";
+        }
+
+        function fermerModal() {
+            document.getElementById('modalRetrait').style.display = "none";
+        }
+
+        function confirmerRetrait() {
+            alert("Requête envoyée ! L'administrateur validera votre paiement sous 24h.");
+            fermerModal();
+            // Ici on pourrait réinitialiser les ventes si nécessaire.
+        }
+
+        window.onload = chargerProfil;
     </script>
 </body>
 </html>
